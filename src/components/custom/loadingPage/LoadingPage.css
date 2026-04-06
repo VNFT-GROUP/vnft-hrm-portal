@@ -110,31 +110,81 @@
 .loading-scene {
   width: 100%;
   position: relative;
-  padding-top: 1rem;
+  padding-top: 0.5rem;
+}
+
+/* — Sky layer — */
+.loading-sky {
+  position: relative;
+  height: 60px;
+  width: 100%;
+  margin-bottom: 0.25rem;
+  overflow: hidden;
+}
+
+/* — Airplane — */
+.airplane {
+  position: absolute;
+  top: 4px;
+  animation: airplane-fly 8s linear infinite;
+  z-index: 2;
+}
+@keyframes airplane-fly {
+  0% { left: -80px; top: 8px; }
+  50% { top: 2px; }
+  100% { left: calc(100% + 80px); top: 8px; }
+}
+.airplane-svg {
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.1));
+}
+
+/* Contrail */
+.airplane-trail {
+  position: absolute;
+  top: 50%;
+  right: 56px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  transform: translateY(-50%);
+}
+.trail-line {
+  display: block;
+  height: 1.5px;
+  border-radius: 1px;
+  background: linear-gradient(90deg, transparent, rgba(148, 163, 184, 0.5));
+  animation: trail-fade 0.6s ease-out infinite;
+}
+.trail-line--1 {
+  width: 40px;
+  animation-delay: 0s;
+}
+.trail-line--2 {
+  width: 30px;
+  animation-delay: 0.15s;
+}
+@keyframes trail-fade {
+  0% { opacity: 0.7; width: 40px; }
+  100% { opacity: 0; width: 10px; }
 }
 
 /* — Clouds — */
-.loading-clouds {
-  position: relative;
-  height: 40px;
-  width: 100%;
-  margin-bottom: 0.5rem;
-}
 .cloud {
   position: absolute;
+  z-index: 1;
 }
 .cloud--1 {
-  top: 0;
+  top: 10px;
   left: 10%;
   animation: cloud-drift 12s linear infinite;
 }
 .cloud--2 {
-  top: 8px;
+  top: 24px;
   left: 55%;
   animation: cloud-drift 16s linear infinite 4s;
 }
 .cloud--3 {
-  top: -2px;
+  top: 6px;
   left: 80%;
   animation: cloud-drift 14s linear infinite 8s;
 }
@@ -289,11 +339,72 @@
   }
 }
 
+/* ===== WATER LAYER ===== */
+.loading-water {
+  position: relative;
+  width: 100%;
+  padding: 0 1rem;
+  margin-top: -2px;
+  height: 36px;
+}
+
+/* Water waves — sit behind the ship */
+.water-waves {
+  position: absolute;
+  bottom: 0;
+  left: 1rem;
+  right: 1rem;
+  z-index: 1;
+}
+.wave--1 {
+  animation: wave-move 3s ease-in-out infinite;
+}
+.wave--2 {
+  animation: wave-move 3s ease-in-out infinite 0.8s;
+}
+@keyframes wave-move {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(8px); }
+}
+
+/* Cargo Ship — floats above the waves */
+.cargo-ship {
+  position: relative;
+  z-index: 2;
+  top: -4px;
+  animation: ship-sail 10s linear infinite;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.1));
+}
+@keyframes ship-sail {
+  0% { transform: translateX(-80px); }
+  100% { transform: translateX(calc(100% + 520px)); }
+}
+.ship-svg {
+  animation: ship-bob 2s ease-in-out infinite;
+}
+@keyframes ship-bob {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-2px) rotate(-0.5deg); }
+  75% { transform: translateY(1px) rotate(0.5deg); }
+}
+
+/* Ship smoke */
+.ship-smoke--1 {
+  animation: ship-smoke-rise 1.5s ease-out infinite;
+}
+.ship-smoke--2 {
+  animation: ship-smoke-rise 1.5s ease-out infinite 0.5s;
+}
+@keyframes ship-smoke-rise {
+  0% { opacity: 0.4; transform: translate(0, 0) scale(1); }
+  100% { opacity: 0; transform: translate(-8px, -10px) scale(2); }
+}
+
 /* — Progress info — */
 .loading-info {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   width: 100%;
   padding: 0 1rem;
 }
@@ -307,26 +418,6 @@
 @keyframes message-pulse {
   0%, 100% { opacity: 0.6; }
   50% { opacity: 1; }
-}
-.loading-percentage {
-  display: flex;
-  align-items: baseline;
-  gap: 2px;
-}
-.percentage-value {
-  font-size: 1.75rem;
-  font-weight: 800;
-  background: linear-gradient(135deg, #059669, #047857);
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  font-variant-numeric: tabular-nums;
-  line-height: 1;
-}
-.percentage-sign {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: rgba(5, 150, 105, 0.45);
 }
 
 /* — Loading dots — */
@@ -372,7 +463,7 @@
   .truck-container {
     transform: translateX(-50px) scale(0.8);
   }
-  .percentage-value {
-    font-size: 1.4rem;
+  .cargo-ship {
+    transform: scale(0.8);
   }
 }

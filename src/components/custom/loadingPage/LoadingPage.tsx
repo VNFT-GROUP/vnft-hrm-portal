@@ -77,10 +77,56 @@ export default function LoadingPage({
           <p className="loading-subtitle">HRM Portal</p>
         </div>
 
-        {/* Road scene */}
+        {/* Full logistics scene */}
         <div className="loading-scene">
-          {/* Sky elements */}
-          <div className="loading-clouds">
+
+          {/* ===== SKY LAYER: Airplane + Clouds ===== */}
+          <div className="loading-sky">
+            {/* Airplane flying across */}
+            <div className="airplane">
+              <svg width="64" height="32" viewBox="0 0 64 32" fill="none" className="airplane-svg">
+                {/* Fuselage */}
+                <ellipse cx="32" cy="16" rx="22" ry="5" fill="url(#plane-body)" />
+                {/* Nose */}
+                <path d="M54 16 L64 15 L54 14 Z" fill="#6b7280" />
+                {/* Tail fin */}
+                <path d="M10 16 L6 6 L16 14 Z" fill="url(#plane-tail)" />
+                <path d="M10 16 L8 22 L16 18 Z" fill="#9ca3af" />
+                {/* Wings */}
+                <path d="M28 14 L22 2 L38 12 Z" fill="url(#plane-wing)" />
+                <path d="M28 18 L22 30 L38 20 Z" fill="#94a3b8" />
+                {/* Windows */}
+                <circle cx="36" cy="15" r="1.2" fill="#bfdbfe" />
+                <circle cx="40" cy="15" r="1.2" fill="#bfdbfe" />
+                <circle cx="44" cy="15" r="1.2" fill="#bfdbfe" />
+                <circle cx="48" cy="15.2" r="1.2" fill="#bfdbfe" />
+                {/* Cockpit window */}
+                <path d="M52 14.5 Q56 14 56 16 Q56 18 52 17.5 Z" fill="#93c5fd" />
+                {/* Engine */}
+                <ellipse cx="30" cy="12" rx="3" ry="1.5" fill="#6b7280" />
+                <defs>
+                  <linearGradient id="plane-body" x1="10" y1="11" x2="10" y2="21">
+                    <stop stopColor="#f1f5f9" />
+                    <stop offset="1" stopColor="#cbd5e1" />
+                  </linearGradient>
+                  <linearGradient id="plane-wing" x1="22" y1="2" x2="38" y2="14">
+                    <stop stopColor="#10b981" />
+                    <stop offset="1" stopColor="#059669" />
+                  </linearGradient>
+                  <linearGradient id="plane-tail" x1="6" y1="6" x2="16" y2="16">
+                    <stop stopColor="#10b981" />
+                    <stop offset="1" stopColor="#047857" />
+                  </linearGradient>
+                </defs>
+              </svg>
+              {/* Contrail */}
+              <div className="airplane-trail">
+                <span className="trail-line trail-line--1" />
+                <span className="trail-line trail-line--2" />
+              </div>
+            </div>
+
+            {/* Clouds */}
             <div className="cloud cloud--1">
               <svg width="60" height="28" viewBox="0 0 60 28" fill="none">
                 <ellipse cx="30" cy="18" rx="25" ry="10" fill="#cbd5e1" fillOpacity="0.5" />
@@ -104,10 +150,9 @@ export default function LoadingPage({
             </div>
           </div>
 
-          {/* Road / Track */}
+          {/* ===== ROAD LAYER: Truck ===== */}
           <div className="loading-road">
             <div className="road-surface">
-              {/* Road dashes */}
               <div className="road-dashes">
                 {Array.from({ length: 20 }).map((_, i) => (
                   <span key={i} className="road-dash" />
@@ -115,94 +160,39 @@ export default function LoadingPage({
               </div>
             </div>
 
-            {/* Progress track */}
             <div className="loading-track">
               <div
                 className="loading-track-fill"
                 style={{ width: `${Math.min(progress, 100)}%` }}
               />
 
-              {/* Truck on the progress bar */}
               <div
                 className="truck-container"
                 style={{ left: `${Math.min(progress, 100)}%` }}
               >
                 <div className={`truck ${progress > 0 ? "truck--moving" : ""}`}>
-                  {/* Exhaust smoke */}
                   <div className="truck-smoke">
                     <span className="smoke-puff smoke-puff--1" />
                     <span className="smoke-puff smoke-puff--2" />
                     <span className="smoke-puff smoke-puff--3" />
                   </div>
 
-                  <svg
-                    width="80"
-                    height="48"
-                    viewBox="0 0 80 48"
-                    fill="none"
-                    className="truck-svg"
-                  >
-                    {/* Cargo container */}
-                    <rect
-                      x="2"
-                      y="8"
-                      width="42"
-                      height="26"
-                      rx="3"
-                      fill="url(#cargo-grad)"
-                      stroke="#059669"
-                      strokeWidth="1.5"
-                    />
-                    {/* Cargo lines */}
+                  <svg width="80" height="48" viewBox="0 0 80 48" fill="none" className="truck-svg">
+                    <rect x="2" y="8" width="42" height="26" rx="3" fill="url(#cargo-grad)" stroke="#059669" strokeWidth="1.5" />
                     <line x1="16" y1="8" x2="16" y2="34" stroke="#059669" strokeOpacity="0.4" strokeWidth="1" />
                     <line x1="30" y1="8" x2="30" y2="34" stroke="#059669" strokeOpacity="0.4" strokeWidth="1" />
-                    {/* Cargo label */}
                     <text x="22" y="24" textAnchor="middle" fill="white" fontSize="7" fontWeight="bold" fontFamily="sans-serif">VNFT</text>
-
-                    {/* Cabin */}
-                    <rect
-                      x="44"
-                      y="14"
-                      width="22"
-                      height="20"
-                      rx="3"
-                      fill="url(#cabin-grad)"
-                      stroke="#047857"
-                      strokeWidth="1.5"
-                    />
-                    {/* Window */}
-                    <rect
-                      x="48"
-                      y="17"
-                      width="14"
-                      height="8"
-                      rx="2"
-                      fill="#a7f3d0"
-                      fillOpacity="0.6"
-                      stroke="#059669"
-                      strokeWidth="0.8"
-                    />
-                    {/* Window reflection */}
+                    <rect x="44" y="14" width="22" height="20" rx="3" fill="url(#cabin-grad)" stroke="#047857" strokeWidth="1.5" />
+                    <rect x="48" y="17" width="14" height="8" rx="2" fill="#a7f3d0" fillOpacity="0.6" stroke="#059669" strokeWidth="0.8" />
                     <line x1="50" y1="17" x2="56" y2="25" stroke="white" strokeOpacity="0.3" strokeWidth="1" />
-
-                    {/* Headlight */}
                     <rect x="66" y="26" width="4" height="5" rx="1.5" fill="#fbbf24" />
-                    <rect x="66" y="26" width="4" height="5" rx="1.5" fill="url(#headlight-glow)" />
-
-                    {/* Front bumper */}
                     <rect x="66" y="31" width="6" height="3" rx="1" fill="#6b7280" />
-
-                    {/* Rear wheel */}
                     <circle cx="14" cy="37" r="6" fill="#374151" stroke="#1f2937" strokeWidth="1.5" />
                     <circle cx="14" cy="37" r="3" fill="#6b7280" />
                     <circle cx="14" cy="37" r="1" fill="#9ca3af" />
-
-                    {/* Front wheel */}
                     <circle cx="54" cy="37" r="6" fill="#374151" stroke="#1f2937" strokeWidth="1.5" />
                     <circle cx="54" cy="37" r="3" fill="#6b7280" />
                     <circle cx="54" cy="37" r="1" fill="#9ca3af" />
-
-                    {/* Wheel spokes animation lines */}
                     <g className="wheel-spokes wheel-spokes--rear">
                       <line x1="14" y1="34" x2="14" y2="40" stroke="#9ca3af" strokeWidth="0.5" />
                       <line x1="11" y1="37" x2="17" y2="37" stroke="#9ca3af" strokeWidth="0.5" />
@@ -211,10 +201,7 @@ export default function LoadingPage({
                       <line x1="54" y1="34" x2="54" y2="40" stroke="#9ca3af" strokeWidth="0.5" />
                       <line x1="51" y1="37" x2="57" y2="37" stroke="#9ca3af" strokeWidth="0.5" />
                     </g>
-
-                    {/* Chassis */}
                     <rect x="6" y="33" width="58" height="2" rx="1" fill="#4b5563" />
-
                     <defs>
                       <linearGradient id="cargo-grad" x1="2" y1="8" x2="2" y2="34">
                         <stop stopColor="#10b981" />
@@ -224,14 +211,57 @@ export default function LoadingPage({
                         <stop stopColor="#34d399" />
                         <stop offset="1" stopColor="#059669" />
                       </linearGradient>
-                      <radialGradient id="headlight-glow" cx="0.5" cy="0.5" r="0.5">
-                        <stop stopColor="#fbbf24" stopOpacity="0.8" />
-                        <stop offset="1" stopColor="#f59e0b" stopOpacity="0" />
-                      </radialGradient>
                     </defs>
                   </svg>
                 </div>
               </div>
+            </div>
+          </div>
+
+          {/* ===== WATER LAYER: Cargo Ship ===== */}
+          <div className="loading-water">
+            {/* Water waves */}
+            <div className="water-waves">
+              <svg width="100%" height="20" viewBox="0 0 520 20" preserveAspectRatio="none">
+                <path className="wave wave--1" d="M0 10 Q13 5 26 10 T52 10 T78 10 T104 10 T130 10 T156 10 T182 10 T208 10 T234 10 T260 10 T286 10 T312 10 T338 10 T364 10 T390 10 T416 10 T442 10 T468 10 T494 10 T520 10 V20 H0 Z" fill="#bfdbfe" fillOpacity="0.4" />
+                <path className="wave wave--2" d="M0 12 Q13 8 26 12 T52 12 T78 12 T104 12 T130 12 T156 12 T182 12 T208 12 T234 12 T260 12 T286 12 T312 12 T338 12 T364 12 T390 12 T416 12 T442 12 T468 12 T494 12 T520 12 V20 H0 Z" fill="#93c5fd" fillOpacity="0.25" />
+              </svg>
+            </div>
+
+            {/* Cargo Ship */}
+            <div className="cargo-ship">
+              <svg width="72" height="36" viewBox="0 0 72 36" fill="none" className="ship-svg">
+                {/* Hull */}
+                <path d="M4 22 L8 32 L64 32 L68 22 Z" fill="url(#hull-grad)" stroke="#047857" strokeWidth="1" />
+                {/* Deck */}
+                <rect x="8" y="18" width="56" height="5" rx="1" fill="#d1d5db" stroke="#9ca3af" strokeWidth="0.5" />
+                {/* Containers row 1 */}
+                <rect x="12" y="10" width="10" height="8" rx="1" fill="#10b981" stroke="#059669" strokeWidth="0.8" />
+                <rect x="23" y="10" width="10" height="8" rx="1" fill="#f59e0b" stroke="#d97706" strokeWidth="0.8" />
+                <rect x="34" y="10" width="10" height="8" rx="1" fill="#3b82f6" stroke="#2563eb" strokeWidth="0.8" />
+                <rect x="45" y="10" width="10" height="8" rx="1" fill="#ef4444" stroke="#dc2626" strokeWidth="0.8" />
+                {/* Containers row 2 (stacked) */}
+                <rect x="16" y="3" width="10" height="7" rx="1" fill="#059669" stroke="#047857" strokeWidth="0.7" />
+                <rect x="27" y="3" width="10" height="7" rx="1" fill="#d97706" stroke="#b45309" strokeWidth="0.7" />
+                <rect x="38" y="3" width="10" height="7" rx="1" fill="#2563eb" stroke="#1d4ed8" strokeWidth="0.7" />
+                {/* Bridge / Cabin */}
+                <rect x="56" y="8" width="8" height="10" rx="1" fill="#f8fafc" stroke="#94a3b8" strokeWidth="0.8" />
+                <rect x="57" y="9" width="6" height="4" rx="0.5" fill="#bfdbfe" />
+                {/* Smokestack */}
+                <rect x="58" y="3" width="4" height="5" rx="0.5" fill="#ef4444" />
+                <rect x="58" y="3" width="4" height="2" rx="0.5" fill="#1f2937" />
+                {/* Ship smoke */}
+                <circle className="ship-smoke ship-smoke--1" cx="60" cy="1" r="2" fill="#94a3b8" fillOpacity="0.4" />
+                <circle className="ship-smoke ship-smoke--2" cx="58" cy="-1" r="1.5" fill="#94a3b8" fillOpacity="0.3" />
+                {/* Water line */}
+                <line x1="4" y1="28" x2="68" y2="28" stroke="white" strokeOpacity="0.3" strokeWidth="0.5" />
+                <defs>
+                  <linearGradient id="hull-grad" x1="36" y1="22" x2="36" y2="32">
+                    <stop stopColor="#1f2937" />
+                    <stop offset="1" stopColor="#111827" />
+                  </linearGradient>
+                </defs>
+              </svg>
             </div>
           </div>
         </div>
@@ -239,12 +269,6 @@ export default function LoadingPage({
         {/* Progress info */}
         <div className="loading-info">
           <p className="loading-message">{message}</p>
-          <div className="loading-percentage">
-            <span className="percentage-value">
-              {Math.round(Math.min(progress, 100))}
-            </span>
-            <span className="percentage-sign">%</span>
-          </div>
         </div>
 
         {/* Loading dots */}

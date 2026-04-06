@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { LoadingPage } from "./components/custom/loadingPage";
+import { LoginPage } from "./pages/public-routes";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -15,8 +16,8 @@ function App() {
   }
 
   return (
-    <div className="flex h-screen w-screen items-center justify-center bg-background text-foreground">
-      <h1 className="text-3xl font-bold tracking-tight">App Portal</h1>
+    <div className="app-container">
+      <LoginPage />
     </div>
   );
 }

@@ -1,13 +1,10 @@
-import { Bell, Search, Menu, MessageSquare } from "lucide-react";
+import { Bell, Search, MessageSquare } from "lucide-react";
 import "./Topbar.css";
 
 export default function Topbar() {
   return (
     <header className="app-topbar">
       <div className="topbar-left">
-        <button className="menu-trigger">
-          <Menu size={22} />
-        </button>
         <div className="search-bar">
           <Search size={18} className="search-icon" />
           <input type="text" placeholder="Tìm kiếm nhân viên, phòng ban..." />

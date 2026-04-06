@@ -1,78 +1,188 @@
-import { LayoutDashboard, Users, Clock, CreditCard, UserPlus, Settings, Package, LogOut } from "lucide-react";
+import React, { useState } from "react";
+import { LayoutDashboard, UserCircle, Calendar, FolderOpen, Users, Building2, Briefcase, Clock, ClipboardList, Shield, FileText, ClipboardCheck, Calculator, FileSpreadsheet, CheckSquare, FileEdit, Wallet, FileBarChart, Settings, History, LogOut, ChevronLeft, Menu, ChevronDown, ChevronRight as ChevronRightIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useLayoutStore } from "../../../store/useLayoutStore";
 import "./Sidebar.css";
 
 export default function Sidebar() {
   const navigate = useNavigate();
+  const isCollapsed = useLayoutStore((state) => state.isSidebarCollapsed);
+  const toggleSidebar = useLayoutStore((state) => state.toggleSidebar);
+
+  // State for sub-menus
+  const [expandedMenus, setExpandedMenus] = useState<Record<string, boolean>>({});
+  
+  // State for our custom "Toasts" (Tooltips)
+  const [activeToast, setActiveToast] = useState<{ text: string; top: number; subItems?: string[] } | null>(null);
+
+  const handleToggleMenu = (label: string, hasSub: boolean) => {
+    if (isCollapsed) {
+       // If collapsed and has sub, expanding the main sidebar first is recommended
+       toggleSidebar();
+       if (hasSub) {
+          setExpandedMenus((prev) => ({ ...prev, [label]: true }));
+       }
+    } else {
+       if (hasSub) {
+         setExpandedMenus((prev) => ({ ...prev, [label]: !prev[label] }));
+       }
+    }
+  };
+
+  const handleMouseEnter = (e: React.MouseEvent<HTMLElement>, label: string, subItems?: {label: string}[]) => {
+    if (!isCollapsed) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    setActiveToast({
+       text: label,
+       top: rect.top,
+       subItems: subItems?.map(s => s.label)
+    });
+  };
+
+  const handleMouseLeave = () => {
+    setActiveToast(null);
+  };
+
+  const menuData = [
+    {
+      section: "",
+      items: [
+        { label: "Dashboard", icon: <LayoutDashboard size={20} /> },
+        { label: "Hồ sơ cá nhân", icon: <UserCircle size={20} /> },
+        { label: "Lịch & Sự kiện", icon: <Calendar size={20} /> },
+        { 
+          label: "Quản lý", 
+          icon: <FolderOpen size={20} />, 
+          subItems: [
+            { label: "Nhân viên", icon: <Users size={16} /> },
+            { label: "Phòng ban", icon: <Building2 size={16} /> },
+            { label: "Chức vụ", icon: <Briefcase size={16} /> },
+            { label: "Chấm công", icon: <Clock size={16} /> },
+            { label: "Tiêu chí đánh giá", icon: <ClipboardList size={16} /> },
+            { label: "Vai trò", icon: <Shield size={16} /> },
+            { label: "Hợp đồng", icon: <FileText size={16} /> },
+          ]
+        },
+        { label: "Đánh giá", icon: <ClipboardCheck size={20} /> },
+        { 
+          label: "ACC", 
+          icon: <Calculator size={20} />,
+          subItems: [
+            { label: "Import Profit Report", icon: <FileSpreadsheet size={16} /> }
+          ]
+        },
+        { label: "Bình chọn", icon: <CheckSquare size={20} /> },
+        { label: "Đơn từ", icon: <FileEdit size={20} /> },
+        { 
+          label: "Tài chính", 
+          icon: <Wallet size={20} />,
+          subItems: [
+            { label: "Báo cáo tài chính", icon: <FileBarChart size={16} /> }
+          ]
+        },
+        { label: "Báo cáo", icon: <FileText size={20} /> },
+        { label: "Cài đặt", icon: <Settings size={20} />, isActive: true },
+        { label: "Nhật ký hoạt động", icon: <History size={20} /> },
+      ]
+    }
+  ];
 
   return (
-    <aside className="app-sidebar">
+    <aside className={`app-sidebar ${isCollapsed ? "collapsed" : ""}`}>
+      {/* Floating Toggle Button */}
+      <button className="sidebar-collapse-btn" onClick={toggleSidebar}>
+        {isCollapsed ? <Menu size={16} /> : <ChevronLeft size={20} />}
+      </button>
+
       {/* Dynamic Background Objects */}
       <div className="sidebar-bg-objects">
-        {/* Wireframe Cube */}
         <svg className="sb-obj obj-box" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.15)" strokeWidth="1.5">
           <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
           <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
           <line x1="12" y1="22.08" x2="12" y2="12"></line>
         </svg>
 
-        {/* Orbit Rings */}
         <svg className="sb-obj obj-ring" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="1.5">
           <circle cx="12" cy="12" r="10"></circle>
           <circle cx="12" cy="12" r="6"></circle>
           <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
         </svg>
 
-        {/* Polygon */}
         <svg className="sb-obj obj-poly" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.15)" strokeWidth="1.5">
           <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
         </svg>
       </div>
 
       <nav className="sidebar-nav">
-        <div className="nav-section">MENU CHÍNH</div>
-        <ul>
-          <li className="active">
-            <LayoutDashboard size={20} />
-            <span>Tổng quan</span>
-          </li>
-          <li>
-            <Users size={20} />
-            <span>Nhân sự</span>
-          </li>
-          <li>
-            <Clock size={20} />
-            <span>Chấm công</span>
-          </li>
-          <li>
-            <CreditCard size={20} />
-            <span>Lương & Thưởng</span>
-          </li>
-        </ul>
+        {menuData.map((group, gIdx) => (
+          <React.Fragment key={gIdx}>
+            {group.section && <div className="nav-section">{isCollapsed ? "---" : group.section}</div>}
+            <ul>
+              {group.items.map((item, iIdx) => {
+                const hasSub = !!item.subItems;
+                const isExpanded = expandedMenus[item.label] || item.isActive; // Expand if active
 
-        <div className="nav-section">QUẢN TRỊ & MỞ RỘNG</div>
-        <ul>
-          <li>
-            <UserPlus size={20} />
-            <span>Tuyển dụng</span>
-          </li>
-          <li>
-            <Package size={20} />
-            <span>Đội xe & Kho</span>
-          </li>
-          <li>
-            <Settings size={20} />
-            <span>Cài đặt hệ thống</span>
-          </li>
-        </ul>
+                return (
+                  <React.Fragment key={iIdx}>
+                    <li 
+                      className={`${item.isActive ? "active" : ""} ${isExpanded ? "expanded" : ""}`}
+                      onClick={() => handleToggleMenu(item.label, hasSub)}
+                      onMouseEnter={(e) => handleMouseEnter(e, item.label, item.subItems)}
+                      onMouseLeave={handleMouseLeave}
+                    >
+                      {item.icon}
+                      <span className="nav-label">{item.label}</span>
+                      {hasSub && !isCollapsed && (
+                        <div className="sub-menu-indicator">
+                          {isExpanded ? <ChevronDown size={16} /> : <ChevronRightIcon size={16} />}
+                        </div>
+                      )}
+                    </li>
+
+                    {/* Sub Menu Level 2 */}
+                    {hasSub && isExpanded && !isCollapsed && (
+                      <ul className="sub-menu">
+                        {item.subItems!.map((sub, sIdx) => (
+                          <li key={sIdx} className="sub-item" onClick={(e) => e.stopPropagation()}>
+                            {sub.icon ? sub.icon : <div className="sub-item-bullet" />}
+                            <span className="sub-nav-label">{sub.label}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </React.Fragment>
+                );
+              })}
+            </ul>
+          </React.Fragment>
+        ))}
       </nav>
 
       <div className="sidebar-footer">
-        <button className="logout-btn" onClick={() => navigate("/login")}>
+        <button 
+          className="logout-btn" 
+          onClick={() => navigate("/login")}
+          onMouseEnter={(e) => handleMouseEnter(e, "Đăng xuất")}
+          onMouseLeave={handleMouseLeave}
+        >
           <LogOut size={20} />
-          <span>Đăng xuất</span>
+          <span className="nav-label">Đăng xuất</span>
         </button>
       </div>
+
+      {/* Floating Javascript Custom Toast (Escapes overflow bounds structurally) */}
+      {activeToast && isCollapsed && (
+        <div className="custom-floating-toast" style={{ top: activeToast.top }}>
+          <div className="toast-main">{activeToast.text}</div>
+          {activeToast.subItems && activeToast.subItems.length > 0 && (
+            <div className="toast-subs">
+              {activeToast.subItems.map((s, i) => (
+                <div key={i} className="toast-sub-item">• {s}</div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
     </aside>
   );
 }

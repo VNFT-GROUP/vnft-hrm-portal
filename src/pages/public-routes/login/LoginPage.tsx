@@ -4,15 +4,26 @@ import "./LoginPage.css";
 import LoginHeader from "./components/LoginHeader";
 import LoginFooter from "./components/LoginFooter";
 import LoginSocialSidebar from "./components/LoginSocialSidebar";
-
 import AnimatedLogisticsBackground from "./components/AnimatedLogisticsBackground";
+import LoadingPage from "../../../components/custom/loadingPage/LoadingPage";
 
 export default function LoginPage() {
+  const [isBooting, setIsBooting] = useState(true);
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+
+  if (isBooting) {
+    return (
+      <LoadingPage
+        duration={3000}
+        onComplete={() => setIsBooting(false)}
+        message="Đang tải hệ thống đăng nhập..."
+      />
+    );
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

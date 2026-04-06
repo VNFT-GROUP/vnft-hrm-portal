@@ -9,27 +9,36 @@ export default function Topbar() {
         <div className="ambient-blob blob-2"></div>
       </div>
 
-      {/* Animated Flow SVGs */}
+      {/* Animated Floating Geometric Particles */}
       <div className="topbar-flow">
-        <svg viewBox="0 0 600 72" className="flow-lines">
-          {/* Base lines */}
-          <path d="M 0,36 C 150,36 200,15 300,36 S 450,57 600,36" fill="none" stroke="rgba(46, 49, 146, 0.08)" strokeWidth="1.5" />
-          <path d="M 0,50 C 150,50 200,30 300,50 S 450,70 600,50" fill="none" stroke="rgba(247, 148, 29, 0.08)" strokeWidth="1" />
-          
-          {/* Animated packets */}
-          <path d="M 0,36 C 150,36 200,15 300,36 S 450,57 600,36" fill="none" stroke="#2E3192" strokeWidth="2" className="packet-anim-1" />
-          <path d="M 0,50 C 150,50 200,30 300,50 S 450,70 600,50" fill="none" stroke="#F7941D" strokeWidth="1.5" className="packet-anim-2" />
-          
-          {/* Node points */}
-          <circle cx="300" cy="36" r="3" className="pulse-node node-blue" />
-          <circle cx="450" cy="57" r="2.5" className="pulse-node node-orange" />
-          <circle cx="150" cy="36" r="2" className="pulse-node node-blue" />
+        <svg viewBox="0 0 600 72" className="obj-abstract">
+           <g className="floating-obj float-1">
+             <rect x="30" y="20" width="16" height="16" rx="3" fill="none" stroke="rgba(46,49,146,0.3)" strokeWidth="1.5" />
+             <rect x="35" y="25" width="6" height="6" rx="1" fill="rgba(247,148,29,0.7)" />
+           </g>
+
+           <g className="floating-obj float-2">
+             <circle cx="120" cy="40" r="14" fill="none" stroke="rgba(247,148,29,0.3)" strokeWidth="1.5" />
+             <circle cx="120" cy="40" r="4" fill="rgba(46,49,146,0.7)" />
+           </g>
+
+           <g className="floating-obj float-3">
+             <polygon points="210,15 228,45 192,45" fill="none" stroke="rgba(46,49,146,0.3)" strokeWidth="1.5" strokeLinejoin="round" />
+             <circle cx="210" cy="33" r="3" fill="rgba(247,148,29,0.7)" />
+           </g>
+           
+           <g className="floating-obj float-4">
+             <path d="M300,18 L322,40 L300,62 L278,40 Z" fill="none" stroke="rgba(247,148,29,0.3)" strokeWidth="1.5" strokeLinejoin="round" />
+             <rect x="295" y="35" width="10" height="10" rx="2" fill="rgba(46,49,146,0.7)" />
+           </g>
+           
+           <g className="floating-obj float-5">
+             <circle cx="400" cy="25" r="10" fill="none" stroke="rgba(46,49,146,0.3)" strokeWidth="1.5" strokeDasharray="4 4" />
+             <polygon points="400,20 405,30 395,30" fill="rgba(247,148,29,0.7)" />
+           </g>
         </svg>
       </div>
 
-      <div className="topbar-left">
-        <h2 className="topbar-title">Hệ thống Quản trị Nhân sự</h2>
-      </div>
       <div className="topbar-right relative z-10">
         <div className="user-profile">
           <div className="user-info">

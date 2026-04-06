@@ -50,67 +50,46 @@
   100% { transform: translateX(100px) scale(1.2); opacity: 0.2; }
 }
 
-/* SVG DATA FLOW */
+/* SVG FLOATING PARTICLES */
 .topbar-flow {
   position: absolute;
   left: 2rem;
   top: 0;
   height: 100%;
-  width: 400px;
+  width: 500px;
   z-index: 1;
   pointer-events: none;
 }
 
-.flow-lines {
+.obj-abstract {
   width: 100%;
   height: 100%;
 }
 
-.packet-anim-1 {
-  stroke-dasharray: 20 600;
-  animation: packet-flow 4s linear infinite;
+.floating-obj {
+  transform-origin: center;
+  transform-box: fill-box;
 }
 
-.packet-anim-2 {
-  stroke-dasharray: 15 600;
-  animation: packet-flow 3.5s linear infinite;
-  animation-delay: -1.5s;
+.float-1 { animation: obj-float 16s ease-in-out infinite alternate; }
+.float-2 { animation: obj-float-rev 14s ease-in-out infinite alternate; animation-delay: -3s; }
+.float-3 { animation: obj-float 20s ease-in-out infinite alternate; animation-delay: -7s; }
+.float-4 { animation: obj-float-rev 18s ease-in-out infinite alternate; animation-delay: -2s; }
+.float-5 { animation: obj-float 15s ease-in-out infinite alternate; animation-delay: -5s; }
+
+@keyframes obj-float {
+  0% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-8px) rotate(100deg); }
+  100% { transform: translateY(8px) rotate(200deg); }
 }
 
-@keyframes packet-flow {
-  0% { stroke-dashoffset: 600; }
-  100% { stroke-dashoffset: 0; }
+@keyframes obj-float-rev {
+  0% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(8px) rotate(-100deg); }
+  100% { transform: translateY(-8px) rotate(-200deg); }
 }
 
-.pulse-node {
-  animation: pulse-node-anim 2s infinite alternate;
-}
 
-.node-blue {
-  fill: #2E3192;
-}
-
-.node-orange {
-  fill: #F7941D;
-}
-
-@keyframes pulse-node-anim {
-  0% { opacity: 0.3; transform: scale(0.8); }
-  100% { opacity: 1; transform: scale(1.5); }
-}
-
-/* TITLE */
-.topbar-title {
-  position: relative;
-  z-index: 10;
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #1e293b;
-  letter-spacing: 0.5px;
-  background: linear-gradient(90deg, #1E2062, #474a9e);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
 
 .topbar-left, .topbar-right {
   display: flex;

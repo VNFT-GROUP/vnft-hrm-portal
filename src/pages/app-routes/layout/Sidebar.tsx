@@ -120,7 +120,7 @@ export default function Sidebar() {
       <ScrollArea className="sidebar-scroll-area">
         <nav className="sidebar-nav">
           {menuData.map((group, gIdx) => (
-            <React.Fragment key={gIdx}>
+            <React.Fragment key={group.section || `group-${gIdx}`}>
               {group.section && <div className="nav-section">{group.section}</div>}
               <ul>
                 {group.items.map((item, iIdx) => {
@@ -133,12 +133,15 @@ export default function Sidebar() {
                 const isExpanded = explicitState !== undefined ? explicitState : isSubActive;
 
                 return (
-                  <React.Fragment key={iIdx}>
+                  <React.Fragment key={item.label}>
                     <li 
                       className={`${(isItemActive || (!hasSub && isSubActive)) ? "active" : ""} ${isExpanded ? "expanded" : ""}`}
                       onClick={() => handleToggleMenu(item.label, hasSub, item.path, isExpanded)}
                       onMouseEnter={(e) => handleMouseEnter(e, item.label, item.subItems)}
                       onMouseLeave={handleMouseLeave}
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleToggleMenu(item.label, hasSub, item.path, isExpanded) }}
                     >
                       {item.icon}
                       <span className="nav-label">{item.label}</span>
@@ -156,11 +159,19 @@ export default function Sidebar() {
                           const isChildActive = sub.path === window.location.pathname;
                           return (
                             <li 
-                              key={sIdx} 
+                              key={sub.label} 
                               className={`sub-item ${isChildActive ? "text-[#F7941D]" : ""}`} 
                               onClick={(e) => {
                                 e.stopPropagation();
                                 navigate(sub.path);
+                              }}
+                              role="button"
+                              tabIndex={0}
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter' || e.key === ' ') {
+                                  e.stopPropagation();
+                                  navigate(sub.path);
+                                }
                               }}
                             >
                               {sub.icon ? sub.icon : <div className="sub-item-bullet" />}
@@ -185,8 +196,8 @@ export default function Sidebar() {
           <div className="toast-main">{activeToast.text}</div>
           {activeToast.subItems && activeToast.subItems.length > 0 && (
             <div className="toast-subs">
-              {activeToast.subItems.map((s, i) => (
-                <div key={i} className="toast-sub-item">• {s}</div>
+              {activeToast.subItems.map((s) => (
+                <div key={s} className="toast-sub-item">• {s}</div>
               ))}
             </div>
           )}

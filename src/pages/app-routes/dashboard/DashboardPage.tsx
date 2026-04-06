@@ -34,7 +34,7 @@ export default function DashboardPage() {
           const isNegative = stat.trend.startsWith('-');
           const isNeutral = stat.trend === "0%";
           return (
-            <div key={idx} className="stat-card">
+            <div key={stat.title} className="stat-card">
               <div className="stat-header">
                 <div className="stat-info">
                   <span className="stat-title">{stat.title}</span>
@@ -66,7 +66,7 @@ export default function DashboardPage() {
           <div className="mock-chart">
             {/* Fake responsive bar chart */}
             {[40, 60, 50, 80, 70, 90, 100, 85, 65, 75, 45, 95].map((h, i) => (
-              <div key={i} className="bar-wrapper">
+              <div key={`month-${i}`} className="bar-wrapper">
                 <div className="bar" style={{ height: `${h}%` }}>
                   <div className="bar-tooltip">Tháng {i + 1}: {h}00</div>
                 </div>

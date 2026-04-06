@@ -16,16 +16,20 @@ export default function Sidebar() {
   // State for our custom "Toasts" (Tooltips)
   const [activeToast, setActiveToast] = useState<{ text: string; top: number; subItems?: string[] } | null>(null);
 
-  const handleToggleMenu = (label: string, hasSub: boolean) => {
+  const handleToggleMenu = (label: string, hasSub: boolean, path?: string, currentlyExpanded?: boolean) => {
     if (isCollapsed) {
        // If collapsed and has sub, expanding the main sidebar first is recommended
        toggleSidebar();
        if (hasSub) {
           setExpandedMenus((prev) => ({ ...prev, [label]: true }));
+       } else if (path) {
+          navigate(path);
        }
     } else {
        if (hasSub) {
-         setExpandedMenus((prev) => ({ ...prev, [label]: !prev[label] }));
+         setExpandedMenus((prev) => ({ ...prev, [label]: !currentlyExpanded }));
+       } else if (path) {
+         navigate(path);
        }
     }
   };
@@ -48,42 +52,42 @@ export default function Sidebar() {
     {
       section: "",
       items: [
-        { label: "Dashboard", icon: <LayoutDashboard size={20} /> },
-        { label: "Hồ sơ cá nhân", icon: <UserCircle size={20} /> },
-        { label: "Lịch & Sự kiện", icon: <Calendar size={20} /> },
+        { label: "Dashboard", path: "/app", icon: <LayoutDashboard size={20} /> },
+        { label: "Hồ sơ cá nhân", path: "/app/profile", icon: <UserCircle size={20} /> },
+        { label: "Lịch & Sự kiện", path: "/app/calendar", icon: <Calendar size={20} /> },
         { 
           label: "Quản lý", 
           icon: <FolderOpen size={20} />, 
           subItems: [
-            { label: "Nhân viên", icon: <Users size={16} /> },
-            { label: "Phòng ban", icon: <Building2 size={16} /> },
-            { label: "Chức vụ", icon: <Briefcase size={16} /> },
-            { label: "Chấm công", icon: <Clock size={16} /> },
-            { label: "Tiêu chí đánh giá", icon: <ClipboardList size={16} /> },
-            { label: "Vai trò", icon: <Shield size={16} /> },
-            { label: "Hợp đồng", icon: <FileText size={16} /> },
+            { label: "Nhân viên", path: "/app/management/employees", icon: <Users size={16} /> },
+            { label: "Phòng ban", path: "/app/management/departments", icon: <Building2 size={16} /> },
+            { label: "Chức vụ", path: "/app/management/roles", icon: <Briefcase size={16} /> },
+            { label: "Chấm công", path: "/app/management/attendance", icon: <Clock size={16} /> },
+            { label: "Tiêu chí đánh giá", path: "/app/management/evaluation-criteria", icon: <ClipboardList size={16} /> },
+            { label: "Vai trò", path: "/app/management/permissions", icon: <Shield size={16} /> },
+            { label: "Hợp đồng", path: "/app/management/contracts", icon: <FileText size={16} /> },
           ]
         },
-        { label: "Đánh giá", icon: <ClipboardCheck size={20} /> },
+        { label: "Đánh giá", path: "/app/evaluation", icon: <ClipboardCheck size={20} /> },
         { 
           label: "ACC", 
           icon: <Calculator size={20} />,
           subItems: [
-            { label: "Import Profit Report", icon: <FileSpreadsheet size={16} /> }
+            { label: "Import Profit Report", path: "/app/acc/profit-report", icon: <FileSpreadsheet size={16} /> }
           ]
         },
-        { label: "Bình chọn", icon: <CheckSquare size={20} /> },
-        { label: "Đơn từ", icon: <FileEdit size={20} /> },
+        { label: "Bình chọn", path: "/app/voting", icon: <CheckSquare size={20} /> },
+        { label: "Đơn từ", path: "/app/requests", icon: <FileEdit size={20} /> },
         { 
           label: "Tài chính", 
           icon: <Wallet size={20} />,
           subItems: [
-            { label: "Báo cáo tài chính", icon: <FileBarChart size={16} /> }
+            { label: "Báo cáo tài chính", path: "/app/finance/reports", icon: <FileBarChart size={16} /> }
           ]
         },
-        { label: "Báo cáo", icon: <FileText size={20} /> },
-        { label: "Cài đặt", icon: <Settings size={20} />, isActive: true },
-        { label: "Nhật ký hoạt động", icon: <History size={20} /> },
+        { label: "Báo cáo", path: "/app/reports", icon: <FileText size={20} /> },
+        { label: "Cài đặt", path: "/app/settings", icon: <Settings size={20} /> },
+        { label: "Nhật ký hoạt động", path: "/app/activity-logs", icon: <History size={20} /> },
       ]
     }
   ];
@@ -120,40 +124,55 @@ export default function Sidebar() {
               {group.section && <div className="nav-section">{isCollapsed ? "---" : group.section}</div>}
               <ul>
                 {group.items.map((item, iIdx) => {
-                  const hasSub = !!item.subItems;
-                  const isExpanded = expandedMenus[item.label] || item.isActive; // Expand if active
+                const hasSub = !!item.subItems;
+                // Auto expand if currently on a sub-item path OR manually expanded
+                const isItemActive = item.path === window.location.pathname;
+                const isSubActive = hasSub && item.subItems!.some(sub => sub.path === window.location.pathname);
+                // If explicit state exists, honor it; otherwise default to true if child is active
+                const explicitState = expandedMenus[item.label];
+                const isExpanded = explicitState !== undefined ? explicitState : isSubActive;
 
-                  return (
-                    <React.Fragment key={iIdx}>
-                      <li 
-                        className={`${item.isActive ? "active" : ""} ${isExpanded ? "expanded" : ""}`}
-                        onClick={() => handleToggleMenu(item.label, hasSub)}
-                        onMouseEnter={(e) => handleMouseEnter(e, item.label, item.subItems)}
-                        onMouseLeave={handleMouseLeave}
-                      >
-                        {item.icon}
-                        <span className="nav-label">{item.label}</span>
-                        {hasSub && !isCollapsed && (
-                          <div className="sub-menu-indicator">
-                            {isExpanded ? <ChevronDown size={16} /> : <ChevronRightIcon size={16} />}
-                          </div>
-                        )}
-                      </li>
-
-                      {/* Sub Menu Level 2 */}
-                      {hasSub && isExpanded && !isCollapsed && (
-                        <ul className="sub-menu">
-                          {item.subItems!.map((sub, sIdx) => (
-                            <li key={sIdx} className="sub-item" onClick={(e) => e.stopPropagation()}>
-                              {sub.icon ? sub.icon : <div className="sub-item-bullet" />}
-                              <span className="sub-nav-label">{sub.label}</span>
-                            </li>
-                          ))}
-                        </ul>
+                return (
+                  <React.Fragment key={iIdx}>
+                    <li 
+                      className={`${(isItemActive || (!hasSub && isSubActive)) ? "active" : ""} ${isExpanded ? "expanded" : ""}`}
+                      onClick={() => handleToggleMenu(item.label, hasSub, item.path, isExpanded)}
+                      onMouseEnter={(e) => handleMouseEnter(e, item.label, item.subItems)}
+                      onMouseLeave={handleMouseLeave}
+                    >
+                      {item.icon}
+                      <span className="nav-label">{item.label}</span>
+                      {hasSub && !isCollapsed && (
+                        <div className="sub-menu-indicator">
+                          {isExpanded ? <ChevronDown size={16} /> : <ChevronRightIcon size={16} />}
+                        </div>
                       )}
-                    </React.Fragment>
-                  );
-                })}
+                    </li>
+
+                    {/* Sub Menu Level 2 */}
+                    {hasSub && isExpanded && !isCollapsed && (
+                      <ul className="sub-menu">
+                        {item.subItems!.map((sub, sIdx) => {
+                          const isChildActive = sub.path === window.location.pathname;
+                          return (
+                            <li 
+                              key={sIdx} 
+                              className={`sub-item ${isChildActive ? "text-[#F7941D]" : ""}`} 
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                navigate(sub.path);
+                              }}
+                            >
+                              {sub.icon ? sub.icon : <div className="sub-item-bullet" />}
+                              <span className="sub-nav-label" style={{ color: isChildActive ? "white" : undefined }}>{sub.label}</span>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    )}
+                  </React.Fragment>
+                );
+              })}
               </ul>
             </React.Fragment>
           ))}

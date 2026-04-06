@@ -82,10 +82,17 @@
 }
 .loading-logo {
   animation: logo-pulse 2s ease-in-out infinite;
+  will-change: transform, filter;
+}
+.loading-logo-img {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  object-fit: contain;
 }
 @keyframes logo-pulse {
-  0%, 100% { transform: scale(1); filter: drop-shadow(0 4px 12px rgba(16,185,129,0.2)); }
-  50% { transform: scale(1.05); filter: drop-shadow(0 6px 20px rgba(16,185,129,0.35)); }
+  0%, 100% { transform: scale(1) translateZ(0); filter: drop-shadow(0 4px 12px rgba(16,185,129,0.2)); }
+  50% { transform: scale(1.05) translateZ(0); filter: drop-shadow(0 6px 20px rgba(16,185,129,0.35)); }
 }
 .loading-title {
   font-size: 1.5rem;
@@ -128,6 +135,7 @@
   top: 4px;
   animation: airplane-fly 8s linear infinite;
   z-index: 2;
+  will-change: transform;
 }
 @keyframes airplane-fly {
   0% { left: -80px; top: 8px; }
@@ -274,10 +282,11 @@
 .truck-container {
   position: absolute;
   bottom: -4px;
-  transform: translateX(-65px);
+  transform: translateX(-65px) translateZ(0);
   z-index: 10;
   transition: left 0.1s linear;
   filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.15));
+  will-change: left;
 }
 .truck {
   position: relative;

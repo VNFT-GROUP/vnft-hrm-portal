@@ -3,9 +3,27 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { Plus } from "lucide-react";
+import { useRef, useEffect } from "react";
 import "./Calendar.css"; // We'll create custom local styling to override fullcalendar layout
 
 export default function CalendarPage() {
+  const calendarRef = useRef<FullCalendar>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+    const observer = new ResizeObserver(() => {
+      if (calendarRef.current) {
+        // requestAnimationFrame ensures it updates smoothly after CSS transitions
+        requestAnimationFrame(() => {
+          calendarRef.current?.getApi().updateSize();
+        });
+      }
+    });
+    observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, []);
+
   const handleDateClick = (arg: any) => {
     alert("Ngày được chọn: " + arg.dateStr);
   };
@@ -36,28 +54,31 @@ export default function CalendarPage() {
       </div>
 
       {/* Main Calendar Card */}
-      <div className="bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-slate-200">
-        <FullCalendar
-          plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-          initialView="dayGridMonth"
-          headerToolbar={{
-            left: "prev,next today",
-            center: "title",
-            right: "dayGridMonth,timeGridWeek,timeGridDay"
-          }}
-          buttonText={{
-            today: "Hôm nay",
-            month: "Tháng",
-            week: "Tuần",
-            day: "Ngày"
-          }}
-          locale="vi"
-          events={hrEvents}
-          dateClick={handleDateClick}
-          eventClick={handleEventClick}
-          height="auto"
-          dayMaxEvents={true}
-        />
+      <div ref={containerRef} className="bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-slate-200 w-full overflow-x-auto">
+        <div className="min-w-[800px] w-full">
+          <FullCalendar
+            ref={calendarRef}
+            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+            initialView="dayGridMonth"
+            headerToolbar={{
+              left: "prev,next today",
+              center: "title",
+              right: "dayGridMonth,timeGridWeek,timeGridDay"
+            }}
+            buttonText={{
+              today: "Hôm nay",
+              month: "Tháng",
+              week: "Tuần",
+              day: "Ngày"
+            }}
+            locale="vi"
+            events={hrEvents}
+            dateClick={handleDateClick}
+            eventClick={handleEventClick}
+            height="auto"
+            dayMaxEvents={true}
+          />
+        </div>
       </div>
     </div>
   );

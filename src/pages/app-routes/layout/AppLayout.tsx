@@ -1,6 +1,7 @@
 import { Outlet } from "react-router-dom";
-import Sidebar from "./Sidebar";
-import Topbar from "./Topbar";
+import { ScrollArea } from "../../../components/ui/scroll-area";
+import Sidebar from "./Sidebar.tsx";
+import Topbar from "./Topbar.tsx";
 import "./AppLayout.css";
 
 export default function AppLayout() {
@@ -9,9 +10,11 @@ export default function AppLayout() {
       <Sidebar />
       <div className="app-main">
         <Topbar />
-        <div className="app-content">
-          <Outlet />
-        </div>
+        <ScrollArea className="app-content-scroll">
+          <div className="app-content">
+            <Outlet />
+          </div>
+        </ScrollArea>
       </div>
     </div>
   );

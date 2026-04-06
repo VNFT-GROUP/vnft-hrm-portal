@@ -1,6 +1,8 @@
 .app-sidebar {
   width: 260px;
-  background: linear-gradient(180deg, #161845 0%, #1E2062 100%);
+  background: linear-gradient(135deg, #161845, #1E2062, #0d0f28, #2E3192);
+  background-size: 300% 300%;
+  animation: sidebar-gradient 15s ease infinite alternate;
   color: #94a3b8;
   display: flex;
   flex-direction: column;
@@ -10,13 +12,95 @@
   overflow: hidden;
 }
 
+@keyframes sidebar-gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
 .app-sidebar::before {
   content: "";
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: radial-gradient(circle at 110% 0%, rgba(247, 148, 29, 0.12) 0%, transparent 50%);
+  background: radial-gradient(circle at 80% 10%, rgba(247, 148, 29, 0.15) 0%, transparent 40%);
+  animation: glow-float 10s ease-in-out infinite alternate;
   pointer-events: none;
   z-index: 0;
+}
+
+.app-sidebar::after {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: url('data:image/svg+xml;utf8,<svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><circle cx="2" cy="2" r="1" fill="rgba(255,255,255,0.03)"/></svg>');
+  animation: bg-scroll 30s linear infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes glow-float {
+  0% { transform: translate(0, 0) scale(1); opacity: 0.8; }
+  100% { transform: translate(-30px, 60px) scale(1.2); opacity: 1; }
+}
+
+@keyframes bg-scroll {
+  from { background-position: 0 0; }
+  to { background-position: 0 400px; }
+}
+
+/* BACKGROUND OBJECTS */
+.sidebar-bg-objects {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.sb-obj {
+  position: absolute;
+  will-change: transform;
+}
+
+.obj-box {
+  width: 80px;
+  height: 80px;
+  top: 10%;
+  left: -20px;
+  animation: float-obj-1 25s linear infinite;
+}
+
+.obj-ring {
+  width: 140px;
+  height: 140px;
+  bottom: 15%;
+  right: -50px;
+  animation: float-obj-2 30s linear infinite reverse;
+}
+
+.obj-poly {
+  width: 50px;
+  height: 50px;
+  top: 60%;
+  left: 20%;
+  animation: float-obj-3 20s ease-in-out infinite alternate;
+}
+
+@keyframes float-obj-1 {
+  0% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(30px) rotate(180deg); }
+  100% { transform: translateY(0) rotate(360deg); }
+}
+
+@keyframes float-obj-2 {
+  0% { transform: translateY(0) rotate(0deg) scale(1); }
+  50% { transform: translateY(-50px) rotate(-90deg) scale(1.1); }
+  100% { transform: translateY(0) rotate(-180deg) scale(1); }
+}
+
+@keyframes float-obj-3 {
+  0% { transform: translateY(0) rotate(0deg); }
+  100% { transform: translateY(-80px) rotate(180deg); }
 }
 
 .sidebar-nav, .sidebar-footer {

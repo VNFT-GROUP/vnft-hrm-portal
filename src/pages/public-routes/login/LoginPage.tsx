@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./LoginPage.css";
 import LoginHeader from "./components/LoginHeader";
 import LoginFooter from "./components/LoginFooter";
@@ -11,12 +12,14 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
+      navigate("/app");
     }, 1500);
   };
 

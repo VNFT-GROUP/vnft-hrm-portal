@@ -1,6 +1,7 @@
 import { useState } from "react";
+import { BrowserRouter } from "react-router-dom";
 import { LoadingPage } from "./components/custom/loadingPage";
-import { LoginPage } from "./pages/public-routes";
+import AppRoutes from "./routes";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -8,7 +9,7 @@ function App() {
   if (loading) {
     return (
       <LoadingPage
-        duration={4000}
+        duration={3000}
         onComplete={() => setLoading(false)}
         message="Đang tải hệ thống..."
       />
@@ -16,9 +17,11 @@ function App() {
   }
 
   return (
-    <div className="app-container">
-      <LoginPage />
-    </div>
+    <BrowserRouter>
+      <div className="app-container">
+        <AppRoutes />
+      </div>
+    </BrowserRouter>
   );
 }
 

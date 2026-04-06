@@ -1,0 +1,250 @@
+.login-animated-bg {
+  position: fixed;
+  top: 72px;
+  bottom: 64px;
+  left: 0;
+  right: 0;
+  overflow: hidden;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.bg-gradient-overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 75% 25%, rgba(247, 148, 29, 0.05) 0%, transparent 60%);
+}
+
+.bg-sun-glow {
+  position: absolute;
+  top: 15%;
+  right: 20%;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(247,148,29,0.15) 0%, rgba(247,148,29,0) 70%);
+  filter: blur(20px);
+}
+
+/* FLOCK OF BIRDS */
+.bg-flock-container {
+  position: absolute;
+  top: 18%;
+  left: -20%;
+  animation: bird-fly-across 35s linear infinite;
+  will-change: transform;
+}
+@keyframes bird-fly-across {
+  0% { transform: translate(0, 20px) scale(0.9); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translate(140vw, -40px) scale(1.1); opacity: 0; }
+}
+.bird-flap {
+  animation: flap 0.8s ease-in-out infinite alternate;
+  transform-origin: center;
+}
+.bird-flap.delay-1 { animation-delay: 0.2s; }
+.bird-flap.delay-2 { animation-delay: 0.4s; }
+.bird-flap.delay-3 { animation-delay: 0.6s; }
+@keyframes flap {
+  0% { transform: scaleY(1); }
+  100% { transform: scaleY(0.4); }
+}
+
+/* HOT AIR BALLOON */
+.bg-balloon-container {
+  position: absolute;
+  bottom: 30%;
+  left: 15%;
+  animation: balloon-float 60s linear infinite;
+  will-change: transform;
+}
+@keyframes balloon-float {
+  0% { transform: translateY(100px) scale(1.2); opacity: 0; }
+  15% { opacity: 1; }
+  85% { opacity: 1; }
+  100% { transform: translateY(-80vh) scale(1.4); opacity: 0; }
+}
+
+/* CLOUDS */
+.bg-clouds-wrapper {
+  position: absolute;
+  inset: 0;
+}
+.bg-cloud {
+  position: absolute;
+  will-change: transform;
+  transform: scale(1.3);
+}
+.cloud-big {
+  top: 10%;
+  animation: drift-cloud 45s linear infinite;
+}
+.cloud-medium {
+  top: 25%;
+  animation: drift-cloud 65s linear infinite -20s;
+}
+.cloud-small {
+  top: 18%;
+  animation: drift-cloud 55s linear infinite -40s;
+}
+@keyframes drift-cloud {
+  0% { transform: translateX(110vw); }
+  100% { transform: translateX(-20vw); }
+}
+
+/* AIRPLANES */
+.bg-airplane {
+  position: absolute;
+  will-change: transform, left;
+}
+.track-1 {
+  top: 22%;
+  animation: airplane-track-1 30s ease-in-out infinite;
+}
+.track-2 {
+  top: 12%;
+  animation: airplane-track-2 45s ease-in-out infinite -15s;
+}
+@keyframes airplane-track-1 {
+  0% { left: -10%; transform: translateY(0) scaleX(1) scale(1.4); }
+  45% { left: 110%; transform: translateY(-15px) scaleX(1) scale(1.4); }
+  50% { left: 110%; transform: translateY(-15px) scaleX(-1) scale(1.5); }
+  95% { left: -10%; transform: translateY(10px) scaleX(-1) scale(1.5); }
+  100% { left: -10%; transform: translateY(0) scaleX(1) scale(1.4); }
+}
+@keyframes airplane-track-2 {
+  0% { left: 110%; transform: scaleX(-1) scale(1.1); opacity: 0; }
+  5% { opacity: 1; }
+  95% { opacity: 1; }
+  100% { left: -10%; transform: scaleX(-1) scale(1.1); opacity: 0; }
+}
+
+/* HILLS & TURBINES */
+.bg-hills-layer {
+  position: absolute;
+  bottom: 80px; /* sits above ocean */
+  left: 0;
+  width: 100%;
+  height: 120px;
+}
+.bg-hills-svg {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+}
+.turbine {
+  position: absolute;
+  opacity: 0.4;
+}
+.turbine-pole {
+  width: 2px;
+  height: 40px;
+  background: #cbd5e1;
+  margin: 0 auto;
+}
+.turbine-blades {
+  position: absolute;
+  top: -2px;
+  left: 50%;
+  width: 2px;
+  height: 2px;
+  transform: translateX(-50%);
+  animation: turbine-spin 12s linear infinite;
+}
+.blade {
+  position: absolute;
+  top: -12px;
+  left: -1px;
+  width: 2px;
+  height: 12px;
+  background: #f1f5f9;
+  border-radius: 1px;
+  transform-origin: bottom center;
+}
+.blade.b1 { transform: rotate(0deg); }
+.blade.b2 { transform: rotate(120deg); }
+.blade.b3 { transform: rotate(240deg); }
+@keyframes turbine-spin {
+  to { transform: translateX(-50%) rotate(360deg); }
+}
+
+/* HIGHWAY & TRUCKS */
+.bg-highway {
+  position: absolute;
+  bottom: 70px;
+  left: 0;
+  width: 100%;
+  height: 30px;
+  background: linear-gradient(0deg, rgba(203, 213, 225, 0.4) 0%, transparent 100%);
+  border-bottom: 2px solid rgba(148, 163, 184, 0.2);
+}
+.highway-line {
+  position: absolute;
+  bottom: 6px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: repeating-linear-gradient(90deg, rgba(148, 163, 184, 0.3) 0, rgba(148, 163, 184, 0.3) 15px, transparent 15px, transparent 30px);
+}
+.bg-truck {
+  position: absolute;
+  bottom: -4px;
+  will-change: left;
+  transform: scale(1.4);
+  transform-origin: bottom center;
+}
+.track-right {
+  animation: drive-right 22s linear infinite;
+}
+.track-left {
+  bottom: 2px;
+  animation: drive-left 18s linear infinite -8s;
+}
+@keyframes drive-right {
+  0% { left: -10%; }
+  100% { left: 110%; }
+}
+@keyframes drive-left {
+  0% { left: 110%; }
+  100% { left: -10%; }
+}
+
+/* OCEAN & SHIPS */
+.bg-ocean-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 70px;
+  background: linear-gradient(180deg, transparent 0%, rgba(46, 49, 146, 0.03) 100%);
+}
+.ocean-waves {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 45px;
+}
+.wave-1 { animation: bg-wave 4s ease-in-out infinite; }
+.wave-2 { animation: bg-wave 4s ease-in-out infinite 1s; }
+@keyframes bg-wave {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(10px); }
+}
+
+.cargo-ship {
+  position: absolute;
+  bottom: 22px; /* Set so the hull sits right on the waves */
+  z-index: -1;
+  animation: sail-across 48s linear infinite;
+  will-change: left;
+}
+@keyframes sail-across {
+  0% { left: -10%; transform: scale(1.5) translateY(0); }
+  25% { transform: scale(1.5) translateY(-2px); }
+  50% { transform: scale(1.5) translateY(1px); }
+  75% { transform: scale(1.5) translateY(-1px); }
+  100% { left: 110%; transform: scale(1.5) translateY(0); }
+}

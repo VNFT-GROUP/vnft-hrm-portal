@@ -10,8 +10,7 @@ import {
   SheetDescription, 
   SheetHeader, 
   SheetTitle, 
-  SheetFooter,
-  SheetClose
+  SheetFooter
 } from "@/components/ui/sheet";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -243,9 +242,9 @@ export default function RolesPage() {
             <Button onClick={handleSave} className="rounded-xl bg-[#2E3192] hover:bg-[#1E2062] text-white flex-1 transition-all" disabled={!formData.name.trim()}>
               {editingRole ? "Lưu thay đổi" : "Lưu chức vụ"}
             </Button>
-            <SheetClose asChild>
-              <Button variant="outline" className="rounded-xl border-slate-200 text-slate-600 hover:bg-slate-50 flex-1 transition-all">Hủy</Button>
-            </SheetClose>
+            <Button variant="outline" onClick={() => setIsOpen(false)} className="rounded-xl border-slate-200 text-slate-600 hover:bg-slate-50 flex-1 transition-all">
+              Hủy
+            </Button>
           </SheetFooter>
         </SheetContent>
       </Sheet>

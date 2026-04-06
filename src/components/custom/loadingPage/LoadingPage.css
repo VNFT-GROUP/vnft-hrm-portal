@@ -1,5 +1,5 @@
 /* =========================================
-   Loading Page — Light Theme (Cargo Truck)
+   Loading Page — VNFT Brand: Navy Blue + Orange
    ========================================= */
 
 .loading-page {
@@ -9,7 +9,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(160deg, #f0fdf4 0%, #ecfdf5 30%, #f8fafc 70%, #eff6ff 100%);
+  background: linear-gradient(160deg, #F0F1FA 0%, #FEF3E2 30%, #F8FAFC 70%, #EFF6FF 100%);
   overflow: hidden;
   font-family: "Geist Variable", system-ui, sans-serif;
 }
@@ -26,7 +26,7 @@
   height: 500px;
   top: -150px;
   left: -120px;
-  background: radial-gradient(circle, rgba(16, 185, 129, 0.12), transparent 70%);
+  background: radial-gradient(circle, rgba(46, 49, 146, 0.12), transparent 70%);
   animation: orb-float 8s ease-in-out infinite;
 }
 .loading-bg-orb--2 {
@@ -34,7 +34,7 @@
   height: 400px;
   bottom: -100px;
   right: -80px;
-  background: radial-gradient(circle, rgba(59, 130, 246, 0.08), transparent 70%);
+  background: radial-gradient(circle, rgba(247, 148, 29, 0.1), transparent 70%);
   animation: orb-float 10s ease-in-out infinite reverse;
 }
 .loading-bg-orb--3 {
@@ -42,7 +42,7 @@
   height: 350px;
   top: 40%;
   left: 55%;
-  background: radial-gradient(circle, rgba(16, 185, 129, 0.06), transparent 70%);
+  background: radial-gradient(circle, rgba(46, 49, 146, 0.06), transparent 70%);
   animation: orb-float 12s ease-in-out infinite 2s;
 }
 @keyframes orb-float {
@@ -91,14 +91,14 @@
   object-fit: contain;
 }
 @keyframes logo-pulse {
-  0%, 100% { transform: scale(1) translateZ(0); filter: drop-shadow(0 4px 12px rgba(16,185,129,0.2)); }
-  50% { transform: scale(1.05) translateZ(0); filter: drop-shadow(0 6px 20px rgba(16,185,129,0.35)); }
+  0%, 100% { transform: scale(1) translateZ(0); filter: drop-shadow(0 4px 12px rgba(46,49,146,0.2)); }
+  50% { transform: scale(1.05) translateZ(0); filter: drop-shadow(0 6px 20px rgba(46,49,146,0.35)); }
 }
 .loading-title {
   font-size: 1.5rem;
   font-weight: 800;
   letter-spacing: 0.1em;
-  background: linear-gradient(135deg, #059669 0%, #047857 50%, #065f46 100%);
+  background: linear-gradient(135deg, #2E3192 0%, #1E2062 50%, #0F1040 100%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -107,7 +107,7 @@
 .loading-subtitle {
   font-size: 0.85rem;
   font-weight: 500;
-  color: rgba(5, 150, 105, 0.5);
+  color: rgba(247, 148, 29, 0.7);
   letter-spacing: 0.25em;
   text-transform: uppercase;
   margin: 0;
@@ -129,18 +129,37 @@
   overflow: hidden;
 }
 
-/* — Airplane — */
-.airplane {
+/* — Airplane Track (width = progress, CSS animates inside) — */
+.airplane-track {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  z-index: 2;
+  overflow: visible;
+  transition: width 0.1s linear;
+}
+.airplane-shuttle {
   position: absolute;
   top: 4px;
-  animation: airplane-fly 8s linear infinite;
-  z-index: 2;
-  will-change: transform;
+  animation: shuttle-airplane 2.8s ease-in-out infinite;
+  will-change: left;
 }
-@keyframes airplane-fly {
-  0% { left: -80px; top: 8px; }
-  50% { top: 2px; }
-  100% { left: calc(100% + 80px); top: 8px; }
+@keyframes shuttle-airplane {
+  0% { left: 0; transform: translateX(-20px) scaleX(1); }
+  45% { left: 100%; transform: translateX(-44px) scaleX(1); }
+  50% { left: 100%; transform: translateX(-44px) scaleX(-1); }
+  95% { left: 0; transform: translateX(-20px) scaleX(-1); }
+  100% { left: 0; transform: translateX(-20px) scaleX(1); }
+}
+
+/* — Airplane — */
+.airplane {
+  animation: airplane-wobble 1.5s ease-in-out infinite;
+}
+@keyframes airplane-wobble {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
 }
 .airplane-svg {
   filter: drop-shadow(0 2px 6px rgba(0,0,0,0.1));
@@ -256,8 +275,8 @@
   border-radius: 6px;
   background: linear-gradient(
     90deg,
-    rgba(16, 185, 129, 0.35) 0%,
-    rgba(16, 185, 129, 0.2) 100%
+    rgba(46, 49, 146, 0.3) 0%,
+    rgba(46, 49, 146, 0.15) 100%
   );
   transition: width 0.1s linear;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
@@ -269,7 +288,7 @@
   right: 0;
   width: 60px;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.3));
+  background: linear-gradient(90deg, transparent, rgba(247, 148, 29, 0.3));
   border-radius: 0 6px 6px 0;
   animation: track-shimmer 1.5s ease-in-out infinite;
 }
@@ -355,9 +374,10 @@
   padding: 0 1rem;
   margin-top: -2px;
   height: 36px;
+  overflow: hidden;
 }
 
-/* Water waves — sit behind the ship */
+/* Water waves */
 .water-waves {
   position: absolute;
   bottom: 0;
@@ -376,18 +396,33 @@
   50% { transform: translateX(8px); }
 }
 
-/* Cargo Ship — floats above the waves */
-.cargo-ship {
+/* Ship Track (width = progress, CSS animates inside) */
+.ship-track {
   position: relative;
   z-index: 2;
   top: -4px;
-  animation: ship-sail 10s linear infinite;
+  height: 36px;
+  overflow: visible;
+  transition: width 0.1s linear;
+}
+.ship-shuttle {
+  position: absolute;
+  top: 0;
+  animation: shuttle-ship 3.5s ease-in-out infinite;
+  will-change: left;
+}
+@keyframes shuttle-ship {
+  0% { left: 0; transform: translateX(-10px) scaleX(1); }
+  45% { left: 100%; transform: translateX(-62px) scaleX(1); }
+  50% { left: 100%; transform: translateX(-62px) scaleX(-1); }
+  95% { left: 0; transform: translateX(-10px) scaleX(-1); }
+  100% { left: 0; transform: translateX(-10px) scaleX(1); }
+}
+
+.cargo-ship {
   filter: drop-shadow(0 2px 6px rgba(0,0,0,0.1));
 }
-@keyframes ship-sail {
-  0% { transform: translateX(-80px); }
-  100% { transform: translateX(calc(100% + 520px)); }
-}
+
 .ship-svg {
   animation: ship-bob 2s ease-in-out infinite;
 }
@@ -419,7 +454,7 @@
 }
 .loading-message {
   font-size: 0.85rem;
-  color: rgba(5, 150, 105, 0.7);
+  color: rgba(46, 49, 146, 0.6);
   margin: 0;
   font-weight: 500;
   animation: message-pulse 2s ease-in-out infinite;
@@ -438,7 +473,7 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: rgba(16, 185, 129, 0.4);
+  background: rgba(46, 49, 146, 0.35);
 }
 .dot--1 {
   animation: dot-bounce 1.2s ease-in-out infinite;
@@ -457,7 +492,7 @@
   40% {
     transform: scale(1.2);
     opacity: 1;
-    background: #059669;
+    background: #F7941D;
   }
 }
 
@@ -472,7 +507,7 @@
   .truck-container {
     transform: translateX(-50px) scale(0.8);
   }
-  .cargo-ship {
+  .ship-shuttle {
     transform: scale(0.8);
   }
 }

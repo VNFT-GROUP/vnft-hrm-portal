@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { LayoutDashboard, UserCircle, Calendar, FolderOpen, Users, Building2, Briefcase, Clock, ClipboardList, Shield, FileText, ClipboardCheck, Calculator, FileSpreadsheet, CheckSquare, FileEdit, Wallet, FileBarChart, Settings, History, LogOut, ChevronLeft, Menu, ChevronDown, ChevronRight as ChevronRightIcon } from "lucide-react";
+import { LayoutDashboard, UserCircle, Calendar, FolderOpen, Users, Building2, Briefcase, Clock, ClipboardList, Shield, FileText, ClipboardCheck, Calculator, FileSpreadsheet, CheckSquare, FileEdit, Wallet, FileBarChart, Settings, History, ChevronLeft, Menu, ChevronDown, ChevronRight as ChevronRightIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { ScrollArea } from "../../../components/ui/scroll-area";
 import { useLayoutStore } from "../../../store/useLayoutStore";
@@ -178,18 +178,6 @@ export default function Sidebar() {
           ))}
         </nav>
       </ScrollArea>
-
-      <div className="sidebar-footer">
-        <button 
-          className="logout-btn" 
-          onClick={() => navigate("/login")}
-          onMouseEnter={(e) => handleMouseEnter(e, "Đăng xuất")}
-          onMouseLeave={handleMouseLeave}
-        >
-          <LogOut size={20} />
-          <span className="nav-label">Đăng xuất</span>
-        </button>
-      </div>
 
       {/* Floating Javascript Custom Toast (Escapes overflow bounds structurally) */}
       {activeToast && isCollapsed && (

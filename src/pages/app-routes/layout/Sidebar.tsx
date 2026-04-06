@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { LayoutDashboard, UserCircle, Calendar, FolderOpen, Users, Building2, Briefcase, Clock, ClipboardList, Shield, FileText, ClipboardCheck, Calculator, FileSpreadsheet, CheckSquare, FileEdit, Wallet, FileBarChart, Settings, History, LogOut, ChevronLeft, Menu, ChevronDown, ChevronRight as ChevronRightIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { ScrollArea } from "../../../components/ui/scroll-area";
 import { useLayoutStore } from "../../../store/useLayoutStore";
 import "./Sidebar.css";
 
@@ -112,51 +113,52 @@ export default function Sidebar() {
           <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
         </svg>
       </div>
+      <ScrollArea className="sidebar-scroll-area">
+        <nav className="sidebar-nav">
+          {menuData.map((group, gIdx) => (
+            <React.Fragment key={gIdx}>
+              {group.section && <div className="nav-section">{isCollapsed ? "---" : group.section}</div>}
+              <ul>
+                {group.items.map((item, iIdx) => {
+                  const hasSub = !!item.subItems;
+                  const isExpanded = expandedMenus[item.label] || item.isActive; // Expand if active
 
-      <nav className="sidebar-nav">
-        {menuData.map((group, gIdx) => (
-          <React.Fragment key={gIdx}>
-            {group.section && <div className="nav-section">{isCollapsed ? "---" : group.section}</div>}
-            <ul>
-              {group.items.map((item, iIdx) => {
-                const hasSub = !!item.subItems;
-                const isExpanded = expandedMenus[item.label] || item.isActive; // Expand if active
+                  return (
+                    <React.Fragment key={iIdx}>
+                      <li 
+                        className={`${item.isActive ? "active" : ""} ${isExpanded ? "expanded" : ""}`}
+                        onClick={() => handleToggleMenu(item.label, hasSub)}
+                        onMouseEnter={(e) => handleMouseEnter(e, item.label, item.subItems)}
+                        onMouseLeave={handleMouseLeave}
+                      >
+                        {item.icon}
+                        <span className="nav-label">{item.label}</span>
+                        {hasSub && !isCollapsed && (
+                          <div className="sub-menu-indicator">
+                            {isExpanded ? <ChevronDown size={16} /> : <ChevronRightIcon size={16} />}
+                          </div>
+                        )}
+                      </li>
 
-                return (
-                  <React.Fragment key={iIdx}>
-                    <li 
-                      className={`${item.isActive ? "active" : ""} ${isExpanded ? "expanded" : ""}`}
-                      onClick={() => handleToggleMenu(item.label, hasSub)}
-                      onMouseEnter={(e) => handleMouseEnter(e, item.label, item.subItems)}
-                      onMouseLeave={handleMouseLeave}
-                    >
-                      {item.icon}
-                      <span className="nav-label">{item.label}</span>
-                      {hasSub && !isCollapsed && (
-                        <div className="sub-menu-indicator">
-                          {isExpanded ? <ChevronDown size={16} /> : <ChevronRightIcon size={16} />}
-                        </div>
+                      {/* Sub Menu Level 2 */}
+                      {hasSub && isExpanded && !isCollapsed && (
+                        <ul className="sub-menu">
+                          {item.subItems!.map((sub, sIdx) => (
+                            <li key={sIdx} className="sub-item" onClick={(e) => e.stopPropagation()}>
+                              {sub.icon ? sub.icon : <div className="sub-item-bullet" />}
+                              <span className="sub-nav-label">{sub.label}</span>
+                            </li>
+                          ))}
+                        </ul>
                       )}
-                    </li>
-
-                    {/* Sub Menu Level 2 */}
-                    {hasSub && isExpanded && !isCollapsed && (
-                      <ul className="sub-menu">
-                        {item.subItems!.map((sub, sIdx) => (
-                          <li key={sIdx} className="sub-item" onClick={(e) => e.stopPropagation()}>
-                            {sub.icon ? sub.icon : <div className="sub-item-bullet" />}
-                            <span className="sub-nav-label">{sub.label}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </React.Fragment>
-                );
-              })}
-            </ul>
-          </React.Fragment>
-        ))}
-      </nav>
+                    </React.Fragment>
+                  );
+                })}
+              </ul>
+            </React.Fragment>
+          ))}
+        </nav>
+      </ScrollArea>
 
       <div className="sidebar-footer">
         <button 

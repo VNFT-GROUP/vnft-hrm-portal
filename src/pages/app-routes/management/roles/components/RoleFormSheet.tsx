@@ -1,6 +1,6 @@
 import { Briefcase } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetFooter } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -18,20 +18,22 @@ interface RoleFormSheetProps {
 export default function RoleFormSheet({ isOpen, onOpenChange, formData, setFormData, isEditing, onSave }: RoleFormSheetProps) {
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
-      <SheetContent className="sm:max-w-[500px] w-full border-l-slate-200 shadow-2xl flex flex-col h-full">
-        <SheetHeader className="pb-4 border-b border-slate-100">
-          <SheetTitle className="text-xl font-bold text-[#1E2062] flex items-center gap-2">
-            <span className="p-1.5 bg-[#2E3192]/10 text-[#2E3192] rounded-md">
-              <Briefcase size={18} />
-            </span>
-            {isEditing ? "Cập nhật chức vụ" : "Thêm mới chức vụ"}
-          </SheetTitle>
-          <SheetDescription className="text-slate-500">
-            {isEditing ? "Chỉnh sửa thông tin của chức vụ đang chọn." : "Điền thông tin bên dưới để khởi tạo một chức vụ mới trong hệ thống."}
-          </SheetDescription>
-        </SheetHeader>
+      <SheetContent className="sm:max-w-[550px] w-full border-l-slate-200 shadow-2xl flex flex-col h-full p-0">
+        <div className="p-6 border-b border-slate-100 flex-shrink-0 bg-slate-50/50">
+          <SheetHeader>
+            <SheetTitle className="text-xl font-bold text-[#1E2062] flex items-center gap-2">
+              <span className="p-1.5 bg-[#2E3192]/10 text-[#2E3192] rounded-md">
+                <Briefcase size={18} />
+              </span>
+              {isEditing ? "Cập nhật chức vụ" : "Thêm mới chức vụ"}
+            </SheetTitle>
+            <SheetDescription className="text-slate-500">
+              {isEditing ? "Chỉnh sửa thông tin của chức vụ đang chọn." : "Điền thông tin bên dưới để khởi tạo một chức vụ mới trong hệ thống."}
+            </SheetDescription>
+          </SheetHeader>
+        </div>
         
-        <div className="flex-1 overflow-y-auto py-6 px-1 space-y-6">
+        <div className="flex-1 overflow-y-auto p-6 space-y-6">
           <div className="space-y-3">
             <Label htmlFor="name" className="text-sm font-semibold text-slate-700">
               Tên chức vụ <span className="text-rose-500">*</span>
@@ -69,14 +71,14 @@ export default function RoleFormSheet({ isOpen, onOpenChange, formData, setFormD
           </div>
         </div>
         
-        <SheetFooter className="pt-4 border-t border-slate-100 flex-shrink-0 mt-auto sm:justify-start">
-          <Button onClick={onSave} className="rounded-xl bg-[#2E3192] hover:bg-[#1E2062] text-white flex-1 transition-all" disabled={!formData.name.trim()}>
-            {isEditing ? "Lưu thay đổi" : "Lưu chức vụ"}
-          </Button>
-          <Button variant="outline" onClick={() => onOpenChange(false)} className="rounded-xl border-slate-200 text-slate-600 hover:bg-slate-50 flex-1 transition-all">
+        <div className="p-4 border-t border-slate-100 flex-shrink-0 bg-white flex justify-end gap-3">
+          <Button variant="outline" onClick={() => onOpenChange(false)} className="rounded-xl border-slate-200 text-slate-600 hover:bg-slate-50 w-32 transition-all">
             Hủy
           </Button>
-        </SheetFooter>
+          <Button onClick={onSave} className="rounded-xl bg-[#2E3192] hover:bg-[#1E2062] text-white w-auto px-6 transition-all shadow-md shadow-[#2E3192]/20" disabled={!formData.name.trim()}>
+            {isEditing ? "Lưu thay đổi" : "Lưu chức vụ"}
+          </Button>
+        </div>
       </SheetContent>
     </Sheet>
   );

@@ -188,7 +188,7 @@ export default function RolesPage() {
 
       {/* Side Form (Sheet) */}
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
-        <SheetContent className="sm:max-w-md border-l-slate-200 shadow-2xl flex flex-col h-full">
+        <SheetContent className="sm:max-w-[500px] w-full border-l-slate-200 shadow-2xl flex flex-col h-full">
           <SheetHeader className="pb-4 border-b border-slate-100">
             <SheetTitle className="text-xl font-bold text-[#1E2062] flex items-center gap-2">
               <span className="p-1.5 bg-[#2E3192]/10 text-[#2E3192] rounded-md">

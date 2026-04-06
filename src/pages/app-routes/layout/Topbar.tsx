@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { User, Book, Globe, Key, LogOut, Briefcase, BadgeCheck } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import "./Topbar.css";

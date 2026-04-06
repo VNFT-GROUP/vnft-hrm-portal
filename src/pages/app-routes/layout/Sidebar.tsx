@@ -123,7 +123,7 @@ export default function Sidebar() {
             <React.Fragment key={group.section || `group-${gIdx}`}>
               {group.section && <div className="nav-section">{group.section}</div>}
               <ul>
-                {group.items.map((item, iIdx) => {
+                {group.items.map((item) => {
                 const hasSub = !!item.subItems;
                 // Auto expand if currently on a sub-item path OR manually expanded
                 const isItemActive = item.path === window.location.pathname;
@@ -155,7 +155,7 @@ export default function Sidebar() {
                     {/* Sub Menu Level 2 */}
                     {hasSub && isExpanded && (
                       <ul className="sub-menu">
-                        {item.subItems!.map((sub, sIdx) => {
+                        {item.subItems!.map((sub) => {
                           const isChildActive = sub.path === window.location.pathname;
                           return (
                             <li 

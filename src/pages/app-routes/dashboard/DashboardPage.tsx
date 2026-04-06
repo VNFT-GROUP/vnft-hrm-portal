@@ -30,7 +30,7 @@ export default function DashboardPage() {
       </div>
 
       <div className="stats-grid">
-        {MOCK_STATS.map((stat, idx) => {
+        {MOCK_STATS.map((stat) => {
           const isNegative = stat.trend.startsWith('-');
           const isNeutral = stat.trend === "0%";
           return (

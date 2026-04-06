@@ -121,7 +121,7 @@ export default function Sidebar() {
         <nav className="sidebar-nav">
           {menuData.map((group, gIdx) => (
             <React.Fragment key={gIdx}>
-              {group.section && <div className="nav-section">{isCollapsed ? "---" : group.section}</div>}
+              {group.section && <div className="nav-section">{group.section}</div>}
               <ul>
                 {group.items.map((item, iIdx) => {
                 const hasSub = !!item.subItems;
@@ -142,7 +142,7 @@ export default function Sidebar() {
                     >
                       {item.icon}
                       <span className="nav-label">{item.label}</span>
-                      {hasSub && !isCollapsed && (
+                      {hasSub && (
                         <div className="sub-menu-indicator">
                           {isExpanded ? <ChevronDown size={16} /> : <ChevronRightIcon size={16} />}
                         </div>
@@ -150,7 +150,7 @@ export default function Sidebar() {
                     </li>
 
                     {/* Sub Menu Level 2 */}
-                    {hasSub && isExpanded && !isCollapsed && (
+                    {hasSub && isExpanded && (
                       <ul className="sub-menu">
                         {item.subItems!.map((sub, sIdx) => {
                           const isChildActive = sub.path === window.location.pathname;

@@ -115,6 +115,7 @@
   z-index: 10;
   min-height: 0; /* Crucial for ScrollArea to function inside a flex container */
   height: 100%;
+  overflow-x: hidden;
 }
 
 .sidebar-nav, .sidebar-footer {
@@ -133,6 +134,8 @@
   margin: 1.5rem 0 0.5rem 1rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  transition: all 0.2s;
+  white-space: nowrap;
 }
 .sidebar-nav .nav-section:first-child {
   margin-top: 0;
@@ -163,7 +166,7 @@
 .sub-menu-indicator {
   margin-left: auto;
   color: #64748b;
-  transition: transform 0.2s;
+  transition: opacity 0.2s, transform 0.2s;
   display: flex;
   align-items: center;
 }
@@ -225,8 +228,9 @@
   border-color: #F7941D;
 }
 
-.sidebar-nav li svg {
+.sidebar-nav li > svg {
   transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  flex-shrink: 0;
 }
 
 .sidebar-nav li:hover {
@@ -258,28 +262,42 @@
 }
 
 .nav-label {
-  transition: opacity 0.2s ease, transform 0.2s ease, width 0.2s ease;
+  transition: opacity 0.2s ease, transform 0.2s ease, max-width 0.2s ease;
   white-space: nowrap;
+  max-width: 200px; /* Safe upper bound */
+  overflow: hidden;
 }
 
 .app-sidebar.collapsed .nav-label {
   opacity: 0;
   transform: translateX(-10px);
   pointer-events: none;
-  width: 0;
-  overflow: hidden;
-  display: none;
+  max-width: 0;
 }
 
 .app-sidebar.collapsed .sidebar-nav li {
   padding: 12px;
   justify-content: center;
+  gap: 0; /* Remove gap so hidden elements don't offset the icon */
 }
 
 .app-sidebar.collapsed .nav-section {
   text-align: center;
   margin-left: 0;
   letter-spacing: 2px;
+  opacity: 0;
+  max-width: 0;
+  overflow: hidden;
+}
+
+.app-sidebar.collapsed .sub-menu {
+  display: none; /* Sub menus can hide instantly to avoid complex height calculations during collapse */
+}
+
+.app-sidebar.collapsed .sub-menu-indicator {
+  opacity: 0;
+  max-width: 0;
+  overflow: hidden;
 }
 
 /* FLOATING TOGGLE BUTTON */

@@ -33,6 +33,16 @@ const resources = {
         reports: "Báo cáo",
         settings: "Cài đặt",
         activityLogs: "Nhật ký hoạt động"
+      },
+      login: {
+        tagline: "YÊU CẦU XÁC THỰC",
+        emailLabel: "EMAIL NHÂN VIÊN",
+        emailPlaceholder: "vd: employee@vnft.vn",
+        passwordLabel: "MÃ BẢO MẬT",
+        forgot: "QUÊN?",
+        submit: "TRUY CẬP HỆ THỐNG",
+        loadingAuth: "Hệ thống đang khởi tạo xác thực...",
+        loadingSystem: "Đang tải hệ thống..."
       }
     }
   },
@@ -66,6 +76,16 @@ const resources = {
         reports: "Reports",
         settings: "Settings",
         activityLogs: "Activity Logs"
+      },
+      login: {
+        tagline: "AUTHENTICATION REQUIRED",
+        emailLabel: "EMPLOYEE EMAIL",
+        emailPlaceholder: "e.g. employee@vnft.vn",
+        passwordLabel: "SECURITY KEY",
+        forgot: "FORGOT?",
+        submit: "ACCESS PORTAL",
+        loadingAuth: "Loading authentication system...",
+        loadingSystem: "Loading system..."
       }
     }
   }

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import "./LoginPage.css";
 import LoginHeader from "./components/LoginHeader";
 import LoginFooter from "./components/LoginFooter";
@@ -8,6 +9,7 @@ import AnimatedLogisticsBackground from "./components/AnimatedLogisticsBackgroun
 import LoadingPage from "../../../components/custom/loadingPage/LoadingPage";
 
 export default function LoginPage() {
+  const { t } = useTranslation();
   const [isBooting, setIsBooting] = useState(true);
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
@@ -20,7 +22,7 @@ export default function LoginPage() {
       <LoadingPage
         duration={3000}
         onComplete={() => setIsBooting(false)}
-        message="Loading authentication system..."
+        message={t('login.loadingAuth')}
       />
     );
   }
@@ -48,7 +50,7 @@ export default function LoginPage() {
         {/* Title area */}
         <div className="login-heading">
           <h1 className="login-title">VNFT Logistics</h1>
-          <p className="login-tagline">AUTHENTICATION REQUIRED</p>
+          <p className="login-tagline">{t('login.tagline')}</p>
           <div className="heading-rule" />
         </div>
 
@@ -58,7 +60,7 @@ export default function LoginPage() {
           {/* Employee ID */}
           <div className="field">
             <label htmlFor="login-email" className="field-label">
-              EMPLOYEE ID / EMAIL
+              {t('login.emailLabel')}
             </label>
             <div className="field-input-wrap">
               <svg className="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -68,7 +70,7 @@ export default function LoginPage() {
               <input
                 type="text"
                 id="login-email"
-                placeholder="e.g. VNFT-8829"
+                placeholder={t('login.emailPlaceholder')}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -80,9 +82,9 @@ export default function LoginPage() {
           <div className="field">
             <div className="field-label-row">
               <label htmlFor="login-password" className="field-label">
-                SECURITY KEY
+                {t('login.passwordLabel')}
               </label>
-              <a href="#" className="forgot-link">FORGOT?</a>
+              <a href="#" className="forgot-link">{t('login.forgot')}</a>
             </div>
             <div className="field-input-wrap">
               <svg className="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -129,7 +131,7 @@ export default function LoginPage() {
               <span className="btn-spinner" />
             ) : (
               <>
-                ACCESS PORTAL
+                {t('login.submit')}
                 <svg className="btn-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <line x1="5" y1="12" x2="19" y2="12" />
                   <polyline points="12 5 19 12 12 19" />

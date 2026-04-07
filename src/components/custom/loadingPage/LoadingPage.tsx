@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback, useMemo, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import AnimatedLogisticsBackground from "../../../pages/public-routes/login/components/AnimatedLogisticsBackground";
 import LoginHeader from "../../../pages/public-routes/login/components/LoginHeader";
 import LoginFooter from "../../../pages/public-routes/login/components/LoginFooter";
@@ -14,8 +15,11 @@ interface LoadingPageProps {
 export default function LoadingPage({
   duration = 3000,
   onComplete,
-  message = "Đang tải hệ thống...",
+  message,
 }: LoadingPageProps) {
+  const { t } = useTranslation();
+  const displayMessage = message || t('login.loadingSystem');
+  
   const [progress, setProgress] = useState(0);
   const onCompleteRef = useRef(onComplete);
 
@@ -79,7 +83,7 @@ export default function LoadingPage({
             <div className="progress-bar-fill" style={{ width: `${clampedProgress}%` }} />
           </div>
           <div className="progress-meta">
-            <span className="loading-message">{message}</span>
+            <span className="loading-message">{displayMessage}</span>
             <span className="progress-pct">{Math.round(clampedProgress)}%</span>
           </div>
         </div>

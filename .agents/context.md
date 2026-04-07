@@ -116,10 +116,11 @@ src/
 - All interactive elements must have **unique `id` attributes** for testing
 - Components should be properly **memoized** where performance matters
 
-## Architecture & Navigation
+## Architecture, Theming & Navigation
 1. **Layout Encapsulation**: Structural UI pieces (Topbar, Sidebar, floating modals like ChangePasswordModal) strictly belong to `layout/components/` to follow a clean Domain-Driven organization instead of cluttering global `components/`.
 2. **Scroll Restoration**: A specialized `ScrollArea` component manages SPA overscrolling constraints. We strictly intercept generic navigation via `[location.pathname]` at the `AppLayout` layer to cleanly trigger viewport `.scrollTo({ top: 0 })` resets.
 3. **Multi-language Support (i18n)**: Integrated completely at the Topbar level, modifying global state cleanly without external page reloads. Default fallback is `vi`.
+4. **Logistics Micro-Interactions**: The public-facing entry points (Login, Loading) implement dynamic SVG backdrops via `AnimatedLogisticsBackground.tsx`. We scale complexity using pure CSS `animation-delay` and `animation-duration` inline mapped to static `.bg-ship`, `.bg-truck`, `.bg-airplane` tracks, allowing rich, cheap pseudo-random traffic generation without JS overhead. The Loading UI features a micro progress trucking system that anchors an SVG to dynamic width percentages.
 
 ## Global Standard Shortcuts
 To ensure highly productive navigation, the HR Portal utilizes the following standard global shortcuts:

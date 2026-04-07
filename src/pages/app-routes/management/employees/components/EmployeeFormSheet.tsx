@@ -5,16 +5,18 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-export const DEPARTMENTS = ["Phòng Nhân Sự", "Phòng Kế Toán", "Phòng IT", "Phòng Kinh Doanh"];
-export const POSITIONS = ["Giám đốc", "Trưởng phòng", "Nhân viên", "Thực tập sinh"];
-export const FUNCTIONS = ["Quản lý", "Chuyên viên", "Hỗ trợ"];
-export const WORK_STATUS = ["Đang làm", "Nghỉ sinh", "Tạm hoãn", "Đã nghỉ việc"];
-export const SYSTEM_ROLES = ["Admin", "HR Manager", "Kế Toán", "Nhân viên"];
+const DEPARTMENTS = ["Phòng Nhân Sự", "Phòng Kế Toán", "Phòng IT", "Phòng Kinh Doanh"];
+const POSITIONS = ["Giám đốc", "Trưởng phòng", "Nhân viên", "Thực tập sinh"];
+const FUNCTIONS = ["Quản lý", "Chuyên viên", "Hỗ trợ"];
+const WORK_STATUS = ["Đang làm", "Nghỉ sinh", "Tạm hoãn", "Đã nghỉ việc"];
+const SYSTEM_ROLES = ["Admin", "HR Manager", "Kế Toán", "Nhân viên"];
 
 interface EmployeeFormSheetProps {
   isOpen: boolean;
   onOpenChange: (isOpen: boolean) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   formData: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setFormData: (data: any) => void;
   isEditing: boolean;
   onSave: () => void;

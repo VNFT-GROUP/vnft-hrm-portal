@@ -64,7 +64,7 @@ export default function RolesPage() {
           </span>
           Chức vụ
         </h1>
-        <p className="text-slate-500 text-base md:text-lg ml-1">
+        <p className="text-muted-foreground text-base md:text-lg ml-1">
           Quản lý và thiết lập danh sách chức vụ trong công ty.
         </p>
       </motion.div>
@@ -74,13 +74,13 @@ export default function RolesPage() {
         initial={{ opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
-        className="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col md:flex-row justify-between items-center gap-4"
+        className="bg-card text-card-foreground p-5 rounded-2xl shadow-sm border border-border flex flex-col md:flex-row justify-between items-center gap-4"
       >
         <div className="relative w-full md:w-96">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" size={20} />
           <Input 
             placeholder="Tìm kiếm theo Tên chức vụ..." 
-            className="pl-12 h-12 rounded-xl bg-slate-50 border-slate-200 focus-visible:ring-[#2E3192] text-base hover:bg-white transition-colors"
+            className="pl-12 h-12 rounded-xl bg-muted border-border focus-visible:ring-[#2E3192] text-base hover:bg-card text-card-foreground transition-colors"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -98,7 +98,7 @@ export default function RolesPage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
-        className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden group hover:shadow-md transition-shadow duration-300 flex-1"
+        className="bg-card text-card-foreground rounded-2xl shadow-sm border border-border overflow-hidden group hover:shadow-md transition-shadow duration-300 flex-1"
       >
         <RoleTable roles={filteredRoles} onEdit={handleOpenForm} onDelete={handleDelete} />
       </motion.div>

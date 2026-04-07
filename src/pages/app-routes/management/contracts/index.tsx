@@ -1,6 +1,6 @@
 export default function ContractsPage() {
   return (
-    <div className="p-8 h-full bg-white rounded-xl border border-gray-100 shadow-sm m-4">
+    <div className="p-8 h-full bg-card text-card-foreground rounded-xl border border-gray-100 shadow-sm m-4">
       <h1 className="text-3xl font-bold text-[#1E2062] uppercase tracking-wide">Contracts MODULE</h1>
       <p className="text-gray-500 mt-3 text-lg">
         Đây là giao diện chờ của phân hệ <strong>Contracts</strong>.

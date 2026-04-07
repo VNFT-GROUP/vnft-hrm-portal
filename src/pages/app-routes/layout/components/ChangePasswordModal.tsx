@@ -34,13 +34,13 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
     <div className="fixed inset-0 z-[200] flex items-center justify-center bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-200">
       {/* Modal Container */}
       <div 
-        className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden transform animate-in zoom-in-95 duration-200"
+        className="bg-card text-card-foreground rounded-2xl shadow-2xl w-full max-w-md overflow-hidden transform animate-in zoom-in-95 duration-200"
         onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside
       >
         {/* Header */}
         <div className="bg-gradient-to-r from-[#2E3192] to-[#1E2062] px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="bg-white/20 p-2 rounded-lg">
+            <div className="bg-card text-card-foreground/20 p-2 rounded-lg">
               <Lock size={20} className="text-white" />
             </div>
             <div>
@@ -50,7 +50,7 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
           </div>
           <button 
             onClick={onClose}
-            className="text-white/70 hover:text-white hover:bg-white/10 p-2 rounded-full transition-colors"
+            className="text-white/70 hover:text-white hover:bg-card text-card-foreground/10 p-2 rounded-full transition-colors"
           >
             <X size={20} />
           </button>
@@ -61,11 +61,11 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
           
           {/* Mật khẩu hiện tại */}
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-semibold text-slate-700">Mật khẩu hiện tại <span className="text-red-500">*</span></label>
+            <label className="text-sm font-semibold text-foreground">Mật khẩu hiện tại <span className="text-red-500">*</span></label>
             <div className="relative">
               <input 
                 type={showCurrent ? "text" : "password"} 
-                className="w-full pl-4 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#2E3192]/20 focus:border-[#2E3192] transition-all"
+                className="w-full pl-4 pr-10 py-2.5 bg-muted border border-border rounded-lg text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-[#2E3192]/20 focus:border-[#2E3192] transition-all"
                 placeholder="Nhập mật khẩu đang dùng"
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
@@ -74,22 +74,22 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
               <button 
                 type="button" 
                 onClick={() => setShowCurrent(!showCurrent)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-muted-foreground"
               >
                 {showCurrent ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
             </div>
           </div>
 
-          <div className="h-px bg-slate-100 my-1"></div>
+          <div className="h-px bg-muted my-1"></div>
 
           {/* Mật khẩu mới */}
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-semibold text-slate-700">Mật khẩu mới <span className="text-red-500">*</span></label>
+            <label className="text-sm font-semibold text-foreground">Mật khẩu mới <span className="text-red-500">*</span></label>
             <div className="relative">
               <input 
                 type={showNew ? "text" : "password"} 
-                className="w-full pl-4 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#2E3192]/20 focus:border-[#2E3192] transition-all"
+                className="w-full pl-4 pr-10 py-2.5 bg-muted border border-border rounded-lg text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-[#2E3192]/20 focus:border-[#2E3192] transition-all"
                 placeholder="Nhập mật khẩu an toàn mới"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
@@ -98,21 +98,21 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
               <button 
                 type="button" 
                 onClick={() => setShowNew(!showNew)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-muted-foreground"
               >
                 {showNew ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
             </div>
-            <p className="text-xs text-slate-500 mt-1">Mật khẩu nên dài ít nhất 8 ký tự, bao gồm số và chữ cái.</p>
+            <p className="text-xs text-muted-foreground mt-1">Mật khẩu nên dài ít nhất 8 ký tự, bao gồm số và chữ cái.</p>
           </div>
 
           {/* Nhập lại mật khẩu mới */}
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-semibold text-slate-700">Nhập lại mật khẩu mới <span className="text-red-500">*</span></label>
+            <label className="text-sm font-semibold text-foreground">Nhập lại mật khẩu mới <span className="text-red-500">*</span></label>
             <div className="relative">
               <input 
                 type={showConfirm ? "text" : "password"} 
-                className="w-full pl-4 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#2E3192]/20 focus:border-[#2E3192] transition-all"
+                className="w-full pl-4 pr-10 py-2.5 bg-muted border border-border rounded-lg text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-[#2E3192]/20 focus:border-[#2E3192] transition-all"
                 placeholder="Xác nhận lại mật khẩu vừa nhập"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
@@ -121,7 +121,7 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
               <button 
                 type="button" 
                 onClick={() => setShowConfirm(!showConfirm)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-muted-foreground"
               >
                 {showConfirm ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
@@ -135,11 +135,11 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
           </div>
 
           {/* Footer Actions */}
-          <div className="flex items-center justify-end gap-3 mt-4 pt-4 border-t border-slate-100">
+          <div className="flex items-center justify-end gap-3 mt-4 pt-4 border-t border-border">
             <button 
               type="button"
               onClick={onClose}
-              className="px-5 py-2.5 rounded-lg text-sm font-semibold text-slate-600 hover:bg-slate-100 transition-colors"
+              className="px-5 py-2.5 rounded-lg text-sm font-semibold text-muted-foreground hover:bg-muted transition-colors"
             >
               Hủy bỏ
             </button>

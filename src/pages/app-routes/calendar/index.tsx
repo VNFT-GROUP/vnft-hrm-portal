@@ -45,7 +45,7 @@ export default function CalendarPage() {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-[#1E2062]">Lịch & Sự kiện</h1>
-          <p className="text-slate-500 mt-1">Quản lý và điều phối các sự kiện tập thể, lịch phỏng vấn và ngày nghỉ.</p>
+          <p className="text-muted-foreground mt-1">Quản lý và điều phối các sự kiện tập thể, lịch phỏng vấn và ngày nghỉ.</p>
         </div>
         <button className="mt-4 md:mt-0 flex items-center gap-2 bg-[#2E3192] hover:bg-[#1E2062] text-white px-5 py-2.5 rounded-lg shadow-sm transition-all font-medium text-sm disabled:opacity-50">
           <Plus size={18} />
@@ -54,7 +54,7 @@ export default function CalendarPage() {
       </div>
 
       {/* Main Calendar Card */}
-      <div ref={containerRef} className="bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-slate-200 w-full overflow-x-auto">
+      <div ref={containerRef} className="bg-card text-card-foreground p-4 md:p-6 rounded-2xl shadow-sm border border-border w-full overflow-x-auto">
         <div className="min-w-[800px] w-full">
           <FullCalendar
             ref={calendarRef}

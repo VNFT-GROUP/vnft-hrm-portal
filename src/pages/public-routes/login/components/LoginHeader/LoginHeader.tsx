@@ -19,7 +19,7 @@ export default function LoginHeader() {
       <nav className="header-nav">
         <button 
           onClick={() => i18n.changeLanguage(i18n.language === 'en' ? 'vi' : 'en')}
-          className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/60 hover:bg-white/80 backdrop-blur-md shadow-sm border border-slate-200 transition-all font-semibold text-slate-700 text-xs"
+          className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-card text-card-foreground/60 hover:bg-card text-card-foreground/80 backdrop-blur-md shadow-sm border border-border transition-all font-semibold text-foreground text-xs"
         >
           <Globe size={14} className="text-[#2E3192]" />
           <span className="uppercase">{i18n.language === 'en' ? 'EN' : 'VN'}</span>

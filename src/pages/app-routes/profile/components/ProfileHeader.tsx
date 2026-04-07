@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 
 export default function ProfileHeader() {
   return (
-    <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 mb-6 relative overflow-hidden group/header hover:shadow-md transition-all duration-300 animate-in fade-in slide-in-from-top-4 duration-500">
+    <div className="bg-card text-card-foreground rounded-2xl p-6 shadow-sm border border-border mb-6 relative overflow-hidden group/header hover:shadow-md transition-all duration-300 animate-in fade-in slide-in-from-top-4 duration-500">
       
       {/* Floating Ambient Blobs */}
       <motion.div 
@@ -24,7 +24,7 @@ export default function ProfileHeader() {
           dragConstraints={{ top: 0, left: 0, bottom: 0, right: 0 }}
           dragElastic={0.4}
           whileTap={{ cursor: "grabbing", scale: 0.95 }}
-          className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-slate-100 shadow-[0_0_0_4px_white,0_4px_20px_rgba(0,0,0,0.08)] flex-shrink-0 flex items-center justify-center text-4xl relative z-10 cursor-grab group-hover/header:shadow-[0_0_0_4px_white,0_8px_30px_rgba(0,0,0,0.12)] transition-shadow duration-300"
+          className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-muted shadow-[0_0_0_4px_white,0_4px_20px_rgba(0,0,0,0.08)] flex-shrink-0 flex items-center justify-center text-4xl relative z-10 cursor-grab group-hover/header:shadow-[0_0_0_4px_white,0_8px_30px_rgba(0,0,0,0.12)] transition-shadow duration-300"
         >
           <div className="w-full h-full overflow-hidden rounded-full pointer-events-none group-hover/header:scale-110 transition-transform duration-500">
             <img 
@@ -38,8 +38,8 @@ export default function ProfileHeader() {
         {/* Basic Info */}
         <div className="flex-1 pb-2">
           <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4 mb-2">
-            <h1 className="text-2xl font-bold text-slate-800">Trương Thành Nhân</h1>
-            <span className="px-3 py-1 bg-slate-100 text-slate-600 rounded-full text-xs font-medium">
+            <h1 className="text-2xl font-bold text-foreground">Trương Thành Nhân</h1>
+            <span className="px-3 py-1 bg-muted text-muted-foreground rounded-full text-xs font-medium">
               VNSGN090
             </span>
             <span className="px-3 py-1 bg-[#F7941D]/10 text-[#F7941D] rounded-full text-xs font-semibold">
@@ -47,21 +47,21 @@ export default function ProfileHeader() {
             </span>
           </div>
           
-          <div className="flex flex-wrap items-center gap-4 text-sm text-slate-500">
-            <div className="flex items-center gap-1.5 hover:text-slate-700 transition-colors">
-              <Briefcase size={16} className="text-slate-400" />
+          <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+            <div className="flex items-center gap-1.5 hover:text-foreground transition-colors">
+              <Briefcase size={16} className="text-muted-foreground" />
               <span>Phòng HR & ADM</span>
             </div>
-            <div className="flex items-center gap-1.5 hover:text-slate-700 transition-colors">
-              <Mail size={16} className="text-slate-400" />
+            <div className="flex items-center gap-1.5 hover:text-foreground transition-colors">
+              <Mail size={16} className="text-muted-foreground" />
               <span>adm.it@vnftgroup.com</span>
             </div>
-            <div className="flex items-center gap-1.5 hover:text-slate-700 transition-colors">
-              <Phone size={16} className="text-slate-400" />
+            <div className="flex items-center gap-1.5 hover:text-foreground transition-colors">
+              <Phone size={16} className="text-muted-foreground" />
               <span>0966724522</span>
             </div>
-            <div className="flex items-center gap-1.5 hover:text-slate-700 transition-colors">
-              <MapPin size={16} className="text-slate-400" />
+            <div className="flex items-center gap-1.5 hover:text-foreground transition-colors">
+              <MapPin size={16} className="text-muted-foreground" />
               <span>Hồ Chí Minh</span>
             </div>
           </div>

@@ -2,19 +2,19 @@ import { User, FileText, Home, Map } from "lucide-react";
 import { motion, type Variants } from "framer-motion";
 
 const Label = ({ children }: { children: React.ReactNode }) => (
-  <div className="text-xs font-medium text-slate-500 uppercase tracking-widest mb-1">{children}</div>
+  <div className="text-xs font-medium text-muted-foreground uppercase tracking-widest mb-1">{children}</div>
 );
 
 const Value = ({ children }: { children: React.ReactNode }) => (
-  <div className="text-sm font-semibold text-slate-800 break-words">{children || "—"}</div>
+  <div className="text-sm font-semibold text-foreground break-words">{children || "—"}</div>
 );
 
 const SectionHeader = ({ icon, title }: { icon: React.ReactNode, title: string }) => (
-  <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100">
-    <div className="p-1.5 bg-[#2E3192]/10 text-[#2E3192] rounded group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300">
+  <div className="flex items-center gap-2 mb-4 pb-3 border-b border-border">
+    <div className="p-1.5 bg-primary/10 text-primary rounded group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300">
       {icon}
     </div>
-    <h3 className="text-base font-bold text-[#1E2062]">{title}</h3>
+    <h3 className="text-base font-bold text-card-foreground">{title}</h3>
   </div>
 );
 
@@ -40,7 +40,7 @@ export default function PersonalInfoTab() {
       className="grid grid-cols-1 lg:grid-cols-2 gap-6"
     >
       {/* Thông tin cơ bản */}
-      <motion.div variants={itemVariants} className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:border-slate-200 hover:shadow-md transition-all duration-300 group hover:-translate-y-1">
+      <motion.div variants={itemVariants} className="bg-card text-card-foreground p-6 rounded-2xl shadow-sm border border-border hover:border-primary/50 hover:shadow-md transition-all duration-300 group hover:-translate-y-1">
         <SectionHeader icon={<User size={18} />} title="Thông tin cơ bản" />
         <div className="grid grid-cols-2 gap-y-6 gap-x-4">
           <div><Label>Họ Tên</Label><Value>Trương Thành Nhân</Value></div>
@@ -58,7 +58,7 @@ export default function PersonalInfoTab() {
       </motion.div>
 
       {/* Giấy tờ tùy thân */}
-      <motion.div variants={itemVariants} className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:border-slate-200 hover:shadow-md transition-all duration-300 group hover:-translate-y-1">
+      <motion.div variants={itemVariants} className="bg-card text-card-foreground p-6 rounded-2xl shadow-sm border border-border hover:border-primary/50 hover:shadow-md transition-all duration-300 group hover:-translate-y-1">
         <SectionHeader icon={<FileText size={18} />} title="Giấy tờ tùy thân" />
         <div className="grid grid-cols-2 gap-y-6 gap-x-4">
           <div className="col-span-2"><Label>Số CCCD</Label><Value>079203000285</Value></div>
@@ -68,7 +68,7 @@ export default function PersonalInfoTab() {
       </motion.div>
 
       {/* Địa chỉ thường trú */}
-      <motion.div variants={itemVariants} className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:border-slate-200 hover:shadow-md transition-all duration-300 group hover:-translate-y-1">
+      <motion.div variants={itemVariants} className="bg-card text-card-foreground p-6 rounded-2xl shadow-sm border border-border hover:border-primary/50 hover:shadow-md transition-all duration-300 group hover:-translate-y-1">
         <SectionHeader icon={<Home size={18} />} title="Địa chỉ thường trú" />
         <div className="grid grid-cols-2 gap-y-6 gap-x-4">
           <div className="col-span-2"><Label>Số nhà, đường</Label><Value>165/75K Tôn Thất Thuyết</Value></div>
@@ -79,7 +79,7 @@ export default function PersonalInfoTab() {
       </motion.div>
 
       {/* Chỗ ở hiện nay */}
-      <motion.div variants={itemVariants} className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:border-slate-200 hover:shadow-md transition-all duration-300 group hover:-translate-y-1">
+      <motion.div variants={itemVariants} className="bg-card text-card-foreground p-6 rounded-2xl shadow-sm border border-border hover:border-primary/50 hover:shadow-md transition-all duration-300 group hover:-translate-y-1">
         <SectionHeader icon={<Map size={18} />} title="Chỗ ở hiện nay" />
         <div className="grid grid-cols-2 gap-y-6 gap-x-4">
           <div className="col-span-2"><Label>Số nhà, đường</Label><Value>165/75K Tôn Thất Thuyết</Value></div>

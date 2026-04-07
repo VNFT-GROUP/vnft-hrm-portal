@@ -32,7 +32,7 @@ export default function ProfilePage() {
               className={`flex items-center gap-2 px-5 py-3 rounded-xl font-medium text-sm transition-all duration-300 ease-out whitespace-nowrap border active:scale-95 ${
                 isActive
                   ? "bg-[#2E3192] text-white border-[#2E3192] shadow-md shadow-[#2E3192]/30 scale-100"
-                  : "bg-white text-slate-500 border-slate-200 hover:bg-slate-50 hover:text-slate-800 hover:border-slate-300 hover:scale-[1.02]"
+                  : "bg-card text-card-foreground text-muted-foreground border-border hover:bg-muted hover:text-foreground hover:border-border hover:scale-[1.02]"
               }`}
             >
               {tab.icon}

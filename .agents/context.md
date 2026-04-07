@@ -110,3 +110,11 @@ src/
 - Use Tailwind utilities for layout and spacing in JSX; use custom CSS for animations and complex visual effects
 - All interactive elements must have **unique `id` attributes** for testing
 - Components should be properly **memoized** where performance matters
+
+## Global Standard Shortcuts
+To ensure highly productive navigation, the HR Portal utilizes the following standard global shortcuts:
+1. **`Ctrl + B`** (or Cmd + B): Quick toggle Left Sidebar Menu
+2. **`Ctrl + I`** (or Cmd + I): Quick toggle Profile Menu (Top Right)
+3. **`Alt + I`** (or Option + I): Navigate directly to User Profile page
+4. **`Shift + K`**: Navigate to User Guide & Auto-scroll to Shortcuts list
+5. **`Esc`**: General close hook for overlays, popups, profile menus

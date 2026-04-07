@@ -97,7 +97,12 @@ src/
 ├── pages/
 │   ├── public-routes/   # Unauthenticated pages (Login, Register)
 │   └── app-routes/      # Authenticated pages (Dashboard, HR modules)
-├── lib/             # Utilities, API clients, helpers
+│       └── layout/      # App layouts
+│           ├── components/ # Granular layout components (Sidebar, Topbar, Modals)
+│           ├── AppLayout.tsx
+│           └── ...
+├── lib/             # Utilities, API clients, helpers (e.g., i18n.ts)
+├── store/           # Zustand global stores (e.g., useLayoutStore.ts)
 ├── App.tsx          # Root component with routing
 ├── main.tsx         # Entry point
 └── index.css        # Global styles + Tailwind theme
@@ -110,6 +115,11 @@ src/
 - Use Tailwind utilities for layout and spacing in JSX; use custom CSS for animations and complex visual effects
 - All interactive elements must have **unique `id` attributes** for testing
 - Components should be properly **memoized** where performance matters
+
+## Architecture & Navigation
+1. **Layout Encapsulation**: Structural UI pieces (Topbar, Sidebar, floating modals like ChangePasswordModal) strictly belong to `layout/components/` to follow a clean Domain-Driven organization instead of cluttering global `components/`.
+2. **Scroll Restoration**: A specialized `ScrollArea` component manages SPA overscrolling constraints. We strictly intercept generic navigation via `[location.pathname]` at the `AppLayout` layer to cleanly trigger viewport `.scrollTo({ top: 0 })` resets.
+3. **Multi-language Support (i18n)**: Integrated completely at the Topbar level, modifying global state cleanly without external page reloads. Default fallback is `vi`.
 
 ## Global Standard Shortcuts
 To ensure highly productive navigation, the HR Portal utilizes the following standard global shortcuts:

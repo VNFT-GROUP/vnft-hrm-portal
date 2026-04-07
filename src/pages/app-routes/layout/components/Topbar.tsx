@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { User, Book, Globe, Key, LogOut, Briefcase, BadgeCheck, Keyboard } from "lucide-react";
+import { User, Book, Globe, Key, LogOut, Briefcase, BadgeCheck, Keyboard, Moon, Sun } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useTheme } from "next-themes";
 import ChangePasswordModal from "./ChangePasswordModal";
 import "./Topbar.css";
 
@@ -10,6 +11,7 @@ export default function Topbar() {
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
+  const { setTheme, resolvedTheme } = useTheme();
 
   // Register Ctrl + I shortcut for toggling User Menu
   React.useEffect(() => {
@@ -79,14 +81,27 @@ export default function Topbar() {
           </div>
         </div>
 
-        <div className="topbar-right relative">
-        <div className="user-profile" onClick={() => setIsProfileOpen(!isProfileOpen)}>
-          <div className="user-info">
-             <span className="user-name">Huỳnh Đức Phú</span>
-             <span className="user-role">Quản trị viên</span>
+        <div className="topbar-right relative flex items-center">
+          
+          <button 
+            onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
+            className="mr-5 flex items-center justify-center w-[36px] h-[36px] rounded-full bg-white/70 hover:bg-white border border-slate-200 shadow-sm dark:bg-[#1A1D2E]/80 dark:hover:bg-[#1A1D2E] dark:border-slate-800 transition-all duration-300"
+            title="Toggle Dark Mode"
+          >
+            {resolvedTheme === 'dark' ? (
+              <Sun size={18} className="text-[#FBBD6A]" />
+            ) : (
+              <Moon size={18} className="text-[#2E3192]" />
+            )}
+          </button>
+
+          <div className="user-profile" onClick={() => setIsProfileOpen(!isProfileOpen)}>
+            <div className="user-info">
+               <span className="user-name">Huỳnh Đức Phú</span>
+               <span className="user-role">Quản trị viên</span>
+            </div>
+            <div className="user-avatar-circle">P</div>
           </div>
-          <div className="user-avatar-circle">P</div>
-        </div>
 
         {/* PROFILE DROPDOWN */}
         {isProfileOpen && (

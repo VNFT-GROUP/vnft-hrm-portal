@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import { lazy, Suspense } from "react";
 
 const LoginPage = lazy(() => import("../pages/public-routes/login/LoginPage"));
+const NetworkPage = lazy(() => import("../pages/public-routes/network/NetworkPage"));
 const AppLayout = lazy(() => import("../pages/app-routes/layout/AppLayout"));
 const DashboardPage = lazy(() => import("../pages/app-routes/dashboard/DashboardPage"));
 
@@ -33,6 +34,7 @@ export default function AppRoutes() {
     <Suspense fallback={<LoadingPage duration={100} message="Loading module..." />}>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/network" element={<NetworkPage />} />
         <Route path="/app" element={<AppLayout />}>
           {/* Dashboard */}
           <Route index element={<DashboardPage />} />

@@ -1,0 +1,76 @@
+.network-page-root {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #111236;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  z-index: 50; /* Above anything else */
+}
+
+/* Beautiful map container taking most screen space */
+.network-map-container {
+  width: 100%;
+  max-width: 1400px;
+  height: auto;
+  aspect-ratio: 16/9;
+  position: relative;
+  z-index: 10;
+  pointer-events: auto;
+}
+
+.network-back-btn {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-left: none;
+  padding: 1.5rem 0.75rem 1.5rem 0.5rem;
+  border-radius: 0 16px 16px 0;
+  cursor: pointer;
+  color: white;
+  z-index: 20;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(8px);
+}
+
+.network-back-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  padding-right: 1.25rem;
+}
+
+.network-page-overlay {
+  position: absolute;
+  bottom: 10%;
+  left: 10%;
+  z-index: 20;
+  pointer-events: none;
+}
+
+.network-page-title {
+  font-size: clamp(3rem, 5vw, 5rem);
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: 0.1em;
+  background: linear-gradient(135deg, #ffffff 0%, #a5b4fc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin: 0;
+  filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5));
+}
+
+.network-page-subtitle {
+  font-size: 1.25rem;
+  color: #c7d2fe;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  margin-top: 1rem;
+  text-transform: uppercase;
+}

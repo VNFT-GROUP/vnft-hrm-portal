@@ -61,12 +61,6 @@ export default function LoadingPage({
       <LoginHeader />
 
       <div className="login-wrapper">
-        <div className="login-heading">
-          <h1 className="login-title">VNFT Logistics</h1>
-          <p className="login-tagline">HỆ THỐNG ĐANG KHỞI ĐỘNG CƠ SỞ DỮ LIỆU</p>
-          <div className="heading-rule" />
-        </div>
-
         <div className="loading-card-custom">
           <div className="progress-truck-wrapper" style={{ width: `${clampedProgress}%` }}>
             <div className="progress-truck-icon">

@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import "./LoginPage.css";
-import LoginHeader from "./components/LoginHeader";
-import LoginFooter from "./components/LoginFooter";
-import LoginSocialSidebar from "./components/LoginSocialSidebar";
-import AnimatedLogisticsBackground from "./components/AnimatedLogisticsBackground";
+import LoginHeader from "./components/LoginHeader/LoginHeader";
+import LoginFooter from "./components/LoginFooter/LoginFooter";
+import LoginSocialSidebar from "./components/LoginSocialSidebar/LoginSocialSidebar";
+import AnimatedLogisticsBackground from "./components/AnimatedLogisticsBackground/AnimatedLogisticsBackground";
 import LoadingPage from "../../../components/custom/loadingPage/LoadingPage";
 
 export default function LoginPage() {

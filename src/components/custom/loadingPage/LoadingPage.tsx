@@ -1,8 +1,8 @@
 import { useEffect, useState, useCallback, useMemo, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import AnimatedLogisticsBackground from "../../../pages/public-routes/login/components/AnimatedLogisticsBackground";
-import LoginHeader from "../../../pages/public-routes/login/components/LoginHeader";
-import LoginFooter from "../../../pages/public-routes/login/components/LoginFooter";
+import AnimatedLogisticsBackground from "../../../pages/public-routes/login/components/AnimatedLogisticsBackground/AnimatedLogisticsBackground";
+import LoginHeader from "../../../pages/public-routes/login/components/LoginHeader/LoginHeader";
+import LoginFooter from "../../../pages/public-routes/login/components/LoginFooter/LoginFooter";
 import "../../../pages/public-routes/login/LoginPage.css"; /* Ensure layout styles are loaded */
 import "./LoadingPage.css";
 

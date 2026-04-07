@@ -1,22 +1,23 @@
 import { GraduationCap, Users, UserPlus } from "lucide-react";
 
-export default function FamilyEduTab() {
-  const Label = ({ children }: { children: React.ReactNode }) => (
-    <div className="text-xs font-medium text-slate-500 uppercase tracking-widest mb-1">{children}</div>
-  );
-  
-  const Value = ({ children }: { children: React.ReactNode }) => (
-    <div className="text-sm font-semibold text-slate-800 break-words">{children || "—"}</div>
-  );
-  
-  const SectionHeader = ({ icon, title }: { icon: React.ReactNode, title: string }) => (
-    <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100">
-      <div className="p-1.5 bg-[#F7941D]/10 text-[#F7941D] rounded group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300">
-        {icon}
-      </div>
-      <h3 className="text-base font-bold text-[#1E2062]">{title}</h3>
+const Label = ({ children }: { children: React.ReactNode }) => (
+  <div className="text-xs font-medium text-slate-500 uppercase tracking-widest mb-1">{children}</div>
+);
+
+const Value = ({ children }: { children: React.ReactNode }) => (
+  <div className="text-sm font-semibold text-slate-800 break-words">{children || "—"}</div>
+);
+
+const SectionHeader = ({ icon, title }: { icon: React.ReactNode, title: string }) => (
+  <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100">
+    <div className="p-1.5 bg-[#F7941D]/10 text-[#F7941D] rounded group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300">
+      {icon}
     </div>
-  );
+    <h3 className="text-base font-bold text-[#1E2062]">{title}</h3>
+  </div>
+);
+
+export default function FamilyEduTab() {
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500 fill-mode-both">

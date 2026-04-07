@@ -1,0 +1,1800 @@
+
+> hrm-portal@0.0.0 lint
+> eslint .
+
+
+C:\VNFT\hrm-portal\src\components\ui\badge.tsx
+  52:17  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+C:\VNFT\hrm-portal\src\components\ui\button.tsx
+  60:18  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+C:\VNFT\hrm-portal\src\components\ui\tabs.tsx
+  82:52  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+C:\VNFT\hrm-portal\src\pages\app-routes\calendar\index.tsx
+  27:33  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  31:34  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\VNFT\hrm-portal\src\pages\app-routes\management\employees\components\EmployeeFormSheet.tsx
+   8:14  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+   9:14  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+  10:14  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+  11:14  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+  12:14  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+  17:13  error  Unexpected any. Specify a different type                                                                                        @typescript-eslint/no-explicit-any
+  18:23  error  Unexpected any. Specify a different type                                                                                        @typescript-eslint/no-explicit-any
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\BankAndDocsTab.tsx
+  26:10  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\BankAndDocsTab.tsx:26:10
+  24 |       {/* Thông tin ngân hàng */}
+  25 |       <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:border-slate-200 hover:shadow-md transition-all duration-300 group hover:-translate-y-1">
+> 26 |         <SectionHeader icon={<CreditCard size={18} />} title="Thông tin ngân hàng" />
+     |          ^^^^^^^^^^^^^ This component is created during render
+  27 |         <div className="flex flex-col gap-6">
+  28 |           <div className="p-4 bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl text-white shadow-md relative overflow-hidden group/card hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 cursor-pointer">
+  29 |             <div className="absolute top-0 right-0 p-4 opacity-10 group-hover/card:scale-110 group-hover/card:opacity-20 transition-all duration-500">
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\BankAndDocsTab.tsx:12:25
+  10 |   );
+  11 |   
+> 12 |   const SectionHeader = ({ icon, title }: { icon: React.ReactNode, title: string }) => (
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 13 |     <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100">
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 14 |       <div className="p-1.5 bg-[#10b981]/10 text-[#10b981] rounded group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300">
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 15 |         {icon}
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 16 |       </div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 17 |       <h3 className="text-base font-bold text-[#1E2062]">{title}</h3>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 18 |     </div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 19 |   );
+     | ^^^^ The component is created during render here
+  20 |
+  21 |   return (
+  22 |     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500 fill-mode-both">  react-hooks/static-components
+  42:19  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\BankAndDocsTab.tsx:42:19
+  40 |           </div>
+  41 |           <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-4 px-2">
+> 42 |             <div><Label>Ngân hàng</Label><Value>BIDV (ĐT và PT VN)</Value></div>
+     |                   ^^^^^ This component is created during render
+  43 |             <div><Label>Chi nhánh</Label><Value>CN BEN NGHE PGD NGUYEN VAN CU</Value></div>
+  44 |           </div>
+  45 |         </div>
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\BankAndDocsTab.tsx:4:17
+  2 |
+  3 | export default function BankAndDocsTab() {
+> 4 |   const Label = ({ children }: { children: React.ReactNode }) => (
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 5 |     <div className="text-xs font-medium text-slate-500 uppercase tracking-widest mb-1">{children}</div>
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 6 |   );
+    | ^^^^ The component is created during render here
+  7 |   
+  8 |   const Value = ({ children }: { children: React.ReactNode }) => (
+  9 |     <div className="text-sm font-semibold text-slate-800 break-words">{children || "—"}</div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     react-hooks/static-components
+  42:43  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\BankAndDocsTab.tsx:42:43
+  40 |           </div>
+  41 |           <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-4 px-2">
+> 42 |             <div><Label>Ngân hàng</Label><Value>BIDV (ĐT và PT VN)</Value></div>
+     |                                           ^^^^^ This component is created during render
+  43 |             <div><Label>Chi nhánh</Label><Value>CN BEN NGHE PGD NGUYEN VAN CU</Value></div>
+  44 |           </div>
+  45 |         </div>
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\BankAndDocsTab.tsx:8:17
+   6 |   );
+   7 |   
+>  8 |   const Value = ({ children }: { children: React.ReactNode }) => (
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>  9 |     <div className="text-sm font-semibold text-slate-800 break-words">{children || "—"}</div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 10 |   );
+     | ^^^^ The component is created during render here
+  11 |   
+  12 |   const SectionHeader = ({ icon, title }: { icon: React.ReactNode, title: string }) => (
+  13 |     <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               react-hooks/static-components
+  43:19  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\BankAndDocsTab.tsx:43:19
+  41 |           <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-4 px-2">
+  42 |             <div><Label>Ngân hàng</Label><Value>BIDV (ĐT và PT VN)</Value></div>
+> 43 |             <div><Label>Chi nhánh</Label><Value>CN BEN NGHE PGD NGUYEN VAN CU</Value></div>
+     |                   ^^^^^ This component is created during render
+  44 |           </div>
+  45 |         </div>
+  46 |       </div>
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\BankAndDocsTab.tsx:4:17
+  2 |
+  3 | export default function BankAndDocsTab() {
+> 4 |   const Label = ({ children }: { children: React.ReactNode }) => (
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 5 |     <div className="text-xs font-medium text-slate-500 uppercase tracking-widest mb-1">{children}</div>
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 6 |   );
+    | ^^^^ The component is created during render here
+  7 |   
+  8 |   const Value = ({ children }: { children: React.ReactNode }) => (
+  9 |     <div className="text-sm font-semibold text-slate-800 break-words">{children || "—"}</div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         react-hooks/static-components
+  43:43  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\BankAndDocsTab.tsx:43:43
+  41 |           <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-4 px-2">
+  42 |             <div><Label>Ngân hàng</Label><Value>BIDV (ĐT và PT VN)</Value></div>
+> 43 |             <div><Label>Chi nhánh</Label><Value>CN BEN NGHE PGD NGUYEN VAN CU</Value></div>
+     |                                           ^^^^^ This component is created during render
+  44 |           </div>
+  45 |         </div>
+  46 |       </div>
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\BankAndDocsTab.tsx:8:17
+   6 |   );
+   7 |   
+>  8 |   const Value = ({ children }: { children: React.ReactNode }) => (
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>  9 |     <div className="text-sm font-semibold text-slate-800 break-words">{children || "—"}</div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 10 |   );
+     | ^^^^ The component is created during render here
+  11 |   
+  12 |   const SectionHeader = ({ icon, title }: { icon: React.ReactNode, title: string }) => (
+  13 |     <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   react-hooks/static-components
+  50:10  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\BankAndDocsTab.tsx:50:10
+  48 |       {/* Hồ sơ đính kèm */}
+  49 |       <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:border-slate-200 hover:shadow-md transition-all duration-300 group hover:-translate-y-1">
+> 50 |         <SectionHeader icon={<FileImage size={18} />} title="Hồ sơ cá nhân" />
+     |          ^^^^^^^^^^^^^ This component is created during render
+  51 |         <div className="space-y-6">
+  52 |           
+  53 |           {/* CCCD Mặt trước */}
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\BankAndDocsTab.tsx:12:25
+  10 |   );
+  11 |   
+> 12 |   const SectionHeader = ({ icon, title }: { icon: React.ReactNode, title: string }) => (
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 13 |     <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100">
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 14 |       <div className="p-1.5 bg-[#10b981]/10 text-[#10b981] rounded group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300">
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 15 |         {icon}
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 16 |       </div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 17 |       <h3 className="text-base font-bold text-[#1E2062]">{title}</h3>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 18 |     </div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 19 |   );
+     | ^^^^ The component is created during render here
+  20 |
+  21 |   return (
+  22 |     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500 fill-mode-both">                                                                                                                                                                                                                                                                                                                                                                       react-hooks/static-components
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\FamilyEduTab.tsx
+  26:10  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\FamilyEduTab.tsx:26:10
+  24 |       {/* Trình độ học vấn */}
+  25 |       <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:border-slate-200 hover:shadow-md transition-all duration-300 group hover:-translate-y-1 lg:col-span-2">
+> 26 |         <SectionHeader icon={<GraduationCap size={18} />} title="Trình độ học vấn" />
+     |          ^^^^^^^^^^^^^ This component is created during render
+  27 |         <div className="grid grid-cols-1 md:grid-cols-3 gap-y-6 gap-x-4">
+  28 |           <div><Label>Trình độ học vấn</Label><Value>Trung cấp nghề</Value></div>
+  29 |           <div><Label>Nơi đào tạo</Label><Value>—</Value></div>
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\FamilyEduTab.tsx:12:25
+  10 |   );
+  11 |   
+> 12 |   const SectionHeader = ({ icon, title }: { icon: React.ReactNode, title: string }) => (
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 13 |     <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100">
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 14 |       <div className="p-1.5 bg-[#F7941D]/10 text-[#F7941D] rounded group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300">
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 15 |         {icon}
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 16 |       </div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 17 |       <h3 className="text-base font-bold text-[#1E2062]">{title}</h3>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 18 |     </div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 19 |   );
+     | ^^^^ The component is created during render here
+  20 |
+  21 |   return (
+  22 |     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500 fill-mode-both">                                         react-hooks/static-components
+  28:17  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\FamilyEduTab.tsx:28:17
+  26 |         <SectionHeader icon={<GraduationCap size={18} />} title="Trình độ học vấn" />
+  27 |         <div className="grid grid-cols-1 md:grid-cols-3 gap-y-6 gap-x-4">
+> 28 |           <div><Label>Trình độ học vấn</Label><Value>Trung cấp nghề</Value></div>
+     |                 ^^^^^ This component is created during render
+  29 |           <div><Label>Nơi đào tạo</Label><Value>—</Value></div>
+  30 |           <div><Label>Chuyên ngành</Label><Value>—</Value></div>
+  31 |         </div>
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\FamilyEduTab.tsx:4:17
+  2 |
+  3 | export default function FamilyEduTab() {
+> 4 |   const Label = ({ children }: { children: React.ReactNode }) => (
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 5 |     <div className="text-xs font-medium text-slate-500 uppercase tracking-widest mb-1">{children}</div>
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 6 |   );
+    | ^^^^ The component is created during render here
+  7 |   
+  8 |   const Value = ({ children }: { children: React.ReactNode }) => (
+  9 |     <div className="text-sm font-semibold text-slate-800 break-words">{children || "—"}</div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           react-hooks/static-components
+  28:48  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\FamilyEduTab.tsx:28:48
+  26 |         <SectionHeader icon={<GraduationCap size={18} />} title="Trình độ học vấn" />
+  27 |         <div className="grid grid-cols-1 md:grid-cols-3 gap-y-6 gap-x-4">
+> 28 |           <div><Label>Trình độ học vấn</Label><Value>Trung cấp nghề</Value></div>
+     |                                                ^^^^^ This component is created during render
+  29 |           <div><Label>Nơi đào tạo</Label><Value>—</Value></div>
+  30 |           <div><Label>Chuyên ngành</Label><Value>—</Value></div>
+  31 |         </div>
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\FamilyEduTab.tsx:8:17
+   6 |   );
+   7 |   
+>  8 |   const Value = ({ children }: { children: React.ReactNode }) => (
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>  9 |     <div className="text-sm font-semibold text-slate-800 break-words">{children || "—"}</div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 10 |   );
+     | ^^^^ The component is created during render here
+  11 |   
+  12 |   const SectionHeader = ({ icon, title }: { icon: React.ReactNode, title: string }) => (
+  13 |     <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            react-hooks/static-components
+  29:17  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\FamilyEduTab.tsx:29:17
+  27 |         <div className="grid grid-cols-1 md:grid-cols-3 gap-y-6 gap-x-4">
+  28 |           <div><Label>Trình độ học vấn</Label><Value>Trung cấp nghề</Value></div>
+> 29 |           <div><Label>Nơi đào tạo</Label><Value>—</Value></div>
+     |                 ^^^^^ This component is created during render
+  30 |           <div><Label>Chuyên ngành</Label><Value>—</Value></div>
+  31 |         </div>
+  32 |       </div>
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\FamilyEduTab.tsx:4:17
+  2 |
+  3 | export default function FamilyEduTab() {
+> 4 |   const Label = ({ children }: { children: React.ReactNode }) => (
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 5 |     <div className="text-xs font-medium text-slate-500 uppercase tracking-widest mb-1">{children}</div>
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 6 |   );
+    | ^^^^ The component is created during render here
+  7 |   
+  8 |   const Value = ({ children }: { children: React.ReactNode }) => (
+  9 |     <div className="text-sm font-semibold text-slate-800 break-words">{children || "—"}</div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    react-hooks/static-components
+  29:43  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\FamilyEduTab.tsx:29:43
+  27 |         <div className="grid grid-cols-1 md:grid-cols-3 gap-y-6 gap-x-4">
+  28 |           <div><Label>Trình độ học vấn</Label><Value>Trung cấp nghề</Value></div>
+> 29 |           <div><Label>Nơi đào tạo</Label><Value>—</Value></div>
+     |                                           ^^^^^ This component is created during render
+  30 |           <div><Label>Chuyên ngành</Label><Value>—</Value></div>
+  31 |         </div>
+  32 |       </div>
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\FamilyEduTab.tsx:8:17
+   6 |   );
+   7 |   
+>  8 |   const Value = ({ children }: { children: React.ReactNode }) => (
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>  9 |     <div className="text-sm font-semibold text-slate-800 break-words">{children || "—"}</div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 10 |   );
+     | ^^^^ The component is created during render here
+  11 |   
+  12 |   const SectionHeader = ({ icon, title }: { icon: React.ReactNode, title: string }) => (
+  13 |     <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          react-hooks/static-components
+  30:17  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\FamilyEduTab.tsx:30:17
+  28 |           <div><Label>Trình độ học vấn</Label><Value>Trung cấp nghề</Value></div>
+  29 |           <div><Label>Nơi đào tạo</Label><Value>—</Value></div>
+> 30 |           <div><Label>Chuyên ngành</Label><Value>—</Value></div>
+     |                 ^^^^^ This component is created during render
+  31 |         </div>
+  32 |       </div>
+  33 |
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\FamilyEduTab.tsx:4:17
+  2 |
+  3 | export default function FamilyEduTab() {
+> 4 |   const Label = ({ children }: { children: React.ReactNode }) => (
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 5 |     <div className="text-xs font-medium text-slate-500 uppercase tracking-widest mb-1">{children}</div>
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 6 |   );
+    | ^^^^ The component is created during render here
+  7 |   
+  8 |   const Value = ({ children }: { children: React.ReactNode }) => (
+  9 |     <div className="text-sm font-semibold text-slate-800 break-words">{children || "—"}</div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              react-hooks/static-components
+  30:44  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\FamilyEduTab.tsx:30:44
+  28 |           <div><Label>Trình độ học vấn</Label><Value>Trung cấp nghề</Value></div>
+  29 |           <div><Label>Nơi đào tạo</Label><Value>—</Value></div>
+> 30 |           <div><Label>Chuyên ngành</Label><Value>—</Value></div>
+     |                                            ^^^^^ This component is created during render
+  31 |         </div>
+  32 |       </div>
+  33 |
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\FamilyEduTab.tsx:8:17
+   6 |   );
+   7 |   
+>  8 |   const Value = ({ children }: { children: React.ReactNode }) => (
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>  9 |     <div className="text-sm font-semibold text-slate-800 break-words">{children || "—"}</div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 10 |   );
+     | ^^^^ The component is created during render here
+  11 |   
+  12 |   const SectionHeader = ({ icon, title }: { icon: React.ReactNode, title: string }) => (
+  13 |     <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   react-hooks/static-components
+  36:10  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\FamilyEduTab.tsx:36:10
+  34 |       {/* Thông tin gia đình */}
+  35 |       <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:border-slate-200 hover:shadow-md transition-all duration-300 group hover:-translate-y-1">
+> 36 |         <SectionHeader icon={<Users size={18} />} title="Thông tin gia đình" />
+     |          ^^^^^^^^^^^^^ This component is created during render
+  37 |         <div className="grid grid-cols-2 gap-y-6 gap-x-4">
+  38 |           <div><Label>Số người phụ thuộc</Label><Value>0</Value></div>
+  39 |           <div><Label>Tình trạng con cái</Label><Value>Chưa có dữ liệu</Value></div>
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\FamilyEduTab.tsx:12:25
+  10 |   );
+  11 |   
+> 12 |   const SectionHeader = ({ icon, title }: { icon: React.ReactNode, title: string }) => (
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 13 |     <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100">
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 14 |       <div className="p-1.5 bg-[#F7941D]/10 text-[#F7941D] rounded group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300">
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 15 |         {icon}
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 16 |       </div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 17 |       <h3 className="text-base font-bold text-[#1E2062]">{title}</h3>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 18 |     </div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 19 |   );
+     | ^^^^ The component is created during render here
+  20 |
+  21 |   return (
+  22 |     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500 fill-mode-both">                                                                react-hooks/static-components
+  38:17  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\FamilyEduTab.tsx:38:17
+  36 |         <SectionHeader icon={<Users size={18} />} title="Thông tin gia đình" />
+  37 |         <div className="grid grid-cols-2 gap-y-6 gap-x-4">
+> 38 |           <div><Label>Số người phụ thuộc</Label><Value>0</Value></div>
+     |                 ^^^^^ This component is created during render
+  39 |           <div><Label>Tình trạng con cái</Label><Value>Chưa có dữ liệu</Value></div>
+  40 |         </div>
+  41 |       </div>
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\FamilyEduTab.tsx:4:17
+  2 |
+  3 | export default function FamilyEduTab() {
+> 4 |   const Label = ({ children }: { children: React.ReactNode }) => (
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 5 |     <div className="text-xs font-medium text-slate-500 uppercase tracking-widest mb-1">{children}</div>
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 6 |   );
+    | ^^^^ The component is created during render here
+  7 |   
+  8 |   const Value = ({ children }: { children: React.ReactNode }) => (
+  9 |     <div className="text-sm font-semibold text-slate-800 break-words">{children || "—"}</div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          react-hooks/static-components
+  38:50  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\FamilyEduTab.tsx:38:50
+  36 |         <SectionHeader icon={<Users size={18} />} title="Thông tin gia đình" />
+  37 |         <div className="grid grid-cols-2 gap-y-6 gap-x-4">
+> 38 |           <div><Label>Số người phụ thuộc</Label><Value>0</Value></div>
+     |                                                  ^^^^^ This component is created during render
+  39 |           <div><Label>Tình trạng con cái</Label><Value>Chưa có dữ liệu</Value></div>
+  40 |         </div>
+  41 |       </div>
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\FamilyEduTab.tsx:8:17
+   6 |   );
+   7 |   
+>  8 |   const Value = ({ children }: { children: React.ReactNode }) => (
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>  9 |     <div className="text-sm font-semibold text-slate-800 break-words">{children || "—"}</div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 10 |   );
+     | ^^^^ The component is created during render here
+  11 |   
+  12 |   const SectionHeader = ({ icon, title }: { icon: React.ReactNode, title: string }) => (
+  13 |     <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         react-hooks/static-components
+  39:17  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\FamilyEduTab.tsx:39:17
+  37 |         <div className="grid grid-cols-2 gap-y-6 gap-x-4">
+  38 |           <div><Label>Số người phụ thuộc</Label><Value>0</Value></div>
+> 39 |           <div><Label>Tình trạng con cái</Label><Value>Chưa có dữ liệu</Value></div>
+     |                 ^^^^^ This component is created during render
+  40 |         </div>
+  41 |       </div>
+  42 |
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\FamilyEduTab.tsx:4:17
+  2 |
+  3 | export default function FamilyEduTab() {
+> 4 |   const Label = ({ children }: { children: React.ReactNode }) => (
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 5 |     <div className="text-xs font-medium text-slate-500 uppercase tracking-widest mb-1">{children}</div>
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 6 |   );
+    | ^^^^ The component is created during render here
+  7 |   
+  8 |   const Value = ({ children }: { children: React.ReactNode }) => (
+  9 |     <div className="text-sm font-semibold text-slate-800 break-words">{children || "—"}</div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          react-hooks/static-components
+  39:50  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\FamilyEduTab.tsx:39:50
+  37 |         <div className="grid grid-cols-2 gap-y-6 gap-x-4">
+  38 |           <div><Label>Số người phụ thuộc</Label><Value>0</Value></div>
+> 39 |           <div><Label>Tình trạng con cái</Label><Value>Chưa có dữ liệu</Value></div>
+     |                                                  ^^^^^ This component is created during render
+  40 |         </div>
+  41 |       </div>
+  42 |
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\FamilyEduTab.tsx:8:17
+   6 |   );
+   7 |   
+>  8 |   const Value = ({ children }: { children: React.ReactNode }) => (
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>  9 |     <div className="text-sm font-semibold text-slate-800 break-words">{children || "—"}</div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 10 |   );
+     | ^^^^ The component is created during render here
+  11 |   
+  12 |   const SectionHeader = ({ icon, title }: { icon: React.ReactNode, title: string }) => (
+  13 |     <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         react-hooks/static-components
+  45:10  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\FamilyEduTab.tsx:45:10
+  43 |       {/* Chi tiết thành viên gia đình */}
+  44 |       <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:border-slate-200 hover:shadow-md transition-all duration-300 group hover:-translate-y-1 relative overflow-hidden">
+> 45 |         <SectionHeader icon={<UserPlus size={18} />} title="Chi tiết thành viên gia đình" />
+     |          ^^^^^^^^^^^^^ This component is created during render
+  46 |         
+  47 |         <div className="flex flex-col items-center justify-center p-8 text-center bg-slate-50/50 rounded-xl border border-dashed border-slate-200 h-[150px]">
+  48 |           <Users size={32} className="text-slate-300 mb-2" />
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\FamilyEduTab.tsx:12:25
+  10 |   );
+  11 |   
+> 12 |   const SectionHeader = ({ icon, title }: { icon: React.ReactNode, title: string }) => (
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 13 |     <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100">
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 14 |       <div className="p-1.5 bg-[#F7941D]/10 text-[#F7941D] rounded group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300">
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 15 |         {icon}
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 16 |       </div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 17 |       <h3 className="text-base font-bold text-[#1E2062]">{title}</h3>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 18 |     </div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 19 |   );
+     | ^^^^ The component is created during render here
+  20 |
+  21 |   return (
+  22 |     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500 fill-mode-both">  react-hooks/static-components
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx
+  44:10  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:44:10
+  42 |       {/* Thông tin cơ bản */}
+  43 |       <motion.div variants={itemVariants} className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:border-slate-200 hover:shadow-md transition-all duration-300 group hover:-translate-y-1">
+> 44 |         <SectionHeader icon={<User size={18} />} title="Thông tin cơ bản" />
+     |          ^^^^^^^^^^^^^ This component is created during render
+  45 |         <div className="grid grid-cols-2 gap-y-6 gap-x-4">
+  46 |           <div><Label>Họ Tên</Label><Value>Trương Thành Nhân</Value></div>
+  47 |           <div><Label>Tên Tiếng Anh</Label><Value>Ethan</Value></div>
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:26:25
+  24 |   );
+  25 |   
+> 26 |   const SectionHeader = ({ icon, title }: { icon: React.ReactNode, title: string }) => (
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 27 |     <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100">
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 28 |       <div className="p-1.5 bg-[#2E3192]/10 text-[#2E3192] rounded group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300">
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 29 |         {icon}
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 30 |       </div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 31 |       <h3 className="text-base font-bold text-[#1E2062]">{title}</h3>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 32 |     </div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 33 |   );
+     | ^^^^ The component is created during render here
+  34 |
+  35 |   return (
+  36 |     <motion.div                                             react-hooks/static-components
+  46:17  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:46:17
+  44 |         <SectionHeader icon={<User size={18} />} title="Thông tin cơ bản" />
+  45 |         <div className="grid grid-cols-2 gap-y-6 gap-x-4">
+> 46 |           <div><Label>Họ Tên</Label><Value>Trương Thành Nhân</Value></div>
+     |                 ^^^^^ This component is created during render
+  47 |           <div><Label>Tên Tiếng Anh</Label><Value>Ethan</Value></div>
+  48 |           <div><Label>Mã NV</Label><Value>VNSGN090</Value></div>
+  49 |           <div><Label>Giới tính</Label><Value>Nam</Value></div>
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:18:17
+  16 |   };
+  17 |
+> 18 |   const Label = ({ children }: { children: React.ReactNode }) => (
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 19 |     <div className="text-xs font-medium text-slate-500 uppercase tracking-widest mb-1">{children}</div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 20 |   );
+     | ^^^^ The component is created during render here
+  21 |   
+  22 |   const Value = ({ children }: { children: React.ReactNode }) => (
+  23 |     <div className="text-sm font-semibold text-slate-800 break-words">{children || "—"}</div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     react-hooks/static-components
+  46:38  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:46:38
+  44 |         <SectionHeader icon={<User size={18} />} title="Thông tin cơ bản" />
+  45 |         <div className="grid grid-cols-2 gap-y-6 gap-x-4">
+> 46 |           <div><Label>Họ Tên</Label><Value>Trương Thành Nhân</Value></div>
+     |                                      ^^^^^ This component is created during render
+  47 |           <div><Label>Tên Tiếng Anh</Label><Value>Ethan</Value></div>
+  48 |           <div><Label>Mã NV</Label><Value>VNSGN090</Value></div>
+  49 |           <div><Label>Giới tính</Label><Value>Nam</Value></div>
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:22:17
+  20 |   );
+  21 |   
+> 22 |   const Value = ({ children }: { children: React.ReactNode }) => (
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 23 |     <div className="text-sm font-semibold text-slate-800 break-words">{children || "—"}</div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 24 |   );
+     | ^^^^ The component is created during render here
+  25 |   
+  26 |   const SectionHeader = ({ icon, title }: { icon: React.ReactNode, title: string }) => (
+  27 |     <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       react-hooks/static-components
+  47:17  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:47:17
+  45 |         <div className="grid grid-cols-2 gap-y-6 gap-x-4">
+  46 |           <div><Label>Họ Tên</Label><Value>Trương Thành Nhân</Value></div>
+> 47 |           <div><Label>Tên Tiếng Anh</Label><Value>Ethan</Value></div>
+     |                 ^^^^^ This component is created during render
+  48 |           <div><Label>Mã NV</Label><Value>VNSGN090</Value></div>
+  49 |           <div><Label>Giới tính</Label><Value>Nam</Value></div>
+  50 |           <div><Label>Ngày sinh</Label><Value>2003-03-19</Value></div>
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:18:17
+  16 |   };
+  17 |
+> 18 |   const Label = ({ children }: { children: React.ReactNode }) => (
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 19 |     <div className="text-xs font-medium text-slate-500 uppercase tracking-widest mb-1">{children}</div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 20 |   );
+     | ^^^^ The component is created during render here
+  21 |   
+  22 |   const Value = ({ children }: { children: React.ReactNode }) => (
+  23 |     <div className="text-sm font-semibold text-slate-800 break-words">{children || "—"}</div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           react-hooks/static-components
+  47:45  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:47:45
+  45 |         <div className="grid grid-cols-2 gap-y-6 gap-x-4">
+  46 |           <div><Label>Họ Tên</Label><Value>Trương Thành Nhân</Value></div>
+> 47 |           <div><Label>Tên Tiếng Anh</Label><Value>Ethan</Value></div>
+     |                                             ^^^^^ This component is created during render
+  48 |           <div><Label>Mã NV</Label><Value>VNSGN090</Value></div>
+  49 |           <div><Label>Giới tính</Label><Value>Nam</Value></div>
+  50 |           <div><Label>Ngày sinh</Label><Value>2003-03-19</Value></div>
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:22:17
+  20 |   );
+  21 |   
+> 22 |   const Value = ({ children }: { children: React.ReactNode }) => (
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 23 |     <div className="text-sm font-semibold text-slate-800 break-words">{children || "—"}</div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 24 |   );
+     | ^^^^ The component is created during render here
+  25 |   
+  26 |   const SectionHeader = ({ icon, title }: { icon: React.ReactNode, title: string }) => (
+  27 |     <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      react-hooks/static-components
+  48:17  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:48:17
+  46 |           <div><Label>Họ Tên</Label><Value>Trương Thành Nhân</Value></div>
+  47 |           <div><Label>Tên Tiếng Anh</Label><Value>Ethan</Value></div>
+> 48 |           <div><Label>Mã NV</Label><Value>VNSGN090</Value></div>
+     |                 ^^^^^ This component is created during render
+  49 |           <div><Label>Giới tính</Label><Value>Nam</Value></div>
+  50 |           <div><Label>Ngày sinh</Label><Value>2003-03-19</Value></div>
+  51 |           <div><Label>Hôn nhân</Label><Value>Độc thân</Value></div>
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:18:17
+  16 |   };
+  17 |
+> 18 |   const Label = ({ children }: { children: React.ReactNode }) => (
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 19 |     <div className="text-xs font-medium text-slate-500 uppercase tracking-widest mb-1">{children}</div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 20 |   );
+     | ^^^^ The component is created during render here
+  21 |   
+  22 |   const Value = ({ children }: { children: React.ReactNode }) => (
+  23 |     <div className="text-sm font-semibold text-slate-800 break-words">{children || "—"}</div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  react-hooks/static-components
+  48:37  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:48:37
+  46 |           <div><Label>Họ Tên</Label><Value>Trương Thành Nhân</Value></div>
+  47 |           <div><Label>Tên Tiếng Anh</Label><Value>Ethan</Value></div>
+> 48 |           <div><Label>Mã NV</Label><Value>VNSGN090</Value></div>
+     |                                     ^^^^^ This component is created during render
+  49 |           <div><Label>Giới tính</Label><Value>Nam</Value></div>
+  50 |           <div><Label>Ngày sinh</Label><Value>2003-03-19</Value></div>
+  51 |           <div><Label>Hôn nhân</Label><Value>Độc thân</Value></div>
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:22:17
+  20 |   );
+  21 |   
+> 22 |   const Value = ({ children }: { children: React.ReactNode }) => (
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 23 |     <div className="text-sm font-semibold text-slate-800 break-words">{children || "—"}</div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 24 |   );
+     | ^^^^ The component is created during render here
+  25 |   
+  26 |   const SectionHeader = ({ icon, title }: { icon: React.ReactNode, title: string }) => (
+  27 |     <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     react-hooks/static-components
+  49:17  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:49:17
+  47 |           <div><Label>Tên Tiếng Anh</Label><Value>Ethan</Value></div>
+  48 |           <div><Label>Mã NV</Label><Value>VNSGN090</Value></div>
+> 49 |           <div><Label>Giới tính</Label><Value>Nam</Value></div>
+     |                 ^^^^^ This component is created during render
+  50 |           <div><Label>Ngày sinh</Label><Value>2003-03-19</Value></div>
+  51 |           <div><Label>Hôn nhân</Label><Value>Độc thân</Value></div>
+  52 |           <div><Label>Nơi sinh</Label><Value>Hồ Chí Minh, VN</Value></div>
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:18:17
+  16 |   };
+  17 |
+> 18 |   const Label = ({ children }: { children: React.ReactNode }) => (
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 19 |     <div className="text-xs font-medium text-slate-500 uppercase tracking-widest mb-1">{children}</div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 20 |   );
+     | ^^^^ The component is created during render here
+  21 |   
+  22 |   const Value = ({ children }: { children: React.ReactNode }) => (
+  23 |     <div className="text-sm font-semibold text-slate-800 break-words">{children || "—"}</div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  react-hooks/static-components
+  49:41  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:49:41
+  47 |           <div><Label>Tên Tiếng Anh</Label><Value>Ethan</Value></div>
+  48 |           <div><Label>Mã NV</Label><Value>VNSGN090</Value></div>
+> 49 |           <div><Label>Giới tính</Label><Value>Nam</Value></div>
+     |                                         ^^^^^ This component is created during render
+  50 |           <div><Label>Ngày sinh</Label><Value>2003-03-19</Value></div>
+  51 |           <div><Label>Hôn nhân</Label><Value>Độc thân</Value></div>
+  52 |           <div><Label>Nơi sinh</Label><Value>Hồ Chí Minh, VN</Value></div>
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:22:17
+  20 |   );
+  21 |   
+> 22 |   const Value = ({ children }: { children: React.ReactNode }) => (
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 23 |     <div className="text-sm font-semibold text-slate-800 break-words">{children || "—"}</div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 24 |   );
+     | ^^^^ The component is created during render here
+  25 |   
+  26 |   const SectionHeader = ({ icon, title }: { icon: React.ReactNode, title: string }) => (
+  27 |     <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 react-hooks/static-components
+  50:17  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:50:17
+  48 |           <div><Label>Mã NV</Label><Value>VNSGN090</Value></div>
+  49 |           <div><Label>Giới tính</Label><Value>Nam</Value></div>
+> 50 |           <div><Label>Ngày sinh</Label><Value>2003-03-19</Value></div>
+     |                 ^^^^^ This component is created during render
+  51 |           <div><Label>Hôn nhân</Label><Value>Độc thân</Value></div>
+  52 |           <div><Label>Nơi sinh</Label><Value>Hồ Chí Minh, VN</Value></div>
+  53 |           <div><Label>Nguyên quán</Label><Value>—</Value></div>
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:18:17
+  16 |   };
+  17 |
+> 18 |   const Label = ({ children }: { children: React.ReactNode }) => (
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 19 |     <div className="text-xs font-medium text-slate-500 uppercase tracking-widest mb-1">{children}</div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 20 |   );
+     | ^^^^ The component is created during render here
+  21 |   
+  22 |   const Value = ({ children }: { children: React.ReactNode }) => (
+  23 |     <div className="text-sm font-semibold text-slate-800 break-words">{children || "—"}</div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        react-hooks/static-components
+  50:41  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:50:41
+  48 |           <div><Label>Mã NV</Label><Value>VNSGN090</Value></div>
+  49 |           <div><Label>Giới tính</Label><Value>Nam</Value></div>
+> 50 |           <div><Label>Ngày sinh</Label><Value>2003-03-19</Value></div>
+     |                                         ^^^^^ This component is created during render
+  51 |           <div><Label>Hôn nhân</Label><Value>Độc thân</Value></div>
+  52 |           <div><Label>Nơi sinh</Label><Value>Hồ Chí Minh, VN</Value></div>
+  53 |           <div><Label>Nguyên quán</Label><Value>—</Value></div>
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:22:17
+  20 |   );
+  21 |   
+> 22 |   const Value = ({ children }: { children: React.ReactNode }) => (
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 23 |     <div className="text-sm font-semibold text-slate-800 break-words">{children || "—"}</div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 24 |   );
+     | ^^^^ The component is created during render here
+  25 |   
+  26 |   const SectionHeader = ({ icon, title }: { icon: React.ReactNode, title: string }) => (
+  27 |     <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       react-hooks/static-components
+  51:17  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:51:17
+  49 |           <div><Label>Giới tính</Label><Value>Nam</Value></div>
+  50 |           <div><Label>Ngày sinh</Label><Value>2003-03-19</Value></div>
+> 51 |           <div><Label>Hôn nhân</Label><Value>Độc thân</Value></div>
+     |                 ^^^^^ This component is created during render
+  52 |           <div><Label>Nơi sinh</Label><Value>Hồ Chí Minh, VN</Value></div>
+  53 |           <div><Label>Nguyên quán</Label><Value>—</Value></div>
+  54 |           <div><Label>Quốc tịch</Label><Value>Việt Nam</Value></div>
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:18:17
+  16 |   };
+  17 |
+> 18 |   const Label = ({ children }: { children: React.ReactNode }) => (
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 19 |     <div className="text-xs font-medium text-slate-500 uppercase tracking-widest mb-1">{children}</div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 20 |   );
+     | ^^^^ The component is created during render here
+  21 |   
+  22 |   const Value = ({ children }: { children: React.ReactNode }) => (
+  23 |     <div className="text-sm font-semibold text-slate-800 break-words">{children || "—"}</div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    react-hooks/static-components
+  51:40  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:51:40
+  49 |           <div><Label>Giới tính</Label><Value>Nam</Value></div>
+  50 |           <div><Label>Ngày sinh</Label><Value>2003-03-19</Value></div>
+> 51 |           <div><Label>Hôn nhân</Label><Value>Độc thân</Value></div>
+     |                                        ^^^^^ This component is created during render
+  52 |           <div><Label>Nơi sinh</Label><Value>Hồ Chí Minh, VN</Value></div>
+  53 |           <div><Label>Nguyên quán</Label><Value>—</Value></div>
+  54 |           <div><Label>Quốc tịch</Label><Value>Việt Nam</Value></div>
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:22:17
+  20 |   );
+  21 |   
+> 22 |   const Value = ({ children }: { children: React.ReactNode }) => (
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 23 |     <div className="text-sm font-semibold text-slate-800 break-words">{children || "—"}</div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 24 |   );
+     | ^^^^ The component is created during render here
+  25 |   
+  26 |   const SectionHeader = ({ icon, title }: { icon: React.ReactNode, title: string }) => (
+  27 |     <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    react-hooks/static-components
+  52:17  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:52:17
+  50 |           <div><Label>Ngày sinh</Label><Value>2003-03-19</Value></div>
+  51 |           <div><Label>Hôn nhân</Label><Value>Độc thân</Value></div>
+> 52 |           <div><Label>Nơi sinh</Label><Value>Hồ Chí Minh, VN</Value></div>
+     |                 ^^^^^ This component is created during render
+  53 |           <div><Label>Nguyên quán</Label><Value>—</Value></div>
+  54 |           <div><Label>Quốc tịch</Label><Value>Việt Nam</Value></div>
+  55 |           <div><Label>Tôn giáo</Label><Value>Phật giáo</Value></div>
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:18:17
+  16 |   };
+  17 |
+> 18 |   const Label = ({ children }: { children: React.ReactNode }) => (
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 19 |     <div className="text-xs font-medium text-slate-500 uppercase tracking-widest mb-1">{children}</div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 20 |   );
+     | ^^^^ The component is created during render here
+  21 |   
+  22 |   const Value = ({ children }: { children: React.ReactNode }) => (
+  23 |     <div className="text-sm font-semibold text-slate-800 break-words">{children || "—"}</div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               react-hooks/static-components
+  52:40  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:52:40
+  50 |           <div><Label>Ngày sinh</Label><Value>2003-03-19</Value></div>
+  51 |           <div><Label>Hôn nhân</Label><Value>Độc thân</Value></div>
+> 52 |           <div><Label>Nơi sinh</Label><Value>Hồ Chí Minh, VN</Value></div>
+     |                                        ^^^^^ This component is created during render
+  53 |           <div><Label>Nguyên quán</Label><Value>—</Value></div>
+  54 |           <div><Label>Quốc tịch</Label><Value>Việt Nam</Value></div>
+  55 |           <div><Label>Tôn giáo</Label><Value>Phật giáo</Value></div>
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:22:17
+  20 |   );
+  21 |   
+> 22 |   const Value = ({ children }: { children: React.ReactNode }) => (
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 23 |     <div className="text-sm font-semibold text-slate-800 break-words">{children || "—"}</div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 24 |   );
+     | ^^^^ The component is created during render here
+  25 |   
+  26 |   const SectionHeader = ({ icon, title }: { icon: React.ReactNode, title: string }) => (
+  27 |     <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               react-hooks/static-components
+  53:17  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:53:17
+  51 |           <div><Label>Hôn nhân</Label><Value>Độc thân</Value></div>
+  52 |           <div><Label>Nơi sinh</Label><Value>Hồ Chí Minh, VN</Value></div>
+> 53 |           <div><Label>Nguyên quán</Label><Value>—</Value></div>
+     |                 ^^^^^ This component is created during render
+  54 |           <div><Label>Quốc tịch</Label><Value>Việt Nam</Value></div>
+  55 |           <div><Label>Tôn giáo</Label><Value>Phật giáo</Value></div>
+  56 |           <div><Label>Dân tộc</Label><Value>Kinh</Value></div>
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:18:17
+  16 |   };
+  17 |
+> 18 |   const Label = ({ children }: { children: React.ReactNode }) => (
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 19 |     <div className="text-xs font-medium text-slate-500 uppercase tracking-widest mb-1">{children}</div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 20 |   );
+     | ^^^^ The component is created during render here
+  21 |   
+  22 |   const Value = ({ children }: { children: React.ReactNode }) => (
+  23 |     <div className="text-sm font-semibold text-slate-800 break-words">{children || "—"}</div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       react-hooks/static-components
+  53:43  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:53:43
+  51 |           <div><Label>Hôn nhân</Label><Value>Độc thân</Value></div>
+  52 |           <div><Label>Nơi sinh</Label><Value>Hồ Chí Minh, VN</Value></div>
+> 53 |           <div><Label>Nguyên quán</Label><Value>—</Value></div>
+     |                                           ^^^^^ This component is created during render
+  54 |           <div><Label>Quốc tịch</Label><Value>Việt Nam</Value></div>
+  55 |           <div><Label>Tôn giáo</Label><Value>Phật giáo</Value></div>
+  56 |           <div><Label>Dân tộc</Label><Value>Kinh</Value></div>
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:22:17
+  20 |   );
+  21 |   
+> 22 |   const Value = ({ children }: { children: React.ReactNode }) => (
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 23 |     <div className="text-sm font-semibold text-slate-800 break-words">{children || "—"}</div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 24 |   );
+     | ^^^^ The component is created during render here
+  25 |   
+  26 |   const SectionHeader = ({ icon, title }: { icon: React.ReactNode, title: string }) => (
+  27 |     <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    react-hooks/static-components
+  54:17  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:54:17
+  52 |           <div><Label>Nơi sinh</Label><Value>Hồ Chí Minh, VN</Value></div>
+  53 |           <div><Label>Nguyên quán</Label><Value>—</Value></div>
+> 54 |           <div><Label>Quốc tịch</Label><Value>Việt Nam</Value></div>
+     |                 ^^^^^ This component is created during render
+  55 |           <div><Label>Tôn giáo</Label><Value>Phật giáo</Value></div>
+  56 |           <div><Label>Dân tộc</Label><Value>Kinh</Value></div>
+  57 |         </div>
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:18:17
+  16 |   };
+  17 |
+> 18 |   const Label = ({ children }: { children: React.ReactNode }) => (
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 19 |     <div className="text-xs font-medium text-slate-500 uppercase tracking-widest mb-1">{children}</div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 20 |   );
+     | ^^^^ The component is created during render here
+  21 |   
+  22 |   const Value = ({ children }: { children: React.ReactNode }) => (
+  23 |     <div className="text-sm font-semibold text-slate-800 break-words">{children || "—"}</div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            react-hooks/static-components
+  54:41  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:54:41
+  52 |           <div><Label>Nơi sinh</Label><Value>Hồ Chí Minh, VN</Value></div>
+  53 |           <div><Label>Nguyên quán</Label><Value>—</Value></div>
+> 54 |           <div><Label>Quốc tịch</Label><Value>Việt Nam</Value></div>
+     |                                         ^^^^^ This component is created during render
+  55 |           <div><Label>Tôn giáo</Label><Value>Phật giáo</Value></div>
+  56 |           <div><Label>Dân tộc</Label><Value>Kinh</Value></div>
+  57 |         </div>
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:22:17
+  20 |   );
+  21 |   
+> 22 |   const Value = ({ children }: { children: React.ReactNode }) => (
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 23 |     <div className="text-sm font-semibold text-slate-800 break-words">{children || "—"}</div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 24 |   );
+     | ^^^^ The component is created during render here
+  25 |   
+  26 |   const SectionHeader = ({ icon, title }: { icon: React.ReactNode, title: string }) => (
+  27 |     <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           react-hooks/static-components
+  55:17  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:55:17
+  53 |           <div><Label>Nguyên quán</Label><Value>—</Value></div>
+  54 |           <div><Label>Quốc tịch</Label><Value>Việt Nam</Value></div>
+> 55 |           <div><Label>Tôn giáo</Label><Value>Phật giáo</Value></div>
+     |                 ^^^^^ This component is created during render
+  56 |           <div><Label>Dân tộc</Label><Value>Kinh</Value></div>
+  57 |         </div>
+  58 |       </motion.div>
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:18:17
+  16 |   };
+  17 |
+> 18 |   const Label = ({ children }: { children: React.ReactNode }) => (
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 19 |     <div className="text-xs font-medium text-slate-500 uppercase tracking-widest mb-1">{children}</div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 20 |   );
+     | ^^^^ The component is created during render here
+  21 |   
+  22 |   const Value = ({ children }: { children: React.ReactNode }) => (
+  23 |     <div className="text-sm font-semibold text-slate-800 break-words">{children || "—"}</div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   react-hooks/static-components
+  55:40  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:55:40
+  53 |           <div><Label>Nguyên quán</Label><Value>—</Value></div>
+  54 |           <div><Label>Quốc tịch</Label><Value>Việt Nam</Value></div>
+> 55 |           <div><Label>Tôn giáo</Label><Value>Phật giáo</Value></div>
+     |                                        ^^^^^ This component is created during render
+  56 |           <div><Label>Dân tộc</Label><Value>Kinh</Value></div>
+  57 |         </div>
+  58 |       </motion.div>
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:22:17
+  20 |   );
+  21 |   
+> 22 |   const Value = ({ children }: { children: React.ReactNode }) => (
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 23 |     <div className="text-sm font-semibold text-slate-800 break-words">{children || "—"}</div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 24 |   );
+     | ^^^^ The component is created during render here
+  25 |   
+  26 |   const SectionHeader = ({ icon, title }: { icon: React.ReactNode, title: string }) => (
+  27 |     <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   react-hooks/static-components
+  56:17  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:56:17
+  54 |           <div><Label>Quốc tịch</Label><Value>Việt Nam</Value></div>
+  55 |           <div><Label>Tôn giáo</Label><Value>Phật giáo</Value></div>
+> 56 |           <div><Label>Dân tộc</Label><Value>Kinh</Value></div>
+     |                 ^^^^^ This component is created during render
+  57 |         </div>
+  58 |       </motion.div>
+  59 |
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:18:17
+  16 |   };
+  17 |
+> 18 |   const Label = ({ children }: { children: React.ReactNode }) => (
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 19 |     <div className="text-xs font-medium text-slate-500 uppercase tracking-widest mb-1">{children}</div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 20 |   );
+     | ^^^^ The component is created during render here
+  21 |   
+  22 |   const Value = ({ children }: { children: React.ReactNode }) => (
+  23 |     <div className="text-sm font-semibold text-slate-800 break-words">{children || "—"}</div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   react-hooks/static-components
+  56:39  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:56:39
+  54 |           <div><Label>Quốc tịch</Label><Value>Việt Nam</Value></div>
+  55 |           <div><Label>Tôn giáo</Label><Value>Phật giáo</Value></div>
+> 56 |           <div><Label>Dân tộc</Label><Value>Kinh</Value></div>
+     |                                       ^^^^^ This component is created during render
+  57 |         </div>
+  58 |       </motion.div>
+  59 |
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:22:17
+  20 |   );
+  21 |   
+> 22 |   const Value = ({ children }: { children: React.ReactNode }) => (
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 23 |     <div className="text-sm font-semibold text-slate-800 break-words">{children || "—"}</div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 24 |   );
+     | ^^^^ The component is created during render here
+  25 |   
+  26 |   const SectionHeader = ({ icon, title }: { icon: React.ReactNode, title: string }) => (
+  27 |     <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    react-hooks/static-components
+  62:10  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:62:10
+  60 |       {/* Giấy tờ tùy thân */}
+  61 |       <motion.div variants={itemVariants} className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:border-slate-200 hover:shadow-md transition-all duration-300 group hover:-translate-y-1">
+> 62 |         <SectionHeader icon={<FileText size={18} />} title="Giấy tờ tùy thân" />
+     |          ^^^^^^^^^^^^^ This component is created during render
+  63 |         <div className="grid grid-cols-2 gap-y-6 gap-x-4">
+  64 |           <div className="col-span-2"><Label>Số CCCD</Label><Value>079203000285</Value></div>
+  65 |           <div><Label>Ngày cấp</Label><Value>2021-12-20</Value></div>
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:26:25
+  24 |   );
+  25 |   
+> 26 |   const SectionHeader = ({ icon, title }: { icon: React.ReactNode, title: string }) => (
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 27 |     <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100">
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 28 |       <div className="p-1.5 bg-[#2E3192]/10 text-[#2E3192] rounded group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300">
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 29 |         {icon}
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 30 |       </div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 31 |       <h3 className="text-base font-bold text-[#1E2062]">{title}</h3>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 32 |     </div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 33 |   );
+     | ^^^^ The component is created during render here
+  34 |
+  35 |   return (
+  36 |     <motion.div                      react-hooks/static-components
+  64:40  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:64:40
+  62 |         <SectionHeader icon={<FileText size={18} />} title="Giấy tờ tùy thân" />
+  63 |         <div className="grid grid-cols-2 gap-y-6 gap-x-4">
+> 64 |           <div className="col-span-2"><Label>Số CCCD</Label><Value>079203000285</Value></div>
+     |                                        ^^^^^ This component is created during render
+  65 |           <div><Label>Ngày cấp</Label><Value>2021-12-20</Value></div>
+  66 |           <div className="col-span-2"><Label>Nơi cấp</Label><Value>Cục cảnh sát quản lý hành chính về trật tự xã hội</Value></div>
+  67 |         </div>
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:18:17
+  16 |   };
+  17 |
+> 18 |   const Label = ({ children }: { children: React.ReactNode }) => (
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 19 |     <div className="text-xs font-medium text-slate-500 uppercase tracking-widest mb-1">{children}</div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 20 |   );
+     | ^^^^ The component is created during render here
+  21 |   
+  22 |   const Value = ({ children }: { children: React.ReactNode }) => (
+  23 |     <div className="text-sm font-semibold text-slate-800 break-words">{children || "—"}</div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      react-hooks/static-components
+  64:62  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:64:62
+  62 |         <SectionHeader icon={<FileText size={18} />} title="Giấy tờ tùy thân" />
+  63 |         <div className="grid grid-cols-2 gap-y-6 gap-x-4">
+> 64 |           <div className="col-span-2"><Label>Số CCCD</Label><Value>079203000285</Value></div>
+     |                                                              ^^^^^ This component is created during render
+  65 |           <div><Label>Ngày cấp</Label><Value>2021-12-20</Value></div>
+  66 |           <div className="col-span-2"><Label>Nơi cấp</Label><Value>Cục cảnh sát quản lý hành chính về trật tự xã hội</Value></div>
+  67 |         </div>
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:22:17
+  20 |   );
+  21 |   
+> 22 |   const Value = ({ children }: { children: React.ReactNode }) => (
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 23 |     <div className="text-sm font-semibold text-slate-800 break-words">{children || "—"}</div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 24 |   );
+     | ^^^^ The component is created during render here
+  25 |   
+  26 |   const SectionHeader = ({ icon, title }: { icon: React.ReactNode, title: string }) => (
+  27 |     <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       react-hooks/static-components
+  65:17  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:65:17
+  63 |         <div className="grid grid-cols-2 gap-y-6 gap-x-4">
+  64 |           <div className="col-span-2"><Label>Số CCCD</Label><Value>079203000285</Value></div>
+> 65 |           <div><Label>Ngày cấp</Label><Value>2021-12-20</Value></div>
+     |                 ^^^^^ This component is created during render
+  66 |           <div className="col-span-2"><Label>Nơi cấp</Label><Value>Cục cảnh sát quản lý hành chính về trật tự xã hội</Value></div>
+  67 |         </div>
+  68 |       </motion.div>
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:18:17
+  16 |   };
+  17 |
+> 18 |   const Label = ({ children }: { children: React.ReactNode }) => (
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 19 |     <div className="text-xs font-medium text-slate-500 uppercase tracking-widest mb-1">{children}</div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 20 |   );
+     | ^^^^ The component is created during render here
+  21 |   
+  22 |   const Value = ({ children }: { children: React.ReactNode }) => (
+  23 |     <div className="text-sm font-semibold text-slate-800 break-words">{children || "—"}</div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          react-hooks/static-components
+  65:40  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:65:40
+  63 |         <div className="grid grid-cols-2 gap-y-6 gap-x-4">
+  64 |           <div className="col-span-2"><Label>Số CCCD</Label><Value>079203000285</Value></div>
+> 65 |           <div><Label>Ngày cấp</Label><Value>2021-12-20</Value></div>
+     |                                        ^^^^^ This component is created during render
+  66 |           <div className="col-span-2"><Label>Nơi cấp</Label><Value>Cục cảnh sát quản lý hành chính về trật tự xã hội</Value></div>
+  67 |         </div>
+  68 |       </motion.div>
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:22:17
+  20 |   );
+  21 |   
+> 22 |   const Value = ({ children }: { children: React.ReactNode }) => (
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 23 |     <div className="text-sm font-semibold text-slate-800 break-words">{children || "—"}</div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 24 |   );
+     | ^^^^ The component is created during render here
+  25 |   
+  26 |   const SectionHeader = ({ icon, title }: { icon: React.ReactNode, title: string }) => (
+  27 |     <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          react-hooks/static-components
+  66:40  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:66:40
+  64 |           <div className="col-span-2"><Label>Số CCCD</Label><Value>079203000285</Value></div>
+  65 |           <div><Label>Ngày cấp</Label><Value>2021-12-20</Value></div>
+> 66 |           <div className="col-span-2"><Label>Nơi cấp</Label><Value>Cục cảnh sát quản lý hành chính về trật tự xã hội</Value></div>
+     |                                        ^^^^^ This component is created during render
+  67 |         </div>
+  68 |       </motion.div>
+  69 |
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:18:17
+  16 |   };
+  17 |
+> 18 |   const Label = ({ children }: { children: React.ReactNode }) => (
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 19 |     <div className="text-xs font-medium text-slate-500 uppercase tracking-widest mb-1">{children}</div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 20 |   );
+     | ^^^^ The component is created during render here
+  21 |   
+  22 |   const Value = ({ children }: { children: React.ReactNode }) => (
+  23 |     <div className="text-sm font-semibold text-slate-800 break-words">{children || "—"}</div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              react-hooks/static-components
+  66:62  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:66:62
+  64 |           <div className="col-span-2"><Label>Số CCCD</Label><Value>079203000285</Value></div>
+  65 |           <div><Label>Ngày cấp</Label><Value>2021-12-20</Value></div>
+> 66 |           <div className="col-span-2"><Label>Nơi cấp</Label><Value>Cục cảnh sát quản lý hành chính về trật tự xã hội</Value></div>
+     |                                                              ^^^^^ This component is created during render
+  67 |         </div>
+  68 |       </motion.div>
+  69 |
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:22:17
+  20 |   );
+  21 |   
+> 22 |   const Value = ({ children }: { children: React.ReactNode }) => (
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 23 |     <div className="text-sm font-semibold text-slate-800 break-words">{children || "—"}</div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 24 |   );
+     | ^^^^ The component is created during render here
+  25 |   
+  26 |   const SectionHeader = ({ icon, title }: { icon: React.ReactNode, title: string }) => (
+  27 |     <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               react-hooks/static-components
+  72:10  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:72:10
+  70 |       {/* Địa chỉ thường trú */}
+  71 |       <motion.div variants={itemVariants} className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:border-slate-200 hover:shadow-md transition-all duration-300 group hover:-translate-y-1">
+> 72 |         <SectionHeader icon={<Home size={18} />} title="Địa chỉ thường trú" />
+     |          ^^^^^^^^^^^^^ This component is created during render
+  73 |         <div className="grid grid-cols-2 gap-y-6 gap-x-4">
+  74 |           <div className="col-span-2"><Label>Số nhà, đường</Label><Value>165/75K Tôn Thất Thuyết</Value></div>
+  75 |           <div><Label>Phường / Xã</Label><Value>Phường 15</Value></div>
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:26:25
+  24 |   );
+  25 |   
+> 26 |   const SectionHeader = ({ icon, title }: { icon: React.ReactNode, title: string }) => (
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 27 |     <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100">
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 28 |       <div className="p-1.5 bg-[#2E3192]/10 text-[#2E3192] rounded group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300">
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 29 |         {icon}
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 30 |       </div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 31 |       <h3 className="text-base font-bold text-[#1E2062]">{title}</h3>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 32 |     </div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 33 |   );
+     | ^^^^ The component is created during render here
+  34 |
+  35 |   return (
+  36 |     <motion.div   react-hooks/static-components
+  74:40  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:74:40
+  72 |         <SectionHeader icon={<Home size={18} />} title="Địa chỉ thường trú" />
+  73 |         <div className="grid grid-cols-2 gap-y-6 gap-x-4">
+> 74 |           <div className="col-span-2"><Label>Số nhà, đường</Label><Value>165/75K Tôn Thất Thuyết</Value></div>
+     |                                        ^^^^^ This component is created during render
+  75 |           <div><Label>Phường / Xã</Label><Value>Phường 15</Value></div>
+  76 |           <div><Label>Quận / Huyện</Label><Value>Quận 4</Value></div>
+  77 |           <div className="col-span-2"><Label>Tỉnh / Thành</Label><Value>Thành phố Hồ Chí Minh</Value></div>
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:18:17
+  16 |   };
+  17 |
+> 18 |   const Label = ({ children }: { children: React.ReactNode }) => (
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 19 |     <div className="text-xs font-medium text-slate-500 uppercase tracking-widest mb-1">{children}</div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 20 |   );
+     | ^^^^ The component is created during render here
+  21 |   
+  22 |   const Value = ({ children }: { children: React.ReactNode }) => (
+  23 |     <div className="text-sm font-semibold text-slate-800 break-words">{children || "—"}</div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     react-hooks/static-components
+  74:68  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:74:68
+  72 |         <SectionHeader icon={<Home size={18} />} title="Địa chỉ thường trú" />
+  73 |         <div className="grid grid-cols-2 gap-y-6 gap-x-4">
+> 74 |           <div className="col-span-2"><Label>Số nhà, đường</Label><Value>165/75K Tôn Thất Thuyết</Value></div>
+     |                                                                    ^^^^^ This component is created during render
+  75 |           <div><Label>Phường / Xã</Label><Value>Phường 15</Value></div>
+  76 |           <div><Label>Quận / Huyện</Label><Value>Quận 4</Value></div>
+  77 |           <div className="col-span-2"><Label>Tỉnh / Thành</Label><Value>Thành phố Hồ Chí Minh</Value></div>
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:22:17
+  20 |   );
+  21 |   
+> 22 |   const Value = ({ children }: { children: React.ReactNode }) => (
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 23 |     <div className="text-sm font-semibold text-slate-800 break-words">{children || "—"}</div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 24 |   );
+     | ^^^^ The component is created during render here
+  25 |   
+  26 |   const SectionHeader = ({ icon, title }: { icon: React.ReactNode, title: string }) => (
+  27 |     <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                react-hooks/static-components
+  75:17  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:75:17
+  73 |         <div className="grid grid-cols-2 gap-y-6 gap-x-4">
+  74 |           <div className="col-span-2"><Label>Số nhà, đường</Label><Value>165/75K Tôn Thất Thuyết</Value></div>
+> 75 |           <div><Label>Phường / Xã</Label><Value>Phường 15</Value></div>
+     |                 ^^^^^ This component is created during render
+  76 |           <div><Label>Quận / Huyện</Label><Value>Quận 4</Value></div>
+  77 |           <div className="col-span-2"><Label>Tỉnh / Thành</Label><Value>Thành phố Hồ Chí Minh</Value></div>
+  78 |         </div>
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:18:17
+  16 |   };
+  17 |
+> 18 |   const Label = ({ children }: { children: React.ReactNode }) => (
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 19 |     <div className="text-xs font-medium text-slate-500 uppercase tracking-widest mb-1">{children}</div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 20 |   );
+     | ^^^^ The component is created during render here
+  21 |   
+  22 |   const Value = ({ children }: { children: React.ReactNode }) => (
+  23 |     <div className="text-sm font-semibold text-slate-800 break-words">{children || "—"}</div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            react-hooks/static-components
+  75:43  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:75:43
+  73 |         <div className="grid grid-cols-2 gap-y-6 gap-x-4">
+  74 |           <div className="col-span-2"><Label>Số nhà, đường</Label><Value>165/75K Tôn Thất Thuyết</Value></div>
+> 75 |           <div><Label>Phường / Xã</Label><Value>Phường 15</Value></div>
+     |                                           ^^^^^ This component is created during render
+  76 |           <div><Label>Quận / Huyện</Label><Value>Quận 4</Value></div>
+  77 |           <div className="col-span-2"><Label>Tỉnh / Thành</Label><Value>Thành phố Hồ Chí Minh</Value></div>
+  78 |         </div>
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:22:17
+  20 |   );
+  21 |   
+> 22 |   const Value = ({ children }: { children: React.ReactNode }) => (
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 23 |     <div className="text-sm font-semibold text-slate-800 break-words">{children || "—"}</div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 24 |   );
+     | ^^^^ The component is created during render here
+  25 |   
+  26 |   const SectionHeader = ({ icon, title }: { icon: React.ReactNode, title: string }) => (
+  27 |     <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         react-hooks/static-components
+  76:17  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:76:17
+  74 |           <div className="col-span-2"><Label>Số nhà, đường</Label><Value>165/75K Tôn Thất Thuyết</Value></div>
+  75 |           <div><Label>Phường / Xã</Label><Value>Phường 15</Value></div>
+> 76 |           <div><Label>Quận / Huyện</Label><Value>Quận 4</Value></div>
+     |                 ^^^^^ This component is created during render
+  77 |           <div className="col-span-2"><Label>Tỉnh / Thành</Label><Value>Thành phố Hồ Chí Minh</Value></div>
+  78 |         </div>
+  79 |       </motion.div>
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:18:17
+  16 |   };
+  17 |
+> 18 |   const Label = ({ children }: { children: React.ReactNode }) => (
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 19 |     <div className="text-xs font-medium text-slate-500 uppercase tracking-widest mb-1">{children}</div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 20 |   );
+     | ^^^^ The component is created during render here
+  21 |   
+  22 |   const Value = ({ children }: { children: React.ReactNode }) => (
+  23 |     <div className="text-sm font-semibold text-slate-800 break-words">{children || "—"}</div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   react-hooks/static-components
+  76:44  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:76:44
+  74 |           <div className="col-span-2"><Label>Số nhà, đường</Label><Value>165/75K Tôn Thất Thuyết</Value></div>
+  75 |           <div><Label>Phường / Xã</Label><Value>Phường 15</Value></div>
+> 76 |           <div><Label>Quận / Huyện</Label><Value>Quận 4</Value></div>
+     |                                            ^^^^^ This component is created during render
+  77 |           <div className="col-span-2"><Label>Tỉnh / Thành</Label><Value>Thành phố Hồ Chí Minh</Value></div>
+  78 |         </div>
+  79 |       </motion.div>
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:22:17
+  20 |   );
+  21 |   
+> 22 |   const Value = ({ children }: { children: React.ReactNode }) => (
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 23 |     <div className="text-sm font-semibold text-slate-800 break-words">{children || "—"}</div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 24 |   );
+     | ^^^^ The component is created during render here
+  25 |   
+  26 |   const SectionHeader = ({ icon, title }: { icon: React.ReactNode, title: string }) => (
+  27 |     <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               react-hooks/static-components
+  77:40  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:77:40
+  75 |           <div><Label>Phường / Xã</Label><Value>Phường 15</Value></div>
+  76 |           <div><Label>Quận / Huyện</Label><Value>Quận 4</Value></div>
+> 77 |           <div className="col-span-2"><Label>Tỉnh / Thành</Label><Value>Thành phố Hồ Chí Minh</Value></div>
+     |                                        ^^^^^ This component is created during render
+  78 |         </div>
+  79 |       </motion.div>
+  80 |
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:18:17
+  16 |   };
+  17 |
+> 18 |   const Label = ({ children }: { children: React.ReactNode }) => (
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 19 |     <div className="text-xs font-medium text-slate-500 uppercase tracking-widest mb-1">{children}</div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 20 |   );
+     | ^^^^ The component is created during render here
+  21 |   
+  22 |   const Value = ({ children }: { children: React.ReactNode }) => (
+  23 |     <div className="text-sm font-semibold text-slate-800 break-words">{children || "—"}</div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           react-hooks/static-components
+  77:67  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:77:67
+  75 |           <div><Label>Phường / Xã</Label><Value>Phường 15</Value></div>
+  76 |           <div><Label>Quận / Huyện</Label><Value>Quận 4</Value></div>
+> 77 |           <div className="col-span-2"><Label>Tỉnh / Thành</Label><Value>Thành phố Hồ Chí Minh</Value></div>
+     |                                                                   ^^^^^ This component is created during render
+  78 |         </div>
+  79 |       </motion.div>
+  80 |
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:22:17
+  20 |   );
+  21 |   
+> 22 |   const Value = ({ children }: { children: React.ReactNode }) => (
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 23 |     <div className="text-sm font-semibold text-slate-800 break-words">{children || "—"}</div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 24 |   );
+     | ^^^^ The component is created during render here
+  25 |   
+  26 |   const SectionHeader = ({ icon, title }: { icon: React.ReactNode, title: string }) => (
+  27 |     <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       react-hooks/static-components
+  83:10  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:83:10
+  81 |       {/* Chỗ ở hiện nay */}
+  82 |       <motion.div variants={itemVariants} className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:border-slate-200 hover:shadow-md transition-all duration-300 group hover:-translate-y-1">
+> 83 |         <SectionHeader icon={<Map size={18} />} title="Chỗ ở hiện nay" />
+     |          ^^^^^^^^^^^^^ This component is created during render
+  84 |         <div className="grid grid-cols-2 gap-y-6 gap-x-4">
+  85 |           <div className="col-span-2"><Label>Số nhà, đường</Label><Value>165/75K Tôn Thất Thuyết</Value></div>
+  86 |           <div><Label>Phường / Xã</Label><Value>Phường 15</Value></div>
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:26:25
+  24 |   );
+  25 |   
+> 26 |   const SectionHeader = ({ icon, title }: { icon: React.ReactNode, title: string }) => (
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 27 |     <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100">
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 28 |       <div className="p-1.5 bg-[#2E3192]/10 text-[#2E3192] rounded group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300">
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 29 |         {icon}
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 30 |       </div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 31 |       <h3 className="text-base font-bold text-[#1E2062]">{title}</h3>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 32 |     </div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 33 |   );
+     | ^^^^ The component is created during render here
+  34 |
+  35 |   return (
+  36 |     <motion.div            react-hooks/static-components
+  85:40  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:85:40
+  83 |         <SectionHeader icon={<Map size={18} />} title="Chỗ ở hiện nay" />
+  84 |         <div className="grid grid-cols-2 gap-y-6 gap-x-4">
+> 85 |           <div className="col-span-2"><Label>Số nhà, đường</Label><Value>165/75K Tôn Thất Thuyết</Value></div>
+     |                                        ^^^^^ This component is created during render
+  86 |           <div><Label>Phường / Xã</Label><Value>Phường 15</Value></div>
+  87 |           <div><Label>Quận / Huyện</Label><Value>Quận 4</Value></div>
+  88 |           <div className="col-span-2"><Label>Tỉnh / Thành</Label><Value>Thành phố Hồ Chí Minh</Value></div>
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:18:17
+  16 |   };
+  17 |
+> 18 |   const Label = ({ children }: { children: React.ReactNode }) => (
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 19 |     <div className="text-xs font-medium text-slate-500 uppercase tracking-widest mb-1">{children}</div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 20 |   );
+     | ^^^^ The component is created during render here
+  21 |   
+  22 |   const Value = ({ children }: { children: React.ReactNode }) => (
+  23 |     <div className="text-sm font-semibold text-slate-800 break-words">{children || "—"}</div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          react-hooks/static-components
+  85:68  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:85:68
+  83 |         <SectionHeader icon={<Map size={18} />} title="Chỗ ở hiện nay" />
+  84 |         <div className="grid grid-cols-2 gap-y-6 gap-x-4">
+> 85 |           <div className="col-span-2"><Label>Số nhà, đường</Label><Value>165/75K Tôn Thất Thuyết</Value></div>
+     |                                                                    ^^^^^ This component is created during render
+  86 |           <div><Label>Phường / Xã</Label><Value>Phường 15</Value></div>
+  87 |           <div><Label>Quận / Huyện</Label><Value>Quận 4</Value></div>
+  88 |           <div className="col-span-2"><Label>Tỉnh / Thành</Label><Value>Thành phố Hồ Chí Minh</Value></div>
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:22:17
+  20 |   );
+  21 |   
+> 22 |   const Value = ({ children }: { children: React.ReactNode }) => (
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 23 |     <div className="text-sm font-semibold text-slate-800 break-words">{children || "—"}</div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 24 |   );
+     | ^^^^ The component is created during render here
+  25 |   
+  26 |   const SectionHeader = ({ icon, title }: { icon: React.ReactNode, title: string }) => (
+  27 |     <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     react-hooks/static-components
+  86:17  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:86:17
+  84 |         <div className="grid grid-cols-2 gap-y-6 gap-x-4">
+  85 |           <div className="col-span-2"><Label>Số nhà, đường</Label><Value>165/75K Tôn Thất Thuyết</Value></div>
+> 86 |           <div><Label>Phường / Xã</Label><Value>Phường 15</Value></div>
+     |                 ^^^^^ This component is created during render
+  87 |           <div><Label>Quận / Huyện</Label><Value>Quận 4</Value></div>
+  88 |           <div className="col-span-2"><Label>Tỉnh / Thành</Label><Value>Thành phố Hồ Chí Minh</Value></div>
+  89 |         </div>
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:18:17
+  16 |   };
+  17 |
+> 18 |   const Label = ({ children }: { children: React.ReactNode }) => (
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 19 |     <div className="text-xs font-medium text-slate-500 uppercase tracking-widest mb-1">{children}</div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 20 |   );
+     | ^^^^ The component is created during render here
+  21 |   
+  22 |   const Value = ({ children }: { children: React.ReactNode }) => (
+  23 |     <div className="text-sm font-semibold text-slate-800 break-words">{children || "—"}</div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            react-hooks/static-components
+  86:43  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:86:43
+  84 |         <div className="grid grid-cols-2 gap-y-6 gap-x-4">
+  85 |           <div className="col-span-2"><Label>Số nhà, đường</Label><Value>165/75K Tôn Thất Thuyết</Value></div>
+> 86 |           <div><Label>Phường / Xã</Label><Value>Phường 15</Value></div>
+     |                                           ^^^^^ This component is created during render
+  87 |           <div><Label>Quận / Huyện</Label><Value>Quận 4</Value></div>
+  88 |           <div className="col-span-2"><Label>Tỉnh / Thành</Label><Value>Thành phố Hồ Chí Minh</Value></div>
+  89 |         </div>
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:22:17
+  20 |   );
+  21 |   
+> 22 |   const Value = ({ children }: { children: React.ReactNode }) => (
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 23 |     <div className="text-sm font-semibold text-slate-800 break-words">{children || "—"}</div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 24 |   );
+     | ^^^^ The component is created during render here
+  25 |   
+  26 |   const SectionHeader = ({ icon, title }: { icon: React.ReactNode, title: string }) => (
+  27 |     <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         react-hooks/static-components
+  87:17  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:87:17
+  85 |           <div className="col-span-2"><Label>Số nhà, đường</Label><Value>165/75K Tôn Thất Thuyết</Value></div>
+  86 |           <div><Label>Phường / Xã</Label><Value>Phường 15</Value></div>
+> 87 |           <div><Label>Quận / Huyện</Label><Value>Quận 4</Value></div>
+     |                 ^^^^^ This component is created during render
+  88 |           <div className="col-span-2"><Label>Tỉnh / Thành</Label><Value>Thành phố Hồ Chí Minh</Value></div>
+  89 |         </div>
+  90 |       </motion.div>
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:18:17
+  16 |   };
+  17 |
+> 18 |   const Label = ({ children }: { children: React.ReactNode }) => (
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 19 |     <div className="text-xs font-medium text-slate-500 uppercase tracking-widest mb-1">{children}</div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 20 |   );
+     | ^^^^ The component is created during render here
+  21 |   
+  22 |   const Value = ({ children }: { children: React.ReactNode }) => (
+  23 |     <div className="text-sm font-semibold text-slate-800 break-words">{children || "—"}</div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   react-hooks/static-components
+  87:44  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:87:44
+  85 |           <div className="col-span-2"><Label>Số nhà, đường</Label><Value>165/75K Tôn Thất Thuyết</Value></div>
+  86 |           <div><Label>Phường / Xã</Label><Value>Phường 15</Value></div>
+> 87 |           <div><Label>Quận / Huyện</Label><Value>Quận 4</Value></div>
+     |                                            ^^^^^ This component is created during render
+  88 |           <div className="col-span-2"><Label>Tỉnh / Thành</Label><Value>Thành phố Hồ Chí Minh</Value></div>
+  89 |         </div>
+  90 |       </motion.div>
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:22:17
+  20 |   );
+  21 |   
+> 22 |   const Value = ({ children }: { children: React.ReactNode }) => (
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 23 |     <div className="text-sm font-semibold text-slate-800 break-words">{children || "—"}</div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 24 |   );
+     | ^^^^ The component is created during render here
+  25 |   
+  26 |   const SectionHeader = ({ icon, title }: { icon: React.ReactNode, title: string }) => (
+  27 |     <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               react-hooks/static-components
+  88:40  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:88:40
+  86 |           <div><Label>Phường / Xã</Label><Value>Phường 15</Value></div>
+  87 |           <div><Label>Quận / Huyện</Label><Value>Quận 4</Value></div>
+> 88 |           <div className="col-span-2"><Label>Tỉnh / Thành</Label><Value>Thành phố Hồ Chí Minh</Value></div>
+     |                                        ^^^^^ This component is created during render
+  89 |         </div>
+  90 |       </motion.div>
+  91 |     </motion.div>
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:18:17
+  16 |   };
+  17 |
+> 18 |   const Label = ({ children }: { children: React.ReactNode }) => (
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 19 |     <div className="text-xs font-medium text-slate-500 uppercase tracking-widest mb-1">{children}</div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 20 |   );
+     | ^^^^ The component is created during render here
+  21 |   
+  22 |   const Value = ({ children }: { children: React.ReactNode }) => (
+  23 |     <div className="text-sm font-semibold text-slate-800 break-words">{children || "—"}</div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         react-hooks/static-components
+  88:67  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:88:67
+  86 |           <div><Label>Phường / Xã</Label><Value>Phường 15</Value></div>
+  87 |           <div><Label>Quận / Huyện</Label><Value>Quận 4</Value></div>
+> 88 |           <div className="col-span-2"><Label>Tỉnh / Thành</Label><Value>Thành phố Hồ Chí Minh</Value></div>
+     |                                                                   ^^^^^ This component is created during render
+  89 |         </div>
+  90 |       </motion.div>
+  91 |     </motion.div>
+
+C:\VNFT\hrm-portal\src\pages\app-routes\profile\components\PersonalInfoTab.tsx:22:17
+  20 |   );
+  21 |   
+> 22 |   const Value = ({ children }: { children: React.ReactNode }) => (
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 23 |     <div className="text-sm font-semibold text-slate-800 break-words">{children || "—"}</div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 24 |   );
+     | ^^^^ The component is created during render here
+  25 |   
+  26 |   const SectionHeader = ({ icon, title }: { icon: React.ReactNode, title: string }) => (
+  27 |     <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     react-hooks/static-components
+
+✖ 79 problems (79 errors, 0 warnings)
+

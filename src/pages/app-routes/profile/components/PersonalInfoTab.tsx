@@ -1,6 +1,23 @@
 import { User, FileText, Home, Map } from "lucide-react";
 import { motion, type Variants } from "framer-motion";
 
+const Label = ({ children }: { children: React.ReactNode }) => (
+  <div className="text-xs font-medium text-slate-500 uppercase tracking-widest mb-1">{children}</div>
+);
+
+const Value = ({ children }: { children: React.ReactNode }) => (
+  <div className="text-sm font-semibold text-slate-800 break-words">{children || "—"}</div>
+);
+
+const SectionHeader = ({ icon, title }: { icon: React.ReactNode, title: string }) => (
+  <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100">
+    <div className="p-1.5 bg-[#2E3192]/10 text-[#2E3192] rounded group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300">
+      {icon}
+    </div>
+    <h3 className="text-base font-bold text-[#1E2062]">{title}</h3>
+  </div>
+);
+
 export default function PersonalInfoTab() {
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
@@ -14,23 +31,6 @@ export default function PersonalInfoTab() {
     hidden: { opacity: 0, y: 20 },
     show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
   };
-
-  const Label = ({ children }: { children: React.ReactNode }) => (
-    <div className="text-xs font-medium text-slate-500 uppercase tracking-widest mb-1">{children}</div>
-  );
-  
-  const Value = ({ children }: { children: React.ReactNode }) => (
-    <div className="text-sm font-semibold text-slate-800 break-words">{children || "—"}</div>
-  );
-  
-  const SectionHeader = ({ icon, title }: { icon: React.ReactNode, title: string }) => (
-    <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100">
-      <div className="p-1.5 bg-[#2E3192]/10 text-[#2E3192] rounded group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300">
-        {icon}
-      </div>
-      <h3 className="text-base font-bold text-[#1E2062]">{title}</h3>
-    </div>
-  );
 
   return (
     <motion.div 

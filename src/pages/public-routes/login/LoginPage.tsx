@@ -6,26 +6,14 @@ import LoginHeader from "./components/LoginHeader/LoginHeader";
 import LoginFooter from "./components/LoginFooter/LoginFooter";
 import LoginSocialSidebar from "./components/LoginSocialSidebar/LoginSocialSidebar";
 import AnimatedLogisticsBackground from "./components/AnimatedLogisticsBackground/AnimatedLogisticsBackground";
-import LoadingPage from "../../../components/custom/loadingPage/LoadingPage";
 
 export default function LoginPage() {
   const { t } = useTranslation();
-  const [isBooting, setIsBooting] = useState(true);
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
-
-  if (isBooting) {
-    return (
-      <LoadingPage
-        duration={3000}
-        onComplete={() => setIsBooting(false)}
-        message={t('login.loadingAuth')}
-      />
-    );
-  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,6 +23,7 @@ export default function LoginPage() {
       navigate("/app");
     }, 1500);
   };
+
 
   return (
     <div className="login-page">

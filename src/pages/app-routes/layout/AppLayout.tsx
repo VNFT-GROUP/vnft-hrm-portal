@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, Suspense } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import { ScrollArea } from "../../../components/ui/scroll-area";
 import Sidebar from "./components/Sidebar.tsx";
@@ -44,7 +44,9 @@ export default function AppLayout() {
 
         <ScrollArea className="app-content-scroll shadow-inner" viewportRef={scrollViewportRef}>
           <div className="app-content">
-            <Outlet />
+            <Suspense fallback={<div className="flex h-full items-center justify-center p-8 text-muted-foreground">Loading module...</div>}>
+              <Outlet />
+            </Suspense>
           </div>
         </ScrollArea>
         <ScrollToTopButton scrollViewportRef={scrollViewportRef} />

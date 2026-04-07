@@ -19,5 +19,9 @@ export default defineConfig({
   server: {
     port: 3000,
     open: true
+  },
+  optimizeDeps: {
+    force: true,   // Forces Vite to always re-bundle dependencies when server starts
+    include: ["leaflet", "react-leaflet"]
   }
 });

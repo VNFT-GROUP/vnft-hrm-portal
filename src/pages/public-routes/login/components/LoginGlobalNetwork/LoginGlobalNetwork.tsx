@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { ChevronLeft, MapPin, X } from "lucide-react";
 import "./LoginGlobalNetwork.css";
 

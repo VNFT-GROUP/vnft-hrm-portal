@@ -1,9 +1,21 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { lazy, Suspense } from "react";
 
-const LoginPage = lazy(() => import("../pages/public-routes/login/LoginPage"));
-const NetworkPage = lazy(() => import("../pages/public-routes/network/NetworkPage"));
-const AppLayout = lazy(() => import("../pages/app-routes/layout/AppLayout"));
+// Utility to enforce a minimum loading time so the truck animation can finish
+/* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+const lazyWithDelay = (importFunc: () => Promise<any>, delay = 2500) => {
+  return lazy(async () => {
+    const [module] = await Promise.all([
+      importFunc(),
+      new Promise((resolve) => setTimeout(resolve, delay)),
+    ]);
+    return module;
+  });
+};
+
+const LoginPage = lazyWithDelay(() => import("../pages/public-routes/login/LoginPage"), 2500);
+const NetworkPage = lazyWithDelay(() => import("../pages/public-routes/network/NetworkPage"), 1500);
+const AppLayout = lazyWithDelay(() => import("../pages/app-routes/layout/AppLayout"), 2500);
 const DashboardPage = lazy(() => import("../pages/app-routes/dashboard/DashboardPage"));
 
 // Dynamic Imports
@@ -31,7 +43,7 @@ import LoadingPage from "../components/custom/loadingPage/LoadingPage";
 
 export default function AppRoutes() {
   return (
-    <Suspense fallback={<LoadingPage duration={100} message="Loading module..." />}>
+    <Suspense fallback={<LoadingPage duration={2500} message="Loading module..." />}>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/network" element={<NetworkPage />} />

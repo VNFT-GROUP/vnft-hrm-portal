@@ -3,6 +3,13 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
+import {
+  ContextMenu,
+  ContextMenuTrigger,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuSeparator,
+} from "@/components/ui/context-menu";
 
 export interface Employee {
   id: string;
@@ -27,7 +34,10 @@ interface EmployeeTableProps {
   onDelete: (id: string) => void;
 }
 
+import { useState } from "react";
+
 export default function EmployeeTable({ employees, onEdit, onDelete }: EmployeeTableProps) {
+  const [rightClickedEmpId, setRightClickedEmpId] = useState<string | null>(null);
   const getStatusColor = (status: string) => {
     switch(status) {
       case "Đang làm": return "bg-[#10b981] hover:bg-[#10b981]/90 shadow-[#10b981]/20";
@@ -38,10 +48,14 @@ export default function EmployeeTable({ employees, onEdit, onDelete }: EmployeeT
     }
   };
 
+  const activeEmp = employees.find(e => e.id === rightClickedEmpId);
+
   return (
     <div className="overflow-x-auto">
-      <Table className="border-collapse">
-        <TableHeader className="bg-muted/80">
+      <ContextMenu>
+        <ContextMenuTrigger className="block w-full">
+          <Table className="border-collapse">
+            <TableHeader className="bg-muted/80">
           <TableRow className="border-b border-border hover:bg-transparent">
             <TableHead className="font-semibold text-foreground w-[120px] border-r border-border text-center align-middle px-4">Mã NV</TableHead>
             <TableHead className="font-semibold text-foreground border-r border-border text-left align-middle px-6 min-w-[250px]">Họ và Tên</TableHead>
@@ -60,6 +74,7 @@ export default function EmployeeTable({ employees, onEdit, onDelete }: EmployeeT
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 className="border-b border-border group/row hover:bg-[#1E2062]/5 transition-colors duration-200"
+                onContextMenu={() => setRightClickedEmpId(emp.id)}
               >
                 <TableCell className="font-medium text-muted-foreground py-4 border-r border-border text-center align-middle px-4">
                   {emp.empCodePrefix}{emp.empCodeId}
@@ -117,6 +132,34 @@ export default function EmployeeTable({ employees, onEdit, onDelete }: EmployeeT
           )}
         </TableBody>
       </Table>
+      </ContextMenuTrigger>
+
+      {/* RENDER CONTEXT MENU FOR THE HOVERED ROW */}
+      {activeEmp && (
+        <ContextMenuContent className="w-56 z-50">
+          <ContextMenuItem className="cursor-pointer">
+            <Eye className="mr-2 h-4 w-4 text-sky-500" />
+            <span>Xem chi tiết thông tin chung</span>
+          </ContextMenuItem>
+          <ContextMenuItem className="cursor-pointer" onClick={() => onEdit(activeEmp)}>
+            <Edit2 className="mr-2 h-4 w-4 text-amber-500" />
+            <span>Chỉnh sửa thông tin chung</span>
+          </ContextMenuItem>
+          <ContextMenuItem className="cursor-pointer">
+            <CircleDollarSign className="mr-2 h-4 w-4 text-emerald-500" />
+            <span>Xem/chỉnh sửa lương</span>
+          </ContextMenuItem>
+          <ContextMenuSeparator />
+          <ContextMenuItem 
+            className="cursor-pointer text-rose-600 focus:text-rose-700 focus:bg-rose-50 dark:focus:bg-rose-500/10" 
+            onClick={() => onDelete(activeEmp.id)}
+          >
+            <Trash2 className="mr-2 h-4 w-4 text-rose-500" />
+            <span>Hủy kích hoạt tài khoản</span>
+          </ContextMenuItem>
+        </ContextMenuContent>
+      )}
+      </ContextMenu>
     </div>
   );
 }

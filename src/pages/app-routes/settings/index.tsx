@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
-import { Monitor } from "lucide-react";
+import { Monitor, Globe } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { useLayoutStore } from "@/store/useLayoutStore";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
@@ -7,6 +8,7 @@ import { Label } from "@/components/ui/label";
 export default function SettingsPage() {
   const showEmployeeLegend = useLayoutStore((state) => state.showEmployeeLegend);
   const setShowEmployeeLegend = useLayoutStore((state) => state.setShowEmployeeLegend);
+  const { i18n } = useTranslation();
 
   return (
     <div className="p-4 md:p-8 w-full max-w-5xl mx-auto min-h-full flex flex-col gap-8">
@@ -64,7 +66,47 @@ export default function SettingsPage() {
           </div>
         </motion.section>
 
-        {/* Can add more sections below... */}
+        {/* Section 2: Language Settings */}
+        <motion.section 
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2, ease: "easeOut" }}
+          className="bg-card text-card-foreground p-6 rounded-2xl border border-border shadow-sm"
+        >
+          <div className="flex items-center gap-3 mb-6 pb-4 border-b border-border">
+            <div className="p-2.5 bg-[#F7941D]/10 text-[#F7941D] rounded-xl">
+              <Globe size={24} />
+            </div>
+            <h2 className="text-xl font-bold text-[#1E2062]">Cài đặt ngôn ngữ</h2>
+          </div>
+
+          <div className="flex flex-col gap-6">
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex flex-col gap-1.5">
+                <Label className="text-base font-semibold">
+                  Ngôn ngữ hệ thống
+                </Label>
+                <p className="text-sm text-muted-foreground max-w-xl">
+                  Thay đổi ngôn ngữ hiển thị tổng thể của portal. (Thay đổi có hiệu lực ngay lập tức).
+                </p>
+              </div>
+              <div className="flex bg-muted p-1 rounded-lg border border-border">
+                <button 
+                  onClick={() => i18n.changeLanguage('vi')}
+                  className={`flex items-center gap-2 px-4 py-2.5 rounded-md font-medium text-sm transition-all ${(i18n.language === 'vi' || i18n.language === 'vi-VN') ? 'bg-background shadow-sm text-[#2E3192]' : 'text-muted-foreground hover:text-foreground hover:bg-muted-foreground/10'}`}
+                >
+                  <img src="https://flagcdn.com/w20/vn.png" width="20" alt="VN" className="rounded-sm shadow-sm" /> Tiếng Việt
+                </button>
+                <button 
+                  onClick={() => i18n.changeLanguage('en')}
+                  className={`flex items-center gap-2 px-4 py-2.5 rounded-md font-medium text-sm transition-all ${(i18n.language && i18n.language.startsWith('en')) ? 'bg-background shadow-sm text-[#2E3192]' : 'text-muted-foreground hover:text-foreground hover:bg-muted-foreground/10'}`}
+                >
+                  <img src="https://flagcdn.com/w20/gb.png" width="20" alt="EN" className="rounded-sm shadow-sm" /> English
+                </button>
+              </div>
+            </div>
+          </div>
+        </motion.section>
         
       </div>
     </div>

@@ -13,6 +13,18 @@ export default function Sidebar() {
   // State for sub-menus
   const [expandedMenus, setExpandedMenus] = useState<Record<string, boolean>>({});
   
+  // Register Ctrl + B shortcut
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'b') {
+        e.preventDefault();
+        toggleSidebar();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [toggleSidebar]);
+  
   // State for our custom "Toasts" (Tooltips)
   const [activeToast, setActiveToast] = useState<{ text: string; top: number; subItems?: string[] } | null>(null);
 

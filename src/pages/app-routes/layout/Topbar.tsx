@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { User, Book, Globe, Key, LogOut, Briefcase, BadgeCheck, Keyboard } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import "./Topbar.css";
@@ -6,6 +6,32 @@ import "./Topbar.css";
 export default function Topbar() {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const navigate = useNavigate();
+
+  // Register Ctrl + I shortcut for toggling User Menu
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Ctrl + I (or Cmd + I) to toggle menu
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'i') {
+        e.preventDefault();
+        setIsProfileOpen((prev) => !prev);
+      }
+      
+      // Alt + I to navigate to Profile
+      if (e.altKey && e.key.toLowerCase() === 'i') {
+        e.preventDefault();
+        navigate('/app/profile');
+        setIsProfileOpen(false); // Close dropdown if it happens to be open
+      }
+      // Shift + K to navigate to User Guide Shortcuts
+      if (e.shiftKey && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        navigate('/app/user-guide#shortcuts');
+        setIsProfileOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [navigate]);
 
   return (
     <>
@@ -82,8 +108,14 @@ export default function Topbar() {
               }}>
                 <Book size={18} className="pd-icon" /> <span>Hướng dẫn sử dụng</span>
               </div>
-              <div className="pd-item">
-                <Keyboard size={18} className="pd-icon" /> <span>Các phím tắt</span>
+              <div className="pd-item" onClick={() => {
+                setIsProfileOpen(false);
+                navigate('/app/user-guide#shortcuts');
+              }}>
+                <Keyboard size={18} className="pd-icon" /> <span className="flex-1">Các phím tắt</span>
+                <div className="flex items-center text-[0.7rem] font-mono text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200">
+                  Shift + K
+                </div>
               </div>
               <div className="pd-item">
                 <Globe size={18} className="pd-icon" /> <span className="flex-1">Ngôn ngữ</span>

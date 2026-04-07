@@ -68,6 +68,19 @@ export default function LoadingPage({
         </div>
 
         <div className="loading-card-custom">
+          <div className="progress-truck-wrapper" style={{ width: `${clampedProgress}%` }}>
+            <div className="progress-truck-icon">
+              <svg width="32" height="18" viewBox="0 0 80 48" fill="none">
+                <rect x="2" y="8" width="45" height="28" rx="3" fill="#F7941D" />
+                <rect x="49" y="14" width="22" height="22" rx="3" fill="#2E3192" />
+                <rect x="54" y="18" width="12" height="10" rx="1.5" fill="#f8fafc" opacity="0.9" />
+                <circle cx="14" cy="39" r="6" fill="#1e293b" />
+                <circle cx="60" cy="39" r="6" fill="#1e293b" />
+                <circle cx="14" cy="39" r="2.5" fill="#e2e8f0" />
+                <circle cx="60" cy="39" r="2.5" fill="#e2e8f0" />
+              </svg>
+            </div>
+          </div>
           <div className="progress-bar-track">
             <div className="progress-bar-fill" style={{ width: `${clampedProgress}%` }} />
           </div>

@@ -1,7 +1,15 @@
+import { useState } from "react";
 import { Edit2, Trash2, Building2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { motion, AnimatePresence } from "framer-motion";
+import {
+  ContextMenu,
+  ContextMenuTrigger,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuSeparator,
+} from "@/components/ui/context-menu";
 
 
 export interface Department {
@@ -27,14 +35,19 @@ interface DepartmentTableProps {
 }
 
 export default function DepartmentTable({ departments, managers, onEdit, onDelete }: DepartmentTableProps) {
+  const [rightClickedDeptId, setRightClickedDeptId] = useState<string | null>(null);
   
   const getManagerDetails = (ids: string[]) => {
     return ids.map(id => managers.find(m => m.id === id)).filter(Boolean) as Manager[];
   };
 
+  const activeDept = departments.find(d => d.id === rightClickedDeptId);
+
   return (
     <div className="overflow-x-auto">
-      <Table className="border-collapse">
+      <ContextMenu>
+        <ContextMenuTrigger className="block w-full">
+          <Table className="border-collapse">
         <TableHeader className="bg-muted/80">
           <TableRow className="border-b border-border hover:bg-transparent">
             <TableHead className="font-semibold text-foreground w-[250px] border-r border-border text-left align-middle px-6">Tên phòng ban</TableHead>
@@ -55,6 +68,7 @@ export default function DepartmentTable({ departments, managers, onEdit, onDelet
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   className="border-b border-border group/row hover:bg-[#1E2062]/5 transition-colors duration-200"
+                  onContextMenu={() => setRightClickedDeptId(dept.id)}
                 >
                   <TableCell className="font-bold text-[#1E2062] py-4 border-r border-border text-left align-middle px-6">
                     {dept.name}
@@ -105,6 +119,26 @@ export default function DepartmentTable({ departments, managers, onEdit, onDelet
           )}
         </TableBody>
       </Table>
+      </ContextMenuTrigger>
+
+      {/* RENDER CONTEXT MENU FOR THE ROW */}
+      {activeDept && (
+        <ContextMenuContent className="w-56 z-50">
+          <ContextMenuItem className="cursor-pointer" onClick={() => onEdit(activeDept)}>
+            <Edit2 className="mr-2 h-4 w-4 text-[#2E3192]" />
+            <span>Chỉnh sửa thông tin phòng ban</span>
+          </ContextMenuItem>
+          <ContextMenuSeparator />
+          <ContextMenuItem 
+            className="cursor-pointer text-rose-600 focus:text-rose-700 focus:bg-rose-50 dark:focus:bg-rose-500/10" 
+            onClick={() => onDelete(activeDept.id)}
+          >
+            <Trash2 className="mr-2 h-4 w-4 text-rose-500" />
+            <span>Xóa phòng ban</span>
+          </ContextMenuItem>
+        </ContextMenuContent>
+      )}
+      </ContextMenu>
     </div>
   );
 }

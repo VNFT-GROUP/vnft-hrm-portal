@@ -8,6 +8,10 @@ import { Label } from "@/components/ui/label";
 export default function SettingsPage() {
   const showEmployeeLegend = useLayoutStore((state) => state.showEmployeeLegend);
   const setShowEmployeeLegend = useLayoutStore((state) => state.setShowEmployeeLegend);
+  const showDepartmentLegend = useLayoutStore((state) => state.showDepartmentLegend);
+  const setShowDepartmentLegend = useLayoutStore((state) => state.setShowDepartmentLegend);
+  const showRoleLegend = useLayoutStore((state) => state.showRoleLegend);
+  const setShowRoleLegend = useLayoutStore((state) => state.setShowRoleLegend);
   const { i18n } = useTranslation();
 
   return (
@@ -44,14 +48,14 @@ export default function SettingsPage() {
           </div>
 
           <div className="flex flex-col gap-6">
-            {/* Setting Item 1 */}
+            {/* Setting Item 1: Employee Legend */}
             <div className="flex items-start justify-between gap-4">
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="employee-legend-toggle" className="text-base font-semibold cursor-pointer">
                   Hiển thị bảng chú thích ở Quản lý nhân viên
                 </Label>
                 <p className="text-sm text-muted-foreground max-w-xl">
-                  Bật/tắt thanh giải thích ý nghĩa các biểu tượng hành động (Xem, Sửa, Lương, Xóa) phía trên bảng danh sách nhân viên.
+                  Bật/tắt thanh giải thích ý nghĩa các biểu tượng hành động phía trên bảng danh sách nhân viên.
                 </p>
               </div>
               <div className="mt-1">
@@ -59,6 +63,46 @@ export default function SettingsPage() {
                   id="employee-legend-toggle"
                   checked={showEmployeeLegend}
                   onCheckedChange={setShowEmployeeLegend}
+                  className="data-[state=checked]:bg-[#2E3192]"
+                />
+              </div>
+            </div>
+
+            {/* Setting Item 2: Department Legend */}
+            <div className="flex items-start justify-between gap-4">
+              <div className="flex flex-col gap-1.5">
+                <Label htmlFor="department-legend-toggle" className="text-base font-semibold cursor-pointer">
+                  Hiển thị bảng chú thích ở Quản lý phòng ban
+                </Label>
+                <p className="text-sm text-muted-foreground max-w-xl">
+                  Bật/tắt thanh giải thích ý nghĩa các biểu tượng hành động phía trên bảng danh sách cấu trúc phòng ban.
+                </p>
+              </div>
+              <div className="mt-1">
+                <Switch 
+                  id="department-legend-toggle"
+                  checked={showDepartmentLegend}
+                  onCheckedChange={setShowDepartmentLegend}
+                  className="data-[state=checked]:bg-[#2E3192]"
+                />
+              </div>
+            </div>
+
+            {/* Setting Item 3: Role Legend */}
+            <div className="flex items-start justify-between gap-4">
+              <div className="flex flex-col gap-1.5">
+                <Label htmlFor="role-legend-toggle" className="text-base font-semibold cursor-pointer">
+                  Hiển thị bảng chú thích ở Quản lý chức vụ
+                </Label>
+                <p className="text-sm text-muted-foreground max-w-xl">
+                  Bật/tắt thanh giải thích ý nghĩa các biểu tượng hành động phía trên bảng danh sách cấu trúc chức vụ.
+                </p>
+              </div>
+              <div className="mt-1">
+                <Switch 
+                  id="role-legend-toggle"
+                  checked={showRoleLegend}
+                  onCheckedChange={setShowRoleLegend}
                   className="data-[state=checked]:bg-[#2E3192]"
                 />
               </div>

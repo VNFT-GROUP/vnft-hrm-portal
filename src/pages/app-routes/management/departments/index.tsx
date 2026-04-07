@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { Plus, Search, Building2 } from "lucide-react";
+import { Plus, Search, Building2, Edit2, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
+import { useLayoutStore } from "@/store/useLayoutStore";
 
 import DepartmentTable, { type Department, type Manager } from "./components/DepartmentTable";
 import DepartmentFormSheet from "./components/DepartmentFormSheet";
@@ -28,6 +29,7 @@ const initDepartments: Department[] = [
 ];
 
 export default function DepartmentsPage() {
+  const showDepartmentLegend = useLayoutStore(state => state.showDepartmentLegend);
   const [departments, setDepartments] = useState<Department[]>(initDepartments);
   const [searchTerm, setSearchTerm] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -86,6 +88,29 @@ export default function DepartmentsPage() {
           Thiết lập cấu trúc phòng ban và chỉ định nhân sự quản lý (BOD/Manager).
         </p>
       </motion.div>
+
+      {/* 1.5 Legend Section */}
+      {showDepartmentLegend && (
+        <motion.div 
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
+          className="bg-card text-card-foreground p-4 rounded-xl border border-border flex flex-wrap gap-x-6 gap-y-3 text-sm text-muted-foreground w-full shadow-sm items-center"
+        >
+          <span className="font-semibold text-[#1E2062] mr-2">Chú thích thao tác:</span>
+          <div className="flex items-center gap-2">
+            <Edit2 size={16} className="text-[#2E3192]" />
+            <span>Chỉnh sửa thông tin phòng ban</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Trash2 size={16} className="text-rose-500" />
+            <span>Xóa phòng ban</span>
+          </div>
+          <div className="ml-auto flex items-center text-xs text-muted-foreground bg-muted/40 px-2 py-1 rounded-md border border-border opacity-70 hover:opacity-100 transition-opacity">
+            (Tắt chú thích trong tùy chỉnh <span className="ml-1 font-mono text-[10px] font-semibold bg-background py-0.5 px-1.5 rounded border border-border shadow-sm">Alt + S</span>)
+          </div>
+        </motion.div>
+      )}
 
       {/* 2 & 3. Toolbar Section (Tìm Kiếm + Nút tạo) */}
       <motion.div 

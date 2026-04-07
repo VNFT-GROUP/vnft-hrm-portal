@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { Search, Users, UserPlus } from "lucide-react";
+import { Search, Users, UserPlus, Eye, Edit2, CircleDollarSign, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
+import { useLayoutStore } from "@/store/useLayoutStore";
 
 import EmployeeTable, { type Employee } from "./components/EmployeeTable";
 import EmployeeFormSheet from "./components/EmployeeFormSheet";
@@ -46,6 +47,7 @@ export default function EmployeesPage() {
   const [employees, setEmployees] = useState<Employee[]>(initEmployees);
   const [searchTerm, setSearchTerm] = useState("");
   const [isOpen, setIsOpen] = useState(false);
+  const showEmployeeLegend = useLayoutStore(state => state.showEmployeeLegend);
   const [editingEmployee, setEditingEmployee] = useState<Employee | null>(null);
 
   const [formData, setFormData] = useState({
@@ -132,11 +134,39 @@ export default function EmployeesPage() {
         </p>
       </motion.div>
 
-      {/* 2 & 3. Toolbar Section */}
+      {/* 2. Legend Section */}
+      {showEmployeeLegend && (
+        <motion.div 
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
+          className="bg-card text-card-foreground p-4 rounded-xl border border-border flex flex-wrap gap-x-6 gap-y-3 text-sm text-muted-foreground w-full shadow-sm items-center"
+        >
+          <span className="font-semibold text-[#1E2062] mr-2">Chú thích thao tác:</span>
+          <div className="flex items-center gap-2">
+            <Eye size={16} className="text-sky-500" /> 
+            <span>Xem chi tiết thông tin chung</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Edit2 size={16} className="text-amber-500" />
+            <span>Chỉnh sửa thông tin chung</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <CircleDollarSign size={16} className="text-emerald-500" />
+            <span>Xem/chỉnh sửa lương</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Trash2 size={16} className="text-rose-500" />
+            <span>Hủy kích hoạt tài khoản</span>
+          </div>
+        </motion.div>
+      )}
+
+      {/* 3. Toolbar Section */}
       <motion.div 
         initial={{ opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
+        transition={{ duration: 0.5, delay: 0.15, ease: "easeOut" }}
         className="bg-card text-card-foreground p-5 rounded-2xl shadow-sm border border-border flex flex-col md:flex-row justify-between items-center gap-4"
       >
         <div className="relative w-full md:w-96">
@@ -156,7 +186,8 @@ export default function EmployeesPage() {
         </Button>
       </motion.div>
 
-      {/* 4. Table Section */}
+
+      {/* 5. Table Section */}
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

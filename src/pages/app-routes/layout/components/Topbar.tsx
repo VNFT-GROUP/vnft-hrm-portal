@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { User, Book, Globe, Key, LogOut, Briefcase, BadgeCheck, Keyboard } from "lucide-react";
+import { User, Book, Globe, Key, LogOut, Briefcase, BadgeCheck, Keyboard, Settings } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import ChangePasswordModal from "./ChangePasswordModal";
 import "./Topbar.css";
@@ -30,6 +30,13 @@ export default function Topbar() {
       if (e.shiftKey && e.key.toLowerCase() === 'k') {
         e.preventDefault();
         navigate('/app/user-guide#shortcuts');
+        setIsProfileOpen(false);
+      }
+      
+      // Alt + S to navigate to Settings
+      if (e.altKey && e.key.toLowerCase() === 's') {
+        e.preventDefault();
+        navigate('/app/settings');
         setIsProfileOpen(false);
       }
     };
@@ -105,8 +112,20 @@ export default function Topbar() {
             <div className="pd-divider"></div>
             
             <div className="pd-body">
-              <div className="pd-item">
+              <div className="pd-item" onClick={() => {
+                setIsProfileOpen(false);
+                navigate('/app/profile');
+              }}>
                 <User size={18} className="pd-icon" /> <span>{t('profile.title')}</span>
+              </div>
+              <div className="pd-item" onClick={() => {
+                setIsProfileOpen(false);
+                navigate('/app/settings');
+              }}>
+                <Settings size={18} className="pd-icon" /> <span className="flex-1">{t('sidebar.settings')}</span>
+                <div className="flex items-center text-[0.7rem] font-mono text-muted-foreground bg-muted px-1.5 py-0.5 rounded border border-border">
+                  Alt + S
+                </div>
               </div>
               <div className="pd-item" onClick={() => {
                 setIsProfileOpen(false);

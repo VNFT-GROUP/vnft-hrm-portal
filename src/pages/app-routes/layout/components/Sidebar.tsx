@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { LayoutDashboard, UserCircle, Calendar, FolderOpen, Users, Building2, Briefcase, Clock, ClipboardList, Shield, FileText, ClipboardCheck, Calculator, FileSpreadsheet, CheckSquare, FileEdit, Wallet, FileBarChart, Settings, History, ChevronLeft, Menu, ChevronDown, ChevronRight as ChevronRightIcon } from "lucide-react";
+import { LayoutDashboard, UserCircle, Calendar, FolderOpen, Users, Building2, Briefcase, Clock, ClipboardList, Shield, FileText, ClipboardCheck, Calculator, FileSpreadsheet, CheckSquare, FileEdit, Wallet, FileBarChart, History, ChevronLeft, Menu, ChevronDown, ChevronRight as ChevronRightIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { ScrollArea } from "../../../../components/ui/scroll-area";
 import { useLayoutStore } from "../../../../store/useLayoutStore";
@@ -101,7 +101,7 @@ export default function Sidebar() {
           ]
         },
         { label: t('sidebar.reports'), path: "/app/reports", icon: <FileText size={20} /> },
-        { label: t('sidebar.settings'), path: "/app/settings", icon: <Settings size={20} /> },
+
         { label: t('sidebar.activityLogs'), path: "/app/activity-logs", icon: <History size={20} /> },
       ]
     }

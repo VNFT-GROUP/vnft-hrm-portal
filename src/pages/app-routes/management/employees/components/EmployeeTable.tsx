@@ -1,4 +1,4 @@
-import { Edit2, Trash2, Users } from "lucide-react";
+import { Edit2, Trash2, Users, Eye, CircleDollarSign } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
@@ -47,7 +47,7 @@ export default function EmployeeTable({ employees, onEdit, onDelete }: EmployeeT
             <TableHead className="font-semibold text-foreground border-r border-border text-left align-middle px-6 min-w-[250px]">Họ và Tên</TableHead>
             <TableHead className="font-semibold text-foreground w-[200px] border-r border-border text-left align-middle px-6">Phòng ban</TableHead>
             <TableHead className="font-semibold text-foreground w-[150px] border-r border-border text-center align-middle px-4">Trạng thái</TableHead>
-            <TableHead className="font-semibold text-foreground w-[120px] text-center align-middle px-4">Thao tác</TableHead>
+            <TableHead className="font-semibold text-foreground w-[180px] text-center align-middle px-4">Thao tác</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -87,11 +87,17 @@ export default function EmployeeTable({ employees, onEdit, onDelete }: EmployeeT
                   </Badge>
                 </TableCell>
                 <TableCell className="py-4 text-center align-middle">
-                  <div className="flex justify-center gap-2">
-                    <Button variant="ghost" size="icon" onClick={() => onEdit(emp)} className="h-8 w-8 text-[#2E3192] hover:bg-[#2E3192]/10 hover:text-[#2E3192] rounded-lg">
+                  <div className="flex justify-center gap-1">
+                    <Button variant="ghost" size="icon" title="Xem chi tiết" className="h-8 w-8 text-sky-500 hover:bg-sky-50 hover:text-sky-600 rounded-lg transition-colors">
+                      <Eye size={16} />
+                    </Button>
+                    <Button variant="ghost" size="icon" title="Chỉnh sửa" onClick={() => onEdit(emp)} className="h-8 w-8 text-amber-500 hover:bg-amber-50 hover:text-amber-600 rounded-lg transition-colors">
                       <Edit2 size={16} />
                     </Button>
-                    <Button variant="ghost" size="icon" onClick={() => onDelete(emp.id)} className="h-8 w-8 text-rose-500 hover:bg-rose-50 hover:text-rose-600 rounded-lg">
+                    <Button variant="ghost" size="icon" title="Chỉnh lương" className="h-8 w-8 text-emerald-500 hover:bg-emerald-50 hover:text-emerald-600 rounded-lg transition-colors">
+                      <CircleDollarSign size={16} />
+                    </Button>
+                    <Button variant="ghost" size="icon" title="Xóa" onClick={() => onDelete(emp.id)} className="h-8 w-8 text-rose-500 hover:bg-rose-50 hover:text-rose-600 rounded-lg transition-colors">
                       <Trash2 size={16} />
                     </Button>
                   </div>

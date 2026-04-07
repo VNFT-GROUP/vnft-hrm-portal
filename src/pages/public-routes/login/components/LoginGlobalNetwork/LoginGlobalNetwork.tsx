@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ChevronLeft, MapPin, X } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import "./LoginGlobalNetwork.css";
 
 const BRANCHES = [
@@ -77,6 +78,7 @@ const WorldMapGraphic = () => (
 
 export default function LoginGlobalNetwork() {
   const [isOpen, setIsOpen] = useState(false);
+  const { t } = useTranslation();
 
   return (
     <>
@@ -84,9 +86,9 @@ export default function LoginGlobalNetwork() {
       <button 
         className={`network-toggle-arrow ${isOpen ? "hidden" : ""}`}
         onClick={() => setIsOpen(true)}
-        title="View Global Network"
+        title={t('login.globalNetworkBtn')}
       >
-        <span className="arrow-text">OUR NETWORK</span>
+        <span className="arrow-text">{t('login.globalNetworkBtn')}</span>
         <ChevronLeft className="arrow-icon" size={24} />
       </button>
 
@@ -100,8 +102,8 @@ export default function LoginGlobalNetwork() {
 
         <div className="network-content-wrapper">
           <div className="network-header">
-            <h2 className="network-title">GLOBAL NETWORK</h2>
-            <p className="network-subtitle">Worldwide Logistics Coverage</p>
+            <h2 className="network-title">{t('login.globalNetworkTitle')}</h2>
+            <p className="network-subtitle">{t('login.globalNetworkSubtitle')}</p>
           </div>
 
           <div className="network-branches-grid">

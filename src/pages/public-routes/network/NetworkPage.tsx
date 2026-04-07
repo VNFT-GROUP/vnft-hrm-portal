@@ -5,6 +5,7 @@ import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
 import { motion } from "framer-motion";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { useTranslation } from "react-i18next";
 
 function MapFlyTo({ coords }: { coords: [number, number] | null }) {
   const map = useMap();
@@ -53,6 +54,7 @@ const BRANCHES = [
 
 export default function NetworkPage() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [activeLocation, setActiveLocation] = useState<[number, number] | null>(null);
 
   return (
@@ -72,6 +74,8 @@ export default function NetworkPage() {
         <MapContainer 
           center={[30, 0]} 
           zoom={3} 
+          minZoom={2}
+          maxZoom={10}
           scrollWheelZoom={true} 
           style={{ width: "100%", height: "100%", background: "#f8fafc" }}
         >
@@ -93,19 +97,19 @@ export default function NetworkPage() {
 
       {/* Bottom Center VNFT Banner */}
       <div className="vnft-bottom-banner">
-        <span>MẠNG LƯỚI VNFT GROUP TOÀN CẦU</span>
+        <span>{t('network.globalNetworkBanner')}</span>
       </div>
 
       {/* Slide-out Sheet for Branch Locations */}
       <Sheet>
         <SheetTrigger className="network-open-sheet-btn">
           <List size={20} />
-          <span>DANH SÁCH CHI NHÁNH</span>
+          <span>{t('network.branchListBtn')}</span>
         </SheetTrigger>
         <SheetContent side="right" className="w-[400px] sm:w-[450px] p-0 border-l border-slate-200 bg-white/95 backdrop-blur-xl flex flex-col z-[2000]">
           <SheetHeader className="p-6 border-b border-slate-100 flex-shrink-0">
             <SheetTitle className="text-[#1E2062] font-bold text-xl text-left tracking-wide">
-              VĂN PHÒNG TOÀN CẦU
+              {t('network.globalOffices')}
             </SheetTitle>
           </SheetHeader>
           

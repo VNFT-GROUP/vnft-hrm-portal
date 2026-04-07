@@ -21,6 +21,7 @@ import FinanceReportsPage from "../pages/app-routes/finance/reports";
 import ReportsPage from "../pages/app-routes/reports";
 import SettingsPage from "../pages/app-routes/settings";
 import ActivityLogsPage from "../pages/app-routes/activity-logs";
+import UserGuidePage from "../pages/app-routes/user-guide";
 
 export default function AppRoutes() {
   return (
@@ -39,6 +40,7 @@ export default function AppRoutes() {
         <Route path="reports" element={<ReportsPage />} />
         <Route path="settings" element={<SettingsPage />} />
         <Route path="activity-logs" element={<ActivityLogsPage />} />
+        <Route path="user-guide" element={<UserGuidePage />} />
 
         {/* Cấp 2: Quản lý */}
         <Route path="management">

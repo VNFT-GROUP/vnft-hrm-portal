@@ -7,9 +7,9 @@ export default function LoginFooter() {
         &copy; {new Date().getFullYear()} VNFT Group. All rights reserved.
       </div>
       <div className="footer-links">
-        <a href="#">Chính sách bảo mật</a>
+        <a href="#">Privacy Policy</a>
         <span className="footer-divider">•</span>
-        <a href="#">Điều khoản sử dụng</a>
+        <a href="#">Terms of Service</a>
       </div>
     </footer>
   );

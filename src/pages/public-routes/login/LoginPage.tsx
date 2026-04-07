@@ -20,7 +20,7 @@ export default function LoginPage() {
       <LoadingPage
         duration={3000}
         onComplete={() => setIsBooting(false)}
-        message="Đang tải hệ thống đăng nhập..."
+        message="Loading authentication system..."
       />
     );
   }
@@ -101,7 +101,7 @@ export default function LoginPage() {
                 type="button"
                 className="password-toggle"
                 onClick={() => setShowPassword(!showPassword)}
-                aria-label={showPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
+                aria-label={showPassword ? "Hide password" : "Show password"}
               >
                 {showPassword ? (
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

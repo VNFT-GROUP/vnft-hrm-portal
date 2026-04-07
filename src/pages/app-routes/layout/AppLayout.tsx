@@ -1,10 +1,13 @@
+import { useRef } from "react";
 import { Outlet } from "react-router-dom";
 import { ScrollArea } from "../../../components/ui/scroll-area";
 import Sidebar from "./Sidebar.tsx";
 import Topbar from "./Topbar.tsx";
+import ScrollToTopButton from "../../../components/custom/ScrollToTopButton";
 import "./AppLayout.css";
-
 export default function AppLayout() {
+  const scrollViewportRef = useRef<HTMLDivElement>(null);
+
   return (
     <div className="app-layout">
       <Sidebar />
@@ -30,11 +33,12 @@ export default function AppLayout() {
           </svg>
         </div>
 
-        <ScrollArea className="app-content-scroll shadow-inner">
+        <ScrollArea className="app-content-scroll shadow-inner" viewportRef={scrollViewportRef}>
           <div className="app-content">
             <Outlet />
           </div>
         </ScrollArea>
+        <ScrollToTopButton scrollViewportRef={scrollViewportRef} />
       </div>
     </div>
   );

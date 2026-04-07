@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { User, Book, Globe, Key, LogOut, Briefcase, BadgeCheck } from "lucide-react";
+import { User, Book, Globe, Key, LogOut, Briefcase, BadgeCheck, Keyboard } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import "./Topbar.css";
 
@@ -76,8 +76,14 @@ export default function Topbar() {
               <div className="pd-item">
                 <User size={18} className="pd-icon" /> <span>Tài khoản</span>
               </div>
-              <div className="pd-item pd-item-highlight">
+              <div className="pd-item pd-item-highlight" onClick={() => {
+                setIsProfileOpen(false);
+                navigate('/app/user-guide');
+              }}>
                 <Book size={18} className="pd-icon" /> <span>Hướng dẫn sử dụng</span>
+              </div>
+              <div className="pd-item">
+                <Keyboard size={18} className="pd-icon" /> <span>Các phím tắt</span>
               </div>
               <div className="pd-item">
                 <Globe size={18} className="pd-icon" /> <span className="flex-1">Ngôn ngữ</span>

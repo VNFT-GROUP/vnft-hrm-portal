@@ -1,12 +1,21 @@
-import { useRef } from "react";
-import { Outlet } from "react-router-dom";
+import { useRef, useEffect } from "react";
+import { Outlet, useLocation } from "react-router-dom";
 import { ScrollArea } from "../../../components/ui/scroll-area";
 import Sidebar from "./components/Sidebar.tsx";
 import Topbar from "./components/Topbar.tsx";
 import ScrollToTopButton from "../../../components/custom/ScrollToTopButton";
 import "./AppLayout.css";
+
 export default function AppLayout() {
   const scrollViewportRef = useRef<HTMLDivElement>(null);
+  const location = useLocation();
+
+  // Automatically scroll to the top of the view when the page route changes.
+  useEffect(() => {
+    if (scrollViewportRef.current) {
+      scrollViewportRef.current.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }, [location.pathname]);
 
   return (
     <div className="app-layout">

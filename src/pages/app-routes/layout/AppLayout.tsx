@@ -4,6 +4,7 @@ import { ScrollArea } from "../../../components/ui/scroll-area";
 import Sidebar from "./components/Sidebar.tsx";
 import Topbar from "./components/Topbar.tsx";
 import ScrollToTopButton from "../../../components/custom/ScrollToTopButton";
+import LoadingPage from "../../../components/custom/loadingPage/LoadingPage";
 import "./AppLayout.css";
 
 export default function AppLayout() {
@@ -44,7 +45,7 @@ export default function AppLayout() {
 
         <ScrollArea className="app-content-scroll shadow-inner" viewportRef={scrollViewportRef}>
           <div className="app-content">
-            <Suspense fallback={<div className="flex h-full items-center justify-center p-8 text-muted-foreground">Loading module...</div>}>
+            <Suspense fallback={<LoadingPage variant="inner" duration={600} message="Tải phân hệ..." />}>
               <Outlet />
             </Suspense>
           </div>

@@ -13,41 +13,60 @@ const lazyWithDelay = (importFunc: () => Promise<any>, delay = 2500) => {
   });
 };
 
-const LoginPage = lazyWithDelay(() => import("../pages/public-routes/login/LoginPage"), 2500);
+const LoginPage = lazyWithDelay(() => import("../pages/public-routes/login/LoginPage"), 2000);
 const NetworkPage = lazyWithDelay(() => import("../pages/public-routes/network/NetworkPage"), 1500);
-const AppLayout = lazyWithDelay(() => import("../pages/app-routes/layout/AppLayout"), 2500);
-const DashboardPage = lazy(() => import("../pages/app-routes/dashboard/DashboardPage"));
+const AppLayout = lazyWithDelay(() => import("../pages/app-routes/layout/AppLayout"), 2000);
 
-// Dynamic Imports
-const ProfilePage = lazy(() => import("../pages/app-routes/profile"));
-const CalendarPage = lazy(() => import("../pages/app-routes/calendar"));
-const EmployeesPage = lazy(() => import("../pages/app-routes/management/employees"));
-const DepartmentsPage = lazy(() => import("../pages/app-routes/management/departments"));
-const RolesPage = lazy(() => import("../pages/app-routes/management/roles"));
-const AttendancePage = lazy(() => import("../pages/app-routes/management/attendance"));
-const EvaluationCriteriaPage = lazy(() => import("../pages/app-routes/management/evaluation-criteria"));
-const PermissionsPage = lazy(() => import("../pages/app-routes/management/permissions"));
-const ContractsPage = lazy(() => import("../pages/app-routes/management/contracts"));
-const EvaluationPage = lazy(() => import("../pages/app-routes/evaluation"));
-const ProfitReportPage = lazy(() => import("../pages/app-routes/acc/profit-report"));
-const VotingPage = lazy(() => import("../pages/app-routes/voting"));
-const RequestsPage = lazy(() => import("../pages/app-routes/requests"));
-const FinanceReportsPage = lazy(() => import("../pages/app-routes/finance/reports"));
-const ReportsPage = lazy(() => import("../pages/app-routes/reports"));
-const SettingsPage = lazy(() => import("../pages/app-routes/settings"));
-const ActivityLogsPage = lazy(() => import("../pages/app-routes/activity-logs"));
-const UserGuidePage = lazy(() => import("../pages/app-routes/user-guide"));
-
+// Dynamic Imports with short realistic delay for Inner Pages
+const DashboardPage = lazyWithDelay(() => import("../pages/app-routes/dashboard/DashboardPage"), 600);
+const ProfilePage = lazyWithDelay(() => import("../pages/app-routes/profile"), 600);
+const CalendarPage = lazyWithDelay(() => import("../pages/app-routes/calendar"), 600);
+const EmployeesPage = lazyWithDelay(() => import("../pages/app-routes/management/employees"), 600);
+const DepartmentsPage = lazyWithDelay(() => import("../pages/app-routes/management/departments"), 600);
+const RolesPage = lazyWithDelay(() => import("../pages/app-routes/management/roles"), 600);
+const AttendancePage = lazyWithDelay(() => import("../pages/app-routes/management/attendance"), 600);
+const EvaluationCriteriaPage = lazyWithDelay(() => import("../pages/app-routes/management/evaluation-criteria"), 600);
+const PermissionsPage = lazyWithDelay(() => import("../pages/app-routes/management/permissions"), 600);
+const ContractsPage = lazyWithDelay(() => import("../pages/app-routes/management/contracts"), 600);
+const EvaluationPage = lazyWithDelay(() => import("../pages/app-routes/evaluation"), 600);
+const ProfitReportPage = lazyWithDelay(() => import("../pages/app-routes/acc/profit-report"), 600);
+const VotingPage = lazyWithDelay(() => import("../pages/app-routes/voting"), 600);
+const RequestsPage = lazyWithDelay(() => import("../pages/app-routes/requests"), 600);
+const FinanceReportsPage = lazyWithDelay(() => import("../pages/app-routes/finance/reports"), 600);
+const ReportsPage = lazyWithDelay(() => import("../pages/app-routes/reports"), 600);
+const SettingsPage = lazyWithDelay(() => import("../pages/app-routes/settings"), 600);
+const ActivityLogsPage = lazyWithDelay(() => import("../pages/app-routes/activity-logs"), 600);
+const UserGuidePage = lazyWithDelay(() => import("../pages/app-routes/user-guide"), 600);
 
 import LoadingPage from "../components/custom/loadingPage/LoadingPage";
 
 export default function AppRoutes() {
   return (
-    <Suspense fallback={<LoadingPage duration={2500} message="Loading module..." />}>
-      <Routes>
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/network" element={<NetworkPage />} />
-        <Route path="/app" element={<AppLayout />}>
+    <Routes>
+      <Route 
+        path="/login" 
+        element={
+          <Suspense fallback={<LoadingPage duration={2000} message="Khởi tạo hệ thống..." />}>
+            <LoginPage />
+          </Suspense>
+        } 
+      />
+      <Route 
+        path="/network" 
+        element={
+          <Suspense fallback={<LoadingPage duration={1500} message="Kết nối mạng lưới VNFT..." />}>
+            <NetworkPage />
+          </Suspense>
+        } 
+      />
+      <Route 
+        path="/app" 
+        element={
+          <Suspense fallback={<LoadingPage duration={2000} message="Tải phân hệ máy chủ..." />}>
+            <AppLayout />
+          </Suspense>
+        }
+      >
           {/* Dashboard */}
           <Route index element={<DashboardPage />} />
           
@@ -84,7 +103,6 @@ export default function AppRoutes() {
           </Route>
         </Route>
         <Route path="*" element={<Navigate to="/login" replace />} />
-      </Routes>
-    </Suspense>
+    </Routes>
   );
 }

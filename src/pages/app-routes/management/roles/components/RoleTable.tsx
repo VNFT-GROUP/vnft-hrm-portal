@@ -1,8 +1,16 @@
+import { useState } from "react";
 import { Edit2, Trash2, Briefcase } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
+import {
+  ContextMenu,
+  ContextMenuTrigger,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuSeparator,
+} from "@/components/ui/context-menu";
 
 export interface Role {
   id: string;
@@ -18,9 +26,15 @@ interface RoleTableProps {
 }
 
 export default function RoleTable({ roles, onEdit, onDelete }: RoleTableProps) {
+  const [rightClickedRoleId, setRightClickedRoleId] = useState<string | null>(null);
+  
+  const activeRole = roles.find(r => r.id === rightClickedRoleId);
+
   return (
     <div className="overflow-x-auto">
-      <Table className="border-collapse">
+      <ContextMenu>
+        <ContextMenuTrigger className="block w-full">
+          <Table className="border-collapse">
         <TableHeader className="bg-muted/80">
           <TableRow className="border-b border-border hover:bg-transparent">
             <TableHead className="font-semibold text-foreground w-[220px] border-r border-border text-left align-middle px-6">Tên chức vụ</TableHead>
@@ -39,6 +53,7 @@ export default function RoleTable({ roles, onEdit, onDelete }: RoleTableProps) {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 className="border-b border-border group/row hover:bg-[#1E2062]/5 transition-colors duration-200"
+                onContextMenu={() => setRightClickedRoleId(role.id)}
               >
                 <TableCell className="font-bold text-[#1E2062] py-4 border-r border-border text-left align-middle px-6">{role.name}</TableCell>
                 <TableCell className="text-muted-foreground py-4 max-w-[300px] truncate border-r border-border text-left align-middle px-6" title={role.description}>{role.description || "—"}</TableCell>
@@ -78,6 +93,26 @@ export default function RoleTable({ roles, onEdit, onDelete }: RoleTableProps) {
           )}
         </TableBody>
       </Table>
+      </ContextMenuTrigger>
+
+      {/* RENDER CONTEXT MENU FOR THE ROW */}
+      {activeRole && (
+        <ContextMenuContent className="w-56 z-50">
+          <ContextMenuItem className="cursor-pointer" onClick={() => onEdit(activeRole)}>
+            <Edit2 className="mr-2 h-4 w-4 text-[#2E3192]" />
+            <span>Chỉnh sửa thông tin chức vụ</span>
+          </ContextMenuItem>
+          <ContextMenuSeparator />
+          <ContextMenuItem 
+            className="cursor-pointer text-rose-600 focus:text-rose-700 focus:bg-rose-50 dark:focus:bg-rose-500/10" 
+            onClick={() => onDelete(activeRole.id)}
+          >
+            <Trash2 className="mr-2 h-4 w-4 text-rose-500" />
+            <span>Xóa chức vụ</span>
+          </ContextMenuItem>
+        </ContextMenuContent>
+      )}
+      </ContextMenu>
     </div>
   );
 }

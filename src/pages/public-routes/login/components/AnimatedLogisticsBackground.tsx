@@ -78,6 +78,22 @@ export default function AnimatedLogisticsBackground() {
           <path d="M28 14 L22 2 L38 12 Z" fill="#F7941D" />
         </svg>
       </div>
+      <div className="bg-airplane track-1" style={{ top: '8%', animationDelay: '-12s', animationDuration: '35s' }}>
+        <svg width="50" height="25" viewBox="0 0 64 32" fill="none" opacity="0.4">
+          <ellipse cx="32" cy="16" rx="22" ry="5" fill="#94a3b8" />
+          <path d="M54 16 L64 15 L54 14 Z" fill="#64748b" />
+          <path d="M10 16 L6 6 L16 14 Z" fill="#2E3192" />
+          <path d="M28 14 L22 2 L38 12 Z" fill="#2E3192" />
+        </svg>
+      </div>
+      <div className="bg-airplane track-2" style={{ top: '28%', animationDelay: '-2s', animationDuration: '40s' }}>
+        <svg width="35" height="18" viewBox="0 0 64 32" fill="none" opacity="0.2">
+          <ellipse cx="32" cy="16" rx="22" ry="5" fill="#94a3b8" />
+          <path d="M54 16 L64 15 L54 14 Z" fill="#64748b" />
+          <path d="M10 16 L6 6 L16 14 Z" fill="#1e293b" />
+          <path d="M28 14 L22 2 L38 12 Z" fill="#1e293b" />
+        </svg>
+      </div>
 
       {/* Distant Hills & Wind Turbines */}
       <div className="bg-hills-layer">
@@ -102,6 +118,7 @@ export default function AnimatedLogisticsBackground() {
       {/* Cargo Highway & Trucks */}
       <div className="bg-highway">
         <div className="highway-line" />
+        {/* Fast lane trucks (moving right) */}
         <div className="bg-truck track-right">
           <svg width="40" height="24" viewBox="0 0 80 48" fill="none" opacity="0.5">
             <rect x="2" y="8" width="42" height="26" rx="3" fill="#2E3192" />
@@ -112,12 +129,48 @@ export default function AnimatedLogisticsBackground() {
             <circle cx="54" cy="37" r="6" fill="#374151" />
           </svg>
         </div>
+        <div className="bg-truck track-right" style={{ animationDelay: '-11s', animationDuration: '26s' }}>
+          <svg width="45" height="26" viewBox="0 0 80 48" fill="none" opacity="0.4">
+            <rect x="2" y="8" width="45" height="28" rx="3" fill="#F7941D" />
+            <rect x="49" y="14" width="22" height="22" rx="3" fill="#475569" />
+            <circle cx="14" cy="39" r="6" fill="#1e293b" />
+            <circle cx="60" cy="39" r="6" fill="#1e293b" />
+          </svg>
+        </div>
+        
+        {/* Slow lane trucks (moving right) */}
+        <div className="bg-truck track-right" style={{ animationDelay: '-4s', animationDuration: '30s', bottom: '-1px' }}>
+          <svg width="35" height="22" viewBox="0 0 80 48" fill="none" opacity="0.3">
+            <rect x="2" y="12" width="38" height="22" rx="2" fill="#cbd5e1" />
+            <rect x="42" y="18" width="20" height="16" rx="2" fill="#94a3b8" />
+            <circle cx="12" cy="37" r="5" fill="#475569" />
+            <circle cx="52" cy="37" r="5" fill="#475569" />
+          </svg>
+        </div>
+
+        {/* Opposite lane trucks (moving left) */}
         <div className="bg-truck track-left">
           <svg width="32" height="20" viewBox="0 0 80 48" fill="none" opacity="0.4" style={{ transform: "scaleX(-1)" }}>
             <rect x="2" y="8" width="42" height="26" rx="3" fill="#64748b" />
             <rect x="44" y="14" width="22" height="20" rx="3" fill="#94a3b8" />
             <circle cx="14" cy="37" r="6" fill="#475569" />
             <circle cx="54" cy="37" r="6" fill="#475569" />
+          </svg>
+        </div>
+        <div className="bg-truck track-left" style={{ animationDelay: '-14s', animationDuration: '24s', bottom: '1px' }}>
+          <svg width="40" height="24" viewBox="0 0 80 48" fill="none" opacity="0.35" style={{ transform: "scaleX(-1)" }}>
+            <rect x="2" y="8" width="50" height="26" rx="3" fill="#1e293b" />
+            <rect x="54" y="14" width="20" height="20" rx="3" fill="#64748b" />
+            <circle cx="16" cy="37" r="6" fill="#0f172a" />
+            <circle cx="64" cy="37" r="6" fill="#0f172a" />
+          </svg>
+        </div>
+        <div className="bg-truck track-left" style={{ animationDelay: '-5s', animationDuration: '19s', bottom: '4px' }}>
+          <svg width="30" height="18" viewBox="0 0 80 48" fill="none" opacity="0.25" style={{ transform: "scaleX(-1)" }}>
+            <rect x="2" y="8" width="40" height="26" rx="3" fill="#f59e0b" />
+            <rect x="44" y="14" width="18" height="20" rx="3" fill="#cbd5e1" />
+            <circle cx="14" cy="37" r="6" fill="#334155" />
+            <circle cx="52" cy="37" r="6" fill="#334155" />
           </svg>
         </div>
       </div>
@@ -128,6 +181,16 @@ export default function AnimatedLogisticsBackground() {
           <path className="wave wave-1" d="M0 20 Q13 14 26 20 T52 20 T78 20 T104 20 T130 20 T156 20 T182 20 T208 20 T234 20 T260 20 T286 20 T312 20 T338 20 T364 20 T390 20 T416 20 T442 20 T468 20 T494 20 T520 20 V40 H0 Z" fill="#93a5f0" opacity="0.15" />
           <path className="wave wave-2" d="M0 24 Q13 18 26 24 T52 24 T78 24 T104 24 T130 24 T156 24 T182 24 T208 24 T234 24 T260 24 T286 24 T312 24 T338 24 T364 24 T390 24 T416 24 T442 24 T468 24 T494 24 T520 24 V40 H0 Z" fill="#6B6FD6" opacity="0.1" />
         </svg>
+        <div className="bg-ship cargo-ship" style={{ animationDelay: '-25s', animationDuration: '60s' }}>
+          <svg width="45" height="22" viewBox="0 0 72 36" fill="none" opacity="0.3">
+            <path d="M4 22 L8 32 L64 32 L68 22 Z" fill="#475569" />
+            <rect x="8" y="18" width="56" height="5" rx="1" fill="#cbd5e1" />
+            <rect x="12" y="10" width="10" height="8" rx="1" fill="#1e293b" />
+            <rect x="23" y="10" width="10" height="8" rx="1" fill="#1e293b" />
+            <rect x="34" y="10" width="10" height="8" rx="1" fill="#64748b" />
+            <rect x="56" y="8" width="8" height="10" rx="1" fill="#cbd5e1" />
+          </svg>
+        </div>
         <div className="bg-ship cargo-ship">
           <svg width="56" height="28" viewBox="0 0 72 36" fill="none" opacity="0.45">
             <path d="M4 22 L8 32 L64 32 L68 22 Z" fill="#374151" />

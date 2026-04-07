@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { LayoutDashboard, UserCircle, Calendar, FolderOpen, Users, Building2, Briefcase, Clock, ClipboardList, Shield, FileText, ClipboardCheck, Calculator, FileSpreadsheet, CheckSquare, FileEdit, Wallet, FileBarChart, Settings, History, ChevronLeft, Menu, ChevronDown, ChevronRight as ChevronRightIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { ScrollArea } from "../../../components/ui/scroll-area";
-import { useLayoutStore } from "../../../store/useLayoutStore";
+import { ScrollArea } from "../../../../components/ui/scroll-area";
+import { useLayoutStore } from "../../../../store/useLayoutStore";
 import "./Sidebar.css";
 
 export default function Sidebar() {

@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { User, Book, Globe, Key, LogOut, Briefcase, BadgeCheck, Keyboard } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import ChangePasswordModal from "./ChangePasswordModal";
 import "./Topbar.css";
 
 export default function Topbar() {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
 
@@ -140,7 +142,10 @@ export default function Topbar() {
             <div className="pd-divider"></div>
             
             <div className="pd-body">
-              <div className="pd-item">
+              <div className="pd-item" onClick={() => {
+                setIsProfileOpen(false);
+                setIsPasswordModalOpen(true);
+              }}>
                 <Key size={18} className="pd-icon" /> <span>{t('profile.changePassword')}</span>
               </div>
               <div className="pd-item text-red-500" onClick={() => {
@@ -158,6 +163,12 @@ export default function Topbar() {
       {isProfileOpen && (
         <div className="profile-backdrop" onClick={() => setIsProfileOpen(false)}></div>
       )}
+
+      {/* PASSWORDS MODAL */}
+      <ChangePasswordModal 
+         isOpen={isPasswordModalOpen} 
+         onClose={() => setIsPasswordModalOpen(false)} 
+      />
     </header>
     </>
   );

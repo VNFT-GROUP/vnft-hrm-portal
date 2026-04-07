@@ -1,8 +1,8 @@
 import { useRef } from "react";
 import { Outlet } from "react-router-dom";
 import { ScrollArea } from "../../../components/ui/scroll-area";
-import Sidebar from "./Sidebar.tsx";
-import Topbar from "./Topbar.tsx";
+import Sidebar from "./components/Sidebar.tsx";
+import Topbar from "./components/Topbar.tsx";
 import ScrollToTopButton from "../../../components/custom/ScrollToTopButton";
 import "./AppLayout.css";
 export default function AppLayout() {

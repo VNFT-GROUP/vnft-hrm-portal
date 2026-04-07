@@ -6,22 +6,8 @@
   height: 100vh;
   background: #111236;
   color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   overflow: hidden;
-  z-index: 50; /* Above anything else */
-}
-
-/* Beautiful map container taking most screen space */
-.network-map-container {
-  width: 100%;
-  max-width: 1400px;
-  height: auto;
-  aspect-ratio: 16/9;
-  position: relative;
-  z-index: 10;
-  pointer-events: auto;
+  z-index: 50; 
 }
 
 .network-back-btn {
@@ -29,33 +15,38 @@
   top: 50%;
   left: 0;
   transform: translateY(-50%);
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(30, 32, 98, 0.8);
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-left: none;
   padding: 1.5rem 0.75rem 1.5rem 0.5rem;
   border-radius: 0 16px 16px 0;
   cursor: pointer;
   color: white;
-  z-index: 20;
+  z-index: 1000; /* Above Leaflet controls */
   transition: all 0.3s ease;
   backdrop-filter: blur(8px);
 }
 
 .network-back-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(46, 49, 146, 0.9);
   padding-right: 1.25rem;
 }
 
 .network-page-overlay {
   position: absolute;
-  bottom: 10%;
-  left: 10%;
-  z-index: 20;
-  pointer-events: none;
+  bottom: 8%;
+  left: 8%;
+  z-index: 1000; /* Above Leaflet Map */
+  pointer-events: none; /* Let clicks pass through to map */
+  background: rgba(17, 18, 54, 0.4);
+  padding: 2rem;
+  border-radius: 24px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .network-page-title {
-  font-size: clamp(3rem, 5vw, 5rem);
+  font-size: clamp(2.5rem, 4vw, 4rem);
   font-weight: 900;
   line-height: 1.1;
   letter-spacing: 0.1em;
@@ -67,10 +58,51 @@
 }
 
 .network-page-subtitle {
-  font-size: 1.25rem;
+  font-size: 1rem;
   color: #c7d2fe;
-  font-weight: 500;
-  letter-spacing: 0.2em;
-  margin-top: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  margin-top: 0.5rem;
   text-transform: uppercase;
+}
+
+/* Custom Leaflet Styling */
+.custom-leaflet-icon {
+  background: transparent;
+  border: none;
+}
+
+.custom-popup .leaflet-popup-content-wrapper {
+  background: rgba(30, 32, 98, 0.95);
+  color: #fff;
+  border-radius: 12px;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+}
+.custom-popup .leaflet-popup-tip {
+  background: rgba(30, 32, 98, 0.95);
+}
+.custom-popup strong {
+  color: #F7941D;
+  display: block;
+  font-size: 0.95rem;
+  margin-bottom: 0.3rem;
+  letter-spacing: 0.05em;
+}
+.custom-popup .leaflet-popup-content {
+  margin: 1rem;
+  font-family: inherit;
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+/* Hide Leaflet default attribution to keep it clean, though strictly it should be kept */
+.leaflet-control-attribution {
+  opacity: 0.5;
+  background: transparent !important;
+  color: #a5b4fc !important;
+}
+.leaflet-control-attribution a {
+  color: #c7d2fe !important;
 }

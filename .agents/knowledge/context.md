@@ -121,11 +121,15 @@ src/
 2. **Scroll Restoration**: A specialized `ScrollArea` component manages SPA overscrolling constraints. We strictly intercept generic navigation via `[location.pathname]` at the `AppLayout` layer to cleanly trigger viewport `.scrollTo({ top: 0 })` resets.
 3. **Multi-language Support (i18n)**: Integrated completely at the Topbar level, modifying global state cleanly without external page reloads. Default fallback is `vi`.
 4. **Logistics Micro-Interactions**: The public-facing entry points (Login, Loading) implement dynamic SVG backdrops via `AnimatedLogisticsBackground.tsx`. We scale complexity using pure CSS `animation-delay` and `animation-duration` inline mapped to static `.bg-ship`, `.bg-truck`, `.bg-airplane` tracks, allowing rich, cheap pseudo-random traffic generation without JS overhead. The Loading UI features a micro progress trucking system that anchors an SVG to dynamic width percentages.
+5. **Lazy Loading**: Entire application is chunked utilizing `React.lazy()` with `Suspense` inside `AppLayout.tsx` for optimal bundle delivery, removing initial boot lag.
+6. **Settings & Global UI Sync**: Modular system under `/app/settings/` integrated with Zustand (`useLayoutStore`). E.g. `showEmployeeLegend` enables user-preference synced context legends dynamically unmounting via state without reload.
+7. **Smart Tables & Context Menus**: Advanced interaction model within features like Employee Management. Implements Shadcn UI ContextMenu at the Table level interacting intelligently with `onContextMenu` ID traps replacing structural HTML reflows inside `<tbody>`.
 
 ## Global Standard Shortcuts
 To ensure highly productive navigation, the HR Portal utilizes the following standard global shortcuts:
 1. **`Ctrl + B`** (or Cmd + B): Quick toggle Left Sidebar Menu
 2. **`Ctrl + I`** (or Cmd + I): Quick toggle Profile Menu (Top Right)
 3. **`Alt + I`** (or Option + I): Navigate directly to User Profile page
-4. **`Shift + K`**: Navigate to User Guide & Auto-scroll to Shortcuts list
-5. **`Esc`**: General close hook for overlays, popups, profile menus
+4. **`Alt + S`** (or Option + S): Navigate directly to System Settings page
+5. **`Shift + K`**: Navigate to User Guide & Auto-scroll to Shortcuts list
+6. **`Esc`**: General close hook for overlays, popups, profile menus

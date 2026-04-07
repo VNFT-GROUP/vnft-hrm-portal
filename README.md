@@ -1,75 +1,51 @@
-# React + TypeScript + Vite
+# VNFT Group — HRM Portal 🚀
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Chào mừng đến với dự án **VNFT Group Human Resource Management Portal** — Hệ thống quản trị Nhân sự dành riêng cho công ty vận tải và tiếp vận VNFT Group.
 
-Currently, two official plugins are available:
+## 🌟 Giới Thiệu
+Dự án được xây dựng dựa trên nguyên tắc **chuyên nghiệp, mượt mà và trực quan**. Hệ thống theo sát bộ nhận diện thương hiệu VNFT Group ("Your Success, Our Target") đi kèm công nghệ Frontend tối tân. 
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## ⚙️ Công Nghệ (Tech Stack)
+Hệ thống sử dụng các bộ thư viện mạnh mẽ:
+- **Framework:** React 19 + TypeScript (Vite 8)
+- **UI & Styling:** Tailwind CSS v4, Vanilla CSS, `shadcn/ui` (Base UI/Radix)
+- **Animation:** Framer Motion
+- **Quản lý state:** Zustand, TanStack React Query
+- **Routing & i18n:** React Router DOM v7, `i18next`
 
-## React Compiler
+## ⌨️ Hướng Dẫn Sử Dụng (User Guide)
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+Hệ thống được thiết kế tối ưu nhất cho tương tác người dùng, với bộ phím tắt và thao tác thông minh:
 
-Note: This will impact Vite dev & build performances.
+### 👉 **Phím Tắt Toàn Cầu (Global Shortcuts)**
+- **`Alt + S`**: Chuyển hướng nhanh truy cập mọi lúc vào trang **Cài Đặt (Settings)**.
+- **`Ctrl + B`** (hoặc Cmd + B): Ẩn/Hiện thanh điều hướng bên trái (Sidebar) nhanh chóng.
+- **`Ctrl + I`** (hoặc Cmd + I): Đóng/Mở Dropdown hồ sơ ở góc trên bên phải.
+- **`Shift + K`**: Di chuyển tốc hành vào mục Hướng Dẫn Sử Dụng.
+- **`Esc`**: Thoát ngay mọi cửa sổ ảo, Pop-up và Popup menu.
 
-## Expanding the ESLint configuration
+### 👉 **Bảng Quản Lý Nhân Viên (Smart Table)**
+Ở danh sách giao diện bảng nhân sự, chúng ta có một cải tiến lớn:
+- Bạn chỉ cần **Click Chuột Phải (Right Click)** ngay trên dòng của nhân viên bất kỳ để mở ra một **Context Menu** y hệt như Native App bao gồm các tác vụ: Xem chi tiết, Chỉnh sửa thông tin, Chỉnh mức lương, và Hủy kích hoạt tài khoản. 
+- Tính năng này giúp loại bỏ hoàn toàn việc phải cuộn chuột dài còng lưng tìm kiếm nút chức năng ở góc khuất, trong khi vẫn không hề vi phạm cấu trúc mượt mà nguyên thủy của HTML `<tbody>`.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### 👉 **Cấu Hình Cá Nhân (Personalization)**
+Tất cả các cấu hình như: Thu gọn Sidebar hay *Tắt/hiển thị thanh Chú thích Context Menu* ở màn Quản lý, đều tự động được lưu bền vững vào `localStorage` qua bộ State Control của **Zustand**. Tắt máy mở lại vẫn giữ nguyên ý bạn!
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+---
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## 🛠️ Yêu Cầu Cài Đặt (Getting Started)
+Để bắt đầu cài đặt và sử dụng ứng dụng ở môi trường cục bộ (Local):
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+# 1. Cài đặt các gói phụ thuộc
+npm install
+
+# 2. Khởi động môi trường dev
+npm run dev
+
+# 3. Chạy build trước khi release
+npm run build
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+_© 2026 Bản quyền thuộc về **VNFT Group**. Developed for Advanced Human Resources Administration._

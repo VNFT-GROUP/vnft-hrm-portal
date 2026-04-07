@@ -1,0 +1,39 @@
+/* Custom Scrollbar for NDA Dialog */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+  margin: 10px 0;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(30, 32, 98, 0.15);
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(30, 32, 98, 0.3);
+}
+
+.nda-dialog-container [data-slot="dialog-close"] {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  color: white !important;
+  border-radius: 50%;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  top: 1.25rem !important;
+  right: 1.25rem !important;
+  border: 1px solid rgba(255,255,255,0.2) !important;
+}
+
+.nda-dialog-container [data-slot="dialog-close"]:hover {
+  background-color: rgba(255, 255, 255, 0.2) !important;
+  transform: rotate(90deg);
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}

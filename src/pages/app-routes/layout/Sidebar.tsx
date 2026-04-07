@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { LayoutDashboard, UserCircle, Calendar, FolderOpen, Users, Building2, Briefcase, Clock, ClipboardList, Shield, FileText, ClipboardCheck, Calculator, FileSpreadsheet, CheckSquare, FileEdit, Wallet, FileBarChart, Settings, History, ChevronLeft, Menu, ChevronDown, ChevronRight as ChevronRightIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { ScrollArea } from "../../../components/ui/scroll-area";
@@ -60,27 +61,29 @@ export default function Sidebar() {
     setActiveToast(null);
   };
 
+  const { t } = useTranslation();
+
   const menuData = [
     {
       section: "",
       items: [
-        { label: "Dashboard", path: "/app", icon: <LayoutDashboard size={20} /> },
-        { label: "Hồ sơ cá nhân", path: "/app/profile", icon: <UserCircle size={20} /> },
-        { label: "Lịch & Sự kiện", path: "/app/calendar", icon: <Calendar size={20} /> },
+        { label: t('sidebar.dashboard'), path: "/app", icon: <LayoutDashboard size={20} /> },
+        { label: t('sidebar.profile'), path: "/app/profile", icon: <UserCircle size={20} /> },
+        { label: t('sidebar.calendar'), path: "/app/calendar", icon: <Calendar size={20} /> },
         { 
-          label: "Quản lý", 
+          label: t('sidebar.management'), 
           icon: <FolderOpen size={20} />, 
           subItems: [
-            { label: "Nhân viên", path: "/app/management/employees", icon: <Users size={16} /> },
-            { label: "Phòng ban", path: "/app/management/departments", icon: <Building2 size={16} /> },
-            { label: "Chức vụ", path: "/app/management/roles", icon: <Briefcase size={16} /> },
-            { label: "Chấm công", path: "/app/management/attendance", icon: <Clock size={16} /> },
-            { label: "Tiêu chí đánh giá", path: "/app/management/evaluation-criteria", icon: <ClipboardList size={16} /> },
-            { label: "Vai trò", path: "/app/management/permissions", icon: <Shield size={16} /> },
-            { label: "Hợp đồng", path: "/app/management/contracts", icon: <FileText size={16} /> },
+            { label: t('sidebar.employees'), path: "/app/management/employees", icon: <Users size={16} /> },
+            { label: t('sidebar.departments'), path: "/app/management/departments", icon: <Building2 size={16} /> },
+            { label: t('sidebar.roles'), path: "/app/management/roles", icon: <Briefcase size={16} /> },
+            { label: t('sidebar.attendance'), path: "/app/management/attendance", icon: <Clock size={16} /> },
+            { label: t('sidebar.evaluationCriteria'), path: "/app/management/evaluation-criteria", icon: <ClipboardList size={16} /> },
+            { label: t('sidebar.permissions'), path: "/app/management/permissions", icon: <Shield size={16} /> },
+            { label: t('sidebar.contracts'), path: "/app/management/contracts", icon: <FileText size={16} /> },
           ]
         },
-        { label: "Đánh giá", path: "/app/evaluation", icon: <ClipboardCheck size={20} /> },
+        { label: t('sidebar.evaluation'), path: "/app/evaluation", icon: <ClipboardCheck size={20} /> },
         { 
           label: "ACC", 
           icon: <Calculator size={20} />,
@@ -88,18 +91,18 @@ export default function Sidebar() {
             { label: "Import Profit Report", path: "/app/acc/profit-report", icon: <FileSpreadsheet size={16} /> }
           ]
         },
-        { label: "Bình chọn", path: "/app/voting", icon: <CheckSquare size={20} /> },
-        { label: "Đơn từ", path: "/app/requests", icon: <FileEdit size={20} /> },
+        { label: t('sidebar.voting'), path: "/app/voting", icon: <CheckSquare size={20} /> },
+        { label: t('sidebar.requests'), path: "/app/requests", icon: <FileEdit size={20} /> },
         { 
-          label: "Tài chính", 
+          label: t('sidebar.finance'), 
           icon: <Wallet size={20} />,
           subItems: [
-            { label: "Báo cáo tài chính", path: "/app/finance/reports", icon: <FileBarChart size={16} /> }
+            { label: t('sidebar.financeReports'), path: "/app/finance/reports", icon: <FileBarChart size={16} /> }
           ]
         },
-        { label: "Báo cáo", path: "/app/reports", icon: <FileText size={20} /> },
-        { label: "Cài đặt", path: "/app/settings", icon: <Settings size={20} /> },
-        { label: "Nhật ký hoạt động", path: "/app/activity-logs", icon: <History size={20} /> },
+        { label: t('sidebar.reports'), path: "/app/reports", icon: <FileText size={20} /> },
+        { label: t('sidebar.settings'), path: "/app/settings", icon: <Settings size={20} /> },
+        { label: t('sidebar.activityLogs'), path: "/app/activity-logs", icon: <History size={20} /> },
       ]
     }
   ];

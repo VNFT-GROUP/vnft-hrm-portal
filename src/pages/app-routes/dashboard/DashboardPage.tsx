@@ -55,27 +55,6 @@ export default function DashboardPage() {
       </div>
 
       <div className="dashboard-content-grid">
-        <div className="dashboard-card chart-card">
-          <div className="card-header">
-            <h3>Biến động nhân sự & Hiệu suất</h3>
-            <select className="period-select">
-              <option>Năm 2026</option>
-              <option>Năm 2025</option>
-            </select>
-          </div>
-          <div className="mock-chart">
-            {/* Fake responsive bar chart */}
-            {[40, 60, 50, 80, 70, 90, 100, 85, 65, 75, 45, 95].map((h, i) => (
-              <div key={`month-${i}`} className="bar-wrapper">
-                <div className="bar" style={{ height: `${h}%` }}>
-                  <div className="bar-tooltip">Tháng {i + 1}: {h}00</div>
-                </div>
-                <span className="bar-label">T{i + 1}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
         <div className="dashboard-card table-card">
           <div className="card-header">
             <h3>Danh sách nhân sự mới</h3>

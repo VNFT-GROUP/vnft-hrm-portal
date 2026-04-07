@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { User, Book, Globe, Key, LogOut, Briefcase, BadgeCheck, Keyboard } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import "./Topbar.css";
@@ -6,6 +7,7 @@ import "./Topbar.css";
 export default function Topbar() {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation();
 
   // Register Ctrl + I shortcut for toggling User Menu
   React.useEffect(() => {
@@ -100,26 +102,38 @@ export default function Topbar() {
             
             <div className="pd-body">
               <div className="pd-item">
-                <User size={18} className="pd-icon" /> <span>Tài khoản</span>
+                <User size={18} className="pd-icon" /> <span>{t('profile.title')}</span>
               </div>
-              <div className="pd-item pd-item-highlight" onClick={() => {
+              <div className="pd-item" onClick={() => {
                 setIsProfileOpen(false);
                 navigate('/app/user-guide');
               }}>
-                <Book size={18} className="pd-icon" /> <span>Hướng dẫn sử dụng</span>
+                <Book size={18} className="pd-icon" /> <span>{t('profile.guide')}</span>
               </div>
               <div className="pd-item" onClick={() => {
                 setIsProfileOpen(false);
                 navigate('/app/user-guide#shortcuts');
               }}>
-                <Keyboard size={18} className="pd-icon" /> <span className="flex-1">Các phím tắt</span>
+                <Keyboard size={18} className="pd-icon" /> <span className="flex-1">{t('profile.shortcuts')}</span>
                 <div className="flex items-center text-[0.7rem] font-mono text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200">
                   Shift + K
                 </div>
               </div>
-              <div className="pd-item">
-                <Globe size={18} className="pd-icon" /> <span className="flex-1">Ngôn ngữ</span>
-                <span className="lang-text">VN <span className="arrow">{">"}</span></span>
+              <div className="pd-item" onClick={(e) => {
+                e.stopPropagation();
+                i18n.changeLanguage(i18n.language === 'en' ? 'vi' : 'en');
+              }}>
+                <Globe size={18} className="pd-icon" /> <span className="flex-1">{t('profile.language')}</span>
+                <span className="lang-text flex items-center gap-2">
+                  <img 
+                    src={i18n.language === 'en' ? 'https://flagcdn.com/w20/gb.png' : 'https://flagcdn.com/w20/vn.png'} 
+                    width="18" 
+                    alt="flag" 
+                    className="shadow-sm rounded-[2px]" 
+                  />
+                  {i18n.language === 'en' ? 'EN' : 'VN'} 
+                  <span className="arrow ml-1">{">"}</span>
+                </span>
               </div>
             </div>
 
@@ -127,13 +141,13 @@ export default function Topbar() {
             
             <div className="pd-body">
               <div className="pd-item">
-                <Key size={18} className="pd-icon" /> <span>Đổi mật khẩu</span>
+                <Key size={18} className="pd-icon" /> <span>{t('profile.changePassword')}</span>
               </div>
               <div className="pd-item text-red-500" onClick={() => {
                 setIsProfileOpen(false);
                 navigate('/login');
               }}>
-                <LogOut size={18} className="pd-icon-red" /> <span>Đăng xuất</span>
+                <LogOut size={18} className="pd-icon-red" /> <span>{t('profile.logout')}</span>
               </div>
             </div>
           </div>

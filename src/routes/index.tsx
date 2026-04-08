@@ -28,6 +28,19 @@ const ActivityLogsPage = lazy(() => import("../pages/app-routes/activity-logs"))
 const UserGuidePage = lazy(() => import("../pages/app-routes/user-guide"));
 
 import LoadingPage from "../components/custom/loadingPage/LoadingPage";
+import { useAuthStore } from "@/store/useAuthStore";
+
+function ProtectedRoute({ children }: { children: React.ReactNode }) {
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  if (!isAuthenticated) return <Navigate to="/login" replace />;
+  return <>{children}</>;
+}
+
+function PublicRoute({ children }: { children: React.ReactNode }) {
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  if (isAuthenticated) return <Navigate to="/app" replace />;
+  return <>{children}</>;
+}
 
 export default function AppRoutes() {
   return (
@@ -35,9 +48,11 @@ export default function AppRoutes() {
       <Route 
         path="/login" 
         element={
-          <Suspense fallback={<LoadingPage message="Khởi tạo hệ thống..." />}>
-            <LoginPage />
-          </Suspense>
+          <PublicRoute>
+            <Suspense fallback={<LoadingPage message="Khởi tạo hệ thống..." />}>
+              <LoginPage />
+            </Suspense>
+          </PublicRoute>
         } 
       />
       <Route 
@@ -51,9 +66,11 @@ export default function AppRoutes() {
       <Route 
         path="/app" 
         element={
-          <Suspense fallback={<LoadingPage message="Tải phân hệ máy chủ..." />}>
-            <AppLayout />
-          </Suspense>
+          <ProtectedRoute>
+            <Suspense fallback={<LoadingPage message="Tải phân hệ máy chủ..." />}>
+              <AppLayout />
+            </Suspense>
+          </ProtectedRoute>
         }
       >
           {/* Dashboard (Home) */}

@@ -5,34 +5,35 @@ import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
 import { useLayoutStore } from "@/store/useLayoutStore";
 
-import RoleTable, { type Role } from "./components/RoleTable";
+import RoleTable from "./components/RoleTable";
 import RoleFormSheet from "./components/RoleFormSheet";
+import type { PositionResponse } from "@/types/response/position/PositionResponse";
 
-const initRoles: Role[] = [
-  { id: "1", name: "Giám đốc", description: "Quản lý điều hành chung", status: true },
-  { id: "2", name: "Trưởng phòng", description: "Quản lý bộ phận kỹ thuật / hành chính", status: true },
-  { id: "3", name: "Nhân viên", description: "Nhân viên chính thức các phòng ban", status: true },
-  { id: "4", name: "Thực tập sinh", description: "Vị trí học việc và thử việc ngắn hạn", status: false },
+const initRoles: PositionResponse[] = [
+  { id: "1", name: "Giám đốc", description: "Quản lý điều hành chung", active: true },
+  { id: "2", name: "Trưởng phòng", description: "Quản lý bộ phận kỹ thuật / hành chính", active: true },
+  { id: "3", name: "Nhân viên", description: "Nhân viên chính thức các phòng ban", active: true },
+  { id: "4", name: "Thực tập sinh", description: "Vị trí học việc và thử việc ngắn hạn", active: false },
 ];
 
 export default function RolesPage() {
   const showRoleLegend = useLayoutStore(state => state.showRoleLegend);
-  const [roles, setRoles] = useState<Role[]>(initRoles);
+  const [roles, setRoles] = useState<PositionResponse[]>(initRoles);
   const [searchTerm, setSearchTerm] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-  const [editingRole, setEditingRole] = useState<Role | null>(null);
+  const [editingRole, setEditingRole] = useState<PositionResponse | null>(null);
 
-  const [formData, setFormData] = useState({ name: "", description: "", status: true });
+  const [formData, setFormData] = useState({ name: "", description: "", active: true });
 
   const filteredRoles = roles.filter(r => r.name.toLowerCase().includes(searchTerm.toLowerCase()));
 
-  const handleOpenForm = (role?: Role) => {
+  const handleOpenForm = (role?: PositionResponse) => {
     if (role) {
       setEditingRole(role);
-      setFormData({ name: role.name, description: role.description, status: role.status });
+      setFormData({ name: role.name, description: role.description || "", active: role.active ?? false });
     } else {
       setEditingRole(null);
-      setFormData({ name: "", description: "", status: true });
+      setFormData({ name: "", description: "", active: true });
     }
     setIsOpen(true);
   };

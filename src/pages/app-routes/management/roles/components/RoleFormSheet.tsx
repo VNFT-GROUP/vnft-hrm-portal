@@ -9,8 +9,8 @@ import { Switch } from "@/components/ui/switch";
 interface RoleFormSheetProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
-  formData: { name: string; description: string; status: boolean };
-  setFormData: (data: { name: string; description: string; status: boolean }) => void;
+  formData: { name: string; description: string; active: boolean };
+  setFormData: (data: { name: string; description: string; active: boolean }) => void;
   isEditing: boolean;
   onSave: () => void;
 }
@@ -65,8 +65,8 @@ export default function RoleFormSheet({ isOpen, onOpenChange, formData, setFormD
               <p className="text-xs text-muted-foreground">Bật để cho phép gán bộ phận này cho nhân sự</p>
             </div>
             <Switch 
-              checked={formData.status} 
-              onCheckedChange={checked => setFormData({...formData, status: checked})} 
+              checked={formData.active} 
+              onCheckedChange={checked => setFormData({...formData, active: checked})} 
             />
           </div>
         </div>

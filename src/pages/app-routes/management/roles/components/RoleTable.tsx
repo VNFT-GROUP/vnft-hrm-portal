@@ -12,16 +12,11 @@ import {
   ContextMenuSeparator,
 } from "@/components/ui/context-menu";
 
-export interface Role {
-  id: string;
-  name: string;
-  description: string;
-  status: boolean;
-}
+import type { PositionResponse } from "@/types/response/position/PositionResponse";
 
 interface RoleTableProps {
-  roles: Role[];
-  onEdit: (role: Role) => void;
+  roles: PositionResponse[];
+  onEdit: (role: PositionResponse) => void;
   onDelete: (id: string) => void;
 }
 
@@ -59,13 +54,13 @@ export default function RoleTable({ roles, onEdit, onDelete }: RoleTableProps) {
                 <TableCell className="text-muted-foreground py-4 max-w-[300px] truncate border-r border-border text-left align-middle px-6" title={role.description}>{role.description || "—"}</TableCell>
                 <TableCell className="py-4 border-r border-border text-center align-middle">
                   <Badge 
-                    variant={role.status ? "default" : "secondary"} 
-                    className={role.status 
+                    variant={role.active ? "default" : "secondary"} 
+                    className={role.active 
                       ? "bg-[#10b981] hover:bg-[#10b981]/90 shadow-sm shadow-[#10b981]/20 font-medium border-0" 
                       : "bg-muted text-muted-foreground hover:bg-slate-800 dark:bg-slate-700 hover:text-muted-foreground font-medium border-0"
                     }
                   >
-                    {role.status ? "Hoạt động" : "Tạm ngưng"}
+                    {role.active ? "Hoạt động" : "Tạm ngưng"}
                   </Badge>
                 </TableCell>
                 <TableCell className="py-4 text-center align-middle">

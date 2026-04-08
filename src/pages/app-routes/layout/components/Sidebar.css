@@ -14,10 +14,15 @@
   position: relative;
   transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 200; /* Ensure it stays above Topbar and right content */
+  will-change: width;
 }
 
 .app-sidebar.collapsed {
   width: 80px;
+}
+
+.app-sidebar.collapsed .sidebar-bg-objects {
+  display: none; /* Optimize by disabling animations implicitly via display: none */
 }
 
 @keyframes sidebar-gradient {
@@ -44,6 +49,7 @@
   animation: bg-scroll 30s linear infinite;
   pointer-events: none;
   z-index: 0;
+  will-change: background-position;
 }
 
 @keyframes glow-float {

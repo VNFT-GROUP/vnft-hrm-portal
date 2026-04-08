@@ -1,179 +1,51 @@
-import { useEffect, useState } from "react";
-import { motion, useSpring, useMotionValue } from "framer-motion";
 import { useLayoutStore } from "@/store/useLayoutStore";
 
 export default function CustomCursor() {
   const cursorStyle = useLayoutStore((state) => state.cursorStyle);
-  
-  // Track mouse position
-  const mouseX = useMotionValue(-100);
-  const mouseY = useMotionValue(-100);
-  
-  // Smooth springs for trailing effects
-  const springConfig = { damping: 25, stiffness: 300, mass: 0.5 };
-  const cursorXSpring = useSpring(mouseX, springConfig);
-  const cursorYSpring = useSpring(mouseY, springConfig);
-
-  const [isClicking, setIsClicking] = useState(false);
-  const [isHovering, setIsHovering] = useState(false);
-
-  useEffect(() => {
-    if (cursorStyle === 'cursor-default') {
-      document.body.style.cursor = 'auto';
-      document.documentElement.classList.remove('hide-native-cursor');
-      return;
-    }
-
-    document.documentElement.classList.add('hide-native-cursor');
-
-    const updateMousePosition = (e: MouseEvent) => {
-      mouseX.set(e.clientX);
-      mouseY.set(e.clientY);
-      
-      const target = e.target as HTMLElement;
-      const isClickable = window.getComputedStyle(target).cursor === 'pointer' || 
-                          target.tagName.toLowerCase() === 'a' || 
-                          target.tagName.toLowerCase() === 'button' ||
-                          target.closest('button') || target.closest('a') ||
-                          target.closest('[role="button"]');
-      
-      setIsHovering(!!isClickable);
-    };
-
-    const handleMouseDown = () => setIsClicking(true);
-    const handleMouseUp = () => setIsClicking(false);
-
-    window.addEventListener("mousemove", updateMousePosition, { passive: true });
-    window.addEventListener("mousedown", handleMouseDown);
-    window.addEventListener("mouseup", handleMouseUp);
-
-    return () => {
-      window.removeEventListener("mousemove", updateMousePosition);
-      window.removeEventListener("mousedown", handleMouseDown);
-      window.removeEventListener("mouseup", handleMouseUp);
-      document.documentElement.classList.remove('hide-native-cursor');
-    };
-  }, [cursorStyle, mouseX, mouseY]);
 
   if (cursorStyle === 'cursor-default') return null;
 
+  let fill = "white";
+  let stroke = "black";
+  let filter = "";
+
+  if (cursorStyle === 'cursor-vnft') { fill = "%23F7941D"; stroke = "%232E3192"; }
+  if (cursorStyle === 'cursor-dark') { fill = "%231E2062"; stroke = "white"; }
+  if (cursorStyle === 'cursor-neon') { 
+    fill = "%230ea5e9"; 
+    stroke = "white"; 
+    filter = `<defs><filter id="g"><feDropShadow dx="0" dy="0" stdDeviation="1.5" flood-color="%230ea5e9"/></filter></defs>`;
+  }
+  if (cursorStyle === 'cursor-rose') { fill = "%23f43f5e"; stroke = "white"; }
+
+  const path = filter ? `<path d="M5.5 3L21.5 14L13.5 15.5L9.5 22.5L5.5 3Z" fill="${fill}" stroke="${stroke}" stroke-width="1.5" stroke-linejoin="round" filter="url(%23g)" />` : `<path d="M5.5 3L21.5 14L13.5 15.5L9.5 22.5L5.5 3Z" fill="${fill}" stroke="${stroke}" stroke-width="1.5" stroke-linejoin="round" />`;
+  const svg = `data:image/svg+xml;charset=utf-8,%3Csvg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"%3E${filter}${path}%3C/svg%3E`;
+
+  // Pointer version (hand)
+  const handPath = filter ? `<path d="M12.95 11.53V6.26C12.95 5.02 13.96 4 15.21 4C16.46 4 17.47 5.02 17.47 6.26V12.29M17.47 9.27V7.01C17.47 5.76 18.48 4.75 19.73 4.75C20.98 4.75 22 5.76 22 7.01V14.93M22 11.53V10.03C22 8.78 23.01 7.76 24.26 7.76C25.51 7.76 26.53 8.78 26.53 10.03V17.57C26.53 20.91 23.83 23.63 20.49 23.63H15.97C13.28 23.63 10.8 21.86 10 19.28L8.53 14.49C8.19 13.38 8.94 12.19 10.09 11.98C11.09 11.79 12.08 12.36 12.49 13.29L12.95 14.2V11.53Z" fill="${fill}" stroke="${stroke}" stroke-width="1.5" stroke-linejoin="round" filter="url(%23g)" />` : `<path d="M12.95 11.53V6.26C12.95 5.02 13.96 4 15.21 4C16.46 4 17.47 5.02 17.47 6.26V12.29M17.47 9.27V7.01C17.47 5.76 18.48 4.75 19.73 4.75C20.98 4.75 22 5.76 22 7.01V14.93M22 11.53V10.03C22 8.78 23.01 7.76 24.26 7.76C25.51 7.76 26.53 8.78 26.53 10.03V17.57C26.53 20.91 23.83 23.63 20.49 23.63H15.97C13.28 23.63 10.8 21.86 10 19.28L8.53 14.49C8.19 13.38 8.94 12.19 10.09 11.98C11.09 11.79 12.08 12.36 12.49 13.29L12.95 14.2V11.53Z" fill="${fill}" stroke="${stroke}" stroke-width="1.5" stroke-linejoin="round" />`;
+  const pointerSvg = `data:image/svg+xml;charset=utf-8,%3Csvg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"%3E${filter}${handPath}%3C/svg%3E`;
+
   return (
-    <>
-      <style>{`
-        .hide-native-cursor, .hide-native-cursor * {
-          cursor: none !important;
-        }
-      `}</style>
+    <style>{`
+      body, html {
+        cursor: url('${svg}') 5 3, auto !important;
+      }
       
-      {/* 1. CLASSIC PRESET */}
-      {cursorStyle === 'cursor-classic' && (
-        <>
-          <motion.div
-            className="fixed top-0 left-0 w-3 h-3 bg-[#F7941D] rounded-full pointer-events-none z-[99999]"
-            style={{ x: mouseX, y: mouseY, translateX: "-50%", translateY: "-50%" }}
-            animate={{
-              scale: isClicking ? 0.5 : isHovering ? 1.5 : 1,
-              backgroundColor: isHovering ? "#2E3192" : "#F7941D"
-            }}
-            transition={{ duration: 0.15 }}
-          />
-          <motion.div
-            className="fixed top-0 left-0 w-10 h-10 border border-[#ab5cf6]/50 rounded-full pointer-events-none z-[99998]"
-            style={{ x: cursorXSpring, y: cursorYSpring, translateX: "-50%", translateY: "-50%" }}
-            animate={{
-              scale: isClicking ? 0.8 : isHovering ? 1.5 : 1,
-              opacity: isHovering ? 0.2 : 0.8,
-              borderColor: isHovering ? "#2E3192" : "#8b5cf6"
-            }}
-            transition={{ duration: 0.2 }}
-          />
-        </>
-      )}
-
-      {/* 2. INVERTED PRESET */}
-      {cursorStyle === 'cursor-inverted' && (
-        <>
-          <motion.div
-            className="fixed top-0 left-0 w-4 h-4 bg-white rounded-full pointer-events-none z-[99999]"
-            style={{ x: mouseX, y: mouseY, translateX: "-50%", translateY: "-50%", mixBlendMode: 'difference' }}
-            animate={{
-              scale: isHovering ? 0 : 1,
-            }}
-            transition={{ duration: 0.15 }}
-          />
-          <motion.div
-            className="fixed top-0 left-0 w-10 h-10 border-2 border-white bg-white/20 rounded-full pointer-events-none z-[99998]"
-            style={{ x: cursorXSpring, y: cursorYSpring, translateX: "-50%", translateY: "-50%", mixBlendMode: 'difference' }}
-            animate={{
-              scale: isClicking ? 0.8 : isHovering ? 2.5 : 1,
-              backgroundColor: isHovering ? "rgba(255,255,255,1)" : "rgba(255,255,255,0)"
-            }}
-            transition={{ duration: 0.2 }}
-          />
-        </>
-      )}
-
-      {/* 3. PULSE PRESET */}
-      {cursorStyle === 'cursor-pulse' && (
-        <>
-          <motion.div
-            className="fixed top-0 left-0 w-3 h-3 bg-[#0ea5e9] rounded-full pointer-events-none z-[99999] shadow-[0_0_10px_#0ea5e9]"
-            style={{ x: mouseX, y: mouseY, translateX: "-50%", translateY: "-50%" }}
-            animate={{
-              scale: isClicking ? 0.8 : isHovering ? 0 : 1,
-            }}
-          />
-          <motion.div
-            className="fixed top-0 left-0 w-12 h-12 border-2 border-[#0ea5e9] rounded-full pointer-events-none z-[99998]"
-            style={{ x: cursorXSpring, y: cursorYSpring, translateX: "-50%", translateY: "-50%" }}
-            animate={{
-              scale: isHovering ? 1.5 : 1,
-            }}
-          />
-          <motion.div
-            className="fixed top-0 left-0 w-12 h-12 bg-[#0ea5e9]/20 rounded-full pointer-events-none z-[99997]"
-            style={{ x: cursorXSpring, y: cursorYSpring, translateX: "-50%", translateY: "-50%" }}
-            animate={{
-              scale: [1, isHovering ? 2 : 1.5, 1],
-              opacity: [0.5, 0, 0.5],
-            }}
-            transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-          />
-        </>
-      )}
-
-      {/* 4. DASHED (TECH) PRESET */}
-      {cursorStyle === 'cursor-dashed' && (
-        <>
-          <motion.div
-            className="fixed top-0 left-0 w-2 h-2 bg-[#f43f5e] rounded-sm pointer-events-none z-[99999]"
-            style={{ x: mouseX, y: mouseY, translateX: "-50%", translateY: "-50%" }}
-            animate={{
-              rotate: isHovering ? 45 : 0,
-              scale: isClicking ? 0.5 : isHovering ? 1.5 : 1
-            }}
-          />
-          <motion.div
-            className="fixed top-0 left-0 w-10 h-10 rounded-full pointer-events-none z-[99998]"
-            style={{ 
-              x: cursorXSpring, 
-              y: cursorYSpring, 
-              translateX: "-50%", 
-              translateY: "-50%",
-              border: "1.5px dashed #f43f5e",
-            }}
-            animate={{
-              rotate: 360,
-              scale: isClicking ? 0.8 : isHovering ? 1.5 : 1,
-              opacity: isHovering ? 0.4 : 1
-            }}
-            transition={{ 
-              rotate: { repeat: Infinity, duration: 8, ease: "linear" },
-              scale: { duration: 0.2 }
-            }}
-          />
-        </>
-      )}
-    </>
+      a, button, [role="button"], label, .cursor-pointer,
+      select, summary, input[type="submit"], input[type="button"],
+      input[type="checkbox"], input[type="radio"] {
+        cursor: url('${pointerSvg}') 10 3, pointer !important;
+      }
+      
+      /* Restoring necessary specific cursors to override global setup */
+      input[type="text"], input[type="password"], input[type="email"], input[type="number"], textarea, .cursor-text {
+        cursor: text !important;
+      }
+      .cursor-grab { cursor: grab !important; }
+      .cursor-move { cursor: move !important; }
+      .cursor-col-resize { cursor: col-resize !important; }
+      .cursor-row-resize { cursor: row-resize !important; }
+      .cursor-not-allowed, :disabled { cursor: not-allowed !important; }
+    `}</style>
   );
 }

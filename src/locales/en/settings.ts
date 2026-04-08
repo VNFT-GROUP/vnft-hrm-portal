@@ -44,11 +44,11 @@ export default {
   cursorSection: {
     title: "Mouse Cursor Settings",
     label: "Cursor Effects",
-    desc: "All cursors share a unified standard shape (circle/dot) but are styled differently to match your personality.",
+    desc: "Customize the colors and styling of the traditional arrow cursor on the system.",
     default: "OS Default",
-    classic: "Classic Dot",
-    inverted: "Invert Core",
-    pulse: "Pulsing Ring",
-    dashed: "Dashed Tech"
+    vnft: "VNFT Brand",
+    dark: "Dark Minimal",
+    neon: "Neon Blue",
+    rose: "Rose Gem"
   }
 };

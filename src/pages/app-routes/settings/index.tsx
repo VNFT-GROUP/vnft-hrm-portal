@@ -85,10 +85,10 @@ export default function SettingsPage() {
 
   const cursorPresets = [
     { id: 'cursor-default', name: t('settings.cursorSection.default'), icon: <MousePointer2 size={24} className="text-muted-foreground" /> },
-    { id: 'cursor-classic', name: t('settings.cursorSection.classic'), icon: <div className="relative w-8 h-8 flex items-center justify-center rounded-full border border-[#ab5cf6]/50"><div className="w-2 h-2 bg-[#F7941D] rounded-full"/></div> },
-    { id: 'cursor-inverted', name: t('settings.cursorSection.inverted'), icon: <div className="relative w-8 h-8 flex items-center justify-center rounded-full border-2 border-foreground bg-foreground/10"><div className="w-2 h-2 bg-foreground rounded-full"/></div> },
-    { id: 'cursor-pulse', name: t('settings.cursorSection.pulse'), icon: <div className="relative w-8 h-8 flex items-center justify-center rounded-full border-2 border-[#0ea5e9] shadow-[0_0_10px_#0ea5e940]"><div className="w-2 h-2 bg-[#0ea5e9] rounded-full"/></div> },
-    { id: 'cursor-dashed', name: t('settings.cursorSection.dashed'), icon: <div className="relative w-8 h-8 flex items-center justify-center rounded-full border border-dashed border-[#f43f5e]"><div className="w-2 h-2 bg-[#f43f5e] rounded-sm"/></div> },
+    { id: 'cursor-vnft', name: t('settings.cursorSection.vnft'), icon: <MousePointer2 fill="#F7941D" stroke="#2E3192" size={24} className="text-[#2E3192]" /> },
+    { id: 'cursor-dark', name: t('settings.cursorSection.dark'), icon: <MousePointer2 fill="#1E2062" stroke="white" size={24} className="text-[#1E2062]" /> },
+    { id: 'cursor-neon', name: t('settings.cursorSection.neon'), icon: <MousePointer2 fill="#0ea5e9" stroke="white" size={24} className="text-[#0ea5e9] drop-shadow-[0_0_5px_rgba(14,165,233,0.8)]" /> },
+    { id: 'cursor-rose', name: t('settings.cursorSection.rose'), icon: <MousePointer2 fill="#f43f5e" stroke="white" size={24} className="text-[#f43f5e]" /> },
   ];
 
 

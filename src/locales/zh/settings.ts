@@ -44,11 +44,11 @@ export default {
   cursorSection: {
     title: "鼠标光标设置",
     label: "光标效果",
-    desc: "所有光标都保持统一的标准形状（圆/点），但具有不同的风格以匹配您的个性。",
+    desc: "自定义系统上传统箭头光标的颜色和样式。",
     default: "系统默认",
-    classic: "经典圆点",
-    inverted: "反转对比",
-    pulse: "脉冲光环",
-    dashed: "虚线科技"
+    vnft: "VNFT 品牌",
+    dark: "极简暗黑",
+    neon: "霓虹发光",
+    rose: "玫瑰宝石"
   }
 };

@@ -44,11 +44,11 @@ export default {
   cursorSection: {
     title: "Cài đặt con trỏ chuột (Cursor)",
     label: "Hiệu ứng con trỏ chuột",
-    desc: "Các mẫu con trỏ đều giữ hình dáng chuẩn (vòng tròn/điểm) nhưng được tùy biến phong cách khác nhau để phù hợp với cá tính của bạn.",
+    desc: "Tùy chỉnh màu sắc và phong cách của con trỏ mũi tên truyền thống trên hệ thống.",
     default: "Hệ điều hành",
-    classic: "Cổ điển (Classic)",
-    inverted: "Tương phản (Invert)",
-    pulse: "Nhịp đập (Pulse)",
-    dashed: "Nét đứt xoay (Tech)"
+    vnft: "VNFT (Cam/Xanh)",
+    dark: "Tối giản (Dark)",
+    neon: "Dạ quang (Neon)",
+    rose: "Hồng ngọc (Rose)"
   }
 };

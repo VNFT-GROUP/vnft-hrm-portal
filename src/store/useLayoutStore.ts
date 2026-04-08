@@ -16,6 +16,8 @@ interface LayoutState {
   setAppFont: (font: string) => void;
   timezone: string;
   setTimezone: (tz: string) => void;
+  cursorStyle: string;
+  setCursorStyle: (cursor: string) => void;
 }
 
 export const useLayoutStore = create<LayoutState>()(
@@ -35,6 +37,8 @@ export const useLayoutStore = create<LayoutState>()(
       setAppFont: (font) => set({ appFont: font }),
       timezone: 'Asia/Ho_Chi_Minh',
       setTimezone: (tz) => set({ timezone: tz }),
+      cursorStyle: 'cursor-default',
+      setCursorStyle: (cursor) => set({ cursorStyle: cursor }),
     }),
     {
       name: 'vnft-layout-storage', // name of the item in localStorage

@@ -40,5 +40,14 @@ export default {
     departmentDesc: "Bật/tắt thanh giải thích ý nghĩa các biểu tượng hành động phía trên bảng danh sách cấu trúc phòng ban.",
     roleLabel: "Hiển thị bảng chú thích ở Quản lý chức vụ",
     roleDesc: "Bật/tắt thanh giải thích ý nghĩa các biểu tượng hành động phía trên bảng danh sách cấu trúc chức vụ."
+  },
+  cursorSection: {
+    title: "Cài đặt con trỏ chuột (Cursor)",
+    label: "Hiệu ứng con trỏ chuột",
+    desc: "Tùy chỉnh hình ảnh và hiệu ứng của con trỏ chuột. (Một số hiệu ứng có thể ảnh hưởng nhẹ đến hiệu năng thiết bị).",
+    default: "Mặc định",
+    dot: "Chấm tròn tinh tế",
+    glow: "Hào quang sáng",
+    tech: "Nhắm mục tiêu (Tech)"
   }
 };

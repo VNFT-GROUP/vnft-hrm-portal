@@ -40,5 +40,14 @@ export default {
     departmentDesc: "Toggle the action icon explanation bar above the department structure table.",
     roleLabel: "Show legend in Position Management",
     roleDesc: "Toggle the action icon explanation bar above the position structure table."
+  },
+  cursorSection: {
+    title: "Mouse Cursor Settings",
+    label: "Cursor Effects",
+    desc: "Customize the appearance and effects of your mouse cursor. (Some effects may slightly impact device performance).",
+    default: "Default",
+    dot: "Subtle Dot",
+    glow: "Radiant Glow",
+    tech: "Tech Crosshair"
   }
 };

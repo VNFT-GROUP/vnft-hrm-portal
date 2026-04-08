@@ -40,5 +40,14 @@ export default {
     departmentDesc: "切换部门结构表上方操作图标解释栏。",
     roleLabel: "在职位管理中显示图例",
     roleDesc: "切换职位结构表上方操作图标解释栏。"
+  },
+  cursorSection: {
+    title: "鼠标光标设置",
+    label: "光标效果",
+    desc: "自定义鼠标光标的外观和效果。（某些效果可能会轻微影响设备性能）。",
+    default: "默认",
+    dot: "精细圆点",
+    glow: "发光光环",
+    tech: "科技瞄准线"
   }
 };

@@ -7,14 +7,12 @@ import "../../../pages/public-routes/login/LoginPage.css"; /* Ensure layout styl
 import "./LoadingPage.css";
 
 interface LoadingPageProps {
-  duration?: number;
   onComplete?: () => void;
   message?: string;
   variant?: "full" | "inner";
 }
 
 export default function LoadingPage({
-  duration = 3000,
   onComplete,
   message,
   variant = "full",
@@ -34,20 +32,21 @@ export default function LoadingPage({
   }, []);
 
   useEffect(() => {
-    const interval = 50;
-    const step = (100 / duration) * interval;
     let raf: number;
     let lastTime = performance.now();
 
     const tick = (now: number) => {
       const delta = now - lastTime;
-      if (delta >= interval) {
+      if (delta >= 50) {
         lastTime = now;
         setProgress((prev) => {
-          const next = prev + step + Math.random() * 0.3;
-          if (next >= 100) {
-            stableOnComplete();
-            return 100;
+          // Asymptotically approach 99% quickly
+          const remaining = 99 - prev;
+          const next = prev + remaining * 0.1;
+          
+          if (next >= 99) {
+             stableOnComplete();
+             return 99;
           }
           return next;
         });
@@ -57,7 +56,7 @@ export default function LoadingPage({
 
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [duration, stableOnComplete]);
+  }, [stableOnComplete]);
 
   const clampedProgress = useMemo(() => Math.min(progress, 100), [progress]);
 

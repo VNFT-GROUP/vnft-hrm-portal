@@ -4,10 +4,12 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 
 import vi from '../locales/vi';
 import en from '../locales/en';
+import zh from '../locales/zh';
 
 const resources = {
   vi: { translation: vi },
-  en: { translation: en }
+  en: { translation: en },
+  zh: { translation: zh }
 };
 
 i18n

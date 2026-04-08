@@ -1,0 +1,21 @@
+export default {
+  dashboard: "Dashboard",
+  profile: "Hồ sơ cá nhân",
+  calendar: "Lịch & Sự kiện",
+  management: "Quản lý",
+  employees: "Nhân viên",
+  departments: "Phòng ban",
+  roles: "Chức vụ",
+  attendance: "Chấm công",
+  evaluationCriteria: "Tiêu chí đánh giá",
+  permissions: "Vai trò",
+  contracts: "Hợp đồng",
+  evaluation: "Đánh giá",
+  voting: "Bình chọn",
+  requests: "Đơn từ",
+  finance: "Tài chính",
+  financeReports: "Báo cáo tài chính",
+  reports: "Báo cáo",
+  settings: "Cài đặt",
+  activityLogs: "Nhật ký hoạt động"
+};

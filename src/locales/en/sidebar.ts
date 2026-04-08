@@ -1,0 +1,21 @@
+export default {
+  dashboard: "Dashboard",
+  profile: "My Profile",
+  calendar: "Calendar & Events",
+  management: "Management",
+  employees: "Employees",
+  departments: "Departments",
+  roles: "Job Roles",
+  attendance: "Attendance",
+  evaluationCriteria: "Evaluation Criteria",
+  permissions: "Permissions",
+  contracts: "Contracts",
+  evaluation: "Evaluation",
+  voting: "Voting",
+  requests: "Requests",
+  finance: "Finance",
+  financeReports: "Financial Reports",
+  reports: "Reports",
+  settings: "Settings",
+  activityLogs: "Activity Logs"
+};

@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
+import { useTranslation } from "react-i18next";
 
 interface DepartmentFormSheetProps {
   isOpen: boolean;
@@ -16,6 +17,7 @@ interface DepartmentFormSheetProps {
 }
 
 export default function DepartmentFormSheet({ isOpen, onOpenChange, formData, setFormData, isEditing, onSave }: DepartmentFormSheetProps) {
+  const { t } = useTranslation();
 
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
@@ -26,10 +28,10 @@ export default function DepartmentFormSheet({ isOpen, onOpenChange, formData, se
                <span className="p-1.5 bg-[#2E3192]/10 text-[#2E3192] rounded-md">
                  <Building2 size={18} />
                </span>
-               {isEditing ? "Cập nhật phòng ban" : "Thêm phòng ban mới"}
+               {isEditing ? t("department.form.updateTitle") : t("department.form.addTitle")}
              </SheetTitle>
              <SheetDescription className="text-muted-foreground">
-               Thiết lập thông tin và chỉ định nhân sự cấp quản lý cho phòng ban này.
+               {t("department.form.subtitle")}
              </SheetDescription>
           </SheetHeader>
         </div>
@@ -38,24 +40,24 @@ export default function DepartmentFormSheet({ isOpen, onOpenChange, formData, se
           <div className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="name" className="text-sm font-semibold text-foreground">
-                Tên phòng ban <span className="text-rose-500">*</span>
+                {t("department.form.nameLabel")} <span className="text-rose-500">*</span>
               </Label>
               <Input 
                 id="name" 
                 value={formData.name} 
                 onChange={e => setFormData({...formData, name: e.target.value})} 
-                placeholder="VD: Phòng Nhân Sự" 
+                placeholder={t("department.form.namePlaceholder")} 
                 className="rounded-xl border-border focus-visible:ring-[#2E3192]"
               />
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="desc" className="text-sm font-semibold text-foreground">Mô tả</Label>
+              <Label htmlFor="desc" className="text-sm font-semibold text-foreground">{t("department.form.descLabel")}</Label>
               <Textarea 
                 id="desc" 
                 value={formData.description} 
                 onChange={e => setFormData({...formData, description: e.target.value})} 
-                placeholder="Vai trò và nhiệm vụ của phòng ban..." 
+                placeholder={t("department.form.descPlaceholder")} 
                 rows={3}
                 className="rounded-xl border-border focus-visible:ring-[#2E3192] resize-none"
               />
@@ -64,8 +66,8 @@ export default function DepartmentFormSheet({ isOpen, onOpenChange, formData, se
 
           <div className="flex items-center justify-between rounded-xl border border-border bg-card text-card-foreground p-4 shadow-sm">
             <div className="space-y-1">
-              <Label className="text-foreground text-sm font-semibold block">Trạng thái hoạt động?</Label>
-              <p className="text-xs text-muted-foreground">Bật để cho phép gán nhân sự vào phòng ban này</p>
+              <Label className="text-foreground text-sm font-semibold block">{t("department.form.statusLabel")}</Label>
+              <p className="text-xs text-muted-foreground">{t("department.form.statusDesc")}</p>
             </div>
             <Switch 
               checked={formData.active} 
@@ -76,10 +78,10 @@ export default function DepartmentFormSheet({ isOpen, onOpenChange, formData, se
         
         <div className="p-4 border-t border-border flex-shrink-0 bg-card text-card-foreground flex justify-end gap-3">
           <Button variant="outline" onClick={() => onOpenChange(false)} className="rounded-xl border-border text-muted-foreground hover:bg-muted w-32 transition-all">
-            Hủy
+            {t("department.form.cancel")}
           </Button>
           <Button onClick={onSave} className="rounded-xl bg-[#2E3192] hover:bg-[#1E2062] text-white w-auto px-6 transition-all shadow-md shadow-[#2E3192]/20" disabled={!formData.name.trim()}>
-            {isEditing ? "Lưu thay đổi" : "Lưu phòng ban"}
+            {isEditing ? t("department.form.saveChanges") : t("department.form.saveBtn")}
           </Button>
         </div>
       </SheetContent>

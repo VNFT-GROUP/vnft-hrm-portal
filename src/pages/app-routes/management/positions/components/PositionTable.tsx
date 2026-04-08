@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslation } from "react-i18next";
 import {
   ContextMenu,
   ContextMenuTrigger,
@@ -21,6 +22,7 @@ interface PositionTableProps {
 }
 
 export default function PositionTable({ positions, onEdit, onDelete }: PositionTableProps) {
+  const { t } = useTranslation();
   const [rightClickedPositionId, setRightClickedPositionId] = useState<string | null>(null);
   
   const activePosition = positions.find(r => r.id === rightClickedPositionId);
@@ -32,11 +34,11 @@ export default function PositionTable({ positions, onEdit, onDelete }: PositionT
           <Table className="border-collapse">
         <TableHeader className="bg-muted/80">
           <TableRow className="border-b border-border hover:bg-transparent">
-            <TableHead className="font-semibold text-foreground w-[220px] border-r border-border text-left align-middle px-6">Tên chức vụ</TableHead>
-            <TableHead className="font-semibold text-foreground w-[150px] border-r border-border text-center align-middle px-4">Cấp bậc</TableHead>
-            <TableHead className="font-semibold text-foreground border-r border-border text-left align-middle px-6">Mô tả</TableHead>
-            <TableHead className="font-semibold text-foreground w-[150px] border-r border-border text-center align-middle px-4">Trạng thái</TableHead>
-            <TableHead className="font-semibold text-foreground w-[120px] text-center align-middle px-4">Thao tác</TableHead>
+            <TableHead className="font-semibold text-foreground w-[220px] border-r border-border text-left align-middle px-6">{t("position.table.name")}</TableHead>
+            <TableHead className="font-semibold text-foreground w-[150px] border-r border-border text-center align-middle px-4">{t("position.table.level")}</TableHead>
+            <TableHead className="font-semibold text-foreground border-r border-border text-left align-middle px-6">{t("position.table.description")}</TableHead>
+            <TableHead className="font-semibold text-foreground w-[150px] border-r border-border text-center align-middle px-4">{t("position.table.status")}</TableHead>
+            <TableHead className="font-semibold text-foreground w-[120px] text-center align-middle px-4">{t("position.table.actions")}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -57,11 +59,11 @@ export default function PositionTable({ positions, onEdit, onDelete }: PositionT
                 <TableCell className="py-4 border-r border-border text-center align-middle px-4">
                   {position.manager ? (
                     <Badge variant="outline" className="bg-amber-50 text-amber-600 border-amber-200 font-medium">
-                      <ShieldCheck size={12} className="mr-1" /> Quản lý
+                      <ShieldCheck size={12} className="mr-1" /> {t("position.table.manager")}
                     </Badge>
                   ) : (
                     <Badge variant="outline" className="bg-slate-50 text-slate-500 border-slate-200 font-medium">
-                      Nhân viên
+                      {t("position.table.staff")}
                     </Badge>
                   )}
                 </TableCell>
@@ -74,7 +76,7 @@ export default function PositionTable({ positions, onEdit, onDelete }: PositionT
                       : "bg-muted text-muted-foreground hover:bg-slate-800 dark:bg-slate-700 hover:text-muted-foreground font-medium border-0"
                     }
                   >
-                    {position.active ? "Hoạt động" : "Tạm ngưng"}
+                    {position.active ? t("position.table.active") : t("position.table.inactive")}
                   </Badge>
                 </TableCell>
                 <TableCell className="py-4 text-center align-middle">
@@ -95,7 +97,7 @@ export default function PositionTable({ positions, onEdit, onDelete }: PositionT
               <TableCell colSpan={5} className="h-40 text-center">
                 <div className="flex flex-col items-center justify-center text-muted-foreground">
                   <Briefcase size={32} className="mb-2 opacity-50" />
-                  <p>Không tìm thấy chức vụ nào</p>
+                  <p>{t("position.table.notFound")}</p>
                 </div>
               </TableCell>
             </TableRow>
@@ -109,7 +111,7 @@ export default function PositionTable({ positions, onEdit, onDelete }: PositionT
         <ContextMenuContent className="w-56 z-50">
           <ContextMenuItem className="cursor-pointer" onClick={() => onEdit(activePosition)}>
             <Edit2 className="mr-2 h-4 w-4 text-[#2E3192]" />
-            <span>Chỉnh sửa thông tin chức vụ</span>
+            <span>{t("position.legendEdit")}</span>
           </ContextMenuItem>
           <ContextMenuSeparator />
           <ContextMenuItem 
@@ -117,7 +119,7 @@ export default function PositionTable({ positions, onEdit, onDelete }: PositionT
             onClick={() => onDelete(activePosition.id)}
           >
             <Trash2 className="mr-2 h-4 w-4 text-rose-500" />
-            <span>Xóa chức vụ</span>
+            <span>{t("position.legendDelete")}</span>
           </ContextMenuItem>
         </ContextMenuContent>
       )}

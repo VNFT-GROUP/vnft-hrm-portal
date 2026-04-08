@@ -11,8 +11,10 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { departmentService } from "@/services/department";
 import { toast } from "sonner";
 import type { UpsertDepartmentRequest } from "@/types/request/department/UpsertDepartmentRequest";
+import { useTranslation } from "react-i18next";
 
 export default function DepartmentsPage() {
+  const { t } = useTranslation();
   const showDepartmentLegend = useLayoutStore(state => state.showDepartmentLegend);
   const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState("");
@@ -48,7 +50,7 @@ export default function DepartmentsPage() {
   const createMutation = useMutation({
     mutationFn: (data: UpsertDepartmentRequest) => departmentService.createDepartment(data),
     onSuccess: () => {
-      toast.success("Đã tạo phòng ban thành công.");
+      toast.success(t("department.createdSuccess"));
       queryClient.invalidateQueries({ queryKey: ["departments"] });
       setIsOpen(false);
     },
@@ -58,7 +60,7 @@ export default function DepartmentsPage() {
     mutationFn: ({ id, data }: { id: string; data: UpsertDepartmentRequest }) =>
       departmentService.updateDepartment(id, data),
     onSuccess: () => {
-      toast.success("Đã cập nhật phòng ban thành công.");
+      toast.success(t("department.updatedSuccess"));
       queryClient.invalidateQueries({ queryKey: ["departments"] });
       setIsOpen(false);
     },
@@ -67,7 +69,7 @@ export default function DepartmentsPage() {
   const deleteMutation = useMutation({
     mutationFn: (id: string) => departmentService.deleteDepartment(id),
     onSuccess: () => {
-      toast.success("Đã xóa phòng ban.");
+      toast.success(t("department.deletedSuccess"));
       queryClient.invalidateQueries({ queryKey: ["departments"] });
     },
   });
@@ -105,10 +107,10 @@ export default function DepartmentsPage() {
           <span className="p-2.5 bg-[#2E3192]/10 text-[#2E3192] rounded-xl">
             <Building2 size={28} />
           </span>
-          Phòng ban
+          {t("department.title")}
         </h1>
         <p className="text-muted-foreground text-base md:text-lg ml-1">
-          Thiết lập cấu trúc phòng ban và chỉ định nhân sự quản lý (BOD/Manager).
+          {t("department.subtitle")}
         </p>
       </motion.div>
 
@@ -120,17 +122,17 @@ export default function DepartmentsPage() {
           transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
           className="bg-card text-card-foreground p-4 rounded-xl border border-border flex flex-wrap gap-x-6 gap-y-3 text-sm text-muted-foreground w-full shadow-sm items-center"
         >
-          <span className="font-semibold text-[#1E2062] mr-2">Chú thích thao tác:</span>
+          <span className="font-semibold text-[#1E2062] mr-2">{t("department.legendTitle")}</span>
           <div className="flex items-center gap-2">
             <Edit2 size={16} className="text-[#2E3192]" />
-            <span>Chỉnh sửa thông tin phòng ban</span>
+            <span>{t("department.legendEdit")}</span>
           </div>
           <div className="flex items-center gap-2">
             <Trash2 size={16} className="text-rose-500" />
-            <span>Xóa phòng ban</span>
+            <span>{t("department.legendDelete")}</span>
           </div>
           <div className="ml-auto flex items-center text-xs text-muted-foreground bg-muted/40 px-2 py-1 rounded-md border border-border opacity-70 hover:opacity-100 transition-opacity">
-            (Tắt chú thích trong tùy chỉnh <span className="ml-1 font-mono text-[10px] font-semibold bg-background py-0.5 px-1.5 rounded border border-border shadow-sm">Alt + S</span>)
+            {t("department.legendHidePrefix")}<span className="ml-1 font-mono text-[10px] font-semibold bg-background py-0.5 px-1.5 rounded border border-border shadow-sm">Alt + S</span>{t("department.legendHideSuffix")}
           </div>
         </motion.div>
       )}
@@ -145,7 +147,7 @@ export default function DepartmentsPage() {
         <div className="relative w-full md:w-96">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" size={20} />
           <Input 
-            placeholder="Tìm kiếm theo Tên phòng ban..." 
+            placeholder={t("department.searchPlaceholder")} 
             className="pl-12 h-12 rounded-xl bg-muted border-border focus-visible:ring-[#2E3192] text-base hover:bg-card text-card-foreground transition-colors"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -155,7 +157,7 @@ export default function DepartmentsPage() {
           onClick={() => handleOpenForm()} 
           className="w-full md:w-auto h-12 px-6 rounded-xl bg-[#2E3192] hover:bg-[#1E2062] text-white shadow-md shadow-[#2E3192]/20 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 text-base font-semibold"
         >
-          <Plus size={20} className="mr-2" /> Thêm phòng ban
+          <Plus size={20} className="mr-2" /> {t("department.addBtn")}
         </Button>
       </motion.div>
 

@@ -1,0 +1,21 @@
+export default {
+  dashboard: "仪表板",
+  profile: "个人资料",
+  calendar: "日历 & 活动",
+  management: "管理",
+  employees: "员工",
+  departments: "部门",
+  roles: "职位",
+  attendance: "考勤",
+  evaluationCriteria: "评估标准",
+  permissions: "权限",
+  contracts: "合同",
+  evaluation: "绩效",
+  voting: "投票",
+  requests: "请求",
+  finance: "财务",
+  financeReports: "财务报表",
+  reports: "报告",
+  settings: "设置",
+  activityLogs: "活动日志"
+};

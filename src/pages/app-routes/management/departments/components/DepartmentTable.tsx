@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslation } from "react-i18next";
 import {
   ContextMenu,
   ContextMenuTrigger,
@@ -24,6 +25,7 @@ interface DepartmentTableProps {
 }
 
 export default function DepartmentTable({ departments, onEdit, onDelete }: DepartmentTableProps) {
+  const { t } = useTranslation();
   const [rightClickedDeptId, setRightClickedDeptId] = useState<string | null>(null);
 
   const activeDept = departments.find(d => d.id === rightClickedDeptId);
@@ -35,10 +37,10 @@ export default function DepartmentTable({ departments, onEdit, onDelete }: Depar
           <Table className="border-collapse">
         <TableHeader className="bg-muted/80">
           <TableRow className="border-b border-border hover:bg-transparent">
-            <TableHead className="font-semibold text-foreground w-[250px] border-r border-border text-left align-middle px-6">Tên phòng ban</TableHead>
-            <TableHead className="font-semibold text-foreground border-r border-border text-left align-middle px-6 min-w-[200px]">Mô tả</TableHead>
-            <TableHead className="font-semibold text-foreground w-[150px] border-r border-border text-center align-middle px-4">Trạng thái</TableHead>
-            <TableHead className="font-semibold text-foreground w-[120px] text-center align-middle px-4">Thao tác</TableHead>
+            <TableHead className="font-semibold text-foreground w-[250px] border-r border-border text-left align-middle px-6">{t("department.table.name")}</TableHead>
+            <TableHead className="font-semibold text-foreground border-r border-border text-left align-middle px-6 min-w-[200px]">{t("department.table.description")}</TableHead>
+            <TableHead className="font-semibold text-foreground w-[150px] border-r border-border text-center align-middle px-4">{t("department.table.status")}</TableHead>
+            <TableHead className="font-semibold text-foreground w-[120px] text-center align-middle px-4">{t("department.table.actions")}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -68,7 +70,7 @@ export default function DepartmentTable({ departments, onEdit, onDelete }: Depar
                         : "bg-muted text-muted-foreground hover:bg-slate-800 dark:bg-slate-700 hover:text-muted-foreground font-medium border-0"
                       }
                     >
-                      {dept.active ? "Hoạt động" : "Tạm ngưng"}
+                      {dept.active ? t("department.table.active") : t("department.table.inactive")}
                     </Badge>
                   </TableCell>
                   <TableCell className="py-4 text-center align-middle">
@@ -90,7 +92,7 @@ export default function DepartmentTable({ departments, onEdit, onDelete }: Depar
               <TableCell colSpan={4} className="h-40 text-center">
                 <div className="flex flex-col items-center justify-center text-muted-foreground">
                   <Building2 size={32} className="mb-2 opacity-50" />
-                  <p>Không tìm thấy phòng ban nào</p>
+                  <p>{t("department.table.notFound")}</p>
                 </div>
               </TableCell>
             </TableRow>
@@ -104,7 +106,7 @@ export default function DepartmentTable({ departments, onEdit, onDelete }: Depar
         <ContextMenuContent className="w-56 z-50">
           <ContextMenuItem className="cursor-pointer" onClick={() => onEdit(activeDept)}>
             <Edit2 className="mr-2 h-4 w-4 text-[#2E3192]" />
-            <span>Chỉnh sửa thông tin phòng ban</span>
+            <span>{t("department.legendEdit")}</span>
           </ContextMenuItem>
           <ContextMenuSeparator />
           <ContextMenuItem 
@@ -112,7 +114,7 @@ export default function DepartmentTable({ departments, onEdit, onDelete }: Depar
             onClick={() => onDelete(activeDept.id)}
           >
             <Trash2 className="mr-2 h-4 w-4 text-rose-500" />
-            <span>Xóa phòng ban</span>
+            <span>{t("department.legendDelete")}</span>
           </ContextMenuItem>
         </ContextMenuContent>
       )}

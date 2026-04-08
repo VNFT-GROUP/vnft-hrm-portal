@@ -139,6 +139,12 @@ export default function SettingsPage() {
                 >
                   <img src="https://flagcdn.com/w20/gb.png" width="20" alt="EN" className="rounded-sm shadow-sm" /> English
                 </button>
+                <button 
+                  onClick={() => i18n.changeLanguage('zh')}
+                  className={`flex items-center gap-2 px-4 py-2.5 rounded-md font-medium text-sm transition-all ${(i18n.language && i18n.language.startsWith('zh')) ? 'bg-background shadow-sm text-[#2E3192]' : 'text-muted-foreground hover:text-foreground hover:bg-muted-foreground/10'}`}
+                >
+                  <img src="https://flagcdn.com/w20/cn.png" width="20" alt="CN" className="rounded-sm shadow-sm" /> 中文
+                </button>
               </div>
             </div>
           </div>

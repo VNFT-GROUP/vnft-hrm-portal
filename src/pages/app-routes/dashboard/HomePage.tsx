@@ -1,42 +1,194 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { ChevronLeft, ChevronRight, Calendar, Minus, CheckCircle2, Clock, ChevronDown, CalendarDays, FileText } from "lucide-react";
+import { ChevronLeft, ChevronRight, Calendar, Minus, CheckCircle2, Clock, ChevronDown, CalendarDays, FileText, Trophy, Medal, TrendingUp } from "lucide-react";
 
-const TaskCard = ({ title, emptyText, delay = 0 }: { title: string, emptyText: string, delay?: number }) => (
-  <motion.div
-    initial={{ opacity: 0, y: 10 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.3, delay }}
-    className="bg-white rounded-md shadow-[0_1px_3px_rgba(0,0,0,0.05)] flex flex-col overflow-hidden w-full border border-gray-100"
-  >
-    <div className="flex items-center justify-between px-5 py-3.5 border-b border-gray-100 bg-white">
-      <h2 className="text-[15px] font-semibold text-[#334155]">{title}</h2>
-      <div className="flex items-center gap-4">
-        <button className="flex items-center justify-between gap-3 border border-gray-200 px-3 py-1.5 rounded text-[13px] font-medium text-gray-500 bg-white hover:bg-gray-50 transition-colors shadow-sm min-w-[80px]">
-          <span>Tất cả</span>
+const mockTopSales = [
+  { id: 1, name: "Nguyễn Văn Tuấn", score: "9,850", trend: "+12%", avatar: "https://i.pravatar.cc/150?img=11" },
+  { id: 2, name: "Trần Thị Lan Anh", score: "8,720", trend: "+8%", avatar: "https://i.pravatar.cc/150?img=5" },
+  { id: 3, name: "Lê Hoàng Hải", score: "8,200", trend: "+5%", avatar: "https://i.pravatar.cc/150?img=8" },
+  { id: 4, name: "Phạm Minh Tâm", score: "7,900", trend: "-2%", avatar: "https://i.pravatar.cc/150?img=12" },
+  { id: 5, name: "Bùi Thị Yến", score: "7,450", trend: "+15%", avatar: "https://i.pravatar.cc/150?img=9" },
+  { id: 6, name: "Hoàng Đức Nam", score: "7,100", trend: "+4%", avatar: "https://i.pravatar.cc/150?img=15" },
+  { id: 7, name: "Vũ Khánh My", score: "6,800", trend: "-1%", avatar: "https://i.pravatar.cc/150?img=20" },
+  { id: 8, name: "Đặng Quốc Bảo", score: "6,500", trend: "+7%", avatar: "https://i.pravatar.cc/150?img=32" },
+  { id: 9, name: "Ngô Nhật Linh", score: "6,200", trend: "+3%", avatar: "https://i.pravatar.cc/150?img=25" },
+  { id: 10, name: "Lý Gia Hân", score: "5,900", trend: "-5%", avatar: "https://i.pravatar.cc/150?img=33" },
+];
+
+const TopSalesTable = () => {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, delay: 0.1 }}
+      className="bg-white rounded-md shadow-[0_1px_3px_rgba(0,0,0,0.05)] flex flex-col overflow-hidden w-full border border-gray-100 mt-2"
+    >
+      <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100 bg-white">
+        <div className="flex items-center gap-2">
+          <div className="bg-amber-100 p-1.5 rounded-lg">
+            <Trophy size={18} className="text-amber-600" strokeWidth={2.5} />
+          </div>
+          <h2 className="text-[16px] font-bold text-[#1f2937] tracking-tight">Top 10 Vouchers / Sales</h2>
+        </div>
+        <button className="flex items-center gap-2 border border-gray-200 px-3 py-1.5 rounded text-[13px] font-medium text-gray-500 bg-white hover:bg-gray-50 transition-colors shadow-sm">
+          <span>Tháng này</span>
           <ChevronDown size={14} className="text-gray-400" />
         </button>
-        <button className="text-gray-400 hover:text-gray-600 transition-colors">
-          <Minus size={18} strokeWidth={1.5} />
-        </button>
       </div>
-    </div>
-    <div className="py-10 px-5 flex flex-col items-center justify-center bg-[#f8fafc] w-full min-h-[120px]">
-      <div className="flex items-center justify-center gap-4">
-        <div className="relative text-gray-300 flex items-center justify-center">
-          {/* Minimal line details for empty state icon */}
-          <div className="absolute w-[40px] h-[3px] bg-gray-200 rounded-full top-[30%] -left-[10px]"></div>
-          <div className="absolute w-[20px] h-[3px] bg-gray-200 rounded-full bottom-[30%] -left-[5px]"></div>
 
-          <FileText size={38} strokeWidth={1.2} className="relative z-10" />
-          <div className="absolute right-[-2px] bottom-[2px] bg-[#f8fafc] rounded-full p-0.5 z-20">
-            <CheckCircle2 size={12} strokeWidth={2} className="text-gray-400" />
-          </div>
+      <div className="flex flex-col p-2">
+        {/* Header */}
+        <div className="grid grid-cols-12 gap-4 px-4 py-3 text-[12px] font-semibold text-gray-400 uppercase tracking-wider border-b border-gray-50 mb-1">
+          <div className="col-span-1 text-center">#</div>
+          <div className="col-span-6 md:col-span-7">Nhân sự</div>
+          <div className="col-span-5 md:col-span-4 text-right">Thành tích</div>
         </div>
-        <p className="text-[14px] text-gray-500 font-medium">{emptyText}</p>
+
+        {/* Rows */}
+        <div className="flex flex-col gap-1">
+          {mockTopSales.map((user, index) => {
+            const isTop1 = index === 0;
+            const isTop2 = index === 1;
+            const isTop3 = index === 2;
+            const isTop3Any = index < 3;
+            
+            return (
+              <motion.div
+                key={user.id}
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.3, delay: 0.15 + index * 0.05 }}
+                whileHover={{ scale: 1.01, backgroundColor: '#f8fafc' }}
+                className={`grid grid-cols-12 gap-4 px-4 py-3.5 items-center rounded-xl cursor-default transition-all duration-200 ${isTop1 ? 'bg-gradient-to-r from-amber-50/50 to-transparent border border-amber-100/50 shadow-[0_2px_10px_rgba(245,158,11,0.05)]' : ''}`}
+              >
+                {/* Ranking */}
+                <div className="col-span-1 flex justify-center">
+                  {isTop1 ? (
+                    <div className="bg-amber-400 text-white rounded-full w-7 h-7 flex items-center justify-center shadow-sm shadow-amber-200">
+                      <Medal size={14} strokeWidth={2.5} />
+                    </div>
+                  ) : isTop2 ? (
+                    <div className="bg-slate-300 text-white rounded-full w-7 h-7 flex items-center justify-center shadow-sm">
+                      <Medal size={14} strokeWidth={2.5} />
+                    </div>
+                  ) : isTop3 ? (
+                    <div className="bg-orange-300 text-white rounded-full w-7 h-7 flex items-center justify-center shadow-sm">
+                      <Medal size={14} strokeWidth={2.5} />
+                    </div>
+                  ) : (
+                    <span className="text-[14px] font-bold text-gray-400">{index + 1}</span>
+                  )}
+                </div>
+
+                {/* Profile */}
+                <div className="col-span-6 md:col-span-7 flex items-center gap-3">
+                  <motion.div whileHover={{ scale: 1.1, rotate: 5 }} className="relative shrink-0">
+                    <img src={user.avatar} alt={user.name} className="w-9 h-9 rounded-full object-cover border-2 border-white shadow-sm" />
+                    {isTop1 && (
+                      <div className="absolute -top-1.5 -right-1.5 bg-amber-400 rounded-full w-4 h-4 flex items-center justify-center border-2 border-white">
+                        <Trophy size={8} fill="white" className="text-white" />
+                      </div>
+                    )}
+                  </motion.div>
+                  <div className="flex flex-col">
+                    <span className={`text-[14px] ${isTop3Any ? 'font-bold text-gray-800' : 'font-medium text-gray-600'}`}>
+                      {user.name}
+                    </span>
+                    <span className="text-[11px] text-gray-400">Sale Executive</span>
+                  </div>
+                </div>
+
+                {/* Score */}
+                <div className="col-span-5 md:col-span-4 flex flex-col items-end justify-center">
+                  <div className={`text-[15px] font-bold ${isTop1 ? 'text-amber-600' : isTop2 ? 'text-slate-600' : isTop3 ? 'text-orange-600' : 'text-[#3b82f6]'}`}>
+                    {user.score} <span className="text-[10px] font-medium text-gray-400">Pts</span>
+                  </div>
+                  <div className={`flex items-center gap-0.5 text-[10px] font-semibold mt-0.5 ${user.trend.startsWith('+') ? 'text-emerald-500' : 'text-red-400'}`}>
+                    {user.trend.startsWith('+') ? <TrendingUp size={10} strokeWidth={3} /> : null}
+                    {user.trend}
+                  </div>
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
       </div>
-    </div>
-  </motion.div>
-);
+    </motion.div>
+  );
+};
+
+const IntegratedTaskCard = () => {
+  const [activeTab, setActiveTab] = useState<'todo' | 'proposed' | 'following'>('todo');
+  
+  const emptyText = activeTab === 'todo' 
+    ? 'Thật tuyệt. Bạn đã xử lý hết công việc!' 
+    : activeTab === 'proposed' 
+    ? 'Đề xuất của bạn đã được xử lý hết.' 
+    : 'Công việc bạn theo dõi đã được xử lý hết.';
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+      className="bg-white rounded-md shadow-[0_1px_3px_rgba(0,0,0,0.05)] flex flex-col overflow-hidden w-full border border-gray-100 flex-grow"
+    >
+      <div className="flex items-center justify-between px-2 pt-2 border-b border-gray-100 bg-white">
+        {/* Tabs */}
+        <div className="flex items-center gap-1 sm:gap-6 px-3">
+          <button 
+            onClick={() => setActiveTab('todo')}
+            className={`pb-3 pt-2 text-[13px] sm:text-[14px] transition-colors whitespace-nowrap ${activeTab === 'todo' ? 'font-semibold text-primary border-b-2 border-primary' : 'font-medium text-gray-500 hover:text-gray-700'}`}
+          >
+            Việc cần thực hiện
+          </button>
+          <button 
+            onClick={() => setActiveTab('proposed')}
+            className={`pb-3 pt-2 text-[13px] sm:text-[14px] transition-colors whitespace-nowrap ${activeTab === 'proposed' ? 'font-semibold text-primary border-b-2 border-primary' : 'font-medium text-gray-500 hover:text-gray-700'}`}
+          >
+            Đề xuất của bạn
+          </button>
+          <button 
+            onClick={() => setActiveTab('following')}
+            className={`pb-3 pt-2 text-[13px] sm:text-[14px] transition-colors whitespace-nowrap ${activeTab === 'following' ? 'font-semibold text-primary border-b-2 border-primary' : 'font-medium text-gray-500 hover:text-gray-700'}`}
+          >
+            Việc bạn giao, theo dõi
+          </button>
+        </div>
+
+        {/* Filters */}
+        <div className="flex items-center gap-4 px-3 pb-2 hidden lg:flex">
+          <div className="relative">
+            <select className="appearance-none border border-gray-200 pl-3 pr-8 py-1.5 rounded text-[13px] font-medium text-gray-500 bg-white hover:bg-gray-50 transition-colors shadow-sm outline-none cursor-pointer">
+              <option>Cần thực hiện</option>
+              <option>Đang làm</option>
+              <option>Hoàn thành</option>
+            </select>
+            <ChevronDown size={14} className="text-gray-400 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+          </div>
+          <button className="text-gray-400 hover:text-gray-600 transition-colors">
+            <Minus size={18} strokeWidth={1.5} />
+          </button>
+        </div>
+      </div>
+      
+      {/* Empty State */}
+      <div className="py-20 px-5 flex flex-col items-center justify-center bg-[#f8fafc] w-full flex-grow min-h-[300px]">
+        <div className="flex items-center justify-center gap-4">
+          <div className="relative text-gray-300 flex items-center justify-center">
+            <div className="absolute w-[40px] h-[3px] bg-gray-200 rounded-full top-[30%] -left-[10px]"></div>
+            <div className="absolute w-[20px] h-[3px] bg-gray-200 rounded-full bottom-[30%] -left-[5px]"></div>
+            <FileText size={38} strokeWidth={1.2} className="relative z-10" />
+            <div className="absolute right-[-2px] bottom-[2px] bg-[#f8fafc] rounded-full p-0.5 z-20">
+              <CheckCircle2 size={12} strokeWidth={2} className="text-gray-400" />
+            </div>
+          </div>
+          <p className="text-[14px] text-gray-500 font-medium">{emptyText}</p>
+        </div>
+      </div>
+    </motion.div>
+  );
+};
 
 export default function HomePage() {
   return (
@@ -46,10 +198,9 @@ export default function HomePage() {
         <div className="grid grid-cols-1 md:grid-cols-12 lg:grid-cols-12 gap-6 items-start">
 
           {/* Left Column (Task Lists) - Takes 7/12 on large */}
-          <div className="md:col-span-7 xl:col-span-8 flex flex-col gap-5">
-            <TaskCard title="Việc cần thực hiện" emptyText="Thật tuyệt. Bạn đã xử lý hết công việc!" delay={0} />
-            <TaskCard title="Đề xuất của bạn" emptyText="Đề xuất của bạn đã được xử lý hết." delay={0.1} />
-            <TaskCard title="Việc bạn giao, theo dõi" emptyText="Công việc bạn theo dõi đã được xử lý hết." delay={0.2} />
+          <div className="md:col-span-7 xl:col-span-8 flex flex-col gap-5 h-full">
+            <IntegratedTaskCard />
+            <TopSalesTable />
           </div>
 
           {/* Right Column - Takes 5/12 on large */}

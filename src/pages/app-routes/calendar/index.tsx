@@ -24,11 +24,11 @@ export default function CalendarPage() {
     return () => observer.disconnect();
   }, []);
 
-  const handleDateClick = (arg: any) => {
+  const handleDateClick = (arg: { dateStr: string }) => {
     alert("Ngày được chọn: " + arg.dateStr);
   };
 
-  const handleEventClick = (arg: any) => {
+  const handleEventClick = (arg: { event: { title: string } }) => {
     alert("Sự kiện: " + arg.event.title);
   };
 

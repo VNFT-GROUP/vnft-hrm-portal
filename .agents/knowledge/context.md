@@ -123,7 +123,7 @@ src/
 4. **Logistics Micro-Interactions**: The public-facing entry points (Login, Loading) implement dynamic SVG backdrops via `AnimatedLogisticsBackground.tsx`. We scale complexity using pure CSS `animation-delay` and `animation-duration` inline mapped to static `.bg-ship`, `.bg-truck`, `.bg-airplane` tracks, allowing rich, cheap pseudo-random traffic generation without JS overhead. The Loading UI features a micro progress trucking system that anchors an SVG to dynamic width percentages.
 5. **Lazy Loading**: Entire application is chunked utilizing `React.lazy()` with `Suspense` inside `AppLayout.tsx` for optimal bundle delivery, removing initial boot lag.
 6. **Settings & Global UI Sync**: Modular system under `/app/settings/` integrated with Zustand (`useLayoutStore`). E.g. `showEmployeeLegend` enables user-preference synced context legends dynamically unmounting via state without reload.
-7. **Smart Tables & Context Menus**: Advanced interaction model within features like Employee Management. Implements Shadcn UI ContextMenu at the Table level interacting intelligently with `onContextMenu` ID traps replacing structural HTML reflows inside `<tbody>`.
+7. **Smart Tables & Context Menus**: Advanced interaction model generalized across core management modules (**Employee**, **Department**, and **Position** Management). Implements Shadcn UI ContextMenu at the Table level interacting intelligently with `onContextMenu` ID traps replacing structural HTML reflows inside `<tbody>` for seamless CRUD operation triggers.
 
 ## Global Standard Shortcuts
 To ensure highly productive navigation, the HR Portal utilizes the following standard global shortcuts:

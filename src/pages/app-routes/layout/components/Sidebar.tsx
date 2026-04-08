@@ -78,7 +78,7 @@ export default function Sidebar() {
             { label: "Tổng quan Dashboard", path: "/app/management/overview", icon: <LayoutDashboard size={16} /> },
             { label: t('sidebar.employees'), path: "/app/management/employees", icon: <Users size={16} /> },
             { label: t('sidebar.departments'), path: "/app/management/departments", icon: <Building2 size={16} /> },
-            { label: t('sidebar.roles'), path: "/app/management/roles", icon: <Briefcase size={16} /> },
+            { label: t('sidebar.roles'), path: "/app/management/positions", icon: <Briefcase size={16} /> },
             { label: t('sidebar.attendance'), path: "/app/management/attendance", icon: <Clock size={16} /> },
             { label: t('sidebar.evaluationCriteria'), path: "/app/management/evaluation-criteria", icon: <ClipboardList size={16} /> },
             { label: t('sidebar.permissions'), path: "/app/management/permissions", icon: <Shield size={16} /> },

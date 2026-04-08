@@ -12,7 +12,7 @@ const CalendarPage = lazy(() => import("../pages/app-routes/calendar"));
 const ManagementOverviewPage = lazy(() => import("../pages/app-routes/management/overview/ManagementOverviewPage"));
 const EmployeesPage = lazy(() => import("../pages/app-routes/management/employees"));
 const DepartmentsPage = lazy(() => import("../pages/app-routes/management/departments"));
-const RolesPage = lazy(() => import("../pages/app-routes/management/roles"));
+const PositionsPage = lazy(() => import("../pages/app-routes/management/positions"));
 const AttendancePage = lazy(() => import("../pages/app-routes/management/attendance"));
 const EvaluationCriteriaPage = lazy(() => import("../pages/app-routes/management/evaluation-criteria"));
 const PermissionsPage = lazy(() => import("../pages/app-routes/management/permissions"));
@@ -75,7 +75,7 @@ export default function AppRoutes() {
              <Route path="overview" element={<ManagementOverviewPage />} />
              <Route path="employees" element={<EmployeesPage />} />
              <Route path="departments" element={<DepartmentsPage />} />
-             <Route path="roles" element={<RolesPage />} />
+             <Route path="positions" element={<PositionsPage />} />
              <Route path="attendance" element={<AttendancePage />} />
              <Route path="evaluation-criteria" element={<EvaluationCriteriaPage />} />
              <Route path="permissions" element={<PermissionsPage />} />

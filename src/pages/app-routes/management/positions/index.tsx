@@ -5,20 +5,20 @@ import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
 import { useLayoutStore } from "@/store/useLayoutStore";
 
-import RoleTable from "./components/RoleTable";
-import RoleFormSheet from "./components/RoleFormSheet";
+import PositionTable from "./components/PositionTable";
+import PositionFormSheet from "./components/PositionFormSheet";
 import type { PositionResponse } from "@/types/response/position/PositionResponse";
 import type { UpsertPositionRequest } from "@/types/request/position/UpsertPositionRequest";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { positionService } from "@/services/position";
 import { toast } from "sonner";
 
-export default function RolesPage() {
-  const showRoleLegend = useLayoutStore((state) => state.showRoleLegend);
+export default function PositionsPage() {
+  const showPositionLegend = useLayoutStore((state) => state.showRoleLegend);
   const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-  const [editingRole, setEditingRole] = useState<PositionResponse | null>(null);
+  const [editingPosition, setEditingPosition] = useState<PositionResponse | null>(null);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -35,14 +35,14 @@ export default function RolesPage() {
 
   const handleOpenForm = (role?: PositionResponse) => {
     if (role) {
-      setEditingRole(role);
+      setEditingPosition(role);
       setFormData({
         name: role.name,
         description: role.description || "",
         active: role.active ?? false,
       });
     } else {
-      setEditingRole(null);
+      setEditingPosition(null);
       setFormData({ name: "", description: "", active: true });
     }
     setIsOpen(true);
@@ -79,14 +79,15 @@ export default function RolesPage() {
   const handleSave = () => {
     if (!formData.name.trim()) return;
 
-    // Convert về UpsertPositionRequest (bỏ flag active vì Backend không có trong DTO cập nhật)
+    // Convert về UpsertPositionRequest
     const payload: UpsertPositionRequest = {
       name: formData.name,
       description: formData.description,
+      active: formData.active,
     };
 
-    if (editingRole) {
-      updateMutation.mutate({ id: editingRole.id, data: payload });
+    if (editingPosition) {
+      updateMutation.mutate({ id: editingPosition.id, data: payload });
     } else {
       createMutation.mutate(payload);
     }
@@ -117,7 +118,7 @@ export default function RolesPage() {
       </motion.div>
 
       {/* 1.5 Legend Section */}
-      {showRoleLegend && (
+      {showPositionLegend && (
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -179,7 +180,7 @@ export default function RolesPage() {
         transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
         className="bg-card text-card-foreground rounded-2xl shadow-sm border border-border overflow-hidden group hover:shadow-md transition-shadow duration-300 flex-1"
       >
-        <RoleTable
+        <PositionTable
           roles={roles}
           onEdit={handleOpenForm}
           onDelete={handleDelete}
@@ -187,12 +188,12 @@ export default function RolesPage() {
       </motion.div>
 
       {/* Side Form (Sheet) */}
-      <RoleFormSheet
+      <PositionFormSheet
         isOpen={isOpen}
         onOpenChange={setIsOpen}
         formData={formData}
         setFormData={setFormData}
-        isEditing={!!editingRole}
+        isEditing={!!editingPosition}
         onSave={handleSave}
       />
     </div>

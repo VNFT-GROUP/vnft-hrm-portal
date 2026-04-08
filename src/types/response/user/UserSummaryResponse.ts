@@ -1,5 +1,5 @@
 export interface UserSummaryResponse {
-  id: number;
+  id: string;
   username: string;
   passwordChangedAt?: string;
 }

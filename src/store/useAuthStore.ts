@@ -3,7 +3,7 @@ import { persist } from 'zustand/middleware';
 import type { UserSummaryResponse } from '@/types/response/user/UserSummaryResponse';
 
 interface AuthState {
-  id: number | null;
+  id: string | null;
   user: UserSummaryResponse | null;
   isAuthenticated: boolean;
   accessToken: string | null;

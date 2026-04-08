@@ -33,6 +33,7 @@ export default function PositionTable({ positions, onEdit, onDelete }: PositionT
         <TableHeader className="bg-muted/80">
           <TableRow className="border-b border-border hover:bg-transparent">
             <TableHead className="font-semibold text-foreground w-[220px] border-r border-border text-left align-middle px-6">Tên chức vụ</TableHead>
+            <TableHead className="font-semibold text-foreground w-[150px] border-r border-border text-center align-middle px-4">Cấp bậc</TableHead>
             <TableHead className="font-semibold text-foreground border-r border-border text-left align-middle px-6">Mô tả</TableHead>
             <TableHead className="font-semibold text-foreground w-[150px] border-r border-border text-center align-middle px-4">Trạng thái</TableHead>
             <TableHead className="font-semibold text-foreground w-[120px] text-center align-middle px-4">Thao tác</TableHead>
@@ -52,9 +53,15 @@ export default function PositionTable({ positions, onEdit, onDelete }: PositionT
               >
                 <TableCell className="font-bold text-[#1E2062] py-4 border-r border-border text-left align-middle px-6">
                   {position.name}
-                  {position.manager && (
-                    <Badge variant="outline" className="ml-2 bg-amber-50 text-amber-600 border-amber-200 font-medium">
+                </TableCell>
+                <TableCell className="py-4 border-r border-border text-center align-middle px-4">
+                  {position.manager ? (
+                    <Badge variant="outline" className="bg-amber-50 text-amber-600 border-amber-200 font-medium">
                       <ShieldCheck size={12} className="mr-1" /> Quản lý
+                    </Badge>
+                  ) : (
+                    <Badge variant="outline" className="bg-slate-50 text-slate-500 border-slate-200 font-medium">
+                      Nhân viên
                     </Badge>
                   )}
                 </TableCell>
@@ -85,7 +92,7 @@ export default function PositionTable({ positions, onEdit, onDelete }: PositionT
           </AnimatePresence>
           {positions.length === 0 && (
             <TableRow>
-              <TableCell colSpan={4} className="h-40 text-center">
+              <TableCell colSpan={5} className="h-40 text-center">
                 <div className="flex flex-col items-center justify-center text-muted-foreground">
                   <Briefcase size={32} className="mb-2 opacity-50" />
                   <p>Không tìm thấy chức vụ nào</p>

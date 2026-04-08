@@ -6,16 +6,16 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 
-interface RoleFormSheetProps {
+interface PositionFormSheetProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
-  formData: { name: string; description: string; active: boolean };
-  setFormData: (data: { name: string; description: string; active: boolean }) => void;
+  formData: { name: string; description: string; active: boolean; manager: boolean };
+  setFormData: (data: { name: string; description: string; active: boolean; manager: boolean }) => void;
   isEditing: boolean;
   onSave: () => void;
 }
 
-export default function RoleFormSheet({ isOpen, onOpenChange, formData, setFormData, isEditing, onSave }: RoleFormSheetProps) {
+export default function PositionFormSheet({ isOpen, onOpenChange, formData, setFormData, isEditing, onSave }: PositionFormSheetProps) {
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
       <SheetContent className="sm:max-w-[550px] w-full border-l-slate-200 shadow-2xl flex flex-col h-full p-0">
@@ -56,6 +56,17 @@ export default function RoleFormSheet({ isOpen, onOpenChange, formData, setFormD
               placeholder="Nhập mô tả quyền hạn và trách nhiệm..." 
               rows={5}
               className="rounded-xl border-border focus-visible:ring-[#2E3192] bg-muted focus:bg-card text-card-foreground transition-colors resize-none"
+            />
+          </div>
+
+          <div className="flex items-center justify-between rounded-xl border border-border bg-card text-card-foreground p-4 shadow-sm">
+            <div className="space-y-1">
+              <Label className="text-foreground text-sm font-semibold block">Chức vụ cấp Quản lý?</Label>
+              <p className="text-xs text-muted-foreground">Bật nếu đây là chức vụ điều hành (Trưởng phòng, Giám đốc...)</p>
+            </div>
+            <Switch 
+              checked={formData.manager} 
+              onCheckedChange={checked => setFormData({...formData, manager: checked})} 
             />
           </div>
           

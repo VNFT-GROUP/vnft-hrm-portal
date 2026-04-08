@@ -24,6 +24,7 @@ export default function PositionsPage() {
     name: "",
     description: "",
     active: true,
+    manager: false,
   });
 
   const { data: positionsData } = useQuery({
@@ -31,7 +32,7 @@ export default function PositionsPage() {
     queryFn: () => positionService.getPositions(searchTerm),
   });
 
-  const roles = positionsData?.data || [];
+  const positions = positionsData?.data || [];
 
   const handleOpenForm = (role?: PositionResponse) => {
     if (role) {
@@ -40,10 +41,11 @@ export default function PositionsPage() {
         name: role.name,
         description: role.description || "",
         active: role.active ?? false,
+        manager: role.manager ?? false,
       });
     } else {
       setEditingPosition(null);
-      setFormData({ name: "", description: "", active: true });
+      setFormData({ name: "", description: "", active: true, manager: false });
     }
     setIsOpen(true);
   };
@@ -84,6 +86,7 @@ export default function PositionsPage() {
       name: formData.name,
       description: formData.description,
       active: formData.active,
+      manager: formData.manager,
     };
 
     if (editingPosition) {
@@ -181,7 +184,7 @@ export default function PositionsPage() {
         className="bg-card text-card-foreground rounded-2xl shadow-sm border border-border overflow-hidden group hover:shadow-md transition-shadow duration-300 flex-1"
       >
         <PositionTable
-          roles={roles}
+          positions={positions}
           onEdit={handleOpenForm}
           onDelete={handleDelete}
         />

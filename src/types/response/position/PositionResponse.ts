@@ -3,6 +3,7 @@ export interface PositionResponse {
   name: string;
   description?: string;
   active?: boolean;
+  manager?: boolean;
   createdAt?: string;
   updatedAt?: string;
   createdBy?: string;

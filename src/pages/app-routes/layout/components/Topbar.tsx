@@ -191,17 +191,18 @@ export default function Topbar() {
               </div>
               <div className="pd-item" onClick={(e) => {
                 e.stopPropagation();
-                i18n.changeLanguage(i18n.language === 'en' ? 'vi' : 'en');
+                const nextLang = i18n.language === 'en' ? 'zh' : (i18n.language === 'zh' ? 'vi' : 'en');
+                i18n.changeLanguage(nextLang);
               }}>
                 <Globe size={18} className="pd-icon" /> <span className="flex-1">{t('profile.language')}</span>
                 <span className="lang-text flex items-center gap-2">
                   <img 
-                    src={i18n.language === 'en' ? 'https://flagcdn.com/w20/gb.png' : 'https://flagcdn.com/w20/vn.png'} 
+                    src={i18n.language === 'zh' ? 'https://flagcdn.com/w20/cn.png' : (i18n.language === 'en' ? 'https://flagcdn.com/w20/gb.png' : 'https://flagcdn.com/w20/vn.png')} 
                     width="18" 
                     alt="flag" 
                     className="shadow-sm rounded-[2px]" 
                   />
-                  {i18n.language === 'en' ? 'EN' : 'VN'} 
+                  {i18n.language === 'zh' ? 'CN' : (i18n.language === 'en' ? 'EN' : 'VN')} 
                   <span className="arrow ml-1">{">"}</span>
                 </span>
               </div>

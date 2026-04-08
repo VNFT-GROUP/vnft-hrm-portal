@@ -18,13 +18,16 @@ export default function LoginHeader() {
 
       <nav className="header-nav">
         <button 
-          onClick={() => i18n.changeLanguage(i18n.language === 'en' ? 'vi' : 'en')}
+          onClick={() => {
+            const nextLang = i18n.language === 'en' ? 'zh' : (i18n.language === 'zh' ? 'vi' : 'en');
+            i18n.changeLanguage(nextLang);
+          }}
           className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-card text-card-foreground/60 hover:bg-card text-card-foreground/80 backdrop-blur-md shadow-sm border border-border transition-all font-semibold text-foreground text-xs"
         >
           <Globe size={14} className="text-[#2E3192]" />
-          <span className="uppercase">{i18n.language === 'en' ? 'EN' : 'VN'}</span>
+          <span className="uppercase">{i18n.language === 'zh' ? 'CN' : (i18n.language === 'en' ? 'EN' : 'VN')}</span>
           <img 
-            src={i18n.language === 'en' ? 'https://flagcdn.com/w20/gb.png' : 'https://flagcdn.com/w20/vn.png'} 
+            src={i18n.language === 'zh' ? 'https://flagcdn.com/w20/cn.png' : (i18n.language === 'en' ? 'https://flagcdn.com/w20/gb.png' : 'https://flagcdn.com/w20/vn.png')} 
             width="16" 
             alt="flag" 
             className="shadow-sm rounded-[2px]" 

@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Monitor, Globe } from "lucide-react";
+import { Monitor, Globe, Palette, Type } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useLayoutStore } from "@/store/useLayoutStore";
 import { Switch } from "@/components/ui/switch";
@@ -12,6 +12,27 @@ export default function SettingsPage() {
   const setShowDepartmentLegend = useLayoutStore((state) => state.setShowDepartmentLegend);
   const showRoleLegend = useLayoutStore((state) => state.showRoleLegend);
   const setShowRoleLegend = useLayoutStore((state) => state.setShowRoleLegend);
+  const sidebarTheme = useLayoutStore((state) => state.sidebarTheme);
+  const setSidebarTheme = useLayoutStore((state) => state.setSidebarTheme);
+  const appFont = useLayoutStore((state) => state.appFont);
+  const setAppFont = useLayoutStore((state) => state.setAppFont);
+
+  const themePresets = [
+    { id: 'theme-midnight', name: 'Midnight', color1: '#161845', color2: '#2E3192' },
+    { id: 'theme-ocean', name: 'Ocean Depth', color1: '#0c4a6e', color2: '#0284c7' },
+    { id: 'theme-emerald', name: 'Emerald', color1: '#064E3B', color2: '#059669' },
+    { id: 'theme-ruby', name: 'Ruby', color1: '#4c0519', color2: '#be123c' },
+    { id: 'theme-obsidian', name: 'Obsidian', color1: '#09090b', color2: '#27272a' },
+  ];
+
+  const fontPresets = [
+    { id: 'font-roboto', name: 'Roboto', desc: 'Sạch sẽ, mặc định' },
+    { id: 'font-inter', name: 'Inter', desc: 'Dễ đọc, trung tính' },
+    { id: 'font-be-vietnam-pro', name: 'Be Vietnam Pro', desc: 'Tối ưu tiếng Việt' },
+    { id: 'font-montserrat', name: 'Montserrat', desc: 'Sang trọng, hình học' },
+    { id: 'font-nunito', name: 'Nunito', desc: 'Mềm mại, thân thiện' },
+  ];
+
   const { i18n } = useTranslation();
 
   return (
@@ -147,6 +168,114 @@ export default function SettingsPage() {
                 >
                   <img src="https://flagcdn.com/w20/gb.png" width="20" alt="EN" className="rounded-sm shadow-sm" /> English
                 </button>
+              </div>
+            </div>
+          </div>
+        </motion.section>
+
+        {/* Section 3: Sidebar Theme Settings */}
+        <motion.section 
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.3, ease: "easeOut" }}
+          className="bg-card text-card-foreground p-6 rounded-2xl border border-border shadow-sm"
+        >
+          <div className="flex items-center gap-3 mb-6 pb-4 border-b border-border">
+            <div className="p-2.5 bg-[#db2777]/10 text-[#db2777] rounded-xl">
+              <Palette size={24} />
+            </div>
+            <h2 className="text-xl font-bold text-[#1E2062]">Cài đặt màu sắc Sidebar</h2>
+          </div>
+
+          <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-1.5">
+                <Label className="text-base font-semibold">
+                  Màu nền thanh điều hướng (Sidebar)
+                </Label>
+                <p className="text-sm text-muted-foreground max-w-xl">
+                  Thay đổi màu nền của menu điều hướng bên trái để phù hợp với sở thích của bạn.
+                </p>
+              </div>
+              <div className="flex flex-wrap gap-4 mt-2">
+                {themePresets.map((preset) => (
+                  <button
+                    key={preset.id}
+                    onClick={() => setSidebarTheme(preset.id)}
+                    className={`relative w-28 h-24 rounded-2xl flex flex-col items-center justify-end pb-3 transition-all duration-300 border-2 overflow-hidden ${
+                      sidebarTheme === preset.id 
+                        ? 'border-[#F7941D] scale-105 shadow-lg' 
+                        : 'border-transparent shadow-sm hover:scale-105 hover:shadow-md'
+                    }`}
+                    style={{
+                      background: `linear-gradient(135deg, ${preset.color1}, ${preset.color2})`
+                    }}
+                  >
+                    <span className="text-xs font-semibold text-white tracking-wide text-center drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] z-10 w-full truncate px-2">
+                      {preset.name}
+                    </span>
+                    {sidebarTheme === preset.id && (
+                       <div className="absolute top-2 right-2 flex items-center justify-center w-5 h-5 bg-[#F7941D] text-white rounded-full z-10 shadow-sm">
+                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                       </div>
+                    )}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </motion.section>
+
+        {/* Section 4: Font Settings */}
+        <motion.section 
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.4, ease: "easeOut" }}
+          className="bg-card text-card-foreground p-6 rounded-2xl border border-border shadow-sm"
+        >
+          <div className="flex items-center gap-3 mb-6 pb-4 border-b border-border">
+            <div className="p-2.5 bg-[#059669]/10 text-[#059669] rounded-xl">
+              <Type size={24} />
+            </div>
+            <h2 className="text-xl font-bold text-[#1E2062]">Cài đặt Phông chữ (Font)</h2>
+          </div>
+
+          <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-1.5">
+               <Label className="text-base font-semibold">
+                 Phông chữ hệ thống
+               </Label>
+               <p className="text-sm text-muted-foreground max-w-xl">
+                 Lựa chọn font chữ yêu thích. Các font dưới đây đều được tối ưu hóa hiển thị chuẩn Tiếng Việt và Tiếng Anh.
+               </p>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-2">
+                {fontPresets.map((preset) => (
+                  <button
+                    key={preset.id}
+                    onClick={() => setAppFont(preset.id)}
+                    className={`relative p-4 rounded-xl border flex flex-col items-start gap-1 transition-all duration-200 text-left ${
+                      appFont === preset.id 
+                        ? 'border-[#2E3192] bg-[#2E3192]/5 shadow-sm' 
+                        : 'border-border bg-card hover:bg-muted/50 hover:border-muted-foreground/30'
+                    }`}
+                  >
+                    <span 
+                      className={`text-lg font-semibold ${preset.id} text-[#1E2062]`} 
+                    >
+                      {preset.name}
+                    </span>
+                    <span className={`text-xs text-muted-foreground ${preset.id}`}>
+                      {preset.desc}
+                    </span>
+                    {appFont === preset.id && (
+                       <div className="absolute top-4 right-4 flex items-center justify-center w-5 h-5 bg-[#2E3192] text-white rounded-full">
+                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                       </div>
+                    )}
+                  </button>
+                ))}
               </div>
             </div>
           </div>

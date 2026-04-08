@@ -10,6 +10,10 @@ interface LayoutState {
   setShowDepartmentLegend: (show: boolean) => void;
   showRoleLegend: boolean;
   setShowRoleLegend: (show: boolean) => void;
+  sidebarTheme: string;
+  setSidebarTheme: (theme: string) => void;
+  appFont: string;
+  setAppFont: (font: string) => void;
 }
 
 export const useLayoutStore = create<LayoutState>()(
@@ -23,6 +27,10 @@ export const useLayoutStore = create<LayoutState>()(
       setShowDepartmentLegend: (show) => set({ showDepartmentLegend: show }),
       showRoleLegend: true,
       setShowRoleLegend: (show) => set({ showRoleLegend: show }),
+      sidebarTheme: 'theme-midnight',
+      setSidebarTheme: (theme) => set({ sidebarTheme: theme }),
+      appFont: 'font-roboto',
+      setAppFont: (font) => set({ appFont: font }),
     }),
     {
       name: 'vnft-layout-storage', // name of the item in localStorage

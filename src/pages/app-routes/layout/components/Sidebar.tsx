@@ -10,6 +10,7 @@ export default function Sidebar() {
   const navigate = useNavigate();
   const isCollapsed = useLayoutStore((state) => state.isSidebarCollapsed);
   const toggleSidebar = useLayoutStore((state) => state.toggleSidebar);
+  const sidebarTheme = useLayoutStore((state) => state.sidebarTheme);
 
   // State for sub-menus
   const [expandedMenus, setExpandedMenus] = useState<Record<string, boolean>>({});
@@ -108,7 +109,7 @@ export default function Sidebar() {
   ];
 
   return (
-    <aside className={`app-sidebar ${isCollapsed ? "collapsed" : ""}`}>
+    <aside className={`app-sidebar ${sidebarTheme} ${isCollapsed ? "collapsed" : ""}`}>
       {/* Floating Toggle Button */}
       <button className="sidebar-collapse-btn" onClick={toggleSidebar}>
         {isCollapsed ? <Menu size={16} /> : <ChevronLeft size={20} />}

@@ -53,12 +53,162 @@ export default function SettingsPage() {
 
       {/* Settings Sections */}
       <div className="flex flex-col gap-6">
-        
-        {/* Section 1: Display Settings */}
+
+        {/* Section 1: Language Settings */}
         <motion.section 
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
+          className="bg-card text-card-foreground p-6 rounded-2xl border border-border shadow-sm"
+        >
+          <div className="flex items-center gap-3 mb-6 pb-4 border-b border-border">
+            <div className="p-2.5 bg-[#F7941D]/10 text-[#F7941D] rounded-xl">
+              <Globe size={24} />
+            </div>
+            <h2 className="text-xl font-bold text-[#1E2062]">Cài đặt ngôn ngữ</h2>
+          </div>
+
+          <div className="flex flex-col gap-6">
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex flex-col gap-1.5">
+                <Label className="text-base font-semibold">
+                  Ngôn ngữ hệ thống
+                </Label>
+                <p className="text-sm text-muted-foreground max-w-xl">
+                  Thay đổi ngôn ngữ hiển thị tổng thể của portal. (Thay đổi có hiệu lực ngay lập tức).
+                </p>
+              </div>
+              <div className="flex bg-muted p-1 rounded-lg border border-border">
+                <button 
+                  onClick={() => i18n.changeLanguage('vi')}
+                  className={`flex items-center gap-2 px-4 py-2.5 rounded-md font-medium text-sm transition-all ${(i18n.language === 'vi' || i18n.language === 'vi-VN') ? 'bg-background shadow-sm text-[#2E3192]' : 'text-muted-foreground hover:text-foreground hover:bg-muted-foreground/10'}`}
+                >
+                  <img src="https://flagcdn.com/w20/vn.png" width="20" alt="VN" className="rounded-sm shadow-sm" /> Tiếng Việt
+                </button>
+                <button 
+                  onClick={() => i18n.changeLanguage('en')}
+                  className={`flex items-center gap-2 px-4 py-2.5 rounded-md font-medium text-sm transition-all ${(i18n.language && i18n.language.startsWith('en')) ? 'bg-background shadow-sm text-[#2E3192]' : 'text-muted-foreground hover:text-foreground hover:bg-muted-foreground/10'}`}
+                >
+                  <img src="https://flagcdn.com/w20/gb.png" width="20" alt="EN" className="rounded-sm shadow-sm" /> English
+                </button>
+              </div>
+            </div>
+          </div>
+        </motion.section>
+
+        {/* Section 2: Sidebar Theme Settings */}
+        <motion.section 
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2, ease: "easeOut" }}
+          className="bg-card text-card-foreground p-6 rounded-2xl border border-border shadow-sm"
+        >
+          <div className="flex items-center gap-3 mb-6 pb-4 border-b border-border">
+            <div className="p-2.5 bg-[#db2777]/10 text-[#db2777] rounded-xl">
+              <Palette size={24} />
+            </div>
+            <h2 className="text-xl font-bold text-[#1E2062]">Cài đặt màu sắc Sidebar</h2>
+          </div>
+
+          <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-1.5">
+                <Label className="text-base font-semibold">
+                  Màu nền thanh điều hướng (Sidebar)
+                </Label>
+                <p className="text-sm text-muted-foreground max-w-xl">
+                  Thay đổi màu nền của menu điều hướng bên trái để phù hợp với sở thích của bạn.
+                </p>
+              </div>
+              <div className="flex flex-wrap gap-4 mt-2">
+                {themePresets.map((preset) => (
+                  <button
+                    key={preset.id}
+                    onClick={() => setSidebarTheme(preset.id)}
+                    className={`relative w-28 h-24 rounded-2xl flex flex-col items-center justify-end pb-3 transition-all duration-300 border-2 overflow-hidden ${
+                      sidebarTheme === preset.id 
+                        ? 'border-[#F7941D] scale-105 shadow-lg' 
+                        : 'border-transparent shadow-sm hover:scale-105 hover:shadow-md'
+                    }`}
+                    style={{
+                      background: `linear-gradient(135deg, ${preset.color1}, ${preset.color2})`
+                    }}
+                  >
+                    <span className="text-xs font-semibold text-white tracking-wide text-center drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] z-10 w-full truncate px-2">
+                      {preset.name}
+                    </span>
+                    {sidebarTheme === preset.id && (
+                       <div className="absolute top-2 right-2 flex items-center justify-center w-5 h-5 bg-[#F7941D] text-white rounded-full z-10 shadow-sm">
+                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                       </div>
+                    )}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </motion.section>
+
+        {/* Section 3: Font Settings */}
+        <motion.section 
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.3, ease: "easeOut" }}
+          className="bg-card text-card-foreground p-6 rounded-2xl border border-border shadow-sm"
+        >
+          <div className="flex items-center gap-3 mb-6 pb-4 border-b border-border">
+            <div className="p-2.5 bg-[#059669]/10 text-[#059669] rounded-xl">
+              <Type size={24} />
+            </div>
+            <h2 className="text-xl font-bold text-[#1E2062]">Cài đặt Phông chữ (Font)</h2>
+          </div>
+
+          <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-1.5">
+               <Label className="text-base font-semibold">
+                 Phông chữ hệ thống
+               </Label>
+               <p className="text-sm text-muted-foreground max-w-xl">
+                 Lựa chọn font chữ yêu thích. Các font dưới đây đều được tối ưu hóa hiển thị chuẩn Tiếng Việt và Tiếng Anh.
+               </p>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-2">
+                {fontPresets.map((preset) => (
+                  <button
+                    key={preset.id}
+                    onClick={() => setAppFont(preset.id)}
+                    className={`relative p-4 rounded-xl border flex flex-col items-start gap-1 transition-all duration-200 text-left ${
+                      appFont === preset.id 
+                        ? 'border-[#2E3192] bg-[#2E3192]/5 shadow-sm' 
+                        : 'border-border bg-card hover:bg-muted/50 hover:border-muted-foreground/30'
+                    }`}
+                  >
+                    <span 
+                      className={`text-lg font-semibold ${preset.id} text-[#1E2062]`} 
+                    >
+                      {preset.name}
+                    </span>
+                    <span className={`text-xs text-muted-foreground ${preset.id}`}>
+                      {preset.desc}
+                    </span>
+                    {appFont === preset.id && (
+                       <div className="absolute top-4 right-4 flex items-center justify-center w-5 h-5 bg-[#2E3192] text-white rounded-full">
+                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                       </div>
+                    )}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </motion.section>
+
+        {/* Section 4: Display Settings (Moved to bottom) */}
+        <motion.section 
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.4, ease: "easeOut" }}
           className="bg-card text-card-foreground p-6 rounded-2xl border border-border shadow-sm"
         >
           <div className="flex items-center gap-3 mb-6 pb-4 border-b border-border">
@@ -130,159 +280,8 @@ export default function SettingsPage() {
             </div>
           </div>
         </motion.section>
-
-        {/* Section 2: Language Settings */}
-        <motion.section 
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2, ease: "easeOut" }}
-          className="bg-card text-card-foreground p-6 rounded-2xl border border-border shadow-sm"
-        >
-          <div className="flex items-center gap-3 mb-6 pb-4 border-b border-border">
-            <div className="p-2.5 bg-[#F7941D]/10 text-[#F7941D] rounded-xl">
-              <Globe size={24} />
-            </div>
-            <h2 className="text-xl font-bold text-[#1E2062]">Cài đặt ngôn ngữ</h2>
-          </div>
-
-          <div className="flex flex-col gap-6">
-            <div className="flex items-center justify-between gap-4">
-              <div className="flex flex-col gap-1.5">
-                <Label className="text-base font-semibold">
-                  Ngôn ngữ hệ thống
-                </Label>
-                <p className="text-sm text-muted-foreground max-w-xl">
-                  Thay đổi ngôn ngữ hiển thị tổng thể của portal. (Thay đổi có hiệu lực ngay lập tức).
-                </p>
-              </div>
-              <div className="flex bg-muted p-1 rounded-lg border border-border">
-                <button 
-                  onClick={() => i18n.changeLanguage('vi')}
-                  className={`flex items-center gap-2 px-4 py-2.5 rounded-md font-medium text-sm transition-all ${(i18n.language === 'vi' || i18n.language === 'vi-VN') ? 'bg-background shadow-sm text-[#2E3192]' : 'text-muted-foreground hover:text-foreground hover:bg-muted-foreground/10'}`}
-                >
-                  <img src="https://flagcdn.com/w20/vn.png" width="20" alt="VN" className="rounded-sm shadow-sm" /> Tiếng Việt
-                </button>
-                <button 
-                  onClick={() => i18n.changeLanguage('en')}
-                  className={`flex items-center gap-2 px-4 py-2.5 rounded-md font-medium text-sm transition-all ${(i18n.language && i18n.language.startsWith('en')) ? 'bg-background shadow-sm text-[#2E3192]' : 'text-muted-foreground hover:text-foreground hover:bg-muted-foreground/10'}`}
-                >
-                  <img src="https://flagcdn.com/w20/gb.png" width="20" alt="EN" className="rounded-sm shadow-sm" /> English
-                </button>
-              </div>
-            </div>
-          </div>
-        </motion.section>
-
-        {/* Section 3: Sidebar Theme Settings */}
-        <motion.section 
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.3, ease: "easeOut" }}
-          className="bg-card text-card-foreground p-6 rounded-2xl border border-border shadow-sm"
-        >
-          <div className="flex items-center gap-3 mb-6 pb-4 border-b border-border">
-            <div className="p-2.5 bg-[#db2777]/10 text-[#db2777] rounded-xl">
-              <Palette size={24} />
-            </div>
-            <h2 className="text-xl font-bold text-[#1E2062]">Cài đặt màu sắc Sidebar</h2>
-          </div>
-
-          <div className="flex flex-col gap-6">
-            <div className="flex flex-col gap-4">
-              <div className="flex flex-col gap-1.5">
-                <Label className="text-base font-semibold">
-                  Màu nền thanh điều hướng (Sidebar)
-                </Label>
-                <p className="text-sm text-muted-foreground max-w-xl">
-                  Thay đổi màu nền của menu điều hướng bên trái để phù hợp với sở thích của bạn.
-                </p>
-              </div>
-              <div className="flex flex-wrap gap-4 mt-2">
-                {themePresets.map((preset) => (
-                  <button
-                    key={preset.id}
-                    onClick={() => setSidebarTheme(preset.id)}
-                    className={`relative w-28 h-24 rounded-2xl flex flex-col items-center justify-end pb-3 transition-all duration-300 border-2 overflow-hidden ${
-                      sidebarTheme === preset.id 
-                        ? 'border-[#F7941D] scale-105 shadow-lg' 
-                        : 'border-transparent shadow-sm hover:scale-105 hover:shadow-md'
-                    }`}
-                    style={{
-                      background: `linear-gradient(135deg, ${preset.color1}, ${preset.color2})`
-                    }}
-                  >
-                    <span className="text-xs font-semibold text-white tracking-wide text-center drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] z-10 w-full truncate px-2">
-                      {preset.name}
-                    </span>
-                    {sidebarTheme === preset.id && (
-                       <div className="absolute top-2 right-2 flex items-center justify-center w-5 h-5 bg-[#F7941D] text-white rounded-full z-10 shadow-sm">
-                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                       </div>
-                    )}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-        </motion.section>
-
-        {/* Section 4: Font Settings */}
-        <motion.section 
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.4, ease: "easeOut" }}
-          className="bg-card text-card-foreground p-6 rounded-2xl border border-border shadow-sm"
-        >
-          <div className="flex items-center gap-3 mb-6 pb-4 border-b border-border">
-            <div className="p-2.5 bg-[#059669]/10 text-[#059669] rounded-xl">
-              <Type size={24} />
-            </div>
-            <h2 className="text-xl font-bold text-[#1E2062]">Cài đặt Phông chữ (Font)</h2>
-          </div>
-
-          <div className="flex flex-col gap-6">
-            <div className="flex flex-col gap-4">
-              <div className="flex flex-col gap-1.5">
-               <Label className="text-base font-semibold">
-                 Phông chữ hệ thống
-               </Label>
-               <p className="text-sm text-muted-foreground max-w-xl">
-                 Lựa chọn font chữ yêu thích. Các font dưới đây đều được tối ưu hóa hiển thị chuẩn Tiếng Việt và Tiếng Anh.
-               </p>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-2">
-                {fontPresets.map((preset) => (
-                  <button
-                    key={preset.id}
-                    onClick={() => setAppFont(preset.id)}
-                    className={`relative p-4 rounded-xl border flex flex-col items-start gap-1 transition-all duration-200 text-left ${
-                      appFont === preset.id 
-                        ? 'border-[#2E3192] bg-[#2E3192]/5 shadow-sm' 
-                        : 'border-border bg-card hover:bg-muted/50 hover:border-muted-foreground/30'
-                    }`}
-                  >
-                    <span 
-                      className={`text-lg font-semibold ${preset.id} text-[#1E2062]`} 
-                    >
-                      {preset.name}
-                    </span>
-                    <span className={`text-xs text-muted-foreground ${preset.id}`}>
-                      {preset.desc}
-                    </span>
-                    {appFont === preset.id && (
-                       <div className="absolute top-4 right-4 flex items-center justify-center w-5 h-5 bg-[#2E3192] text-white rounded-full">
-                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                       </div>
-                    )}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-        </motion.section>
         
       </div>
     </div>
   );
 }
-

@@ -1,4 +1,4 @@
-chimport { motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, Calendar, Minus, CheckCircle2, Clock, ChevronDown, CalendarDays, FileText } from "lucide-react";
 
 const TaskCard = ({ title, emptyText, delay = 0 }: { title: string, emptyText: string, delay?: number }) => (
@@ -40,7 +40,7 @@ const TaskCard = ({ title, emptyText, delay = 0 }: { title: string, emptyText: s
 
 export default function HomePage() {
   return (
-    <div className="p-4 md:p-6 w-full h-full min-h-screen bg-background">
+    <div className="p-4 md:p-6 w-full h-full min-h-screen bg-transparent">
       <div className="max-w-7xl mx-auto w-full">
         {/* Main Grid container */}
         <div className="grid grid-cols-1 md:grid-cols-12 lg:grid-cols-12 gap-6 items-start">

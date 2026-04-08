@@ -44,10 +44,11 @@ export default {
   cursorSection: {
     title: "Mouse Cursor Settings",
     label: "Cursor Effects",
-    desc: "Customize the appearance and effects of your mouse cursor. (Some effects may slightly impact device performance).",
-    default: "Default",
-    dot: "Subtle Dot",
-    glow: "Radiant Glow",
-    tech: "Tech Crosshair"
+    desc: "All cursors share a unified standard shape (circle/dot) but are styled differently to match your personality.",
+    default: "OS Default",
+    classic: "Classic Dot",
+    inverted: "Invert Core",
+    pulse: "Pulsing Ring",
+    dashed: "Dashed Tech"
   }
 };

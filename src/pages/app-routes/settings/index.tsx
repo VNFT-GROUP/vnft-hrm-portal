@@ -85,9 +85,10 @@ export default function SettingsPage() {
 
   const cursorPresets = [
     { id: 'cursor-default', name: t('settings.cursorSection.default'), icon: <MousePointer2 size={24} className="text-muted-foreground" /> },
-    { id: 'cursor-dot', name: t('settings.cursorSection.dot'), icon: <div className="relative w-8 h-8 flex items-center justify-center rounded-full border border-muted-foreground/30"><div className="w-2 h-2 bg-muted-foreground rounded-full"/></div> },
-    { id: 'cursor-glow', name: t('settings.cursorSection.glow'), icon: <div className="w-6 h-6 bg-[#8b5cf6] rounded-full blur-[6px]" /> },
-    { id: 'cursor-tech', name: t('settings.cursorSection.tech'), icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-muted-foreground"><path d="M5 5h2v2H5V5zm12 0h2v2h-2V5zM5 17h2v2H5v-2zm12 0h2v2h-2v-2zM11 11h2v2h-2v-2z"/></svg> },
+    { id: 'cursor-classic', name: t('settings.cursorSection.classic'), icon: <div className="relative w-8 h-8 flex items-center justify-center rounded-full border border-[#ab5cf6]/50"><div className="w-2 h-2 bg-[#F7941D] rounded-full"/></div> },
+    { id: 'cursor-inverted', name: t('settings.cursorSection.inverted'), icon: <div className="relative w-8 h-8 flex items-center justify-center rounded-full border-2 border-foreground bg-foreground/10"><div className="w-2 h-2 bg-foreground rounded-full"/></div> },
+    { id: 'cursor-pulse', name: t('settings.cursorSection.pulse'), icon: <div className="relative w-8 h-8 flex items-center justify-center rounded-full border-2 border-[#0ea5e9] shadow-[0_0_10px_#0ea5e940]"><div className="w-2 h-2 bg-[#0ea5e9] rounded-full"/></div> },
+    { id: 'cursor-dashed', name: t('settings.cursorSection.dashed'), icon: <div className="relative w-8 h-8 flex items-center justify-center rounded-full border border-dashed border-[#f43f5e]"><div className="w-2 h-2 bg-[#f43f5e] rounded-sm"/></div> },
   ];
 
 
@@ -359,7 +360,7 @@ export default function SettingsPage() {
                  {t("settings.cursorSection.desc")}
                </p>
               </div>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-2">
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mt-2">
                 {cursorPresets.map((preset) => (
                   <button
                     key={preset.id}

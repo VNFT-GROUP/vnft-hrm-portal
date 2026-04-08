@@ -44,10 +44,11 @@ export default {
   cursorSection: {
     title: "鼠标光标设置",
     label: "光标效果",
-    desc: "自定义鼠标光标的外观和效果。（某些效果可能会轻微影响设备性能）。",
-    default: "默认",
-    dot: "精细圆点",
-    glow: "发光光环",
-    tech: "科技瞄准线"
+    desc: "所有光标都保持统一的标准形状（圆/点），但具有不同的风格以匹配您的个性。",
+    default: "系统默认",
+    classic: "经典圆点",
+    inverted: "反转对比",
+    pulse: "脉冲光环",
+    dashed: "虚线科技"
   }
 };

@@ -18,10 +18,8 @@ export default function CustomCursor() {
   const [isHovering, setIsHovering] = useState(false);
 
   useEffect(() => {
-    // If default, we don't need all this tracking logic active in DOM
     if (cursorStyle === 'cursor-default') {
       document.body.style.cursor = 'auto';
-      // Remove any global hiding class
       document.documentElement.classList.remove('hide-native-cursor');
       return;
     }
@@ -32,12 +30,12 @@ export default function CustomCursor() {
       mouseX.set(e.clientX);
       mouseY.set(e.clientY);
       
-      // Check if hovering over clickable elements
       const target = e.target as HTMLElement;
       const isClickable = window.getComputedStyle(target).cursor === 'pointer' || 
                           target.tagName.toLowerCase() === 'a' || 
                           target.tagName.toLowerCase() === 'button' ||
-                          target.closest('button') || target.closest('a');
+                          target.closest('button') || target.closest('a') ||
+                          target.closest('[role="button"]');
       
       setIsHovering(!!isClickable);
     };
@@ -67,33 +65,21 @@ export default function CustomCursor() {
         }
       `}</style>
       
-      {/* 1. DOT PRESET */}
-      {cursorStyle === 'cursor-dot' && (
+      {/* 1. CLASSIC PRESET */}
+      {cursorStyle === 'cursor-classic' && (
         <>
-          {/* Main small dot tracking exact mouse */}
           <motion.div
             className="fixed top-0 left-0 w-3 h-3 bg-[#F7941D] rounded-full pointer-events-none z-[99999]"
-            style={{ 
-              x: mouseX, 
-              y: mouseY,
-              translateX: "-50%",
-              translateY: "-50%",
-            }}
+            style={{ x: mouseX, y: mouseY, translateX: "-50%", translateY: "-50%" }}
             animate={{
               scale: isClicking ? 0.5 : isHovering ? 1.5 : 1,
               backgroundColor: isHovering ? "#2E3192" : "#F7941D"
             }}
             transition={{ duration: 0.15 }}
           />
-          {/* Outer ring tracking with delay */}
           <motion.div
             className="fixed top-0 left-0 w-10 h-10 border border-[#ab5cf6]/50 rounded-full pointer-events-none z-[99998]"
-            style={{ 
-              x: cursorXSpring, 
-              y: cursorYSpring,
-              translateX: "-50%",
-              translateY: "-50%",
-            }}
+            style={{ x: cursorXSpring, y: cursorYSpring, translateX: "-50%", translateY: "-50%" }}
             animate={{
               scale: isClicking ? 0.8 : isHovering ? 1.5 : 1,
               opacity: isHovering ? 0.2 : 0.8,
@@ -104,62 +90,89 @@ export default function CustomCursor() {
         </>
       )}
 
-      {/* 2. GLOW PRESET */}
-      {cursorStyle === 'cursor-glow' && (
-        <motion.div
-          className="fixed top-0 left-0 w-48 h-48 bg-[#8b5cf6] rounded-full blur-[60px] opacity-30 pointer-events-none z-[9999]"
-          style={{ 
-            x: cursorXSpring, 
-            y: cursorYSpring,
-            translateX: "-50%",
-            translateY: "-50%",
-            mixBlendMode: "screen"
-          }}
-          animate={{
-            scale: isClicking ? 0.8 : isHovering ? 1.2 : 1,
-            opacity: isHovering ? 0.5 : 0.3,
-            backgroundColor: isHovering ? "#F7941D" : "#8b5cf6"
-          }}
-        />
-      )}
-      {cursorStyle === 'cursor-glow' && (
-        <motion.div
-            className="fixed top-0 left-0 w-1.5 h-1.5 bg-white shadow-xl rounded-full pointer-events-none z-[99999]"
-            style={{ 
-              x: mouseX, 
-              y: mouseY,
-              translateX: "-50%",
-              translateY: "-50%",
+      {/* 2. INVERTED PRESET */}
+      {cursorStyle === 'cursor-inverted' && (
+        <>
+          <motion.div
+            className="fixed top-0 left-0 w-4 h-4 bg-white rounded-full pointer-events-none z-[99999]"
+            style={{ x: mouseX, y: mouseY, translateX: "-50%", translateY: "-50%", mixBlendMode: 'difference' }}
+            animate={{
+              scale: isHovering ? 0 : 1,
             }}
+            transition={{ duration: 0.15 }}
           />
+          <motion.div
+            className="fixed top-0 left-0 w-10 h-10 border-2 border-white bg-white/20 rounded-full pointer-events-none z-[99998]"
+            style={{ x: cursorXSpring, y: cursorYSpring, translateX: "-50%", translateY: "-50%", mixBlendMode: 'difference' }}
+            animate={{
+              scale: isClicking ? 0.8 : isHovering ? 2.5 : 1,
+              backgroundColor: isHovering ? "rgba(255,255,255,1)" : "rgba(255,255,255,0)"
+            }}
+            transition={{ duration: 0.2 }}
+          />
+        </>
       )}
 
-      {/* 3. TECH PRESET */}
-      {cursorStyle === 'cursor-tech' && (
-        <motion.div
-          className="fixed top-0 left-0 w-12 h-12 pointer-events-none z-[99999] flex items-center justify-center"
-          style={{ 
-            x: cursorXSpring, 
-            y: cursorYSpring,
-            translateX: "-50%",
-            translateY: "-50%",
-          }}
-          animate={{
-            scale: isClicking ? 0.7 : isHovering ? 0.8 : 1,
-            rotate: isClicking ? 45 : isHovering ? 90 : 0
-          }}
-          transition={{ duration: 0.2, type: "spring", stiffness: 200 }}
-        >
-          {/* Tech crosshairs / brackets */}
-          <div className={`absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 transition-colors ${isHovering ? 'border-[#F7941D]' : 'border-[#2E3192]'}`}></div>
-          <div className={`absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 transition-colors ${isHovering ? 'border-[#F7941D]' : 'border-[#2E3192]'}`}></div>
-          <div className={`absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 transition-colors ${isHovering ? 'border-[#F7941D]' : 'border-[#2E3192]'}`}></div>
-          <div className={`absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 transition-colors ${isHovering ? 'border-[#F7941D]' : 'border-[#2E3192]'}`}></div>
-          <motion.div 
-             className="w-1.5 h-1.5 bg-[#F7941D] rounded-full"
-             animate={{ scale: isHovering ? 0 : 1 }}
+      {/* 3. PULSE PRESET */}
+      {cursorStyle === 'cursor-pulse' && (
+        <>
+          <motion.div
+            className="fixed top-0 left-0 w-3 h-3 bg-[#0ea5e9] rounded-full pointer-events-none z-[99999] shadow-[0_0_10px_#0ea5e9]"
+            style={{ x: mouseX, y: mouseY, translateX: "-50%", translateY: "-50%" }}
+            animate={{
+              scale: isClicking ? 0.8 : isHovering ? 0 : 1,
+            }}
           />
-        </motion.div>
+          <motion.div
+            className="fixed top-0 left-0 w-12 h-12 border-2 border-[#0ea5e9] rounded-full pointer-events-none z-[99998]"
+            style={{ x: cursorXSpring, y: cursorYSpring, translateX: "-50%", translateY: "-50%" }}
+            animate={{
+              scale: isHovering ? 1.5 : 1,
+            }}
+          />
+          <motion.div
+            className="fixed top-0 left-0 w-12 h-12 bg-[#0ea5e9]/20 rounded-full pointer-events-none z-[99997]"
+            style={{ x: cursorXSpring, y: cursorYSpring, translateX: "-50%", translateY: "-50%" }}
+            animate={{
+              scale: [1, isHovering ? 2 : 1.5, 1],
+              opacity: [0.5, 0, 0.5],
+            }}
+            transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+          />
+        </>
+      )}
+
+      {/* 4. DASHED (TECH) PRESET */}
+      {cursorStyle === 'cursor-dashed' && (
+        <>
+          <motion.div
+            className="fixed top-0 left-0 w-2 h-2 bg-[#f43f5e] rounded-sm pointer-events-none z-[99999]"
+            style={{ x: mouseX, y: mouseY, translateX: "-50%", translateY: "-50%" }}
+            animate={{
+              rotate: isHovering ? 45 : 0,
+              scale: isClicking ? 0.5 : isHovering ? 1.5 : 1
+            }}
+          />
+          <motion.div
+            className="fixed top-0 left-0 w-10 h-10 rounded-full pointer-events-none z-[99998]"
+            style={{ 
+              x: cursorXSpring, 
+              y: cursorYSpring, 
+              translateX: "-50%", 
+              translateY: "-50%",
+              border: "1.5px dashed #f43f5e",
+            }}
+            animate={{
+              rotate: 360,
+              scale: isClicking ? 0.8 : isHovering ? 1.5 : 1,
+              opacity: isHovering ? 0.4 : 1
+            }}
+            transition={{ 
+              rotate: { repeat: Infinity, duration: 8, ease: "linear" },
+              scale: { duration: 0.2 }
+            }}
+          />
+        </>
       )}
     </>
   );

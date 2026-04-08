@@ -44,10 +44,11 @@ export default {
   cursorSection: {
     title: "Cài đặt con trỏ chuột (Cursor)",
     label: "Hiệu ứng con trỏ chuột",
-    desc: "Tùy chỉnh hình ảnh và hiệu ứng của con trỏ chuột. (Một số hiệu ứng có thể ảnh hưởng nhẹ đến hiệu năng thiết bị).",
-    default: "Mặc định",
-    dot: "Chấm tròn tinh tế",
-    glow: "Hào quang sáng",
-    tech: "Nhắm mục tiêu (Tech)"
+    desc: "Các mẫu con trỏ đều giữ hình dáng chuẩn (vòng tròn/điểm) nhưng được tùy biến phong cách khác nhau để phù hợp với cá tính của bạn.",
+    default: "Hệ điều hành",
+    classic: "Cổ điển (Classic)",
+    inverted: "Tương phản (Invert)",
+    pulse: "Nhịp đập (Pulse)",
+    dashed: "Nét đứt xoay (Tech)"
   }
 };

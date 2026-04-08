@@ -14,6 +14,8 @@ interface LayoutState {
   setSidebarTheme: (theme: string) => void;
   appFont: string;
   setAppFont: (font: string) => void;
+  timezone: string;
+  setTimezone: (tz: string) => void;
 }
 
 export const useLayoutStore = create<LayoutState>()(
@@ -31,6 +33,8 @@ export const useLayoutStore = create<LayoutState>()(
       setSidebarTheme: (theme) => set({ sidebarTheme: theme }),
       appFont: 'font-roboto',
       setAppFont: (font) => set({ appFont: font }),
+      timezone: 'Asia/Ho_Chi_Minh',
+      setTimezone: (tz) => set({ timezone: tz }),
     }),
     {
       name: 'vnft-layout-storage', // name of the item in localStorage

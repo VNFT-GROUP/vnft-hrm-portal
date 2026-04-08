@@ -2,8 +2,37 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { User, Book, Globe, Key, LogOut, Briefcase, BadgeCheck, Keyboard, Settings } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useLayoutStore } from "../../../../store/useLayoutStore";
 import ChangePasswordModal from "./ChangePasswordModal";
 import "./Topbar.css";
+
+function LiveClock() {
+  const [time, setTime] = useState(new Date());
+  const timezone = useLayoutStore((state) => state.timezone);
+
+  React.useEffect(() => {
+    const timer = setInterval(() => setTime(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const dateStr = time.toLocaleDateString('vi-VN', { timeZone: timezone, weekday: 'short', day: '2-digit', month: '2-digit', year: 'numeric' });
+  const timeStr = time.toLocaleTimeString('vi-VN', { timeZone: timezone, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  
+  // Abbreviation (e.g. ICT, UTC, EST) is trickier in JS natively without timezone name parsing, 
+  // but we can extract it by passing timeZoneName: 'short' to toLocaleTimeString 
+  const timeParts = time.toLocaleTimeString('en-US', { timeZone: timezone, timeZoneName: 'short' }).split(' ');
+  const tzAbbr = timeParts[timeParts.length - 1];
+
+  return (
+    <div className="hidden md:flex flex-col items-end justify-center mr-6 font-mono bg-muted/60 px-3 py-1.5 rounded-lg border border-border">
+      <div className="flex items-center gap-2">
+        <span className="text-[15px] font-bold text-[#1E2062] tabular-nums whitespace-nowrap">{timeStr}</span>
+        <span className="text-[10px] font-semibold bg-[#2E3192] text-white px-1.5 py-0.5 rounded shadow-sm">{tzAbbr}</span>
+      </div>
+      <span className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider mt-0.5">{dateStr}</span>
+    </div>
+  );
+}
 
 export default function Topbar() {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -88,6 +117,7 @@ export default function Topbar() {
 
         <div className="topbar-right relative flex items-center">
 
+          <LiveClock />
 
           <div className="user-profile" onClick={() => setIsProfileOpen(!isProfileOpen)}>
             <div className="user-info">

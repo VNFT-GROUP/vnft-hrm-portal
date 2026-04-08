@@ -5,6 +5,7 @@ import network from './network';
 import ndaContent from './ndaContent';
 import department from './department';
 import position from './position';
+import settings from './settings';
 
 export default {
   profile,
@@ -13,5 +14,6 @@ export default {
   network,
   ndaContent,
   department,
-  position
+  position,
+  settings
 };

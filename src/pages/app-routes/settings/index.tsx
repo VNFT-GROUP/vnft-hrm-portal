@@ -20,7 +20,7 @@ export default function SettingsPage() {
   const timezone = useLayoutStore((state) => state.timezone);
   const setTimezone = useLayoutStore((state) => state.setTimezone);
 
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [now, setNow] = useState(new Date());
 
   const fullTimezones = [
@@ -47,12 +47,12 @@ export default function SettingsPage() {
       let city = tz.split('/').pop()?.replace(/_/g, ' ') || tz;
       
       // Custom display names based on VNFT office locations
-      if (tz === 'Asia/Ho_Chi_Minh') city = 'Việt Nam & Cambodia HQ';
-      if (tz === 'Asia/Shanghai') city = 'Shenzhen (Văn phòng Trung Quốc)';
-      if (tz === 'America/New_York') city = 'New York (Mỹ)';
-      if (tz === 'America/Chicago') city = 'Houston, TX (Mỹ)';
-      if (tz === 'America/Edmonton') city = 'Calgary, AB (Canada)';
-      if (tz === 'America/Vancouver') city = 'California & Vancouver BC';
+      if (tz === 'Asia/Ho_Chi_Minh') city = t('settings.tzSection.hcm');
+      if (tz === 'Asia/Shanghai') city = t('settings.tzSection.shanghai');
+      if (tz === 'America/New_York') city = t('settings.tzSection.ny');
+      if (tz === 'America/Chicago') city = t('settings.tzSection.chicago');
+      if (tz === 'America/Edmonton') city = t('settings.tzSection.edmonton');
+      if (tz === 'America/Vancouver') city = t('settings.tzSection.vancouver');
 
       return {
         value: tz,
@@ -74,11 +74,11 @@ export default function SettingsPage() {
   ];
 
   const fontPresets = [
-    { id: 'font-roboto', name: 'Roboto', desc: 'Sạch sẽ, mặc định' },
-    { id: 'font-inter', name: 'Inter', desc: 'Dễ đọc, trung tính' },
-    { id: 'font-be-vietnam-pro', name: 'Be Vietnam Pro', desc: 'Tối ưu tiếng Việt' },
-    { id: 'font-montserrat', name: 'Montserrat', desc: 'Sang trọng, hình học' },
-    { id: 'font-nunito', name: 'Nunito', desc: 'Mềm mại, thân thiện' },
+    { id: 'font-roboto', name: 'Roboto', desc: t('settings.fontSection.robotoDesc') },
+    { id: 'font-inter', name: 'Inter', desc: t('settings.fontSection.interDesc') },
+    { id: 'font-be-vietnam-pro', name: 'Be Vietnam Pro', desc: t('settings.fontSection.beVietnamDesc') },
+    { id: 'font-montserrat', name: 'Montserrat', desc: t('settings.fontSection.montserratDesc') },
+    { id: 'font-nunito', name: 'Nunito', desc: t('settings.fontSection.nunitoDesc') },
   ];
 
 
@@ -92,10 +92,10 @@ export default function SettingsPage() {
         transition={{ duration: 0.5, ease: "easeOut" }}
       >
         <h1 className="text-2xl md:text-4xl font-bold text-[#1E2062] uppercase tracking-wide">
-          Cài đặt hệ thống
+          {t("settings.title")}
         </h1>
         <p className="text-muted-foreground mt-2 text-base md:text-lg">
-          Tùy chỉnh các chức năng, giao diện và luồng hoạt động của portal.
+          {t("settings.subtitle")}
         </p>
       </motion.div>
 
@@ -113,17 +113,17 @@ export default function SettingsPage() {
             <div className="p-2.5 bg-[#F7941D]/10 text-[#F7941D] rounded-xl">
               <Globe size={24} />
             </div>
-            <h2 className="text-xl font-bold text-[#1E2062]">Cài đặt ngôn ngữ</h2>
+            <h2 className="text-xl font-bold text-[#1E2062]">{t("settings.langSection.title")}</h2>
           </div>
 
           <div className="flex flex-col gap-6">
             <div className="flex items-center justify-between gap-4">
               <div className="flex flex-col gap-1.5">
                 <Label className="text-base font-semibold">
-                  Ngôn ngữ hệ thống
+                  {t("settings.langSection.label")}
                 </Label>
                 <p className="text-sm text-muted-foreground max-w-xl">
-                  Thay đổi ngôn ngữ hiển thị tổng thể của portal. (Thay đổi có hiệu lực ngay lập tức).
+                  {t("settings.langSection.desc")}
                 </p>
               </div>
               <div className="flex bg-muted p-1 rounded-lg border border-border">
@@ -161,17 +161,17 @@ export default function SettingsPage() {
             <div className="p-2.5 bg-[#8b5cf6]/10 text-[#8b5cf6] rounded-xl">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
             </div>
-            <h2 className="text-xl font-bold text-[#1E2062]">Cài đặt múi giờ (Timezone)</h2>
+            <h2 className="text-xl font-bold text-[#1E2062]">{t("settings.tzSection.title")}</h2>
           </div>
 
           <div className="flex flex-col gap-6">
             <div className="flex flex-col gap-4">
               <div className="flex flex-col gap-1.5">
                 <Label className="text-base font-semibold">
-                  Múi giờ hệ thống
+                  {t("settings.tzSection.label")}
                 </Label>
                 <p className="text-sm text-muted-foreground max-w-xl">
-                  Thay đổi múi giờ được áp dụng cho đồng hồ góc phải và các báo cáo xuất ra. (Giờ hiển thị trên thẻ sẽ thay đổi thực tế theo thời gian).
+                  {t("settings.tzSection.desc")}
                 </p>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-2 w-full">
@@ -229,17 +229,17 @@ export default function SettingsPage() {
             <div className="p-2.5 bg-[#db2777]/10 text-[#db2777] rounded-xl">
               <Palette size={24} />
             </div>
-            <h2 className="text-xl font-bold text-[#1E2062]">Cài đặt màu sắc Sidebar</h2>
+            <h2 className="text-xl font-bold text-[#1E2062]">{t("settings.themeSection.title")}</h2>
           </div>
 
           <div className="flex flex-col gap-6">
             <div className="flex flex-col gap-4">
               <div className="flex flex-col gap-1.5">
                 <Label className="text-base font-semibold">
-                  Màu nền thanh điều hướng (Sidebar)
+                  {t("settings.themeSection.label")}
                 </Label>
                 <p className="text-sm text-muted-foreground max-w-xl">
-                  Thay đổi màu nền của menu điều hướng bên trái để phù hợp với sở thích của bạn.
+                  {t("settings.themeSection.desc")}
                 </p>
               </div>
               <div className="flex flex-wrap gap-4 mt-2">
@@ -282,17 +282,17 @@ export default function SettingsPage() {
             <div className="p-2.5 bg-[#059669]/10 text-[#059669] rounded-xl">
               <Type size={24} />
             </div>
-            <h2 className="text-xl font-bold text-[#1E2062]">Cài đặt Phông chữ (Font)</h2>
+            <h2 className="text-xl font-bold text-[#1E2062]">{t("settings.fontSection.title")}</h2>
           </div>
 
           <div className="flex flex-col gap-6">
             <div className="flex flex-col gap-4">
               <div className="flex flex-col gap-1.5">
                <Label className="text-base font-semibold">
-                 Phông chữ hệ thống
+                 {t("settings.fontSection.label")}
                </Label>
                <p className="text-sm text-muted-foreground max-w-xl">
-                 Lựa chọn font chữ yêu thích. Các font dưới đây đều được tối ưu hóa hiển thị chuẩn Tiếng Việt và Tiếng Anh.
+                 {t("settings.fontSection.desc")}
                </p>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-2">
@@ -337,7 +337,7 @@ export default function SettingsPage() {
             <div className="p-2.5 bg-[#2E3192]/10 text-[#2E3192] rounded-xl">
               <Monitor size={24} />
             </div>
-            <h2 className="text-xl font-bold text-[#1E2062]">Cài đặt hiển thị</h2>
+            <h2 className="text-xl font-bold text-[#1E2062]">{t("settings.displaySection.title")}</h2>
           </div>
 
           <div className="flex flex-col gap-6">
@@ -345,10 +345,10 @@ export default function SettingsPage() {
             <div className="flex items-start justify-between gap-4">
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="employee-legend-toggle" className="text-base font-semibold cursor-pointer">
-                  Hiển thị bảng chú thích ở Quản lý nhân viên
+                  {t("settings.displaySection.employeeLabel")}
                 </Label>
                 <p className="text-sm text-muted-foreground max-w-xl">
-                  Bật/tắt thanh giải thích ý nghĩa các biểu tượng hành động phía trên bảng danh sách nhân viên.
+                  {t("settings.displaySection.employeeDesc")}
                 </p>
               </div>
               <div className="mt-1">
@@ -365,10 +365,10 @@ export default function SettingsPage() {
             <div className="flex items-start justify-between gap-4">
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="department-legend-toggle" className="text-base font-semibold cursor-pointer">
-                  Hiển thị bảng chú thích ở Quản lý phòng ban
+                  {t("settings.displaySection.departmentLabel")}
                 </Label>
                 <p className="text-sm text-muted-foreground max-w-xl">
-                  Bật/tắt thanh giải thích ý nghĩa các biểu tượng hành động phía trên bảng danh sách cấu trúc phòng ban.
+                  {t("settings.displaySection.departmentDesc")}
                 </p>
               </div>
               <div className="mt-1">
@@ -385,10 +385,10 @@ export default function SettingsPage() {
             <div className="flex items-start justify-between gap-4">
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="role-legend-toggle" className="text-base font-semibold cursor-pointer">
-                  Hiển thị bảng chú thích ở Quản lý chức vụ
+                  {t("settings.displaySection.roleLabel")}
                 </Label>
                 <p className="text-sm text-muted-foreground max-w-xl">
-                  Bật/tắt thanh giải thích ý nghĩa các biểu tượng hành động phía trên bảng danh sách cấu trúc chức vụ.
+                  {t("settings.displaySection.roleDesc")}
                 </p>
               </div>
               <div className="mt-1">

@@ -19,7 +19,7 @@ export default function RoleFormSheet({ isOpen, onOpenChange, formData, setFormD
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
       <SheetContent className="sm:max-w-[550px] w-full border-l-slate-200 shadow-2xl flex flex-col h-full p-0">
-        <div className="p-6 border-b border-border flex-shrink-0 bg-muted/50">
+        <div className="p-6 border-b border-border shrink-0 bg-muted/50">
           <SheetHeader>
             <SheetTitle className="text-xl font-bold text-[#1E2062] flex items-center gap-2">
               <span className="p-1.5 bg-[#2E3192]/10 text-[#2E3192] rounded-md">
@@ -71,7 +71,7 @@ export default function RoleFormSheet({ isOpen, onOpenChange, formData, setFormD
           </div>
         </div>
         
-        <div className="p-4 border-t border-border flex-shrink-0 bg-card text-card-foreground flex justify-end gap-3">
+        <div className="p-4 border-t border-border shrink-0 bg-card text-card-foreground flex justify-end gap-3">
           <Button variant="outline" onClick={() => onOpenChange(false)} className="rounded-xl border-border text-muted-foreground hover:bg-muted w-32 transition-all">
             Hủy
           </Button>

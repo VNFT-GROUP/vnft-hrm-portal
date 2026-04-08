@@ -5,6 +5,16 @@ import { useLayoutStore } from "./store/useLayoutStore";
 import { useEffect } from "react";
 import { MotionConfig } from "framer-motion";
 import { Toaster } from "@/components/ui/sonner";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: 1,
+    },
+  },
+});
 
 function App() {
   const appFont = useLayoutStore((state) => state.appFont);
@@ -19,17 +29,19 @@ function App() {
   }, [appFont]);
 
   return (
-    <MotionConfig reducedMotion="user">
-      <BrowserRouter>
-        <ScrollArea className={`h-screen w-screen bg-background text-foreground ${appFont}`}>
-          <div className="app-container">
-            <AppRoutes />
-          </div>
-        </ScrollArea>
-        {/* Shadcn Sonner Toaster để hiển thị các popup Error/Success */}
-        <Toaster />
-      </BrowserRouter>
-    </MotionConfig>
+    <QueryClientProvider client={queryClient}>
+      <MotionConfig reducedMotion="user">
+        <BrowserRouter>
+          <ScrollArea className={`h-screen w-screen bg-background text-foreground ${appFont}`}>
+            <div className="app-container">
+              <AppRoutes />
+            </div>
+          </ScrollArea>
+          {/* Shadcn Sonner Toaster để hiển thị các popup Error/Success */}
+          <Toaster />
+        </BrowserRouter>
+      </MotionConfig>
+    </QueryClientProvider>
   );
 }
 

@@ -3,6 +3,8 @@ import { useTranslation } from "react-i18next";
 import { User, Book, Globe, Key, LogOut, Briefcase, BadgeCheck, Keyboard, Settings } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useLayoutStore } from "../../../../store/useLayoutStore";
+import { useAuthStore } from "@/store/useAuthStore";
+import { authService } from "@/services/auth";
 import ChangePasswordModal from "./ChangePasswordModal";
 import "./Topbar.css";
 
@@ -39,6 +41,21 @@ export default function Topbar() {
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
+
+  const { user, logout: logoutAction } = useAuthStore();
+
+  const handleLogout = async () => {
+    setIsProfileOpen(false);
+    try {
+      // Gọi API xoá cookie refresh token ở Backend
+      await authService.logout();
+    } catch {
+      // Bõ qua lỗi gọi API (ví dụ server down), ta vẫn cần cho user out ra login ở client
+    } finally {
+      logoutAction(); // Xoá zustand store
+      navigate('/login'); // Đá văng ra màn Login
+    }
+  };
 
   // Register Ctrl + I shortcut for toggling User Menu
   React.useEffect(() => {
@@ -121,19 +138,19 @@ export default function Topbar() {
 
           <div className="user-profile" onClick={() => setIsProfileOpen(!isProfileOpen)}>
             <div className="user-info">
-               <span className="user-name">Huỳnh Đức Phú</span>
+               <span className="user-name">{user?.username || "Người dùng"}</span>
                <span className="user-role">Quản trị viên</span>
             </div>
-            <div className="user-avatar-circle">P</div>
+            <div className="user-avatar-circle">{user?.username ? user.username.charAt(0).toUpperCase() : "U"}</div>
           </div>
 
         {/* PROFILE DROPDOWN */}
         {isProfileOpen && (
           <div className="profile-dropdown">
             <div className="pd-header">
-              <div className="pd-avatar-large">P</div>
+              <div className="pd-avatar-large">{user?.username ? user.username.charAt(0).toUpperCase() : "U"}</div>
               <div className="pd-info">
-                <h3 className="pd-name">Huỳnh Đức Phú</h3>
+                <h3 className="pd-name">{user?.username || "Người dùng"}</h3>
                 <div className="pd-role-item"><Briefcase size={15}/> HR & ADM</div>
                 <div className="pd-role-item"><BadgeCheck size={15}/> Nhân viên</div>
               </div>
@@ -199,10 +216,7 @@ export default function Topbar() {
               }}>
                 <Key size={18} className="pd-icon" /> <span>{t('profile.changePassword')}</span>
               </div>
-              <div className="pd-item text-red-500" onClick={() => {
-                setIsProfileOpen(false);
-                navigate('/login');
-              }}>
+              <div className="pd-item text-red-500" onClick={handleLogout}>
                 <LogOut size={18} className="pd-icon-red" /> <span>{t('profile.logout')}</span>
               </div>
             </div>

@@ -4,6 +4,7 @@ import AppRoutes from "./routes";
 import { useLayoutStore } from "./store/useLayoutStore";
 import { useEffect } from "react";
 import { MotionConfig } from "framer-motion";
+import { Toaster } from "@/components/ui/sonner";
 
 function App() {
   const appFont = useLayoutStore((state) => state.appFont);
@@ -25,6 +26,8 @@ function App() {
             <AppRoutes />
           </div>
         </ScrollArea>
+        {/* Shadcn Sonner Toaster để hiển thị các popup Error/Success */}
+        <Toaster />
       </BrowserRouter>
     </MotionConfig>
   );

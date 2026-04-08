@@ -2,6 +2,7 @@ import axios, { type InternalAxiosRequestConfig } from 'axios';
 import { useAuthStore } from '@/store/useAuthStore';
 import type { ApiResponse } from '@/types/base/ApiResponse';
 import type { AuthResponse } from '@/types/response/auth/AuthResponse';
+import { toast } from 'sonner';
 
 const baseURL = import.meta.env.VITE_BACKEND_BASE_URL || 'http://localhost:8080';
 
@@ -25,46 +26,64 @@ apiClient.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Xử lý tự động Refresh Token nếu request trả về 401 Unauthorized
+// Xử lý tự động Refresh Token và Error Handler
 apiClient.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    // Trường hợp Backend trả 200 OK nhưng body có chứa errorCode (lỗi logic nghiệp vụ)
+    const data = response.data as ApiResponse<unknown>;
+    if (data && data.errorCode) {
+      // Dùng Sonner để báo lỗi lên màn hình
+      toast.error(data.errorMessage || "Đã xảy ra lỗi dữ liệu.");
+      // Trả reject để nhảy vào khối catch của lệnh đang gọi (ví dụ await login(..))
+      return Promise.reject(new Error(data.errorMessage || 'API Error'));
+    }
+    return response;
+  },
   async (error) => {
     const originalRequest = error.config;
 
-    // Nếu mã lỗi là 401 và chưa có cờ _retry đã đánh dấu thử lại
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      // Bật cờ _retry để tránh vòng lặp vô tận (nếu bản thân refresh cũng 401)
+    const errMsg = error.response?.data?.errorMessage;
+    const errCode = error.response?.data?.errorCode;
+
+    // Check xem có phải lỗi mốc Token Expired (1102) hay không
+    const isTokenExpired = error.response?.status === 401 && errCode === 1102;
+
+    // Hiển thị Toast thông báo cho TẤT CẢ các lỗi từ Backend nếu KHÔNG PHẢI là lỗi Refresh Token
+    // (Bao gồm cả 401 nhưng bị sai MK = 1103)
+    if (error.response && !isTokenExpired) {
+      if (errMsg) {
+        toast.error(errMsg);
+      } else {
+        toast.error("Lỗi kết nối hoặc hệ thống, vui lòng thử lại.");
+      }
+    }
+
+    // Xử lý 401 Unauthorized VÀ errorCode 1102 -> Call chức năng Refresh
+    if (isTokenExpired && !originalRequest._retry) {
       originalRequest._retry = true;
 
-      // Nếu chưa có tiến trình refresh token nào thì tạo mới
       if (!refreshTokenPromise) {
-        // Dùng axios thô cơ bản (không dùng apiClient) để tránh bị gọi lại interceptor này
         refreshTokenPromise = axios
           .post<ApiResponse<AuthResponse>>(`${baseURL}/auth/refresh`, {}, { withCredentials: true })
           .then((res) => {
             const dataResult = res.data.data;
             if (dataResult && dataResult.accessToken && dataResult.user) {
-              // Cập nhật Store mới
               useAuthStore.getState().login(dataResult.user, dataResult.accessToken);
               return dataResult.accessToken;
             }
           })
           .catch((err) => {
-            // Nếu Refresh JWT mà cũng lỗi ( hết hạn refreshToken trong cookie ) => Đăng xuất
             useAuthStore.getState().logout();
             return Promise.reject(err);
           })
           .finally(() => {
-            // Release memory để các lần sau nếu 401 lại vẫn chạy qua đoạn request API refresh được
             refreshTokenPromise = null;
           });
       }
 
       try {
-        // Đợi tiến trình lấy Token mới hoặc trả về Token đang được cấp chung
         const newAccessToken = await refreshTokenPromise;
         if (newAccessToken) {
-          // Setup lại headers và gửi yêu cầu bị rớt
           originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
           return apiClient(originalRequest);
         }

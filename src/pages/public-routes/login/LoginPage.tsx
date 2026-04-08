@@ -1,6 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
+import { authService } from "@/services/auth";
+import { useAuthStore } from "@/store/useAuthStore";
 import "./LoginPage.css";
 import LoginHeader from "./components/LoginHeader/LoginHeader";
 import LoginFooter from "./components/LoginFooter/LoginFooter";
@@ -99,14 +102,25 @@ export default function LoginPage() {
   const [showNewPassword, setShowNewPassword] = useState(false);
 
   const navigate = useNavigate();
+  const loginAction = useAuthStore((state) => state.login);
 
-  const handleLoginSubmit = (e: React.FormEvent) => {
+  const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setTimeout(() => {
+    try {
+      const response = await authService.login({ username: email, password });
+      
+      if (response.data && response.data.accessToken && response.data.user) {
+        loginAction(response.data.user, response.data.accessToken);
+        toast.success("Đăng nhập thành công!");
+        navigate("/app");
+      }
+    } catch (error: unknown) {
+      // Phía apiClient (Interceptor) đã lo việc bắn ra Toast Error thông báo rồi, ta chỉ console log
+      console.error("Lỗi xảy ra lúc login:", error);
+    } finally {
       setLoading(false);
-      navigate("/app");
-    }, 1500);
+    }
   };
 
   const handleForgotEmailSubmit = (e: React.FormEvent) => {

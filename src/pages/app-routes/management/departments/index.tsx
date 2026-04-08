@@ -5,26 +5,12 @@ import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
 import { useLayoutStore } from "@/store/useLayoutStore";
 
-import DepartmentTable, { type Department, type Manager } from "./components/DepartmentTable";
+import DepartmentTable, { type Department } from "./components/DepartmentTable";
 import DepartmentFormSheet from "./components/DepartmentFormSheet";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { departmentService } from "@/services/department";
 import { toast } from "sonner";
 import type { UpsertDepartmentRequest } from "@/types/request/department/UpsertDepartmentRequest";
-
-const MANAGERS: Manager[] = [
-  { id: "m1", name: "Đoàn Trúc Thuỷ", role: "Manager", username: "@jena", deptLabel: "LOG" },
-  { id: "m2", name: "Huỳnh Tân Viễn", role: "Manager", username: "@victor", deptLabel: "" },
-  { id: "m3", name: "La Hồng Ngọc Cẩm", role: "Manager", username: "@ruby", deptLabel: "OPS" },
-  { id: "m4", name: "La Hồng Vân", role: "BOD", username: "@anny", deptLabel: "HR & ADM" },
-  { id: "m5", name: "Lê Viết Tuấn", role: "Manager", username: "@tony", deptLabel: "" },
-  { id: "m6", name: "Ngô Thị Thuỳ", role: "Manager", username: "@tina", deptLabel: "SALES" },
-  { id: "m11", name: "Nguyễn Duy Khánh (Richard)", role: "BOD", username: "@richard", deptLabel: "" },
-  { id: "m7", name: "Nguyễn Thị Kim Phượng", role: "Manager", username: "@violet", deptLabel: "ACC" },
-  { id: "m8", name: "Phạm Thị Hoài Thu", role: "Manager", username: "@sunny", deptLabel: "HAN" },
-  { id: "m9", name: "Trịnh Huyền Trang", role: "Manager", username: "@tracytrang", deptLabel: "AIR FREIGHT" },
-  { id: "m10", name: "Võ Thị Trúc Mai", role: "Manager", username: "@candy", deptLabel: "PRICING" },
-];
 
 export default function DepartmentsPage() {
   const showDepartmentLegend = useLayoutStore(state => state.showDepartmentLegend);
@@ -33,8 +19,8 @@ export default function DepartmentsPage() {
   const [isOpen, setIsOpen] = useState(false);
   const [editingDept, setEditingDept] = useState<Department | null>(null);
 
-  const [formData, setFormData] = useState<{name: string, description: string, active: boolean, managerIds: string[]}>({ 
-    name: "", description: "", active: true, managerIds: [] 
+  const [formData, setFormData] = useState<{name: string, description: string, active: boolean}>({ 
+    name: "", description: "", active: true
   });
 
   const { data: departmentsData } = useQuery({
@@ -50,12 +36,11 @@ export default function DepartmentsPage() {
       setFormData({ 
         name: dept.name, 
         description: dept.description || "", 
-        active: dept.active ?? false,
-        managerIds: dept.managerIds || [] 
+        active: dept.active ?? false
       });
     } else {
       setEditingDept(null);
-      setFormData({ name: "", description: "", active: true, managerIds: [] });
+      setFormData({ name: "", description: "", active: true });
     }
     setIsOpen(true);
   };
@@ -183,7 +168,6 @@ export default function DepartmentsPage() {
       >
         <DepartmentTable 
           departments={departments} 
-          managers={MANAGERS}
           onEdit={handleOpenForm} 
           onDelete={handleDelete} 
         />
@@ -197,7 +181,6 @@ export default function DepartmentsPage() {
         setFormData={setFormData}
         isEditing={!!editingDept}
         onSave={handleSave}
-        managers={MANAGERS}
       />
     </div>
   );

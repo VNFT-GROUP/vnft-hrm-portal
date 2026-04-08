@@ -1,40 +1,21 @@
-import { Building2, Search } from "lucide-react";
+import { Building2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
-import { useState } from "react";
-import { type Manager } from "./DepartmentTable";
+import { Textarea } from "@/components/ui/textarea";
 
 interface DepartmentFormSheetProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
-  formData: { name: string; description: string; managerIds: string[], active: boolean };
-  setFormData: (data: { name: string; description: string; managerIds: string[], active: boolean }) => void;
+  formData: { name: string; description: string; active: boolean };
+  setFormData: (data: { name: string; description: string; active: boolean }) => void;
   isEditing: boolean;
   onSave: () => void;
-  managers: Manager[];
 }
 
-export default function DepartmentFormSheet({ isOpen, onOpenChange, formData, setFormData, isEditing, onSave, managers }: DepartmentFormSheetProps) {
-  const [mgrSearch, setMgrSearch] = useState("");
-
-  const filteredManagers = managers.filter(m => 
-    m.name.toLowerCase().includes(mgrSearch.toLowerCase()) || 
-    m.username.toLowerCase().includes(mgrSearch.toLowerCase())
-  );
-
-  const toggleManager = (id: string) => {
-    const isSelected = formData.managerIds.includes(id);
-    if (isSelected) {
-      setFormData({ ...formData, managerIds: formData.managerIds.filter(mId => mId !== id) });
-    } else {
-      setFormData({ ...formData, managerIds: [...formData.managerIds, id] });
-    }
-  };
+export default function DepartmentFormSheet({ isOpen, onOpenChange, formData, setFormData, isEditing, onSave }: DepartmentFormSheetProps) {
 
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
@@ -90,63 +71,6 @@ export default function DepartmentFormSheet({ isOpen, onOpenChange, formData, se
               checked={formData.active} 
               onCheckedChange={checked => setFormData({...formData, active: checked})} 
             />
-          </div>
-
-          <div className="space-y-3">
-            <Label className="text-sm font-semibold text-foreground flex justify-between items-center">
-              <span>Chọn Manager / BOD quản lý <span className="text-xs font-normal text-muted-foreground">(Có thể chọn nhiều)</span></span>
-              <Badge variant="secondary" className="bg-[#1E2062]/10 text-[#1E2062]">Đã chọn: {formData.managerIds.length}</Badge>
-            </Label>
-            
-            {/* Search within managers */}
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
-              <Input 
-                placeholder="Tìm quản lý..." 
-                className="pl-9 h-10 rounded-lg border-border bg-muted"
-                value={mgrSearch}
-                onChange={e => setMgrSearch(e.target.value)}
-              />
-            </div>
-
-            {/* List of managers to select */}
-            <div className="border border-border rounded-xl max-h-[320px] overflow-y-auto bg-card text-card-foreground divide-y divide-slate-100 shadow-inner">
-              {filteredManagers.length > 0 ? filteredManagers.map(mgr => (
-                <div 
-                  key={mgr.id} 
-                  className={`flex items-center gap-3 p-3 transition-colors cursor-pointer select-none
-                    ${formData.managerIds.includes(mgr.id) ? 'bg-[#2E3192]/5 hover:bg-[#2E3192]/10' : 'hover:bg-muted'}
-                  `} 
-                  onClick={() => toggleManager(mgr.id)}
-                >
-                  <input 
-                    type="checkbox" 
-                    checked={formData.managerIds.includes(mgr.id)} 
-                    readOnly 
-                    className="w-4 h-4 ml-1 accent-[#2E3192] cursor-pointer" 
-                  />
-                  <div className="w-10 h-10 rounded-full bg-[#1E2062]/10 flex flex-shrink-0 items-center justify-center text-[#1E2062] font-bold shadow-sm">
-                    {mgr.name.charAt(0)}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className={`font-semibold text-sm truncate ${formData.managerIds.includes(mgr.id) ? 'text-[#1E2062]' : 'text-foreground'}`}>
-                      {mgr.name}
-                    </p>
-                    <p className="text-xs text-muted-foreground truncate">{mgr.username}</p>
-                  </div>
-                  <div className="flex flex-col items-end gap-1 flex-shrink-0">
-                    <Badge variant="outline" className={`${mgr.role === 'BOD' ? 'text-rose-600 border-rose-200 bg-rose-50' : 'text-[#2E3192] border-[#2E3192]/20 bg-[#2E3192]/5'}`}>
-                      {mgr.role}
-                    </Badge>
-                    {mgr.deptLabel && <span className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider hidden sm:block">{mgr.deptLabel}</span>}
-                  </div>
-                </div>
-              )) : (
-                <div className="p-8 text-center text-muted-foreground text-sm">
-                  Không tìm thấy quản lý phù hợp
-                </div>
-              )}
-            </div>
           </div>
         </div>
         

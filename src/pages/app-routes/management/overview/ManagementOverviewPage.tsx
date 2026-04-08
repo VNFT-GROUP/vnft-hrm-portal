@@ -1,5 +1,5 @@
 import { Users, UserCheck, Building, ArrowUpRight, ArrowDownRight, PackageCheck } from "lucide-react";
-import "./DashboardPage.css";
+import "./ManagementOverview.css";
 
 const MOCK_STATS = [
   { title: "Tổng nhân sự", value: "1,248", trend: "+12%", trendLabel: "so với tháng trước", icon: <Users size={24} /> },
@@ -16,7 +16,7 @@ const MOCK_EMPLOYEES = [
   { id: "VN8833", name: "Nguyễn Văn F", role: "Nhân sự", department: "Phòng Hành Chính", status: "Thử việc" },
 ];
 
-export default function DashboardPage() {
+export default function ManagementOverviewPage() {
   return (
     <div className="dashboard-page">
       <div className="dashboard-header">

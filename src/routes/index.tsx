@@ -6,9 +6,10 @@ const NetworkPage = lazy(() => import("../pages/public-routes/network/NetworkPag
 const AppLayout = lazy(() => import("../pages/app-routes/layout/AppLayout"));
 
 // Dynamic Imports for Inner Pages
-const DashboardPage = lazy(() => import("../pages/app-routes/dashboard/DashboardPage"));
+const HomePage = lazy(() => import("../pages/app-routes/dashboard/HomePage"));
 const ProfilePage = lazy(() => import("../pages/app-routes/profile"));
 const CalendarPage = lazy(() => import("../pages/app-routes/calendar"));
+const ManagementOverviewPage = lazy(() => import("../pages/app-routes/management/overview/ManagementOverviewPage"));
 const EmployeesPage = lazy(() => import("../pages/app-routes/management/employees"));
 const DepartmentsPage = lazy(() => import("../pages/app-routes/management/departments"));
 const RolesPage = lazy(() => import("../pages/app-routes/management/roles"));
@@ -55,8 +56,8 @@ export default function AppRoutes() {
           </Suspense>
         }
       >
-          {/* Dashboard */}
-          <Route index element={<DashboardPage />} />
+          {/* Dashboard (Home) */}
+          <Route index element={<HomePage />} />
           
           {/* Core Menu */}
           <Route path="profile" element={<ProfilePage />} />
@@ -71,6 +72,7 @@ export default function AppRoutes() {
 
           {/* Cấp 2: Quản lý */}
           <Route path="management">
+             <Route path="overview" element={<ManagementOverviewPage />} />
              <Route path="employees" element={<EmployeesPage />} />
              <Route path="departments" element={<DepartmentsPage />} />
              <Route path="roles" element={<RolesPage />} />

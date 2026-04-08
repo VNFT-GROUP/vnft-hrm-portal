@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Monitor, Globe, Palette, Type, Clock } from "lucide-react";
+import { Monitor, Globe, Palette, Type, Clock, MousePointer2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useLayoutStore } from "@/store/useLayoutStore";
@@ -19,6 +19,8 @@ export default function SettingsPage() {
   const setAppFont = useLayoutStore((state) => state.setAppFont);
   const timezone = useLayoutStore((state) => state.timezone);
   const setTimezone = useLayoutStore((state) => state.setTimezone);
+  const cursorStyle = useLayoutStore((state) => state.cursorStyle);
+  const setCursorStyle = useLayoutStore((state) => state.setCursorStyle);
 
   const { t, i18n } = useTranslation();
   const [now, setNow] = useState(new Date());
@@ -79,6 +81,13 @@ export default function SettingsPage() {
     { id: 'font-be-vietnam-pro', name: 'Be Vietnam Pro', desc: t('settings.fontSection.beVietnamDesc') },
     { id: 'font-montserrat', name: 'Montserrat', desc: t('settings.fontSection.montserratDesc') },
     { id: 'font-nunito', name: 'Nunito', desc: t('settings.fontSection.nunitoDesc') },
+  ];
+
+  const cursorPresets = [
+    { id: 'cursor-default', name: t('settings.cursorSection.default'), icon: <MousePointer2 size={24} className="text-muted-foreground" /> },
+    { id: 'cursor-dot', name: t('settings.cursorSection.dot'), icon: <div className="relative w-8 h-8 flex items-center justify-center rounded-full border border-muted-foreground/30"><div className="w-2 h-2 bg-muted-foreground rounded-full"/></div> },
+    { id: 'cursor-glow', name: t('settings.cursorSection.glow'), icon: <div className="w-6 h-6 bg-[#8b5cf6] rounded-full blur-[6px]" /> },
+    { id: 'cursor-tech', name: t('settings.cursorSection.tech'), icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-muted-foreground"><path d="M5 5h2v2H5V5zm12 0h2v2h-2V5zM5 17h2v2H5v-2zm12 0h2v2h-2v-2zM11 11h2v2h-2v-2z"/></svg> },
   ];
 
 
@@ -317,6 +326,61 @@ export default function SettingsPage() {
                     {appFont === preset.id && (
                        <div className="absolute top-4 right-4 flex items-center justify-center w-5 h-5 bg-[#2E3192] text-white rounded-full">
                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                       </div>
+                    )}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </motion.section>
+
+        {/* Section 3.5: Cursor Settings */}
+        <motion.section 
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.35, ease: "easeOut" }}
+          className="bg-card text-card-foreground p-6 rounded-2xl border border-border shadow-sm"
+        >
+          <div className="flex items-center gap-3 mb-6 pb-4 border-b border-border">
+            <div className="p-2.5 bg-[#f43f5e]/10 text-[#f43f5e] rounded-xl">
+              <MousePointer2 size={24} />
+            </div>
+            <h2 className="text-xl font-bold text-[#1E2062]">{t("settings.cursorSection.title")}</h2>
+          </div>
+
+          <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-1.5">
+               <Label className="text-base font-semibold">
+                 {t("settings.cursorSection.label")}
+               </Label>
+               <p className="text-sm text-muted-foreground max-w-xl">
+                 {t("settings.cursorSection.desc")}
+               </p>
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-2">
+                {cursorPresets.map((preset) => (
+                  <button
+                    key={preset.id}
+                    onClick={() => setCursorStyle(preset.id)}
+                    className={`relative p-4 rounded-xl border flex flex-col items-center justify-center gap-3 transition-all duration-200 text-center ${
+                      cursorStyle === preset.id 
+                        ? 'border-[#f43f5e] bg-[#f43f5e]/5 shadow-sm' 
+                        : 'border-border bg-card hover:bg-muted/50 hover:border-muted-foreground/30'
+                    }`}
+                  >
+                    <div className="h-8 flex items-center justify-center text-muted-foreground">
+                      {preset.icon}
+                    </div>
+                    <span 
+                      className={`text-sm font-semibold ${cursorStyle === preset.id ? 'text-[#1E2062]' : 'text-muted-foreground'}`} 
+                    >
+                      {preset.name}
+                    </span>
+                    {cursorStyle === preset.id && (
+                       <div className="absolute top-2 right-2 flex items-center justify-center w-4 h-4 bg-[#f43f5e] text-white rounded-full">
+                         <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
                        </div>
                     )}
                   </button>

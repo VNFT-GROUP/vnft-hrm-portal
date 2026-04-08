@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { MotionConfig } from "framer-motion";
 import { Toaster } from "@/components/ui/sonner";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import CustomCursor from "@/components/custom/CustomCursor";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -31,6 +32,7 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <MotionConfig reducedMotion="user">
+        <CustomCursor />
         <BrowserRouter>
           <ScrollArea className={`h-screen w-screen bg-background text-foreground ${appFont}`}>
             <div className="app-container">

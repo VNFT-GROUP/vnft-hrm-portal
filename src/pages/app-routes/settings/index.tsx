@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Monitor, Globe, Palette, Type } from "lucide-react";
+import { Monitor, Globe, Palette, Type, Clock } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useLayoutStore } from "@/store/useLayoutStore";
@@ -173,31 +173,38 @@ export default function SettingsPage() {
                   <button
                     key={tz.value}
                     onClick={() => setTimezone(tz.value)}
-                    className={`relative p-4 rounded-xl border flex flex-col items-start gap-2 transition-all duration-200 text-left ${
+                    className={`relative p-4 rounded-xl border flex flex-col items-start transition-all duration-200 text-left w-full ${
                       timezone === tz.value 
                         ? 'border-[#8b5cf6] bg-[#8b5cf6]/5 shadow-sm' 
                         : 'border-border bg-card hover:bg-muted/50 hover:border-muted-foreground/30'
                     }`}
                   >
-                    <span 
-                      className={`text-[15px] font-semibold leading-tight ${timezone === tz.value ? 'text-[#8b5cf6]' : 'text-[#1E2062]'}`} 
-                    >
-                      {tz.city}
-                    </span>
-                    
-                    <span className="text-xs text-muted-foreground font-mono bg-muted/60 px-1.5 py-0.5 rounded border border-border/50">
-                      {tz.offsetPart}
-                    </span>
-
-                    <div className="absolute top-4 right-4 flex items-center justify-center font-bold text-lg text-foreground tabular-nums opacity-90 tracking-tight">
-                       {tz.timeString}
+                    <div className="flex w-full items-start justify-between gap-3">
+                      <span 
+                        className={`text-[15px] font-semibold leading-relaxed pr-2 ${
+                          timezone === tz.value ? 'text-[#8b5cf6]' : 'text-[#1E2062]'
+                        }`} 
+                      >
+                        {tz.city}
+                      </span>
+                      
+                      <div className="flex items-center gap-1.5 shrink-0 bg-muted/50 px-2.5 py-1 rounded-md border border-border/40 text-foreground tabular-nums shadow-sm">
+                        <Clock size={16} className="text-muted-foreground opacity-80" strokeWidth={2.5} />
+                        <span className="font-bold text-lg tracking-tight mt-[1px]">{tz.timeString}</span>
+                      </div>
                     </div>
-
-                    {timezone === tz.value && (
-                       <div className="absolute bottom-4 right-4 flex items-center justify-center w-5 h-5 bg-[#8b5cf6] text-white rounded-full shadow-sm">
-                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                       </div>
-                    )}
+                    
+                    <div className="flex items-center justify-between w-full mt-3">
+                      <span className="text-sm font-medium text-muted-foreground font-mono bg-muted/60 px-2 py-0.5 rounded border border-border/50 shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
+                        {tz.offsetPart}
+                      </span>
+                      
+                      {timezone === tz.value && (
+                         <div className="flex items-center justify-center w-[22px] h-[22px] bg-[#8b5cf6] text-white rounded-full shadow-sm ml-auto transition-all animate-in fade-in zoom-in duration-200">
+                           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                         </div>
+                      )}
+                    </div>
                   </button>
                 ))}
               </div>

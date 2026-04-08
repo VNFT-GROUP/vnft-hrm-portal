@@ -7,6 +7,10 @@ import { useLayoutStore } from "@/store/useLayoutStore";
 
 import DepartmentTable, { type Department, type Manager } from "./components/DepartmentTable";
 import DepartmentFormSheet from "./components/DepartmentFormSheet";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { departmentService } from "@/services/department";
+import { toast } from "sonner";
+import type { UpsertDepartmentRequest } from "@/types/request/department/UpsertDepartmentRequest";
 
 const MANAGERS: Manager[] = [
   { id: "m1", name: "Đoàn Trúc Thuỷ", role: "Manager", username: "@jena", deptLabel: "LOG" },
@@ -22,51 +26,85 @@ const MANAGERS: Manager[] = [
   { id: "m10", name: "Võ Thị Trúc Mai", role: "Manager", username: "@candy", deptLabel: "PRICING" },
 ];
 
-const initDepartments: Department[] = [
-  { id: "d1", name: "Phòng Nhân Sự (HR & ADM)", description: "Quản lý tuyển dụng, lương thưởng và văn hóa", managerIds: ["m4"] },
-  { id: "d2", name: "Phòng Kinh Doanh (SALES)", description: "Tìm kiếm khách hàng, xúc tiến thương mại", managerIds: ["m6"] },
-  { id: "d3", name: "Phòng Chứng Từ (OPS)", description: "Xử lý vận đơn, theo dõi lộ trình hàng", managerIds: ["m3"] },
-];
-
 export default function DepartmentsPage() {
   const showDepartmentLegend = useLayoutStore(state => state.showDepartmentLegend);
-  const [departments, setDepartments] = useState<Department[]>(initDepartments);
+  const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [editingDept, setEditingDept] = useState<Department | null>(null);
 
-  const [formData, setFormData] = useState<{name: string, description: string, managerIds: string[]}>({ 
-    name: "", description: "", managerIds: [] 
+  const [formData, setFormData] = useState<{name: string, description: string, active: boolean, managerIds: string[]}>({ 
+    name: "", description: "", active: true, managerIds: [] 
   });
 
-  const filteredDepts = departments.filter(d => 
-    d.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    d.description.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const { data: departmentsData } = useQuery({
+    queryKey: ["departments", searchTerm],
+    queryFn: () => departmentService.getDepartments(searchTerm),
+  });
+
+  const departments: Department[] = departmentsData?.data || [];
 
   const handleOpenForm = (dept?: Department) => {
     if (dept) {
       setEditingDept(dept);
-      setFormData({ name: dept.name, description: dept.description, managerIds: dept.managerIds });
+      setFormData({ 
+        name: dept.name, 
+        description: dept.description || "", 
+        active: dept.active ?? false,
+        managerIds: dept.managerIds || [] 
+      });
     } else {
       setEditingDept(null);
-      setFormData({ name: "", description: "", managerIds: [] });
+      setFormData({ name: "", description: "", active: true, managerIds: [] });
     }
     setIsOpen(true);
   };
 
+  const createMutation = useMutation({
+    mutationFn: (data: UpsertDepartmentRequest) => departmentService.createDepartment(data),
+    onSuccess: () => {
+      toast.success("Đã tạo phòng ban thành công.");
+      queryClient.invalidateQueries({ queryKey: ["departments"] });
+      setIsOpen(false);
+    },
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: ({ id, data }: { id: string; data: UpsertDepartmentRequest }) =>
+      departmentService.updateDepartment(id, data),
+    onSuccess: () => {
+      toast.success("Đã cập nhật phòng ban thành công.");
+      queryClient.invalidateQueries({ queryKey: ["departments"] });
+      setIsOpen(false);
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => departmentService.deleteDepartment(id),
+    onSuccess: () => {
+      toast.success("Đã xóa phòng ban.");
+      queryClient.invalidateQueries({ queryKey: ["departments"] });
+    },
+  });
+
   const handleSave = () => {
     if (!formData.name.trim()) return;
+
+    const payload: UpsertDepartmentRequest = {
+      name: formData.name,
+      description: formData.description,
+      active: formData.active,
+    };
+
     if (editingDept) {
-      setDepartments(departments.map(d => d.id === editingDept.id ? { ...d, ...formData } : d));
+      updateMutation.mutate({ id: editingDept.id, data: payload });
     } else {
-      setDepartments([{ id: Date.now().toString(), ...formData }, ...departments]);
+      createMutation.mutate(payload);
     }
-    setIsOpen(false);
   };
 
   const handleDelete = (id: string) => {
-    setDepartments(departments.filter(d => d.id !== id));
+    deleteMutation.mutate(id);
   };
 
   return (
@@ -144,7 +182,7 @@ export default function DepartmentsPage() {
         className="bg-card text-card-foreground rounded-2xl shadow-sm border border-border overflow-hidden group hover:shadow-md transition-shadow duration-300 flex-1"
       >
         <DepartmentTable 
-          departments={filteredDepts} 
+          departments={departments} 
           managers={MANAGERS}
           onEdit={handleOpenForm} 
           onDelete={handleDelete} 

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Edit2, Trash2, Building2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ContextMenu,
@@ -12,11 +13,10 @@ import {
 } from "@/components/ui/context-menu";
 
 
-export interface Department {
-  id: string;
-  name: string;
-  description: string;
-  managerIds: string[];
+import type { DepartmentResponse } from "@/types/response/department/DepartmentResponse";
+
+export interface Department extends DepartmentResponse {
+  managerIds?: string[];
 }
 
 export interface Manager {
@@ -52,6 +52,7 @@ export default function DepartmentTable({ departments, managers, onEdit, onDelet
           <TableRow className="border-b border-border hover:bg-transparent">
             <TableHead className="font-semibold text-foreground w-[250px] border-r border-border text-left align-middle px-6">Tên phòng ban</TableHead>
             <TableHead className="font-semibold text-foreground border-r border-border text-left align-middle px-6 min-w-[200px]">Mô tả</TableHead>
+            <TableHead className="font-semibold text-foreground w-[150px] border-r border-border text-center align-middle px-4">Trạng thái</TableHead>
             <TableHead className="font-semibold text-foreground w-[350px] border-r border-border text-left align-middle px-6">Quản lý / BOD</TableHead>
             <TableHead className="font-semibold text-foreground w-[120px] text-center align-middle px-4">Thao tác</TableHead>
           </TableRow>
@@ -59,7 +60,7 @@ export default function DepartmentTable({ departments, managers, onEdit, onDelet
         <TableBody>
           <AnimatePresence>
             {departments.map((dept) => {
-              const assignedManagers = getManagerDetails(dept.managerIds);
+              const assignedManagers = dept.managerIds ? getManagerDetails(dept.managerIds) : [];
               return (
                 <motion.tr 
                   key={dept.id}
@@ -75,6 +76,17 @@ export default function DepartmentTable({ departments, managers, onEdit, onDelet
                   </TableCell>
                   <TableCell className="text-muted-foreground py-4 border-r border-border text-left align-middle px-6 truncate max-w-[300px]" title={dept.description}>
                     {dept.description || "—"}
+                  </TableCell>
+                  <TableCell className="py-4 border-r border-border text-center align-middle">
+                    <Badge 
+                      variant={dept.active ? "default" : "secondary"} 
+                      className={dept.active 
+                        ? "bg-[#10b981] hover:bg-[#10b981]/90 shadow-sm shadow-[#10b981]/20 font-medium border-0" 
+                        : "bg-muted text-muted-foreground hover:bg-slate-800 dark:bg-slate-700 hover:text-muted-foreground font-medium border-0"
+                      }
+                    >
+                      {dept.active ? "Hoạt động" : "Tạm ngưng"}
+                    </Badge>
                   </TableCell>
                   <TableCell className="py-4 border-r border-border text-left align-middle px-6">
                     {assignedManagers.length > 0 ? (
@@ -109,7 +121,7 @@ export default function DepartmentTable({ departments, managers, onEdit, onDelet
           </AnimatePresence>
           {departments.length === 0 && (
             <TableRow>
-              <TableCell colSpan={4} className="h-40 text-center">
+              <TableCell colSpan={5} className="h-40 text-center">
                 <div className="flex flex-col items-center justify-center text-muted-foreground">
                   <Building2 size={32} className="mb-2 opacity-50" />
                   <p>Không tìm thấy phòng ban nào</p>

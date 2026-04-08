@@ -5,14 +5,15 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
+import { Switch } from "@/components/ui/switch";
 import { useState } from "react";
 import { type Manager } from "./DepartmentTable";
 
 interface DepartmentFormSheetProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
-  formData: { name: string; description: string; managerIds: string[] };
-  setFormData: (data: { name: string; description: string; managerIds: string[] }) => void;
+  formData: { name: string; description: string; managerIds: string[], active: boolean };
+  setFormData: (data: { name: string; description: string; managerIds: string[], active: boolean }) => void;
   isEditing: boolean;
   onSave: () => void;
   managers: Manager[];
@@ -78,6 +79,17 @@ export default function DepartmentFormSheet({ isOpen, onOpenChange, formData, se
                 className="rounded-xl border-border focus-visible:ring-[#2E3192] resize-none"
               />
             </div>
+          </div>
+
+          <div className="flex items-center justify-between rounded-xl border border-border bg-card text-card-foreground p-4 shadow-sm">
+            <div className="space-y-1">
+              <Label className="text-foreground text-sm font-semibold block">Trạng thái hoạt động?</Label>
+              <p className="text-xs text-muted-foreground">Bật để cho phép gán nhân sự vào phòng ban này</p>
+            </div>
+            <Switch 
+              checked={formData.active} 
+              onCheckedChange={checked => setFormData({...formData, active: checked})} 
+            />
           </div>
 
           <div className="space-y-3">

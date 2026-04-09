@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import ProfileHeader from "./components/ProfileHeader";
 import PersonalInfoTab from "./components/PersonalInfoTab";
 import FamilyEduTab from "./components/FamilyEduTab";
@@ -7,13 +8,14 @@ import SalaryTab from "./components/SalaryTab";
 import { User, GraduationCap, FileText, Banknote } from "lucide-react";
 
 export default function ProfilePage() {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState("personal");
 
   const tabs = [
-    { id: "personal", label: "Lý lịch trích ngang", icon: <User size={16} /> },
-    { id: "family-edu", label: "Học vấn & Gia đình", icon: <GraduationCap size={16} /> },
-    { id: "bank-docs", label: "Ngân hàng & CCCD", icon: <FileText size={16} /> },
-    { id: "salary", label: "Thông tin lương", icon: <Banknote size={16} /> },
+    { id: "personal", label: t('profile.tabs.personal'), icon: <User size={16} /> },
+    { id: "family-edu", label: t('profile.tabs.familyEdu'), icon: <GraduationCap size={16} /> },
+    { id: "bank-docs", label: t('profile.tabs.bankDocs'), icon: <FileText size={16} /> },
+    { id: "salary", label: t('profile.tabs.salary'), icon: <Banknote size={16} /> },
   ];
 
   return (

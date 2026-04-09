@@ -145,8 +145,8 @@ export default function Topbar() {
 
           <div className="user-profile" onClick={() => setIsProfileOpen(!isProfileOpen)}>
             <div className="user-info">
-               <span className="user-name">{user?.username || "Người dùng"}</span>
-               <span className="user-role">Quản trị viên</span>
+               <span className="user-name">{user?.username || t('profile.defaultUser')}</span>
+               <span className="user-role">{t('profile.roleAdmin')}</span>
             </div>
             <div className="user-avatar-circle">{user?.username ? user.username.charAt(0).toUpperCase() : "U"}</div>
           </div>
@@ -157,9 +157,9 @@ export default function Topbar() {
             <div className="pd-header">
               <div className="pd-avatar-large">{user?.username ? user.username.charAt(0).toUpperCase() : "U"}</div>
               <div className="pd-info">
-                <h3 className="pd-name">{user?.username || "Người dùng"}</h3>
+                <h3 className="pd-name">{user?.username || t('profile.defaultUser')}</h3>
                 <div className="pd-role-item"><Briefcase size={15}/> HR & ADM</div>
-                <div className="pd-role-item"><BadgeCheck size={15}/> Nhân viên</div>
+                <div className="pd-role-item"><BadgeCheck size={15}/> {t('profile.roleStaff')}</div>
               </div>
             </div>
             

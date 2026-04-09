@@ -5,6 +5,9 @@ export default {
   language: "Language",
   changePassword: "Change Password",
   logout: "Log Out",
+  defaultUser: "User",
+  roleAdmin: "Administrator",
+  roleStaff: "Staff",
   passwordForm: {
     title: "Change Password",
     subtitle: "Update secure new password",
@@ -20,5 +23,38 @@ export default {
     cancel: "Cancel",
     update: "Update password",
     success: "Password updated successfully!"
+  },
+  tabs: {
+    personal: "Personal Profile",
+    familyEdu: "Education & Family",
+    bankDocs: "Bank & ID Docs",
+    salary: "Salary Info"
+  },
+  workingStatus: {
+    active: "Working"
+  },
+  fields: {
+    basicInfo: "Basic Information",
+    fullName: "Full Name",
+    engName: "English Name",
+    empId: "Emp ID",
+    gender: "Gender",
+    dob: "Date of Birth",
+    maritalStatus: "Marital Status",
+    birthPlace: "Place of Birth",
+    hometown: "Hometown",
+    nationality: "Nationality",
+    religion: "Religion",
+    ethnicity: "Ethnicity",
+    idDocs: "Identity Documents",
+    idNumber: "ID Number",
+    issueDate: "Issue Date",
+    issuePlace: "Issue Place",
+    permanentAddress: "Permanent Address",
+    currentAddress: "Current Address",
+    street: "Street Number",
+    ward: "Ward / Commune",
+    district: "District",
+    province: "Province / City"
   }
 };

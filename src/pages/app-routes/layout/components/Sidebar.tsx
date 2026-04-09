@@ -68,14 +68,14 @@ export default function Sidebar() {
     {
       section: "",
       items: [
-        { label: "Trang chủ", path: "/app", icon: <LayoutDashboard size={20} /> },
+        { label: t('sidebar.dashboard'), path: "/app", icon: <LayoutDashboard size={20} /> },
         { label: t('sidebar.profile'), path: "/app/profile", icon: <UserCircle size={20} /> },
         { label: t('sidebar.calendar'), path: "/app/calendar", icon: <Calendar size={20} /> },
         { 
           label: t('sidebar.management'), 
           icon: <FolderOpen size={20} />, 
           subItems: [
-            { label: "Tổng quan Dashboard", path: "/app/management/overview", icon: <LayoutDashboard size={16} /> },
+            { label: t('sidebar.dashboardOverview'), path: "/app/management/overview", icon: <LayoutDashboard size={16} /> },
             { label: t('sidebar.employees'), path: "/app/management/employees", icon: <Users size={16} /> },
             { label: t('sidebar.departments'), path: "/app/management/departments", icon: <Building2 size={16} /> },
             { label: t('sidebar.roles'), path: "/app/management/positions", icon: <Briefcase size={16} /> },

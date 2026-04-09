@@ -1,6 +1,13 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, Calendar, Minus, CheckCircle2, Clock, ChevronDown, CalendarDays, FileText, Trophy, Medal, TrendingUp } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const mockTopSales = [
   { id: 1, name: "Nguyễn Văn Tuấn", score: "9,850", trend: "+12%", avatar: "https://i.pravatar.cc/150?img=11" },
@@ -51,7 +58,7 @@ const TopSalesTable = () => {
             const isTop2 = index === 1;
             const isTop3 = index === 2;
             const isTop3Any = index < 3;
-            
+
             return (
               <motion.div
                 key={user.id}
@@ -119,12 +126,12 @@ const TopSalesTable = () => {
 
 const IntegratedTaskCard = () => {
   const [activeTab, setActiveTab] = useState<'todo' | 'proposed' | 'following'>('todo');
-  
-  const emptyText = activeTab === 'todo' 
-    ? 'Thật tuyệt. Bạn đã xử lý hết công việc!' 
-    : activeTab === 'proposed' 
-    ? 'Đề xuất của bạn đã được xử lý hết.' 
-    : 'Công việc bạn theo dõi đã được xử lý hết.';
+
+  const emptyText = activeTab === 'todo'
+    ? 'Thật tuyệt. Bạn đã xử lý hết công việc!'
+    : activeTab === 'proposed'
+      ? 'Đề xuất của bạn đã được xử lý hết.'
+      : 'Công việc bạn theo dõi đã được xử lý hết.';
 
   return (
     <motion.div
@@ -136,19 +143,19 @@ const IntegratedTaskCard = () => {
       <div className="flex items-center justify-between px-2 pt-2 border-b border-gray-100 bg-white">
         {/* Tabs */}
         <div className="flex items-center gap-1 sm:gap-6 px-3">
-          <button 
+          <button
             onClick={() => setActiveTab('todo')}
             className={`pb-3 pt-2 text-[13px] sm:text-[14px] transition-colors whitespace-nowrap ${activeTab === 'todo' ? 'font-semibold text-primary border-b-2 border-primary' : 'font-medium text-gray-500 hover:text-gray-700'}`}
           >
             Việc cần thực hiện
           </button>
-          <button 
+          <button
             onClick={() => setActiveTab('proposed')}
             className={`pb-3 pt-2 text-[13px] sm:text-[14px] transition-colors whitespace-nowrap ${activeTab === 'proposed' ? 'font-semibold text-primary border-b-2 border-primary' : 'font-medium text-gray-500 hover:text-gray-700'}`}
           >
             Đề xuất của bạn
           </button>
-          <button 
+          <button
             onClick={() => setActiveTab('following')}
             className={`pb-3 pt-2 text-[13px] sm:text-[14px] transition-colors whitespace-nowrap ${activeTab === 'following' ? 'font-semibold text-primary border-b-2 border-primary' : 'font-medium text-gray-500 hover:text-gray-700'}`}
           >
@@ -157,21 +164,23 @@ const IntegratedTaskCard = () => {
         </div>
 
         {/* Filters */}
-        <div className="flex items-center gap-4 px-3 pb-2 hidden lg:flex">
-          <div className="relative">
-            <select className="appearance-none border border-gray-200 pl-3 pr-8 py-1.5 rounded text-[13px] font-medium text-gray-500 bg-white hover:bg-gray-50 transition-colors shadow-sm outline-none cursor-pointer">
-              <option>Cần thực hiện</option>
-              <option>Đang làm</option>
-              <option>Hoàn thành</option>
-            </select>
-            <ChevronDown size={14} className="text-gray-400 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-          </div>
-          <button className="text-gray-400 hover:text-gray-600 transition-colors">
+        <div className="flex items-center gap-2 px-3 pb-2 hidden lg:flex">
+          <Select defaultValue="Cần thực hiện">
+            <SelectTrigger className="h-[30px] border-gray-200 text-[13px] font-medium text-gray-500 bg-white hover:bg-gray-50 shadow-sm focus:ring-0">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent align="end" alignItemWithTrigger={false} sideOffset={4} className="text-[13px] min-w-[140px]">
+              <SelectItem value="Cần thực hiện" className="text-[13px] cursor-pointer">Cần thực hiện</SelectItem>
+              <SelectItem value="Đang làm" className="text-[13px] cursor-pointer">Đang làm</SelectItem>
+              <SelectItem value="Hoàn thành" className="text-[13px] cursor-pointer">Hoàn thành</SelectItem>
+            </SelectContent>
+          </Select>
+          <button className="text-gray-400 hover:text-gray-600 transition-colors ml-2">
             <Minus size={18} strokeWidth={1.5} />
           </button>
         </div>
       </div>
-      
+
       {/* Empty State */}
       <div className="py-20 px-5 flex flex-col items-center justify-center bg-[#f8fafc] w-full flex-grow min-h-[300px]">
         <div className="flex items-center justify-center gap-4">

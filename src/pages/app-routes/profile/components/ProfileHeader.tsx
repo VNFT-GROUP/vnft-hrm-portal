@@ -1,7 +1,9 @@
 import { Mail, Phone, MapPin, Briefcase } from "lucide-react";
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 
 export default function ProfileHeader() {
+  const { t } = useTranslation();
   return (
     <div className="bg-card text-card-foreground rounded-2xl p-6 shadow-sm border border-border mb-6 relative overflow-hidden group/header hover:shadow-md transition-all duration-300 animate-in fade-in slide-in-from-top-4 duration-500">
       
@@ -43,7 +45,7 @@ export default function ProfileHeader() {
               VNSGN090
             </span>
             <span className="px-3 py-1 bg-[#F7941D]/10 text-[#F7941D] rounded-full text-xs font-semibold">
-              Đang làm việc
+              {t("profile.workingStatus.active")}
             </span>
           </div>
           

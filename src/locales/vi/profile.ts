@@ -5,6 +5,9 @@ export default {
   language: "Ngôn ngữ",
   changePassword: "Đổi mật khẩu",
   logout: "Đăng xuất",
+  defaultUser: "Người dùng",
+  roleAdmin: "Quản trị viên",
+  roleStaff: "Nhân viên",
   passwordForm: {
     title: "Đổi mật khẩu",
     subtitle: "Cập nhật mật khẩu an toàn mới",
@@ -20,5 +23,38 @@ export default {
     cancel: "Hủy bỏ",
     update: "Cập nhật mật khẩu",
     success: "Cập nhật mật khẩu thành công!"
+  },
+  tabs: {
+    personal: "Lý lịch trích ngang",
+    familyEdu: "Học vấn & Gia đình",
+    bankDocs: "Ngân hàng & CCCD",
+    salary: "Thông tin lương"
+  },
+  workingStatus: {
+    active: "Đang làm việc"
+  },
+  fields: {
+    basicInfo: "Thông tin cơ bản",
+    fullName: "Họ Tên",
+    engName: "Tên Tiếng Anh",
+    empId: "Mã NV",
+    gender: "Giới tính",
+    dob: "Ngày sinh",
+    maritalStatus: "Hôn nhân",
+    birthPlace: "Nơi sinh",
+    hometown: "Nguyên quán",
+    nationality: "Quốc tịch",
+    religion: "Tôn giáo",
+    ethnicity: "Dân tộc",
+    idDocs: "Giấy tờ tùy thân",
+    idNumber: "Số CCCD",
+    issueDate: "Ngày cấp",
+    issuePlace: "Nơi cấp",
+    permanentAddress: "Địa chỉ thường trú",
+    currentAddress: "Chỗ ở hiện nay",
+    street: "Số nhà, đường",
+    ward: "Phường / Xã",
+    district: "Quận / Huyện",
+    province: "Tỉnh / Thành"
   }
 };

@@ -5,6 +5,9 @@ export default {
   language: "语言",
   changePassword: "修改密码",
   logout: "登出",
+  defaultUser: "用户",
+  roleAdmin: "管理员",
+  roleStaff: "员工",
   passwordForm: {
     title: "修改密码",
     subtitle: "更新安全新密码",
@@ -20,5 +23,38 @@ export default {
     cancel: "取消",
     update: "更新密码",
     success: "密码更新成功！"
+  },
+  tabs: {
+    personal: "个人资料",
+    familyEdu: "教育与家庭",
+    bankDocs: "银行与证件",
+    salary: "薪资信息"
+  },
+  workingStatus: {
+    active: "在职"
+  },
+  fields: {
+    basicInfo: "基本信息",
+    fullName: "姓名",
+    engName: "英文名",
+    empId: "员工编号",
+    gender: "性别",
+    dob: "出生日期",
+    maritalStatus: "婚姻状况",
+    birthPlace: "出生地",
+    hometown: "籍贯",
+    nationality: "国籍",
+    religion: "宗教",
+    ethnicity: "民族",
+    idDocs: "身份文件",
+    idNumber: "身份证号码",
+    issueDate: "签发日期",
+    issuePlace: "签发机关",
+    permanentAddress: "常住地址",
+    currentAddress: "现居地址",
+    street: "街道 / 门牌号",
+    ward: "街道办事处",
+    district: "区 / 县",
+    province: "省 / 市"
   }
 };

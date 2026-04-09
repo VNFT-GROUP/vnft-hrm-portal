@@ -13,8 +13,12 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, Command
 import type { UpsertUserProfileRequest } from "@/types/request/user/UpsertUserProfileRequest";
 import countries from "i18n-iso-countries";
 import viLocale from "i18n-iso-countries/langs/vi.json";
+import enLocale from "i18n-iso-countries/langs/en.json";
+import zhLocale from "i18n-iso-countries/langs/zh.json";
 
 countries.registerLocale(viLocale);
+countries.registerLocale(enLocale);
+countries.registerLocale(zhLocale);
 const COUNTRIES_VI = Object.values(countries.getNames("vi"));
 const ALL_COUNTRIES_SORTED = [
   "Việt Nam", 
@@ -103,22 +107,25 @@ const GLOBAL_ETHNICITIES = [
   "Any other ethnic group"
 ];
 
-function SearchableSelect({ options, value, onChange, placeholder }: { options: string[], value: string, onChange: (val: string) => void, placeholder: string }) {
+function SearchableSelect({ options, value, onChange, placeholder, getTranslation }: { options: string[], value: string, onChange: (val: string) => void, placeholder: string, getTranslation?: (val: string) => string }) {
   const [open, setOpen] = useState(false);
   const { t } = useTranslation();
+  
+  const displayValue = value ? (getTranslation ? getTranslation(value) : value) : t(placeholder);
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger 
         className="flex h-11 w-full items-center justify-between rounded-xl border border-input bg-card px-3 text-sm text-foreground shadow-sm hover:bg-muted/30 focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 overflow-hidden"
       >
-        <span className="truncate">{value ? t(value) : t(placeholder)}</span>
+        <span className="truncate">{displayValue}</span>
         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
       </PopoverTrigger>
       <PopoverContent className="p-0 rounded-xl w-[calc(100vw-2rem)] sm:w-[350px] md:w-[450px]" align="start">
         <Command>
-          <CommandInput placeholder={t("Tìm kiếm...")} />
+          <CommandInput placeholder={t("editProfile.searchableSelect.searchPlaceholder", { defaultValue: "Tìm kiếm..." })} />
           <CommandList className="max-h-[350px]">
-            <CommandEmpty>{t("Không tìm thấy kết quả.")}</CommandEmpty>
+            <CommandEmpty>{t("editProfile.searchableSelect.noResults", { defaultValue: "Không tìm thấy kết quả." })}</CommandEmpty>
             <CommandGroup>
               {options.map((opt) => (
                 <CommandItem
@@ -132,7 +139,7 @@ function SearchableSelect({ options, value, onChange, placeholder }: { options: 
                   <Check
                     className={`mr-2 h-4 w-4 ${value === opt ? "opacity-100" : "opacity-0"}`}
                   />
-                  {t(opt)}
+                  {getTranslation ? getTranslation(opt) : opt}
                 </CommandItem>
               ))}
             </CommandGroup>
@@ -144,10 +151,20 @@ function SearchableSelect({ options, value, onChange, placeholder }: { options: 
 }
 
 export default function EditProfilePage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const session = useAuthStore((state) => state.session);
   const [activeTab, setActiveTab] = useState("basic");
+
+  const getCountryTranslation = (viName: string) => {
+    if (i18n.language === 'vi') return viName;
+    const viNames = countries.getNames("vi");
+    const code = Object.keys(viNames).find(k => viNames[k] === viName);
+    if (code) {
+      return countries.getName(code, i18n.language === 'zh' ? 'zh' : 'en') || viName;
+    }
+    return viName;
+  };
 
   // Common select styles matching Shadcn Input
   const selectClassName = "flex h-11 w-full rounded-xl border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring bg-card";
@@ -313,7 +330,8 @@ export default function EditProfilePage() {
                       value={formData.employeeCode}
                       onChange={(e) => handleTextChange("employeeCode", e.target.value)}
                       placeholder={t("editProfile.basicInfo.employeeCodePlaceholder", { defaultValue: "VD: VNSGN090" })}
-                      className="h-11 rounded-xl"
+                      className="h-11 rounded-xl bg-muted"
+                      disabled
                     />
                   </div>
                   <div className="space-y-2">
@@ -331,7 +349,8 @@ export default function EditProfilePage() {
                       value={formData.englishName}
                       onChange={(e) => handleTextChange("englishName", e.target.value)}
                       placeholder={t("editProfile.basicInfo.englishNamePlaceholder", { defaultValue: "VD: Ethan Truong" })} 
-                      className="h-11 rounded-xl"
+                      className="h-11 rounded-xl bg-muted"
+                      disabled
                     />
                   </div>
                   <div className="space-y-2">
@@ -391,6 +410,7 @@ export default function EditProfilePage() {
                          value={formData.nationality || "Việt Nam"} 
                          onChange={(v) => handleTextChange("nationality", v)} 
                          placeholder={t("editProfile.basicInfo.nationalityPlaceholder", { defaultValue: "Chọn Quốc tịch..." })} 
+                         getTranslation={getCountryTranslation}
                        />
                      </div>
                      <div className="space-y-2">
@@ -400,6 +420,7 @@ export default function EditProfilePage() {
                          value={formData.ethnicity || "Kinh"} 
                          onChange={(v) => handleTextChange("ethnicity", v)} 
                          placeholder={t("editProfile.basicInfo.ethnicityPlaceholder", { defaultValue: "Chọn Dân tộc..." })} 
+                         getTranslation={(opt) => t(`dropdowns.ethnicity.${opt}`, { defaultValue: opt })}
                        />
                      </div>
                      <div className="space-y-2">
@@ -409,6 +430,7 @@ export default function EditProfilePage() {
                          value={formData.religion || "Không"} 
                          onChange={(v) => handleTextChange("religion", v)} 
                          placeholder={t("editProfile.basicInfo.religionPlaceholder", { defaultValue: "Chọn Tôn giáo..." })} 
+                         getTranslation={(opt) => t(`dropdowns.religion.${opt}`, { defaultValue: opt })}
                        />
                      </div>
                   </div>

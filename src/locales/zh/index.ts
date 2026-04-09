@@ -1,5 +1,6 @@
 import profile from './profile';
 import editProfile from './editProfile';
+import dropdowns from './dropdowns';
 import sidebar from './sidebar';
 import login from './login';
 import network from './network';
@@ -17,5 +18,6 @@ export default {
   department,
   position,
   settings,
-  editProfile
+  editProfile,
+  dropdowns
 };

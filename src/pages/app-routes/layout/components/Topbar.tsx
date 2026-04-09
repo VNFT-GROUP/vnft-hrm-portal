@@ -6,6 +6,7 @@ import { useLayoutStore } from "../../../../store/useLayoutStore";
 import { useAuthStore } from "@/store/useAuthStore";
 import { authService } from "@/services/auth";
 import ChangePasswordModal from "./ChangePasswordModal";
+import { AvatarPlaceholder } from "@/components/custom/AvatarPlaceholder";
 import "./Topbar.css";
 
 function LiveClock() {
@@ -148,14 +149,14 @@ export default function Topbar() {
                <span className="user-name">{session?.username || t('profile.defaultUser')}</span>
                <span className="user-role">{t('profile.roleAdmin')}</span>
             </div>
-            <div className="user-avatar-circle">{session?.username ? session.username.charAt(0).toUpperCase() : "U"}</div>
+            <AvatarPlaceholder name={session?.username} className="user-avatar-circle" />
           </div>
 
         {/* PROFILE DROPDOWN */}
         {isProfileOpen && (
           <div className="profile-dropdown">
             <div className="pd-header">
-              <div className="pd-avatar-large">{session?.username ? session.username.charAt(0).toUpperCase() : "U"}</div>
+              <AvatarPlaceholder name={session?.username} className="pd-avatar-large" />
               <div className="pd-info">
                 <h3 className="pd-name">{session?.username || t('profile.defaultUser')}</h3>
                 <div className="pd-role-item"><Briefcase size={15}/> HR & ADM</div>

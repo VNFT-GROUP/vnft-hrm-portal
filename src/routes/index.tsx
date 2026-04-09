@@ -15,6 +15,7 @@ const EmployeesPage = lazy(() => import("../pages/app-routes/management/employee
 const DepartmentsPage = lazy(() => import("../pages/app-routes/management/departments"));
 const PositionsPage = lazy(() => import("../pages/app-routes/management/positions"));
 const EmployeeCodesPage = lazy(() => import("../pages/app-routes/management/employee-codes"));
+const RolesPage = lazy(() => import("../pages/app-routes/management/roles"));
 const EvaluationPage = lazy(() => import("../pages/app-routes/evaluation"));
 const ProfitReportPage = lazy(() => import("../pages/app-routes/acc/profit-report"));
 const VotingPage = lazy(() => import("../pages/app-routes/voting"));
@@ -93,6 +94,7 @@ export default function AppRoutes() {
              <Route path="departments" element={<DepartmentsPage />} />
              <Route path="positions" element={<PositionsPage />} />
              <Route path="employee-codes" element={<EmployeeCodesPage />} />
+             <Route path="roles" element={<RolesPage />} />
           </Route>
 
           {/* Cấp 2: ACC */}

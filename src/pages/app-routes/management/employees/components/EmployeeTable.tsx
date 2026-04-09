@@ -57,11 +57,14 @@ export default function EmployeeTable({ employees, onEdit, onDelete }: EmployeeT
           <Table className="border-collapse">
             <TableHeader className="bg-muted/80">
           <TableRow className="border-b border-border hover:bg-transparent">
-            <TableHead className="font-semibold text-foreground w-[120px] border-r border-border text-center align-middle px-4">Mã NV</TableHead>
-            <TableHead className="font-semibold text-foreground border-r border-border text-left align-middle px-6 min-w-[250px]">Họ và Tên</TableHead>
-            <TableHead className="font-semibold text-foreground w-[200px] border-r border-border text-left align-middle px-6">Phòng ban</TableHead>
-            <TableHead className="font-semibold text-foreground w-[150px] border-r border-border text-center align-middle px-4">Trạng thái</TableHead>
-            <TableHead className="font-semibold text-foreground w-[180px] text-center align-middle px-4">Thao tác</TableHead>
+            <TableHead className="font-semibold text-foreground w-[120px] border-r border-border text-center align-middle px-4">EMP.CODE</TableHead>
+            <TableHead className="font-semibold text-foreground w-[120px] border-r border-border text-center align-middle px-4">ATT.CODE</TableHead>
+            <TableHead className="font-semibold text-foreground border-r border-border text-left align-middle px-6 min-w-[250px]">FULLNAME</TableHead>
+            <TableHead className="font-semibold text-foreground border-r border-border text-left align-middle px-6 min-w-[180px]">ENGLISHNAME</TableHead>
+            <TableHead className="font-semibold text-foreground w-[180px] border-r border-border text-left align-middle px-6">DEPARTMENT</TableHead>
+            <TableHead className="font-semibold text-foreground w-[180px] border-r border-border text-left align-middle px-6">POSITION</TableHead>
+            <TableHead className="font-semibold text-foreground w-[150px] border-r border-border text-center align-middle px-4">STATUS</TableHead>
+            <TableHead className="font-semibold text-foreground w-[180px] text-center align-middle px-4">THAO TÁC</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -76,32 +79,33 @@ export default function EmployeeTable({ employees, onEdit, onDelete }: EmployeeT
                 className="border-b border-border group/row hover:bg-[#1E2062]/5 transition-colors duration-200"
                 onContextMenu={() => setRightClickedEmpId(emp.id)}
               >
-                <TableCell className="font-medium text-muted-foreground py-4 border-r border-border text-center align-middle px-4">
+                <TableCell className="font-medium text-muted-foreground py-4 border-r border-border text-center align-middle px-4 whitespace-nowrap">
                   {emp.empCodePrefix}{emp.empCodeId}
                 </TableCell>
-                <TableCell className="py-4 border-r border-border text-left align-middle px-6">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-[#1E2062]/10 flex flex-shrink-0 items-center justify-center text-[#1E2062] font-bold shadow-sm">
-                      {emp.fullName.charAt(0)}
-                    </div>
-                    <div className="flex flex-col">
-                      <span className="font-bold text-[#1E2062]">{emp.fullName}</span>
-                      <span className="text-xs text-muted-foreground">{emp.englishName ? `(${emp.englishName})` : ''} - {emp.email}</span>
-                    </div>
+                <TableCell className="font-medium text-muted-foreground py-4 border-r border-border text-center align-middle px-4 whitespace-nowrap">
+                  {emp.attendanceCode || "-"}
+                </TableCell>
+                <TableCell className="py-4 border-r border-border text-left align-middle px-6 whitespace-nowrap">
+                  <div className="flex flex-col">
+                    <span className="font-bold text-[#1E2062]">{emp.fullName || "-"}</span>
+                    {emp.email && <span className="text-xs text-muted-foreground">{emp.email}</span>}
                   </div>
                 </TableCell>
-                <TableCell className="py-4 border-r border-border text-left align-middle px-6 text-muted-foreground">
-                  <div className="flex flex-col">
-                    <span className="font-medium">{emp.department}</span>
-                    <span className="text-xs text-muted-foreground">{emp.position}</span>
-                  </div>
+                <TableCell className="font-medium text-muted-foreground py-4 border-r border-border text-left align-middle px-6 whitespace-nowrap">
+                  {emp.englishName || "-"}
+                </TableCell>
+                <TableCell className="font-medium text-muted-foreground py-4 border-r border-border text-left align-middle px-6 whitespace-nowrap">
+                  {emp.department || "-"}
+                </TableCell>
+                <TableCell className="font-medium text-muted-foreground py-4 border-r border-border text-left align-middle px-6 whitespace-nowrap">
+                  {emp.position || "-"}
                 </TableCell>
                 <TableCell className="py-4 border-r border-border text-center align-middle">
                   <Badge className={`${getStatusColor(emp.status)} shadow-sm font-medium border-0`}>
-                    {emp.status}
+                    {emp.status || "-"}
                   </Badge>
                 </TableCell>
-                <TableCell className="py-4 text-center align-middle">
+                <TableCell className="py-4 text-center align-middle whitespace-nowrap">
                   <div className="flex justify-center gap-1">
                     <Button variant="ghost" size="icon" title="Xem chi tiết" className="h-8 w-8 text-sky-500 hover:bg-sky-50 hover:text-sky-600 rounded-lg transition-colors">
                       <Eye size={16} />
@@ -122,7 +126,7 @@ export default function EmployeeTable({ employees, onEdit, onDelete }: EmployeeT
           </AnimatePresence>
           {employees.length === 0 && (
             <TableRow>
-              <TableCell colSpan={5} className="h-40 text-center">
+              <TableCell colSpan={8} className="h-40 text-center">
                 <div className="flex flex-col items-center justify-center text-muted-foreground">
                   <Users size={32} className="mb-2 opacity-50" />
                   <p>Không tìm thấy nhân viên nào</p>

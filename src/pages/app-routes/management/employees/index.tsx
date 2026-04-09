@@ -1,5 +1,14 @@
 import { useState } from "react";
-import { Search, Users, UserPlus, Eye, Edit2, CircleDollarSign, Trash2 } from "lucide-react";
+import {
+  Search,
+  Users,
+  UserPlus,
+  Eye,
+  Edit2,
+  CircleDollarSign,
+  Trash2,
+  Loader2,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
@@ -8,52 +17,19 @@ import { useLayoutStore } from "@/store/useLayoutStore";
 import EmployeeTable, { type Employee } from "./components/EmployeeTable";
 import EmployeeFormSheet from "./components/EmployeeFormSheet";
 import UserFormSheet from "../users/components/UserFormSheet";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { userService } from "@/services/user/userService";
 import { toast } from "sonner";
 import type { CreateUserRequest } from "@/types/request/CreateUserRequest";
 
-const initEmployees: Employee[] = [
-  {
-    id: "1",
-    empCodePrefix: "VNSGN",
-    empCodeId: "090",
-    attendanceCode: "12345",
-    fullName: "Trương Thành Nhân",
-    englishName: "Ethan",
-    email: "ethan@vnft.com",
-    department: "Phòng IT",
-    position: "Trưởng phòng",
-    func: "Quản lý",
-    status: "Đang làm",
-    checkInTime: "08:30",
-    checkOutTime: "17:30",
-    sysRole: "Admin"
-  },
-  {
-    id: "2",
-    empCodePrefix: "VNHAN",
-    empCodeId: "012",
-    attendanceCode: "12346",
-    fullName: "Nguyễn Văn A",
-    englishName: "John Doe",
-    email: "john@vnft.com",
-    department: "Phòng Nhân Sự",
-    position: "Nhân viên",
-    func: "Chuyên viên",
-    status: "Tạm hoãn",
-    checkInTime: "08:30",
-    checkOutTime: "17:30",
-    sysRole: ""
-  }
-];
-
 export default function EmployeesPage() {
-  const [employees, setEmployees] = useState<Employee[]>(initEmployees);
+  const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [isUserFormOpen, setIsUserFormOpen] = useState(false);
-  const showEmployeeLegend = useLayoutStore(state => state.showEmployeeLegend);
+  const showEmployeeLegend = useLayoutStore(
+    (state) => state.showEmployeeLegend,
+  );
   const [editingEmployee, setEditingEmployee] = useState<Employee | null>(null);
 
   const [formData, setFormData] = useState({
@@ -71,12 +47,38 @@ export default function EmployeesPage() {
     checkOutTime: "17:30",
     sysRole: "",
     password: "",
-    confirmPassword: ""
+    confirmPassword: "",
   });
 
-  const filteredData = employees.filter(e => 
-    e.fullName.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    `${e.empCodePrefix}${e.empCodeId}`.toLowerCase().includes(searchTerm.toLowerCase())
+  const { data: usersResponse, isLoading } = useQuery({
+    queryKey: ["users"],
+    queryFn: () => userService.getUsers(1, 1000),
+  });
+
+  const apiEmployees: Employee[] =
+    usersResponse?.data?.content?.map((user) => ({
+      id: user.id,
+      empCodePrefix: user.employeeCode || "",
+      empCodeId: "",
+      attendanceCode: "",
+      fullName: user.fullName || "Chưa cập nhật",
+      englishName: user.englishName || "",
+      email: user.username || "",
+      department: "",
+      position: "",
+      func: "",
+      status: user.active ? "Đang làm" : "Đã nghỉ việc",
+      checkInTime: "",
+      checkOutTime: "",
+      sysRole: "",
+    })) || [];
+
+  const filteredData = apiEmployees.filter(
+    (e) =>
+      e.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      `${e.empCodePrefix}${e.empCodeId}`
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase()),
   );
 
   const createUserMutation = useMutation({
@@ -84,10 +86,22 @@ export default function EmployeesPage() {
     onSuccess: () => {
       toast.success("Tạo tài khoản hệ thống thành công!");
       setIsUserFormOpen(false);
+      queryClient.invalidateQueries({ queryKey: ["users"] });
     },
     onError: () => {
       toast.error("Đã có lỗi xảy ra khi tạo tài khoản hệ thống.");
-    }
+    },
+  });
+
+  const deleteUserMutation = useMutation({
+    mutationFn: (id: string) => userService.deleteUser(id),
+    onSuccess: () => {
+      toast.success("Hủy kích hoạt tài khoản thành công!");
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+    },
+    onError: () => {
+      toast.error("Đã có lỗi xảy ra khi hủy kích hoạt.");
+    },
   });
 
   const handleSaveUser = (data: CreateUserRequest) => {
@@ -102,7 +116,9 @@ export default function EmployeesPage() {
       setEditingEmployee(null);
       setFormData({
         empCodePrefix: "VNSGN",
-        empCodeId: Math.floor(100 + Math.random() * 900).toString().padStart(3, '0'),
+        empCodeId: Math.floor(100 + Math.random() * 900)
+          .toString()
+          .padStart(3, "0"),
         attendanceCode: "",
         fullName: "",
         englishName: "",
@@ -115,30 +131,26 @@ export default function EmployeesPage() {
         checkOutTime: "17:30",
         sysRole: "",
         password: "",
-        confirmPassword: ""
+        confirmPassword: "",
       });
     }
     setIsOpen(true);
   };
 
   const handleSave = () => {
-    if (!formData.fullName.trim()) return;
-    if (editingEmployee) {
-      setEmployees(employees.map(e => e.id === editingEmployee.id ? { ...e, ...formData } : e));
-    } else {
-      setEmployees([{ id: Date.now().toString(), ...formData }, ...employees]);
-    }
+    // Currently UI only, real update needs UserService PUT request.
+    toast.info("Chức năng cập nhật nhân viên chưa có endpoint!");
     setIsOpen(false);
   };
 
   const handleDelete = (id: string) => {
-    setEmployees(employees.filter(e => e.id !== id));
+    deleteUserMutation.mutate(id);
   };
 
   return (
     <div className="p-4 md:p-8 w-full max-w-7xl mx-auto min-h-full flex flex-col gap-6 md:gap-8">
       {/* 1. Header Section */}
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
@@ -151,21 +163,24 @@ export default function EmployeesPage() {
           Hồ sơ nhân viên
         </h1>
         <p className="text-muted-foreground text-base md:text-lg ml-1">
-          Quản lý toàn bộ thông tin nhân sự và cấp phát tài khoản trong hệ thống.
+          Quản lý toàn bộ thông tin nhân sự và cấp phát tài khoản trong hệ
+          thống.
         </p>
       </motion.div>
 
       {/* 2. Legend Section */}
       {showEmployeeLegend && (
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
-          className="bg-card text-card-foreground p-4 rounded-xl border border-border flex flex-wrap gap-x-6 gap-y-3 text-sm text-muted-foreground w-full shadow-sm items-center"
+          className="bg-card p-4 rounded-xl border border-border flex flex-wrap gap-x-6 gap-y-3 text-sm text-muted-foreground w-full shadow-sm items-center"
         >
-          <span className="font-semibold text-[#1E2062] mr-2">Chú thích thao tác:</span>
+          <span className="font-semibold text-[#1E2062] mr-2">
+            Chú thích thao tác:
+          </span>
           <div className="flex items-center gap-2">
-            <Eye size={16} className="text-sky-500" /> 
+            <Eye size={16} className="text-sky-500" />
             <span>Xem chi tiết thông tin chung</span>
           </div>
           <div className="flex items-center gap-2">
@@ -181,30 +196,37 @@ export default function EmployeesPage() {
             <span>Hủy kích hoạt tài khoản</span>
           </div>
           <div className="ml-auto flex items-center text-xs text-muted-foreground bg-muted/40 px-2 py-1 rounded-md border border-border opacity-70 hover:opacity-100 transition-opacity">
-            (Tắt chú thích trong tùy chỉnh <span className="ml-1 font-mono text-[10px] font-semibold bg-background py-0.5 px-1.5 rounded border border-border shadow-sm">Alt + S</span>)
+            (Tắt chú thích trong tùy chỉnh{" "}
+            <span className="ml-1 font-mono text-[10px] font-semibold bg-background py-0.5 px-1.5 rounded border border-border shadow-sm">
+              Alt + S
+            </span>
+            )
           </div>
         </motion.div>
       )}
 
       {/* 3. Toolbar Section */}
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5, delay: 0.15, ease: "easeOut" }}
         className="bg-card text-card-foreground p-5 rounded-2xl shadow-sm border border-border flex flex-col md:flex-row justify-between items-center gap-4"
       >
         <div className="relative w-full md:w-96">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" size={20} />
-          <Input 
-            placeholder="Tìm kiếm theo Tên hoặc Mã NV..." 
+          <Search
+            className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground"
+            size={20}
+          />
+          <Input
+            placeholder="Tìm kiếm theo Tên hoặc Mã NV..."
             className="pl-12 h-12 rounded-xl bg-muted border-border focus-visible:ring-[#2E3192] text-base hover:bg-card text-card-foreground transition-colors"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
         <div className="flex gap-3 w-full md:w-auto flex-col md:flex-row">
-          <Button 
-            onClick={() => setIsUserFormOpen(true)} 
+          <Button
+            onClick={() => setIsUserFormOpen(true)}
             className="w-full md:w-auto h-12 px-6 rounded-xl bg-[#2E3192] hover:bg-[#1E2062] text-white shadow-md shadow-[#2E3192]/20 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 text-base font-semibold"
           >
             <UserPlus size={20} className="mr-2" /> Thêm nhân viên
@@ -212,19 +234,29 @@ export default function EmployeesPage() {
         </div>
       </motion.div>
 
-
       {/* 5. Table Section */}
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
-        className="bg-card text-card-foreground rounded-2xl shadow-sm border border-border overflow-hidden group hover:shadow-md transition-shadow duration-300 flex-1"
+        className="bg-card text-card-foreground rounded-2xl shadow-sm border border-border overflow-hidden group hover:shadow-md transition-shadow duration-300 flex-1 flex flex-col"
       >
-        <EmployeeTable employees={filteredData} onEdit={handleOpenForm} onDelete={handleDelete} />
+        {isLoading ? (
+          <div className="flex flex-col items-center justify-center p-20 text-muted-foreground h-64">
+            <Loader2 className="w-8 h-8 animate-spin mb-4 text-[#2E3192]" />
+            <p className="animate-pulse">Đang tải dữ liệu nhân viên...</p>
+          </div>
+        ) : (
+          <EmployeeTable
+            employees={filteredData}
+            onEdit={handleOpenForm}
+            onDelete={handleDelete}
+          />
+        )}
       </motion.div>
 
       {/* Side Form (Sheet) */}
-      <EmployeeFormSheet 
+      <EmployeeFormSheet
         isOpen={isOpen}
         onOpenChange={setIsOpen}
         formData={formData}
@@ -232,8 +264,8 @@ export default function EmployeesPage() {
         isEditing={!!editingEmployee}
         onSave={handleSave}
       />
-      
-      <UserFormSheet 
+
+      <UserFormSheet
         isOpen={isUserFormOpen}
         onOpenChange={setIsUserFormOpen}
         onSave={handleSaveUser}

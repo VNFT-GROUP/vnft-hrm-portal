@@ -38,8 +38,8 @@ export default {
     employeeDesc: "Bật/tắt thanh giải thích ý nghĩa các biểu tượng hành động phía trên bảng danh sách nhân viên.",
     departmentLabel: "Hiển thị bảng chú thích ở Quản lý phòng ban",
     departmentDesc: "Bật/tắt thanh giải thích ý nghĩa các biểu tượng hành động phía trên bảng danh sách cấu trúc phòng ban.",
-    roleLabel: "Hiển thị bảng chú thích ở Quản lý chức vụ",
-    roleDesc: "Bật/tắt thanh giải thích ý nghĩa các biểu tượng hành động phía trên bảng danh sách cấu trúc chức vụ."
+    roleLabel: "Hiển thị bảng chú thích ở Quản lý vị trí",
+    roleDesc: "Bật/tắt thanh giải thích ý nghĩa các biểu tượng hành động phía trên bảng danh sách cấu trúc vị trí."
   },
   cursorSection: {
     title: "Cài đặt con trỏ chuột (Cursor)",

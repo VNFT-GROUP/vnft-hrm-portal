@@ -20,8 +20,8 @@ export const employeeCodeService = {
     const response = await apiClient.put(`/employee-codes/${id}`, data);
     return response.data;
   },
-  deleteEmployeeCode: async (id: string): Promise<ApiResponse<void>> => {
-    const response = await apiClient.delete(`/employee-codes/${id}`);
+  toggleActiveEmployeeCode: async (id: string): Promise<ApiResponse<EmployeeCodeResponse>> => {
+    const response = await apiClient.patch(`/employee-codes/${id}/toggle-active`);
     return response.data;
   }
 };

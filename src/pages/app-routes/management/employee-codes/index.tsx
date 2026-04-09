@@ -42,14 +42,13 @@ export default function EmployeeCodesPage() {
     },
   });
 
-  const deleteMutation = useMutation({
-    mutationFn: (id: string) => employeeCodeService.deleteEmployeeCode(id),
+  const toggleMutation = useMutation({
+    mutationFn: (id: string) => employeeCodeService.toggleActiveEmployeeCode(id),
     onSuccess: () => {
-      toast.success('Xóa thành công');
+      toast.success('Cập nhật trạng thái thành công');
       queryClient.invalidateQueries({ queryKey: ['employee-codes'] });
     },
   });
-
 
   const handleSave = () => {
     if (!formData.prefix.trim()) return;
@@ -63,8 +62,8 @@ export default function EmployeeCodesPage() {
     createMutation.mutate(payload);
   };
 
-  const handleDelete = (id: string) => {
-    deleteMutation.mutate(id);
+  const handleToggleActive = (id: string) => {
+    toggleMutation.mutate(id);
   };
 
 
@@ -89,7 +88,7 @@ export default function EmployeeCodesPage() {
       </motion.div>
 
       <motion.div className='bg-card rounded-2xl shadow-sm border border-border overflow-hidden flex-1 group hover:shadow-md transition-shadow duration-300'>
-        <EmployeeCodeTable data={filtered} onDelete={handleDelete} />
+        <EmployeeCodeTable data={filtered} onToggleActive={handleToggleActive} />
       </motion.div>
 
       <EmployeeCodeFormSheet isOpen={isOpen} onOpenChange={setIsOpen} formData={formData} setFormData={setFormData} onSave={handleSave} />

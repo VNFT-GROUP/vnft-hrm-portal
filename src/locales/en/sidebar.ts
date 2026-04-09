@@ -1,5 +1,6 @@
 export default {
-  dashboard: "Dashboard",
+  dashboard: "Home",
+  dashboardOverview: "Dashboard Overview",
   profile: "My Profile",
   calendar: "Calendar & Events",
   management: "Management",

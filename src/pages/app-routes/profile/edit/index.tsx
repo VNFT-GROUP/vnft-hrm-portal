@@ -187,8 +187,8 @@ export default function EditProfilePage() {
     
     // Mandatory field validation
     if (!formData.employeeCode?.trim() || !formData.fullName?.trim() || !formData.dateOfBirth?.trim() || !formData.maritalStatus || !formData.phoneNumber?.trim() || !formData.currentAddress?.trim() || !formData.currentCity?.trim() || !formData.citizenIdNumber?.trim() || !formData.citizenIdIssueDate?.trim() || !formData.citizenIdIssuePlace?.trim()) {
-      toast.error("Thiếu thông tin bắt buộc", {
-        description: "Vui lòng điền đầy đủ thông tin cho các trường có đánh dấu (*)."
+      toast.error(t("editProfile.validation.missingInfoTitle", { defaultValue: "Thiếu thông tin bắt buộc" }), {
+        description: t("editProfile.validation.missingInfoDesc", { defaultValue: "Vui lòng điền đầy đủ thông tin cho các trường có đánh dấu (*)." })
       });
       return;
     }
@@ -205,18 +205,18 @@ export default function EditProfilePage() {
     
     // Simulate updating API request
     toast.success(t("profile.updateSuccess", { defaultValue: "Cập nhật hồ sơ thành công" }), {
-      description: "Toàn bộ thông tin cá nhân và lý lịch đã được đối soát."
+      description: t("editProfile.validation.updateSuccessDesc", { defaultValue: "Toàn bộ thông tin cá nhân và lý lịch đã được đối soát." })
     });
     navigate("/app/profile");
   };
 
   const tabs = [
-    { id: "basic", label: "Thông tin cơ bản", icon: <User size={16} /> },
-    { id: "contact", label: "Cư trú & Liên hệ", icon: <MapPin size={16} /> },
-    { id: "identity", label: "CCCD & Ngân hàng", icon: <Shield size={16} /> },
-    { id: "education", label: "Học vấn", icon: <BookOpen size={16} /> },
-    { id: "experience", label: "Kinh nghiệm", icon: <Briefcase size={16} /> },
-    { id: "dependents", label: "Người phụ thuộc", icon: <Users size={16} /> },
+    { id: "basic", label: t("editProfile.tabs.basic", { defaultValue: "Thông tin cơ bản" }), icon: <User size={16} /> },
+    { id: "contact", label: t("editProfile.tabs.contact", { defaultValue: "Cư trú & Liên hệ" }), icon: <MapPin size={16} /> },
+    { id: "identity", label: t("editProfile.tabs.identity", { defaultValue: "CCCD & Ngân hàng" }), icon: <Shield size={16} /> },
+    { id: "education", label: t("editProfile.tabs.education", { defaultValue: "Học vấn" }), icon: <BookOpen size={16} /> },
+    { id: "experience", label: t("editProfile.tabs.experience", { defaultValue: "Kinh nghiệm" }), icon: <Briefcase size={16} /> },
+    { id: "dependents", label: t("editProfile.tabs.dependents", { defaultValue: "Người phụ thuộc" }), icon: <Users size={16} /> },
   ];
 
   return (
@@ -232,8 +232,8 @@ export default function EditProfilePage() {
             <ArrowLeft size={18} />
           </button>
           <div>
-            <h1 className="text-2xl font-bold text-foreground">Cập nhật hồ sơ</h1>
-            <p className="text-sm text-muted-foreground">Chỉnh sửa toàn bộ thông tin cá nhân thuộc hệ thống quản trị</p>
+            <h1 className="text-2xl font-bold text-foreground">{t("editProfile.header.title", { defaultValue: "Cập nhật hồ sơ" })}</h1>
+            <p className="text-sm text-muted-foreground">{t("editProfile.header.subtitle", { defaultValue: "Chỉnh sửa toàn bộ thông tin cá nhân thuộc hệ thống quản trị" })}</p>
           </div>
         </div>
         
@@ -242,7 +242,7 @@ export default function EditProfilePage() {
           className="rounded-xl bg-[#F7941D] hover:bg-[#D87D12] text-white shadow-md shadow-[#F7941D]/20 hover:shadow-[#F7941D]/40 transition-all gap-2 h-11 px-7 font-semibold"
         >
           <Save size={18} /> 
-          Lưu thay đổi hồ sơ
+          {t("editProfile.header.saveBtn", { defaultValue: "Lưu thay đổi hồ sơ" })}
         </Button>
       </div>
 
@@ -279,8 +279,8 @@ export default function EditProfilePage() {
             {activeTab === "basic" && (
               <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
                 <div className="border-b border-border pb-4 mb-6">
-                  <h2 className="text-lg font-bold text-foreground">Thông tin cơ bản</h2>
-                  <p className="text-sm text-muted-foreground">Các thông tin cá nhân và định danh cơ bản.</p>
+                  <h2 className="text-lg font-bold text-foreground">{t("editProfile.basicInfo.title", { defaultValue: "Thông tin cơ bản" })}</h2>
+                  <p className="text-sm text-muted-foreground">{t("editProfile.basicInfo.desc", { defaultValue: "Các thông tin cá nhân và định danh cơ bản." })}</p>
                 </div>
                 
                 {/* AVATAR UPLOAD */}
@@ -298,53 +298,53 @@ export default function EditProfilePage() {
                      </button>
                   </div>
                   <div className="space-y-1.5 text-center sm:text-left">
-                     <h3 className="font-semibold text-foreground">Ảnh chân dung</h3>
-                     <p className="text-xs text-muted-foreground max-w-[200px] sm:max-w-xs">Định dạng hỗ trợ: JPEG, PNG, WEBP. Kích thước tỷ lệ 1:1, dung lượng tối đa 5MB.</p>
+                     <h3 className="font-semibold text-foreground">{t("editProfile.basicInfo.avatarTitle", { defaultValue: "Ảnh chân dung" })}</h3>
+                     <p className="text-xs text-muted-foreground max-w-[200px] sm:max-w-xs">{t("editProfile.basicInfo.avatarHint", { defaultValue: "Định dạng hỗ trợ: JPEG, PNG, WEBP. Kích thước tỷ lệ 1:1, dung lượng tối đa 5MB." })}</p>
                      <Button type="button" variant="outline" size="sm" className="mt-3 rounded-xl text-xs font-medium bg-card hover:bg-[#2E3192]/5 hover:text-[#2E3192] hover:border-[#2E3192]/30 transition-colors">
-                        Chọn tệp tải lên
+                        {t("editProfile.basicInfo.uploadAvatarBtn", { defaultValue: "Chọn tệp tải lên" })}
                      </Button>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <Label>Mã nhân viên (Bắt buộc)</Label>
+                    <Label>{t("editProfile.basicInfo.employeeCode", { defaultValue: "Mã nhân viên (Bắt buộc)" })}</Label>
                     <Input 
                       value={formData.employeeCode}
                       onChange={(e) => handleTextChange("employeeCode", e.target.value)}
-                      placeholder="VD: VNSGN090" 
+                      placeholder={t("editProfile.basicInfo.employeeCodePlaceholder", { defaultValue: "VD: VNSGN090" })}
                       className="h-11 rounded-xl"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>Họ và Tên <span className="text-destructive">*</span></Label>
+                    <Label>{t("editProfile.basicInfo.fullName", { defaultValue: "Họ và Tên" })} <span className="text-destructive">*</span></Label>
                     <Input 
                       value={formData.fullName}
                       onChange={(e) => handleTextChange("fullName", e.target.value)}
-                      placeholder="VD: Trương Thành Nhân" 
+                      placeholder={t("editProfile.basicInfo.fullNamePlaceholder", { defaultValue: "VD: Trương Thành Nhân" })} 
                       className="h-11 rounded-xl"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>Tên tiếng Anh (English Name)</Label>
+                    <Label>{t("editProfile.basicInfo.englishName", { defaultValue: "Tên tiếng Anh (English Name)" })}</Label>
                     <Input 
                       value={formData.englishName}
                       onChange={(e) => handleTextChange("englishName", e.target.value)}
-                      placeholder="VD: Ethan Truong" 
+                      placeholder={t("editProfile.basicInfo.englishNamePlaceholder", { defaultValue: "VD: Ethan Truong" })} 
                       className="h-11 rounded-xl"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>Số điện thoại <span className="text-destructive">*</span></Label>
+                    <Label>{t("editProfile.basicInfo.phoneNumber", { defaultValue: "Số điện thoại" })} <span className="text-destructive">*</span></Label>
                     <Input 
                       value={formData.phoneNumber || ''}
                       onChange={(e) => handleTextChange("phoneNumber", e.target.value)}
-                      placeholder="VD: 0987654321" 
+                      placeholder={t("editProfile.basicInfo.phoneNumberPlaceholder", { defaultValue: "VD: 0987654321" })} 
                       className="h-11 rounded-xl"
                     />
                   </div>
                   <div className="space-y-2">
-                     <Label>Ngày sinh (Date of Birth) <span className="text-destructive">*</span></Label>
+                     <Label>{t("editProfile.basicInfo.dob", { defaultValue: "Ngày sinh (Date of Birth)" })} <span className="text-destructive">*</span></Label>
                      <Input 
                        type="date"
                        value={formData.dateOfBirth} 
@@ -353,62 +353,62 @@ export default function EditProfilePage() {
                      />
                   </div>
                   <div className="space-y-2">
-                    <Label>Giới tính</Label>
+                    <Label>{t("editProfile.basicInfo.gender", { defaultValue: "Giới tính" })}</Label>
                     <select 
                       className={selectClassName} 
                       value={formData.gender} 
                       onChange={(e) => handleTextChange("gender", e.target.value as UpsertUserProfileRequest['gender'])}
                     >
-                       <option value="MALE">Nam</option>
-                       <option value="FEMALE">Nữ</option>
-                       <option value="OTHER">Hệ khác</option>
+                       <option value="MALE">{t("editProfile.basicInfo.genderMale", { defaultValue: "Nam" })}</option>
+                       <option value="FEMALE">{t("editProfile.basicInfo.genderFemale", { defaultValue: "Nữ" })}</option>
+                       <option value="OTHER">{t("editProfile.basicInfo.genderOther", { defaultValue: "Hệ khác" })}</option>
                     </select>
                   </div>
                   <div className="space-y-2">
-                    <Label>Tình trạng hôn nhân <span className="text-destructive">*</span></Label>
+                    <Label>{t("editProfile.basicInfo.maritalStatus", { defaultValue: "Tình trạng hôn nhân" })} <span className="text-destructive">*</span></Label>
                     <select 
                       className={selectClassName} 
                       value={formData.maritalStatus} 
                       onChange={(e) => handleTextChange("maritalStatus", e.target.value as UpsertUserProfileRequest['maritalStatus'])}
                     >
-                       <option value="SINGLE">Độc thân</option>
-                       <option value="MARRIED">Đã kết hôn</option>
+                       <option value="SINGLE">{t("editProfile.basicInfo.statusSingle", { defaultValue: "Độc thân" })}</option>
+                       <option value="MARRIED">{t("editProfile.basicInfo.statusMarried", { defaultValue: "Đã kết hôn" })}</option>
                     </select>
                   </div>
                   <div className="space-y-2">
-                    <Label>Nơi sinh</Label>
+                    <Label>{t("editProfile.basicInfo.placeOfBirth", { defaultValue: "Nơi sinh" })}</Label>
                     <Input value={formData.placeOfBirth} onChange={(e) => handleTextChange("placeOfBirth", e.target.value)} className="h-11 rounded-xl" />
                   </div>
                   <div className="space-y-2">
-                    <Label>Quê quán</Label>
+                    <Label>{t("editProfile.basicInfo.hometown", { defaultValue: "Quê quán" })}</Label>
                     <Input value={formData.placeOfOrigin} onChange={(e) => handleTextChange("placeOfOrigin", e.target.value)} className="h-11 rounded-xl" />
                   </div>
                   <div className="grid grid-cols-3 gap-4 md:col-span-2">
                      <div className="space-y-2">
-                       <Label>Quốc tịch</Label>
+                       <Label>{t("editProfile.basicInfo.nationality", { defaultValue: "Quốc tịch" })}</Label>
                        <SearchableSelect 
                          options={ALL_COUNTRIES_SORTED} 
                          value={formData.nationality || "Việt Nam"} 
                          onChange={(v) => handleTextChange("nationality", v)} 
-                         placeholder="Chọn Quốc tịch..." 
+                         placeholder={t("editProfile.basicInfo.nationalityPlaceholder", { defaultValue: "Chọn Quốc tịch..." })} 
                        />
                      </div>
                      <div className="space-y-2">
-                       <Label>Dân tộc</Label>
+                       <Label>{t("editProfile.basicInfo.ethnicity", { defaultValue: "Dân tộc" })}</Label>
                        <SearchableSelect 
                          options={[...ETHNICITIES_VN, ...GLOBAL_ETHNICITIES, "Khác"]} 
                          value={formData.ethnicity || "Kinh"} 
                          onChange={(v) => handleTextChange("ethnicity", v)} 
-                         placeholder="Chọn Dân tộc..." 
+                         placeholder={t("editProfile.basicInfo.ethnicityPlaceholder", { defaultValue: "Chọn Dân tộc..." })} 
                        />
                      </div>
                      <div className="space-y-2">
-                       <Label>Tôn giáo</Label>
+                       <Label>{t("editProfile.basicInfo.religion", { defaultValue: "Tôn giáo" })}</Label>
                        <SearchableSelect 
                          options={WORLD_RELIGIONS} 
                          value={formData.religion || "Không"} 
                          onChange={(v) => handleTextChange("religion", v)} 
-                         placeholder="Chọn Tôn giáo..." 
+                         placeholder={t("editProfile.basicInfo.religionPlaceholder", { defaultValue: "Chọn Tôn giáo..." })} 
                        />
                      </div>
                   </div>
@@ -420,34 +420,34 @@ export default function EditProfilePage() {
             {activeTab === "contact" && (
               <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
                 <div className="border-b border-border pb-4 mb-6">
-                  <h2 className="text-lg font-bold text-foreground">Liên hệ và Báo tin</h2>
-                  <p className="text-sm text-muted-foreground">Địa chỉ thường trú và địa chỉ cư trú hiện tại.</p>
+                  <h2 className="text-lg font-bold text-foreground">{t("editProfile.contact.title", { defaultValue: "Liên hệ và Báo tin" })}</h2>
+                  <p className="text-sm text-muted-foreground">{t("editProfile.contact.desc", { defaultValue: "Địa chỉ thường trú và địa chỉ cư trú hiện tại." })}</p>
                 </div>
                 
                 <div className="space-y-6">
                   <div className="space-y-4 p-4 rounded-xl border border-border bg-muted/20">
-                     <h3 className="font-semibold text-sm flex items-center gap-2"><MapPin size={16}/> Hộ khẩu thường trú</h3>
+                     <h3 className="font-semibold text-sm flex items-center gap-2"><MapPin size={16}/> {t("editProfile.contact.permanentAddressSection", { defaultValue: "Hộ khẩu thường trú" })}</h3>
                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-2">
-                          <Label>Tỉnh/Thành phố</Label>
+                          <Label>{t("editProfile.contact.province", { defaultValue: "Tỉnh/Thành phố" })}</Label>
                           <Input value={formData.permanentCity} onChange={(e) => handleTextChange("permanentCity", e.target.value)} className="h-11 rounded-xl" />
                         </div>
                         <div className="space-y-2">
-                          <Label>Địa chỉ chi tiết (Số nhà, đường)</Label>
+                          <Label>{t("editProfile.contact.detailedAddress", { defaultValue: "Địa chỉ chi tiết (Số nhà, đường)" })}</Label>
                           <Input value={formData.permanentAddress} onChange={(e) => handleTextChange("permanentAddress", e.target.value)} className="h-11 rounded-xl" />
                         </div>
                      </div>
                   </div>
 
                   <div className="space-y-4 p-4 rounded-xl border border-border bg-muted/20">
-                     <h3 className="font-semibold text-sm flex items-center gap-2"><MapPin size={16}/> Chỗ ở hiện tại</h3>
+                     <h3 className="font-semibold text-sm flex items-center gap-2"><MapPin size={16}/> {t("editProfile.contact.currentAddressSection", { defaultValue: "Chỗ ở hiện tại" })}</h3>
                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-2">
-                          <Label>Tỉnh/Thành phố hiện tại <span className="text-destructive">*</span></Label>
+                          <Label>{t("editProfile.contact.currentProvince", { defaultValue: "Tỉnh/Thành phố hiện tại" })} <span className="text-destructive">*</span></Label>
                           <Input value={formData.currentCity || ''} onChange={(e) => handleTextChange("currentCity", e.target.value)} className="h-11 rounded-xl" />
                         </div>
                         <div className="space-y-2">
-                          <Label>Địa chỉ hiện tại <span className="text-destructive">*</span></Label>
+                          <Label>{t("editProfile.contact.currentDetailedAddress", { defaultValue: "Địa chỉ hiện tại" })} <span className="text-destructive">*</span></Label>
                           <Input value={formData.currentAddress} onChange={(e) => handleTextChange("currentAddress", e.target.value)} className="h-11 rounded-xl" />
                         </div>
                      </div>
@@ -460,20 +460,20 @@ export default function EditProfilePage() {
             {activeTab === "identity" && (
               <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
                 <div className="border-b border-border pb-4 mb-6">
-                  <h2 className="text-lg font-bold text-foreground">Định danh CCCD</h2>
+                  <h2 className="text-lg font-bold text-foreground">{t("editProfile.identity.title", { defaultValue: "Định danh CCCD" })}</h2>
                 </div>
                 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div className="space-y-2 md:col-span-1">
-                    <Label>Số CCCD <span className="text-destructive">*</span></Label>
+                    <Label>{t("editProfile.identity.idNumber", { defaultValue: "Số CCCD" })} <span className="text-destructive">*</span></Label>
                     <Input value={formData.citizenIdNumber} onChange={(e) => handleTextChange("citizenIdNumber", e.target.value)} className="h-11 rounded-xl" />
                   </div>
                   <div className="space-y-2">
-                    <Label>Ngày cấp <span className="text-destructive">*</span></Label>
+                    <Label>{t("editProfile.identity.issueDate", { defaultValue: "Ngày cấp" })} <span className="text-destructive">*</span></Label>
                     <Input type="date" value={formData.citizenIdIssueDate} onChange={(e) => handleTextChange("citizenIdIssueDate", e.target.value)} className="h-11 rounded-xl" />
                   </div>
                   <div className="space-y-2">
-                    <Label>Nơi cấp <span className="text-destructive">*</span></Label>
+                    <Label>{t("editProfile.identity.issuePlace", { defaultValue: "Nơi cấp" })} <span className="text-destructive">*</span></Label>
                     <Input value={formData.citizenIdIssuePlace} onChange={(e) => handleTextChange("citizenIdIssuePlace", e.target.value)} className="h-11 rounded-xl" />
                   </div>
                 </div>
@@ -481,25 +481,25 @@ export default function EditProfilePage() {
                 {/* CCCD IMAGES UPLOAD */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
                    <div className="space-y-3 relative group">
-                      <Label className="font-semibold block">Ảnh mặt trước CCCD</Label>
+                      <Label className="font-semibold block">{t("editProfile.identity.frontImg", { defaultValue: "Ảnh mặt trước CCCD" })}</Label>
                       <div className="border-2 border-dashed border-border rounded-2xl h-48 flex flex-col items-center justify-center text-muted-foreground bg-muted/10 hover:bg-muted/50 hover:border-[#2E3192]/40 transition-colors cursor-pointer overflow-hidden">
                          <span className="p-3 bg-card rounded-full shadow-sm mb-3 group-hover:scale-110 transition-transform"><Camera size={24} className="text-muted-foreground group-hover:text-[#2E3192] transition-colors" /></span>
-                         <span className="font-medium text-sm text-foreground">Tải ảnh mặt trước lên</span>
-                         <span className="text-xs opacity-70 mt-1">Định dạng JPEG, PNG, max 5MB</span>
+                         <span className="font-medium text-sm text-foreground">{t("editProfile.identity.uploadFrontImg", { defaultValue: "Tải ảnh mặt trước lên" })}</span>
+                         <span className="text-xs opacity-70 mt-1">{t("editProfile.identity.imgHint", { defaultValue: "Định dạng JPEG, PNG, max 5MB" })}</span>
                       </div>
                    </div>
                    <div className="space-y-3 relative group">
-                      <Label className="font-semibold block">Ảnh mặt sau CCCD</Label>
+                      <Label className="font-semibold block">{t("editProfile.identity.backImg", { defaultValue: "Ảnh mặt sau CCCD" })}</Label>
                       <div className="border-2 border-dashed border-border rounded-2xl h-48 flex flex-col items-center justify-center text-muted-foreground bg-muted/10 hover:bg-muted/50 hover:border-[#2E3192]/40 transition-colors cursor-pointer overflow-hidden">
                          <span className="p-3 bg-card rounded-full shadow-sm mb-3 group-hover:scale-110 transition-transform"><Camera size={24} className="text-muted-foreground group-hover:text-[#2E3192] transition-colors" /></span>
-                         <span className="font-medium text-sm text-foreground">Tải ảnh mặt sau lên</span>
-                         <span className="text-xs opacity-70 mt-1">Định dạng JPEG, PNG, max 5MB</span>
+                         <span className="font-medium text-sm text-foreground">{t("editProfile.identity.uploadBackImg", { defaultValue: "Tải ảnh mặt sau lên" })}</span>
+                         <span className="text-xs opacity-70 mt-1">{t("editProfile.identity.imgHint", { defaultValue: "Định dạng JPEG, PNG, max 5MB" })}</span>
                       </div>
                    </div>
                 </div>
 
                 <div className="border-b border-border pb-4 mb-6 mt-10">
-                  <h2 className="text-lg font-bold text-foreground">Tài khoản Ngân hàng (Nhận lương)</h2>
+                  <h2 className="text-lg font-bold text-foreground">{t("editProfile.bank.title", { defaultValue: "Tài khoản Ngân hàng (Nhận lương)" })}</h2>
                 </div>
 
                 <div className="space-y-4">
@@ -507,32 +507,32 @@ export default function EditProfilePage() {
                     <div key={index} className="flex flex-col md:flex-row gap-4 items-start md:items-end bg-muted/30 p-4 rounded-xl border border-border">
                        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 flex-1 w-full">
                           <div className="space-y-1">
-                            <Label className="text-xs">Ngân hàng</Label>
-                            <Input placeholder="VD: Vietcombank" value={bank.bankName} onChange={e => {
+                            <Label className="text-xs">{t("editProfile.bank.bankName", { defaultValue: "Ngân hàng" })}</Label>
+                            <Input placeholder={t("editProfile.bank.bankNamePlaceholder", { defaultValue: "VD: Vietcombank" })} value={bank.bankName} onChange={e => {
                                const newBanks = [...formData.bankInformations!];
                                newBanks[index].bankName = e.target.value;
                                handleTextChange("bankInformations", newBanks);
                             }} />
                           </div>
                           <div className="space-y-1">
-                             <Label className="text-xs">Chi nhánh</Label>
-                             <Input placeholder="VD: HCM" value={bank.bankBranch} onChange={e => {
+                             <Label className="text-xs">{t("editProfile.bank.branch", { defaultValue: "Chi nhánh" })}</Label>
+                             <Input placeholder={t("editProfile.bank.branchPlaceholder", { defaultValue: "VD: HCM" })} value={bank.bankBranch} onChange={e => {
                                const newBanks = [...formData.bankInformations!];
                                newBanks[index].bankBranch = e.target.value;
                                handleTextChange("bankInformations", newBanks);
                             }} />
                           </div>
                           <div className="space-y-1">
-                             <Label className="text-xs">Tên chủ tài khoản</Label>
-                             <Input placeholder="VD: TRUONG THANH NHAN" value={bank.bankAccountName || ''} onChange={e => {
+                             <Label className="text-xs">{t("editProfile.bank.accountName", { defaultValue: "Tên chủ tài khoản" })}</Label>
+                             <Input placeholder={t("editProfile.bank.accountNamePlaceholder", { defaultValue: "VD: TRUONG THANH NHAN" })} value={bank.bankAccountName || ''} onChange={e => {
                                const newBanks = [...formData.bankInformations!];
                                newBanks[index].bankAccountName = e.target.value;
                                handleTextChange("bankInformations", newBanks);
                             }}/>
                           </div>
                           <div className="space-y-1">
-                             <Label className="text-xs">Số tài khoản</Label>
-                             <Input placeholder="VD: 99120..." value={bank.bankAccountNumber||''} onChange={e => {
+                             <Label className="text-xs">{t("editProfile.bank.accountNumber", { defaultValue: "Số tài khoản" })}</Label>
+                             <Input placeholder={t("editProfile.bank.accountNumberPlaceholder", { defaultValue: "VD: 99120..." })} value={bank.bankAccountNumber||''} onChange={e => {
                                const newBanks = [...formData.bankInformations!];
                                newBanks[index].bankAccountNumber = e.target.value;
                                handleTextChange("bankInformations", newBanks);
@@ -547,7 +547,7 @@ export default function EditProfilePage() {
                   
                   <Button type="button" variant="outline" onClick={() => {
                      handleTextChange("bankInformations", [...(formData.bankInformations||[]), { bankName: '', bankBranch: '', bankAccountName: '', bankAccountNumber: '' }]);
-                  }} className="border-dashed border-2 gap-2 w-full h-12 rounded-xl text-muted-foreground hover:text-primary"><Plus size={16}/> Thêm Tài khoản Ngân hàng</Button>
+                  }} className="border-dashed border-2 gap-2 w-full h-12 rounded-xl text-muted-foreground hover:text-primary"><Plus size={16}/> {t("editProfile.bank.addBtn", { defaultValue: "Thêm Tài khoản Ngân hàng" })}</Button>
                 </div>
               </div>
             )}
@@ -556,7 +556,7 @@ export default function EditProfilePage() {
             {activeTab === "education" && (
               <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
                 <div className="border-b border-border pb-4 mb-6">
-                  <h2 className="text-lg font-bold text-foreground">Học vấn & Bằng cấp</h2>
+                  <h2 className="text-lg font-bold text-foreground">{t("editProfile.education.title", { defaultValue: "Học vấn & Bằng cấp" })}</h2>
                 </div>
                 
                 <div className="space-y-4">
@@ -565,39 +565,39 @@ export default function EditProfilePage() {
                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1">
                           <div className="grid grid-cols-2 gap-4 md:col-span-2">
                              <div className="space-y-1.5">
-                                <Label className="text-xs">Từ ngày</Label>
+                                <Label className="text-xs">{t("editProfile.education.fromDate", { defaultValue: "Từ ngày" })}</Label>
                                 <Input type="date" value={edu.fromDate || ''} onChange={(e) => {
                                    const arr = [...formData.educationRecords!]; arr[index].fromDate = e.target.value; handleTextChange("educationRecords", arr);
                                 }} className="h-11 rounded-xl" />
                              </div>
                              <div className="space-y-1.5">
-                                <Label className="text-xs">Đến ngày</Label>
+                                <Label className="text-xs">{t("editProfile.education.toDate", { defaultValue: "Đến ngày" })}</Label>
                                 <Input type="date" value={edu.toDate || ''} onChange={(e) => {
                                    const arr = [...formData.educationRecords!]; arr[index].toDate = e.target.value; handleTextChange("educationRecords", arr);
                                 }} className="h-11 rounded-xl" />
                              </div>
                           </div>
                           <div className="space-y-1.5 md:col-span-2">
-                             <Label className="text-xs">Cơ sở đào tạo (Trường học / Trung tâm)</Label>
-                             <Input placeholder="VD: Đại học Khoa học Tự nhiên" value={edu.institutionName || ''} onChange={(e) => {
+                             <Label className="text-xs">{t("editProfile.education.institutionName", { defaultValue: "Cơ sở đào tạo (Trường học / Trung tâm)" })}</Label>
+                             <Input placeholder={t("editProfile.education.institutionNamePlaceholder", { defaultValue: "VD: Đại học Khoa học Tự nhiên" })} value={edu.institutionName || ''} onChange={(e) => {
                                 const arr = [...formData.educationRecords!]; arr[index].institutionName = e.target.value; handleTextChange("educationRecords", arr);
                              }} className="h-11 rounded-xl" />
                           </div>
                           <div className="space-y-1.5">
-                             <Label className="text-xs">Hình thức đào tạo</Label>
-                             <Input placeholder="VD: Chính quy, Từ xa, Vừa làm vừa học" value={edu.trainingMode || ''} onChange={(e) => {
+                             <Label className="text-xs">{t("editProfile.education.trainingMode", { defaultValue: "Hình thức đào tạo" })}</Label>
+                             <Input placeholder={t("editProfile.education.trainingModePlaceholder", { defaultValue: "VD: Chính quy, Từ xa, Vừa làm vừa học" })} value={edu.trainingMode || ''} onChange={(e) => {
                                 const arr = [...formData.educationRecords!]; arr[index].trainingMode = e.target.value; handleTextChange("educationRecords", arr);
                              }} className="h-11 rounded-xl" />
                           </div>
                           <div className="space-y-1.5">
-                             <Label className="text-xs">Trình độ học vấn</Label>
-                             <Input placeholder="VD: Cử nhân, Thạc sĩ, Cao đẳng" value={edu.educationLevel || ''} onChange={(e) => {
+                             <Label className="text-xs">{t("editProfile.education.educationLevel", { defaultValue: "Trình độ học vấn" })}</Label>
+                             <Input placeholder={t("editProfile.education.educationLevelPlaceholder", { defaultValue: "VD: Cử nhân, Thạc sĩ, Cao đẳng" })} value={edu.educationLevel || ''} onChange={(e) => {
                                 const arr = [...formData.educationRecords!]; arr[index].educationLevel = e.target.value; handleTextChange("educationRecords", arr);
                              }} className="h-11 rounded-xl" />
                           </div>
                           <div className="space-y-1.5 md:col-span-2">
-                             <Label className="text-xs">Chuyên ngành</Label>
-                             <Input placeholder="VD: Công nghệ Thông tin" value={edu.major || ''} onChange={(e) => {
+                             <Label className="text-xs">{t("editProfile.education.major", { defaultValue: "Chuyên ngành" })}</Label>
+                             <Input placeholder={t("editProfile.education.majorPlaceholder", { defaultValue: "VD: Công nghệ Thông tin" })} value={edu.major || ''} onChange={(e) => {
                                 const arr = [...formData.educationRecords!]; arr[index].major = e.target.value; handleTextChange("educationRecords", arr);
                              }} className="h-11 rounded-xl" />
                           </div>
@@ -610,7 +610,7 @@ export default function EditProfilePage() {
                   
                   <Button type="button" variant="outline" onClick={() => {
                      handleTextChange("educationRecords", [...(formData.educationRecords||[]), { trainingMode: '' }]);
-                  }} className="border-dashed border-2 gap-2 w-full h-12 rounded-xl text-muted-foreground"><Plus size={16}/> Thêm Bằng cấp/Học vấn</Button>
+                  }} className="border-dashed border-2 gap-2 w-full h-12 rounded-xl text-muted-foreground"><Plus size={16}/> {t("editProfile.education.addBtn", { defaultValue: "Thêm Bằng cấp/Học vấn" })}</Button>
                 </div>
               </div>
             )}
@@ -619,7 +619,7 @@ export default function EditProfilePage() {
             {activeTab === "experience" && (
               <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
                 <div className="border-b border-border pb-4 mb-6">
-                  <h2 className="text-lg font-bold text-foreground">Kinh nghiệm làm việc</h2>
+                  <h2 className="text-lg font-bold text-foreground">{t("editProfile.experience.title", { defaultValue: "Kinh nghiệm làm việc" })}</h2>
                 </div>
                 
                 <div className="space-y-4">
@@ -628,45 +628,45 @@ export default function EditProfilePage() {
                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1">
                           <div className="grid grid-cols-2 gap-4 md:col-span-2">
                              <div className="space-y-1.5">
-                                <Label className="text-xs">Từ tháng</Label>
+                                <Label className="text-xs">{t("editProfile.experience.fromMonth", { defaultValue: "Từ tháng" })}</Label>
                                 <Input type="month" value={work.fromMonth || ''} onChange={(e) => {
                                    const arr = [...formData.workExperiences!]; arr[index].fromMonth = e.target.value; handleTextChange("workExperiences", arr);
                                 }} className="h-11 rounded-xl" />
                              </div>
                              <div className="space-y-1.5">
-                                <Label className="text-xs">Đến tháng</Label>
+                                <Label className="text-xs">{t("editProfile.experience.toMonth", { defaultValue: "Đến tháng" })}</Label>
                                 <Input type="month" value={work.toMonth || ''} onChange={(e) => {
                                    const arr = [...formData.workExperiences!]; arr[index].toMonth = e.target.value; handleTextChange("workExperiences", arr);
                                 }} className="h-11 rounded-xl" />
                              </div>
                           </div>
                           <div className="space-y-1.5 md:col-span-2">
-                             <Label className="text-xs">Tên Công ty / Đơn vị</Label>
-                             <Input placeholder="VD: Công ty công nghệ VNFT" value={work.companyName || ''} onChange={(e) => {
+                             <Label className="text-xs">{t("editProfile.experience.companyName", { defaultValue: "Tên Công ty / Đơn vị" })}</Label>
+                             <Input placeholder={t("editProfile.experience.companyNamePlaceholder", { defaultValue: "VD: Công ty công nghệ VNFT" })} value={work.companyName || ''} onChange={(e) => {
                                 const arr = [...formData.workExperiences!]; arr[index].companyName = e.target.value; handleTextChange("workExperiences", arr);
                              }} className="h-11 rounded-xl" />
                           </div>
                           <div className="space-y-1.5 md:col-span-2">
-                             <Label className="text-xs">Vị trí công tác</Label>
-                             <Input placeholder="VD: Nhân viên Phát triển phần mềm" value={work.position || ''} onChange={(e) => {
+                             <Label className="text-xs">{t("editProfile.experience.position", { defaultValue: "Vị trí công tác" })}</Label>
+                             <Input placeholder={t("editProfile.experience.positionPlaceholder", { defaultValue: "VD: Nhân viên Phát triển phần mềm" })} value={work.position || ''} onChange={(e) => {
                                 const arr = [...formData.workExperiences!]; arr[index].position = e.target.value; handleTextChange("workExperiences", arr);
                              }} className="h-11 rounded-xl" />
                           </div>
                           <div className="space-y-1.5">
-                             <Label className="text-xs">Người tham chiếu</Label>
-                             <Input placeholder="VD: Nguyễn Văn B (Trưởng phòng)" value={work.referencePerson || ''} onChange={(e) => {
+                             <Label className="text-xs">{t("editProfile.experience.referencePerson", { defaultValue: "Người tham chiếu" })}</Label>
+                             <Input placeholder={t("editProfile.experience.referencePersonPlaceholder", { defaultValue: "VD: Nguyễn Văn B (Trưởng phòng)" })} value={work.referencePerson || ''} onChange={(e) => {
                                 const arr = [...formData.workExperiences!]; arr[index].referencePerson = e.target.value; handleTextChange("workExperiences", arr);
                              }} className="h-11 rounded-xl" />
                           </div>
                           <div className="space-y-1.5">
-                             <Label className="text-xs">SĐT người tham chiếu</Label>
-                             <Input placeholder="VD: 0912345678" value={work.phoneNumber || ''} onChange={(e) => {
+                             <Label className="text-xs">{t("editProfile.experience.phoneNumber", { defaultValue: "SĐT người tham chiếu" })}</Label>
+                             <Input placeholder={t("editProfile.experience.phoneNumberPlaceholder", { defaultValue: "VD: 0912345678" })} value={work.phoneNumber || ''} onChange={(e) => {
                                 const arr = [...formData.workExperiences!]; arr[index].phoneNumber = e.target.value; handleTextChange("workExperiences", arr);
                              }} className="h-11 rounded-xl" />
                           </div>
                           <div className="space-y-1.5 md:col-span-2">
-                             <Label className="text-xs">Mô tả công việc</Label>
-                             <Textarea placeholder="Liệt kê ngắn gọn vai trò và các công việc chuyên môn bạn đã đảm nhận tại đơn vị này..." rows={4} value={work.jobDescription || ''} onChange={(e) => {
+                             <Label className="text-xs">{t("editProfile.experience.jobDesc", { defaultValue: "Mô tả công việc" })}</Label>
+                             <Textarea placeholder={t("editProfile.experience.jobDescPlaceholder", { defaultValue: "Liệt kê ngắn gọn vai trò và các công việc chuyên môn bạn đã đảm nhận tại đơn vị này..." })} rows={4} value={work.jobDescription || ''} onChange={(e) => {
                                 const arr = [...formData.workExperiences!]; arr[index].jobDescription = e.target.value; handleTextChange("workExperiences", arr);
                              }} className="rounded-xl resize-none" />
                           </div>
@@ -679,7 +679,7 @@ export default function EditProfilePage() {
                   
                   <Button type="button" variant="outline" onClick={() => {
                      handleTextChange("workExperiences", [...(formData.workExperiences||[]), { companyName: '' }]);
-                  }} className="border-dashed border-2 gap-2 w-full h-12 rounded-xl text-muted-foreground"><Plus size={16}/> Thêm Kinh nghiệm</Button>
+                  }} className="border-dashed border-2 gap-2 w-full h-12 rounded-xl text-muted-foreground"><Plus size={16}/> {t("editProfile.experience.addBtn", { defaultValue: "Thêm Kinh nghiệm" })}</Button>
                 </div>
               </div>
             )}
@@ -688,29 +688,29 @@ export default function EditProfilePage() {
             {activeTab === "dependents" && (
               <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
                 <div className="border-b border-border pb-4 mb-6">
-                  <h2 className="text-lg font-bold text-foreground">Người phụ thuộc</h2>
+                  <h2 className="text-lg font-bold text-foreground">{t("editProfile.dependents.title", { defaultValue: "Người phụ thuộc" })}</h2>
                 </div>
                 
                 <div className="space-y-4">
                   {formData.dependents?.map((dep, index) => (
                     <div key={index} className="flex gap-4 items-start bg-muted/30 p-4 rounded-xl border border-border">
                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1">
-                          <Input placeholder="Họ và Tên" value={dep.dependentFullName || ''} onChange={(e) => {
+                          <Input placeholder={t("editProfile.dependents.fullNamePlaceholder", { defaultValue: "Họ và Tên" })} value={dep.dependentFullName || ''} onChange={(e) => {
                              const arr = [...formData.dependents!]; arr[index].dependentFullName = e.target.value; handleTextChange("dependents", arr);
                           }} />
-                          <Input placeholder="Mối quan hệ" value={dep.dependentRelationship || ''} onChange={(e) => {
+                          <Input placeholder={t("editProfile.dependents.relationshipPlaceholder", { defaultValue: "Mối quan hệ" })} value={dep.dependentRelationship || ''} onChange={(e) => {
                              const arr = [...formData.dependents!]; arr[index].dependentRelationship = e.target.value; handleTextChange("dependents", arr);
                           }} />
-                          <Input type="date" placeholder="Ngày sinh" value={dep.dependentDateOfBirth || ''} onChange={(e) => {
+                          <Input type="date" placeholder={t("editProfile.dependents.dobPlaceholder", { defaultValue: "Ngày sinh" })} value={dep.dependentDateOfBirth || ''} onChange={(e) => {
                              const arr = [...formData.dependents!]; arr[index].dependentDateOfBirth = e.target.value; handleTextChange("dependents", arr);
                           }} />
-                          <Input placeholder="SĐT liên hệ" value={dep.dependentPhoneNumber || ''} onChange={(e) => {
+                          <Input placeholder={t("editProfile.dependents.phonePlaceholder", { defaultValue: "SĐT liên hệ" })} value={dep.dependentPhoneNumber || ''} onChange={(e) => {
                              const arr = [...formData.dependents!]; arr[index].dependentPhoneNumber = e.target.value; handleTextChange("dependents", arr);
                           }} />
-                          <Input placeholder="Số CMT/CCCD" value={dep.dependentIdentityNumber || ''} onChange={(e) => {
+                          <Input placeholder={t("editProfile.dependents.identityNumberPlaceholder", { defaultValue: "Số CMT/CCCD" })} value={dep.dependentIdentityNumber || ''} onChange={(e) => {
                              const arr = [...formData.dependents!]; arr[index].dependentIdentityNumber = e.target.value; handleTextChange("dependents", arr);
                           }} />
-                          <Input placeholder="Mã số thuế" value={dep.dependentTaxCode || ''} onChange={(e) => {
+                          <Input placeholder={t("editProfile.dependents.taxCodePlaceholder", { defaultValue: "Mã số thuế" })} value={dep.dependentTaxCode || ''} onChange={(e) => {
                              const arr = [...formData.dependents!]; arr[index].dependentTaxCode = e.target.value; handleTextChange("dependents", arr);
                           }} />
                        </div>
@@ -722,7 +722,7 @@ export default function EditProfilePage() {
                   
                   <Button type="button" variant="outline" onClick={() => {
                      handleTextChange("dependents", [...(formData.dependents||[]), { dependentFullName: '', dependentRelationship: '' }]);
-                  }} className="border-dashed border-2 gap-2 w-full h-12 rounded-xl text-muted-foreground"><Plus size={16}/> Thêm Khai báo NPT</Button>
+                  }} className="border-dashed border-2 gap-2 w-full h-12 rounded-xl text-muted-foreground"><Plus size={16}/> {t("editProfile.dependents.addBtn", { defaultValue: "Thêm Khai báo NPT" })}</Button>
                 </div>
               </div>
             )}

@@ -1,4 +1,5 @@
 import profile from './profile';
+import editProfile from './editProfile';
 import sidebar from './sidebar';
 import login from './login';
 import network from './network';
@@ -15,5 +16,6 @@ export default {
   ndaContent,
   department,
   position,
-  settings
+  settings,
+  editProfile
 };

@@ -5,6 +5,7 @@ export default {
   calendar: "日历 & 活动",
   management: "管理",
   employees: "员工",
+  employeeCodes: "员工代码",
   departments: "部门",
   roles: "职位",
   attendance: "考勤",

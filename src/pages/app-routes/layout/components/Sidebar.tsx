@@ -76,13 +76,10 @@ export default function Sidebar() {
           icon: <FolderOpen size={20} />, 
           subItems: [
             { label: t('sidebar.dashboardOverview'), path: "/app/management/overview", icon: <LayoutDashboard size={16} /> },
+            { label: t('sidebar.employeeCodes'), path: "/app/management/employee-codes", icon: <FileText size={16} /> },
             { label: t('sidebar.employees'), path: "/app/management/employees", icon: <Users size={16} /> },
             { label: t('sidebar.departments'), path: "/app/management/departments", icon: <Building2 size={16} /> },
             { label: t('sidebar.roles'), path: "/app/management/positions", icon: <Briefcase size={16} /> },
-            { label: t('sidebar.attendance'), path: "/app/management/attendance", icon: <Clock size={16} /> },
-            { label: t('sidebar.evaluationCriteria'), path: "/app/management/evaluation-criteria", icon: <ClipboardList size={16} /> },
-            { label: t('sidebar.permissions'), path: "/app/management/permissions", icon: <Shield size={16} /> },
-            { label: t('sidebar.contracts'), path: "/app/management/contracts", icon: <FileText size={16} /> },
           ]
         },
         { label: t('sidebar.evaluation'), path: "/app/evaluation", icon: <ClipboardCheck size={20} /> },

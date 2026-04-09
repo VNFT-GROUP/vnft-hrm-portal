@@ -5,6 +5,7 @@ export default {
   calendar: "Lịch & Sự kiện",
   management: "Quản lý",
   employees: "Nhân viên",
+  employeeCodes: "Mã nhân viên",
   departments: "Phòng ban",
   roles: "Chức vụ",
   attendance: "Chấm công",

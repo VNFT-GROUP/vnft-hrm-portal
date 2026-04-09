@@ -14,10 +14,7 @@ const ManagementOverviewPage = lazy(() => import("../pages/app-routes/management
 const EmployeesPage = lazy(() => import("../pages/app-routes/management/employees"));
 const DepartmentsPage = lazy(() => import("../pages/app-routes/management/departments"));
 const PositionsPage = lazy(() => import("../pages/app-routes/management/positions"));
-const AttendancePage = lazy(() => import("../pages/app-routes/management/attendance"));
-const EvaluationCriteriaPage = lazy(() => import("../pages/app-routes/management/evaluation-criteria"));
-const PermissionsPage = lazy(() => import("../pages/app-routes/management/permissions"));
-const ContractsPage = lazy(() => import("../pages/app-routes/management/contracts"));
+const EmployeeCodesPage = lazy(() => import("../pages/app-routes/management/employee-codes"));
 const EvaluationPage = lazy(() => import("../pages/app-routes/evaluation"));
 const ProfitReportPage = lazy(() => import("../pages/app-routes/acc/profit-report"));
 const VotingPage = lazy(() => import("../pages/app-routes/voting"));
@@ -95,10 +92,7 @@ export default function AppRoutes() {
              <Route path="employees" element={<EmployeesPage />} />
              <Route path="departments" element={<DepartmentsPage />} />
              <Route path="positions" element={<PositionsPage />} />
-             <Route path="attendance" element={<AttendancePage />} />
-             <Route path="evaluation-criteria" element={<EvaluationCriteriaPage />} />
-             <Route path="permissions" element={<PermissionsPage />} />
-             <Route path="contracts" element={<ContractsPage />} />
+             <Route path="employee-codes" element={<EmployeeCodesPage />} />
           </Route>
 
           {/* Cấp 2: ACC */}

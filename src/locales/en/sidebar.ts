@@ -5,6 +5,7 @@ export default {
   calendar: "Calendar & Events",
   management: "Management",
   employees: "Employees",
+  employeeCodes: "Employee Codes",
   departments: "Departments",
   roles: "Job Roles",
   attendance: "Attendance",

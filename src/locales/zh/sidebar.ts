@@ -1,6 +1,6 @@
 export default {
   dashboard: "首页",
-  dashboardOverview: "仪表板概览",
+  dashboardOverview: "概览",
   profile: "个人资料",
   calendar: "日历 & 活动",
   management: "管理",

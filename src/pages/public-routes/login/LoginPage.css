@@ -4,12 +4,10 @@
    ========================================= */
 
 .login-page {
-  position: fixed;
-  top: 0;
-  left: 0;
+  position: relative;
   width: 100%;
-  height: 100vh;
-  height: 100dvh;
+  min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -18,7 +16,8 @@
   font-family: "Geist Variable", system-ui, sans-serif;
   padding: 4rem 1.5rem; /* more padding so it doesn't collide with fixed headers */
   gap: 0;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 

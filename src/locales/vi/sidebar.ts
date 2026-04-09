@@ -1,5 +1,6 @@
 export default {
-  dashboard: "Dashboard",
+  dashboard: "Trang chủ",
+  dashboardOverview: "Tổng quan Dashboard",
   profile: "Hồ sơ cá nhân",
   calendar: "Lịch & Sự kiện",
   management: "Quản lý",

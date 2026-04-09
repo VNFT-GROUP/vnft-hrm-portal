@@ -5,13 +5,22 @@ import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
 
+interface EmployeeCodeFormProps {
+  isOpen: boolean;
+  onOpenChange: (open: boolean) => void;
+  formData: { prefix: string; description: string; active: boolean };
+  setFormData: (data: { prefix: string; description: string; active: boolean }) => void;
+  isEditing: boolean;
+  onSave: () => void;
+}
+
 export default function EmployeeCodeFormSheet({
   isOpen, onOpenChange, formData, setFormData, isEditing, onSave
-}: any) {
+}: EmployeeCodeFormProps) {
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
       <SheetContent className='overflow-y-auto sm:max-w-md w-full bg-card border-none shadow-2xl rounded-l-3xl z-50 flex flex-col h-full right-0 p-0'>
-        <div className='px-6 py-5 border-b border-border bg-gradient-to-b from-muted/50 to-transparent'>
+        <div className='px-6 py-5 border-b border-border bg-linear-to-b from-muted/50 to-transparent'>
           <SheetHeader><SheetTitle className='text-2xl font-bold text-[#1E2062]'>{isEditing ? 'Cập nhật' : 'Tạo mới'} Prefix</SheetTitle></SheetHeader>
         </div>
         <div className='px-6 py-6 flex flex-col gap-6 flex-1'>

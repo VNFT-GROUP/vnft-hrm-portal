@@ -2,6 +2,7 @@ import { apiClient } from '@/lib/apiClient';
 import type { ApiResponse } from '@/types/base/ApiResponse';
 import type { EmployeeCodeResponse } from '@/types/response/user/EmployeeCodeResponse';
 import type { UpsertEmployeeCodeRequest } from '@/types/request/user/UpsertEmployeeCodeRequest';
+import type { UpdateEmployeeCodeDescriptionRequest } from '@/types/request/user/UpdateEmployeeCodeDescriptionRequest';
 
 export const employeeCodeService = {
   getEmployeeCodes: async (): Promise<ApiResponse<EmployeeCodeResponse[]>> => {
@@ -22,6 +23,10 @@ export const employeeCodeService = {
   },
   toggleActiveEmployeeCode: async (id: string): Promise<ApiResponse<EmployeeCodeResponse>> => {
     const response = await apiClient.patch(`/employee-codes/${id}/toggle-active`);
+    return response.data;
+  },
+  updateEmployeeCodeDescription: async (id: string, data: UpdateEmployeeCodeDescriptionRequest): Promise<ApiResponse<EmployeeCodeResponse>> => {
+    const response = await apiClient.patch(`/employee-codes/${id}/description`, data);
     return response.data;
   }
 };

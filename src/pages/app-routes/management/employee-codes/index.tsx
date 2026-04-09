@@ -9,12 +9,14 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { employeeCodeService } from '@/services/employeeCode';
 import { toast } from 'sonner';
 import type { UpsertEmployeeCodeRequest } from '@/types/request/user/UpsertEmployeeCodeRequest';
+import type { UpdateEmployeeCodeDescriptionRequest } from '@/types/request/user/UpdateEmployeeCodeDescriptionRequest';
 import type { EmployeeCodeResponse } from '@/types/response/user/EmployeeCodeResponse';
 
 export default function EmployeeCodesPage() {
   const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState('');
   const [isOpen, setIsOpen] = useState(false);
+  const [editingItem, setEditingItem] = useState<EmployeeCodeResponse | null>(null);
 
   const [formData, setFormData] = useState<{prefix: string, description: string, active: boolean}>({ 
     prefix: '', description: '', active: true
@@ -28,8 +30,18 @@ export default function EmployeeCodesPage() {
   const codes: EmployeeCodeResponse[] = qData?.data || [];
   const filtered = codes.filter(c => c.prefix.toLowerCase().includes(searchTerm.toLowerCase()));
 
-  const handleOpenForm = () => {
-    setFormData({ prefix: '', description: '', active: true });
+  const handleOpenForm = (item?: EmployeeCodeResponse) => {
+    if (item) {
+      setEditingItem(item);
+      setFormData({ 
+        prefix: item.prefix, 
+        description: item.description || '', 
+        active: item.active ?? false
+      });
+    } else {
+      setEditingItem(null);
+      setFormData({ prefix: '', description: '', active: true });
+    }
     setIsOpen(true);
   };
 
@@ -50,7 +62,22 @@ export default function EmployeeCodesPage() {
     },
   });
 
+  const updateDescMutation = useMutation({
+    mutationFn: ({ id, data }: { id: string; data: UpdateEmployeeCodeDescriptionRequest }) =>
+      employeeCodeService.updateEmployeeCodeDescription(id, data),
+    onSuccess: () => {
+      toast.success('Cập nhật mô tả thành công');
+      queryClient.invalidateQueries({ queryKey: ['employee-codes'] });
+      setIsOpen(false);
+    },
+  });
+
   const handleSave = () => {
+    if (editingItem) {
+      updateDescMutation.mutate({ id: editingItem.id, data: { description: formData.description } });
+      return;
+    }
+
     if (!formData.prefix.trim()) return;
 
     const payload: UpsertEmployeeCodeRequest = {
@@ -88,10 +115,10 @@ export default function EmployeeCodesPage() {
       </motion.div>
 
       <motion.div className='bg-card rounded-2xl shadow-sm border border-border overflow-hidden flex-1 group hover:shadow-md transition-shadow duration-300'>
-        <EmployeeCodeTable data={filtered} onToggleActive={handleToggleActive} />
+        <EmployeeCodeTable data={filtered} onToggleActive={handleToggleActive} onEdit={handleOpenForm} />
       </motion.div>
 
-      <EmployeeCodeFormSheet isOpen={isOpen} onOpenChange={setIsOpen} formData={formData} setFormData={setFormData} onSave={handleSave} />
+      <EmployeeCodeFormSheet isOpen={isOpen} onOpenChange={setIsOpen} formData={formData} setFormData={setFormData} isEditing={!!editingItem} onSave={handleSave} />
     </div>
   );
 }

@@ -17,6 +17,7 @@ interface EmployeeCodeFormProps {
   onOpenChange: (open: boolean) => void;
   formData: { prefix: string; description: string; active: boolean };
   setFormData: (data: { prefix: string; description: string; active: boolean }) => void;
+  isEditing?: boolean;
   onSave: () => void;
 }
 
@@ -25,6 +26,7 @@ export default function EmployeeCodeFormSheet({
   onOpenChange,
   formData,
   setFormData,
+  isEditing,
   onSave,
 }: EmployeeCodeFormProps) {
   return (
@@ -36,10 +38,10 @@ export default function EmployeeCodeFormSheet({
               <span className="p-1.5 bg-[#2E3192]/10 text-[#2E3192] rounded-md">
                 <FileText size={18} />
               </span>
-              Tạo mới Prefix
+              {isEditing ? "Cập nhật mô tả" : "Tạo mới Prefix"}
             </SheetTitle>
             <SheetDescription className="text-muted-foreground">
-              Thông tin cấu hình cho mã định danh nhân viên.
+              {isEditing ? "Chỉnh sửa mô tả cho mã định danh nhân viên." : "Thông tin cấu hình cho mã định danh nhân viên."}
             </SheetDescription>
           </SheetHeader>
         </div>
@@ -69,6 +71,7 @@ export default function EmployeeCodeFormSheet({
                     setFormData({ ...formData, prefix: e.target.value })
                   }
                   placeholder="VD: VN, SGN"
+                  disabled={isEditing}
                   className="rounded-xl border-border focus-visible:ring-[#2E3192]"
                 />
               </div>
@@ -93,22 +96,24 @@ export default function EmployeeCodeFormSheet({
               </div>
             </div>
 
-            <div className="flex items-center justify-between rounded-xl border border-border bg-card text-card-foreground p-4 shadow-sm">
-              <div className="space-y-1">
-                <Label className="text-foreground text-sm font-semibold block">
-                  Trạng thái hoạt động
-                </Label>
-                <p className="text-xs text-muted-foreground">
-                  Cho phép hoặc vô hiệu hóa prefix này trên hệ thống
-                </p>
+            {!isEditing && (
+              <div className="flex items-center justify-between rounded-xl border border-border bg-card text-card-foreground p-4 shadow-sm">
+                <div className="space-y-1">
+                  <Label className="text-foreground text-sm font-semibold block">
+                    Trạng thái hoạt động
+                  </Label>
+                  <p className="text-xs text-muted-foreground">
+                    Cho phép hoặc vô hiệu hóa prefix này trên hệ thống
+                  </p>
+                </div>
+                <Switch
+                  checked={formData.active}
+                  onCheckedChange={(checked) =>
+                    setFormData({ ...formData, active: checked })
+                  }
+                />
               </div>
-              <Switch
-                checked={formData.active}
-                onCheckedChange={(checked) =>
-                  setFormData({ ...formData, active: checked })
-                }
-              />
-            </div>
+            )}
           </div>
 
           <div className="p-4 border-t border-border shrink-0 bg-card text-card-foreground flex justify-end gap-3">
@@ -125,7 +130,7 @@ export default function EmployeeCodeFormSheet({
               className="rounded-xl bg-[#2E3192] hover:bg-[#1E2062] text-white w-auto px-6 transition-all shadow-md shadow-[#2E3192]/20"
               disabled={!formData.prefix.trim()}
             >
-              Tạo mới
+              {isEditing ? "Lưu thay đổi" : "Tạo mới"}
             </Button>
           </div>
         </form>

@@ -50,5 +50,11 @@ export default {
     dark: "Dark Minimal",
     neon: "Neon Blue",
     rose: "Rose Gem"
+  },
+  securitySection: {
+    title: "Account & Security",
+    label: "Password Management",
+    desc: "Change your login password regularly to keep your account secure.",
+    changePasswordButton: "Update Secure Password"
   }
 };

@@ -50,5 +50,11 @@ export default {
     dark: "Tối giản (Dark)",
     neon: "Dạ quang (Neon)",
     rose: "Hồng ngọc (Rose)"
+  },
+  securitySection: {
+    title: "Bảo mật & Tài khoản",
+    label: "Quản lý mật khẩu",
+    desc: "Thay đổi mật khẩu đăng nhập của bạn thường xuyên để bảo vệ tài khoản.",
+    changePasswordButton: "Đổi mật khẩu bảo mật"
   }
 };

@@ -1,5 +1,16 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { X, Eye, EyeOff, Lock, CheckCircle2 } from 'lucide-react';
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 interface ChangePasswordModalProps {
   isOpen: boolean;
@@ -7,6 +18,7 @@ interface ChangePasswordModalProps {
 }
 
 export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordModalProps) {
+  const { t } = useTranslation();
   
   const [showCurrent, setShowCurrent] = useState(false);
   const [showNew, setShowNew] = useState(false);
@@ -17,12 +29,10 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  if (!isOpen) return null;
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Simulate successful password change
-    alert("Cập nhật mật khẩu thành công!");
+    alert(t('profile.passwordForm.success'));
     onClose();
     // Reset fields
     setCurrentPassword('');
@@ -30,43 +40,54 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
     setConfirmPassword('');
   };
 
+  const handleOpenChange = (open: boolean) => {
+     if (!open) {
+         onClose();
+         // Reset fields on close
+         setCurrentPassword('');
+         setNewPassword('');
+         setConfirmPassword('');
+     }
+  };
+
   return (
-    <div className="fixed inset-0 z-[200] flex items-center justify-center bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-200">
-      {/* Modal Container */}
-      <div 
-        className="bg-card text-card-foreground rounded-2xl shadow-2xl w-full max-w-md overflow-hidden transform animate-in zoom-in-95 duration-200"
-        onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside
-      >
-        {/* Header */}
-        <div className="bg-gradient-to-r from-[#2E3192] to-[#1E2062] px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="bg-card text-card-foreground/20 p-2 rounded-lg">
-              <Lock size={20} className="text-white" />
-            </div>
-            <div>
-              <h2 className="text-white font-bold text-lg leading-tight">Đổi mật khẩu</h2>
-              <p className="text-indigo-200 text-xs mt-0.5">Cập nhật mật khẩu an toàn mới</p>
-            </div>
+    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+      <DialogContent showCloseButton={false} className="sm:max-w-md p-0 overflow-hidden border-border bg-card shadow-2xl">
+        {/* Header - Keeps the premium gradient look but adapted for the Dialog */}
+        <div className="relative bg-gradient-to-r from-[#2E3192] to-[#1E2062] px-6 py-5 flex items-center gap-4">
+          <div className="bg-white/10 p-2.5 rounded-xl backdrop-blur-sm shadow-inner hidden sm:block">
+            <Lock size={24} className="text-white" />
+          </div>
+          <div>
+            <DialogTitle className="text-white font-bold text-xl leading-tight text-left">
+              {t('profile.passwordForm.title')}
+            </DialogTitle>
+            <DialogDescription className="text-indigo-200 text-[13px] mt-1 text-left">
+              {t('profile.passwordForm.subtitle')}
+            </DialogDescription>
           </div>
           <button 
+            type="button"
             onClick={onClose}
-            className="text-white/70 hover:text-white hover:bg-card text-card-foreground/10 p-2 rounded-full transition-colors"
+            className="absolute right-4 top-1/2 -translate-y-1/2 text-white/70 hover:text-white hover:bg-white/10 p-2 rounded-full transition-colors"
           >
-            <X size={20} />
+            <X size={18} />
           </button>
         </div>
 
         {/* Form Body */}
-        <form onSubmit={handleSubmit} className="p-6 flex flex-col gap-5">
+        <form onSubmit={handleSubmit} className="px-6 py-5 flex flex-col gap-4">
           
           {/* Mật khẩu hiện tại */}
-          <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-semibold text-foreground">Mật khẩu hiện tại <span className="text-red-500">*</span></label>
+          <div className="flex flex-col gap-2">
+            <Label className="text-[13px] font-semibold text-foreground">
+              {t('profile.passwordForm.currentPassword')} <span className="text-destructive">*</span>
+            </Label>
             <div className="relative">
-              <input 
+              <Input 
                 type={showCurrent ? "text" : "password"} 
-                className="w-full pl-4 pr-10 py-2.5 bg-muted border border-border rounded-lg text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-[#2E3192]/20 focus:border-[#2E3192] transition-all"
-                placeholder="Nhập mật khẩu đang dùng"
+                className="pr-10 h-10"
+                placeholder={t('profile.passwordForm.currentPasswordPlaceholder')}
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
                 required
@@ -74,23 +95,25 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
               <button 
                 type="button" 
                 onClick={() => setShowCurrent(!showCurrent)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-muted-foreground"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
               >
-                {showCurrent ? <EyeOff size={18} /> : <Eye size={18} />}
+                {showCurrent ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
             </div>
           </div>
 
-          <div className="h-px bg-muted my-1"></div>
+          <div className="h-px bg-border/60 my-1 rounded-full"></div>
 
           {/* Mật khẩu mới */}
-          <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-semibold text-foreground">Mật khẩu mới <span className="text-red-500">*</span></label>
+          <div className="flex flex-col gap-2">
+            <Label className="text-[13px] font-semibold text-foreground">
+              {t('profile.passwordForm.newPassword')} <span className="text-destructive">*</span>
+            </Label>
             <div className="relative">
-              <input 
+              <Input 
                 type={showNew ? "text" : "password"} 
-                className="w-full pl-4 pr-10 py-2.5 bg-muted border border-border rounded-lg text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-[#2E3192]/20 focus:border-[#2E3192] transition-all"
-                placeholder="Nhập mật khẩu an toàn mới"
+                className="pr-10 h-10"
+                placeholder={t('profile.passwordForm.newPasswordPlaceholder')}
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 required
@@ -98,22 +121,26 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
               <button 
                 type="button" 
                 onClick={() => setShowNew(!showNew)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-muted-foreground"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
               >
-                {showNew ? <EyeOff size={18} /> : <Eye size={18} />}
+                {showNew ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
             </div>
-            <p className="text-xs text-muted-foreground mt-1">Mật khẩu nên dài ít nhất 8 ký tự, bao gồm số và chữ cái.</p>
+            <p className="text-xs text-muted-foreground">
+              {t('profile.passwordForm.newPasswordHint')}
+            </p>
           </div>
 
           {/* Nhập lại mật khẩu mới */}
-          <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-semibold text-foreground">Nhập lại mật khẩu mới <span className="text-red-500">*</span></label>
+          <div className="flex flex-col gap-2">
+            <Label className="text-[13px] font-semibold text-foreground">
+              {t('profile.passwordForm.confirmPassword')} <span className="text-destructive">*</span>
+            </Label>
             <div className="relative">
-              <input 
+              <Input 
                 type={showConfirm ? "text" : "password"} 
-                className="w-full pl-4 pr-10 py-2.5 bg-muted border border-border rounded-lg text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-[#2E3192]/20 focus:border-[#2E3192] transition-all"
-                placeholder="Xác nhận lại mật khẩu vừa nhập"
+                className={`pr-10 h-10 ${confirmPassword && newPassword !== confirmPassword ? 'border-destructive focus-visible:ring-destructive/20' : ''} ${confirmPassword && newPassword === confirmPassword ? 'border-emerald-500/50 focus-visible:ring-emerald-500/20' : ''}`}
+                placeholder={t('profile.passwordForm.confirmPasswordPlaceholder')}
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
@@ -121,38 +148,47 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
               <button 
                 type="button" 
                 onClick={() => setShowConfirm(!showConfirm)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-muted-foreground"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
               >
-                {showConfirm ? <EyeOff size={18} /> : <Eye size={18} />}
+                {showConfirm ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
             </div>
-            {confirmPassword && newPassword !== confirmPassword && (
-              <p className="text-xs text-red-500 mt-1">Mật khẩu nhập lại không khớp!</p>
-            )}
-            {confirmPassword && newPassword === confirmPassword && currentPassword && (
-              <p className="text-xs text-emerald-600 mt-1 flex items-center gap-1"><CheckCircle2 size={12}/> Hợp lệ</p>
-            )}
+            
+            {/* Validation Feedback */}
+            <div className="h-5 flex items-center">
+              {confirmPassword && newPassword !== confirmPassword && (
+                <p className="text-xs text-destructive animate-in fade-in slide-in-from-top-1">
+                  {t('profile.passwordForm.passwordsDoNotMatch')}
+                </p>
+              )}
+              {confirmPassword && newPassword === confirmPassword && currentPassword && (
+                <p className="text-xs text-emerald-600 dark:text-emerald-500 flex items-center gap-1.5 animate-in fade-in slide-in-from-top-1 font-medium">
+                  <CheckCircle2 size={14} className="text-emerald-500"/> {t('profile.passwordForm.valid')}
+                </p>
+              )}
+            </div>
           </div>
 
           {/* Footer Actions */}
-          <div className="flex items-center justify-end gap-3 mt-4 pt-4 border-t border-border">
-            <button 
+          <DialogFooter className="mt-4 pt-4 border-t border-border/50 gap-2 sm:gap-3">
+            <Button 
               type="button"
+              variant="outline"
               onClick={onClose}
-              className="px-5 py-2.5 rounded-lg text-sm font-semibold text-muted-foreground hover:bg-muted transition-colors"
+              className="w-full sm:w-auto h-10"
             >
-              Hủy bỏ
-            </button>
-            <button 
+              {t('profile.passwordForm.cancel')}
+            </Button>
+            <Button 
               type="submit"
-              disabled={!currentPassword || !newPassword || newPassword !== confirmPassword}
-              className="px-5 py-2.5 rounded-lg text-sm font-semibold text-white bg-[#F7941D] hover:bg-[#D4780F] disabled:opacity-50 disabled:cursor-not-allowed shadow-md shadow-orange-500/20 transition-all"
+              disabled={!currentPassword || !newPassword || newPassword !== confirmPassword || newPassword.length < 8}
+              className="w-full sm:w-auto h-10 bg-[#F7941D] hover:bg-[#D4780F] text-white shadow-md shadow-orange-500/20 hover:shadow-orange-500/30 transition-all font-semibold"
             >
-              Cập nhật mật khẩu
-            </button>
-          </div>
+              {t('profile.passwordForm.update')}
+            </Button>
+          </DialogFooter>
         </form>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }

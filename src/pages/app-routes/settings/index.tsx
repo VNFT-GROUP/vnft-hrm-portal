@@ -1,10 +1,11 @@
 import { motion } from "framer-motion";
-import { Monitor, Globe, Palette, Type, Clock, MousePointer2 } from "lucide-react";
+import { Monitor, Globe, Palette, Type, Clock, MousePointer2, ShieldCheck, Key } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useLayoutStore } from "@/store/useLayoutStore";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import ChangePasswordModal from "../layout/components/ChangePasswordModal";
 
 export default function SettingsPage() {
   const showEmployeeLegend = useLayoutStore((state) => state.showEmployeeLegend);
@@ -24,6 +25,7 @@ export default function SettingsPage() {
 
   const { t, i18n } = useTranslation();
   const [now, setNow] = useState(new Date());
+  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
 
   const fullTimezones = [
     "Asia/Ho_Chi_Minh",      // Vietnam & Cambodia
@@ -468,7 +470,48 @@ export default function SettingsPage() {
           </div>
         </motion.section>
         
+        {/* Section 5: Security Settings */}
+        <motion.section 
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.45, ease: "easeOut" }}
+          className="bg-card text-card-foreground p-6 rounded-2xl border border-border shadow-sm"
+        >
+          <div className="flex items-center gap-3 mb-6 pb-4 border-b border-border">
+            <div className="p-2.5 bg-[#f59e0b]/10 text-[#f59e0b] rounded-xl flex items-center justify-center">
+              <ShieldCheck size={24} />
+            </div>
+            <h2 className="text-xl font-bold text-[#1E2062]">{t("settings.securitySection.title")}</h2>
+          </div>
+
+          <div className="flex flex-col gap-6">
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+              <div className="flex flex-col gap-1.5">
+                <Label className="text-base font-semibold">
+                  {t("settings.securitySection.label")}
+                </Label>
+                <p className="text-sm text-muted-foreground max-w-xl">
+                  {t("settings.securitySection.desc")}
+                </p>
+              </div>
+              
+              <button 
+                onClick={() => setIsPasswordModalOpen(true)}
+                className="flex items-center gap-2 mt-2 md:mt-0 px-5 py-2.5 rounded-lg text-sm font-semibold text-white bg-[#F7941D] hover:bg-[#D4780F] shadow-sm hover:shadow transition-all"
+              >
+                <Key size={18} />
+                {t("settings.securitySection.changePasswordButton")}
+              </button>
+            </div>
+          </div>
+        </motion.section>
+        
       </div>
+
+      <ChangePasswordModal 
+         isOpen={isPasswordModalOpen} 
+         onClose={() => setIsPasswordModalOpen(false)} 
+      />
     </div>
   );
 }

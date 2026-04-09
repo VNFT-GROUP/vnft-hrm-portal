@@ -50,5 +50,11 @@ export default {
     dark: "极简暗黑",
     neon: "霓虹发光",
     rose: "玫瑰宝石"
+  },
+  securitySection: {
+    title: "安全与账户",
+    label: "密码管理",
+    desc: "定期更改登录密码以保护账户安全。",
+    changePasswordButton: "更新安全密码"
   }
 };

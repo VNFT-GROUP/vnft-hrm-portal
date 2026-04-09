@@ -85,6 +85,13 @@ export default function Topbar() {
         navigate('/app/settings');
         setIsProfileOpen(false);
       }
+      
+      // Alt + P to open Change Password Settings
+      if (e.altKey && e.key.toLowerCase() === 'p') {
+        e.preventDefault();
+        setIsPasswordModalOpen(true);
+        setIsProfileOpen(false);
+      }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
@@ -215,7 +222,10 @@ export default function Topbar() {
                 setIsProfileOpen(false);
                 setIsPasswordModalOpen(true);
               }}>
-                <Key size={18} className="pd-icon" /> <span>{t('profile.changePassword')}</span>
+                <Key size={18} className="pd-icon" /> <span className="flex-1">{t('profile.changePassword')}</span>
+                <div className="flex items-center text-[0.7rem] font-mono text-muted-foreground bg-muted px-1.5 py-0.5 rounded border border-border">
+                  Alt + P
+                </div>
               </div>
               <div className="pd-item text-red-500" onClick={handleLogout}>
                 <LogOut size={18} className="pd-icon-red" /> <span>{t('profile.logout')}</span>

@@ -11,6 +11,10 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useMutation } from '@tanstack/react-query';
+import { toast } from 'sonner';
+import { isAxiosError } from 'axios';
+import { currentUserProfileService } from '@/services/user/currentUserProfileService';
 
 interface ChangePasswordModalProps {
   isOpen: boolean;
@@ -29,15 +33,40 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
+  const changePasswordMutation = useMutation({
+    mutationFn: currentUserProfileService.changePassword,
+    onSuccess: () => {
+      toast.success(t('profile.passwordForm.success') || "Thành công", {
+        description: "Mật khẩu của bạn đã được cập nhật.",
+      });
+      onClose();
+      // Reset fields
+      setCurrentPassword('');
+      setNewPassword('');
+      setConfirmPassword('');
+    },
+    onError: (error) => {
+      let message = "Không thể thay đổi mật khẩu. Vui lòng kiểm tra lại mật khẩu hiện tại.";
+      if (isAxiosError(error) && error.response?.data?.message) {
+        message = typeof error.response.data.message === 'string' 
+          ? error.response.data.message 
+          : String(error.response.data.message);
+      }
+      toast.error("Có lỗi xảy ra", {
+        description: message,
+      });
+    },
+  });
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulate successful password change
-    alert(t('profile.passwordForm.success'));
-    onClose();
-    // Reset fields
-    setCurrentPassword('');
-    setNewPassword('');
-    setConfirmPassword('');
+    if (newPassword !== confirmPassword) return;
+    
+    changePasswordMutation.mutate({
+      currentPassword,
+      newPassword,
+      confirmNewPassword: confirmPassword,
+    });
   };
 
   const handleOpenChange = (open: boolean) => {
@@ -54,7 +83,7 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogContent showCloseButton={false} className="sm:max-w-md p-0 overflow-hidden border-border bg-card shadow-2xl">
         {/* Header - Keeps the premium gradient look but adapted for the Dialog */}
-        <div className="relative bg-gradient-to-r from-[#2E3192] to-[#1E2062] px-6 py-5 flex items-center gap-4">
+        <div className="relative bg-linear-to-r from-[#2E3192] to-[#1E2062] px-6 py-5 flex items-center gap-4">
           <div className="bg-white/10 p-2.5 rounded-xl backdrop-blur-sm shadow-inner hidden sm:block">
             <Lock size={24} className="text-white" />
           </div>
@@ -181,10 +210,10 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
             </Button>
             <Button 
               type="submit"
-              disabled={!currentPassword || !newPassword || newPassword !== confirmPassword || newPassword.length < 8}
+              disabled={!currentPassword || !newPassword || newPassword !== confirmPassword || newPassword.length < 8 || changePasswordMutation.isPending}
               className="w-full sm:w-auto h-10 bg-[#F7941D] hover:bg-[#D4780F] text-white shadow-md shadow-orange-500/20 hover:shadow-orange-500/30 transition-all font-semibold"
             >
-              {t('profile.passwordForm.update')}
+              {changePasswordMutation.isPending ? "Đang xử lý..." : t('profile.passwordForm.update')}
             </Button>
           </DialogFooter>
         </form>

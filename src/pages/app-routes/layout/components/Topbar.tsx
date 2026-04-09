@@ -72,8 +72,8 @@ export default function Topbar() {
         navigate('/app/profile');
         setIsProfileOpen(false); // Close dropdown if it happens to be open
       }
-      // Shift + K to navigate to User Guide Shortcuts
-      if (e.shiftKey && e.key.toLowerCase() === 'k') {
+      // Alt + K to navigate to User Guide Shortcuts
+      if (e.altKey && e.key.toLowerCase() === 'k') {
         e.preventDefault();
         navigate('/app/user-guide#shortcuts');
         setIsProfileOpen(false);
@@ -193,7 +193,7 @@ export default function Topbar() {
               }}>
                 <Keyboard size={18} className="pd-icon" /> <span className="flex-1">{t('profile.shortcuts')}</span>
                 <div className="flex items-center text-[0.7rem] font-mono text-muted-foreground bg-muted px-1.5 py-0.5 rounded border border-border">
-                  Shift + K
+                  Alt + K
                 </div>
               </div>
               <div className="pd-item" onClick={(e) => {

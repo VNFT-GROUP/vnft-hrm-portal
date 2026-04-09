@@ -10,10 +10,8 @@ import { employeeCodeService } from '@/services/employeeCode';
 import { toast } from 'sonner';
 import type { UpsertEmployeeCodeRequest } from '@/types/request/user/UpsertEmployeeCodeRequest';
 import type { EmployeeCodeResponse } from '@/types/response/user/EmployeeCodeResponse';
-import { useTranslation } from 'react-i18next';
 
 export default function EmployeeCodesPage() {
-  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState('');
   const [isOpen, setIsOpen] = useState(false);

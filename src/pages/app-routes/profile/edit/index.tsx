@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import type { UpsertUserProfileRequest } from "@/types/request/user/UpsertUserProfileRequest";
 
 export default function EditProfilePage() {
@@ -449,29 +450,52 @@ export default function EditProfilePage() {
                 
                 <div className="space-y-4">
                   {formData.workExperiences?.map((work, index) => (
-                    <div key={index} className="flex gap-4 items-start bg-muted/30 p-4 rounded-xl border border-border">
+                    <div key={index} className="flex gap-4 items-start bg-muted/30 p-5 rounded-2xl border border-border">
                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1">
-                          <Input type="month" placeholder="Từ" value={work.fromMonth || ''} onChange={(e) => {
-                             const arr = [...formData.workExperiences!]; arr[index].fromMonth = e.target.value; handleTextChange("workExperiences", arr);
-                          }} />
-                          <Input type="month" placeholder="Đến" value={work.toMonth || ''} onChange={(e) => {
-                             const arr = [...formData.workExperiences!]; arr[index].toMonth = e.target.value; handleTextChange("workExperiences", arr);
-                          }} />
-                          <Input placeholder="Tên Công ty" value={work.companyName || ''} onChange={(e) => {
-                             const arr = [...formData.workExperiences!]; arr[index].companyName = e.target.value; handleTextChange("workExperiences", arr);
-                          }} className="md:col-span-2" />
-                          <Input placeholder="Vị trí" value={work.position || ''} onChange={(e) => {
-                             const arr = [...formData.workExperiences!]; arr[index].position = e.target.value; handleTextChange("workExperiences", arr);
-                          }} />
-                          <Input placeholder="SĐT Người tham chiếu" value={work.phoneNumber || ''} onChange={(e) => {
-                             const arr = [...formData.workExperiences!]; arr[index].phoneNumber = e.target.value; handleTextChange("workExperiences", arr);
-                          }} />
-                          <Input placeholder="Tên người tham chiếu" value={work.referencePerson || ''} onChange={(e) => {
-                             const arr = [...formData.workExperiences!]; arr[index].referencePerson = e.target.value; handleTextChange("workExperiences", arr);
-                          }} className="md:col-span-2" />
-                          <Input placeholder="Mô tả công việc" value={work.jobDescription || ''} onChange={(e) => {
-                             const arr = [...formData.workExperiences!]; arr[index].jobDescription = e.target.value; handleTextChange("workExperiences", arr);
-                          }} className="md:col-span-2" />
+                          <div className="grid grid-cols-2 gap-4 md:col-span-2">
+                             <div className="space-y-1.5">
+                                <Label className="text-xs">Từ tháng</Label>
+                                <Input type="month" value={work.fromMonth || ''} onChange={(e) => {
+                                   const arr = [...formData.workExperiences!]; arr[index].fromMonth = e.target.value; handleTextChange("workExperiences", arr);
+                                }} className="h-11 rounded-xl" />
+                             </div>
+                             <div className="space-y-1.5">
+                                <Label className="text-xs">Đến tháng</Label>
+                                <Input type="month" value={work.toMonth || ''} onChange={(e) => {
+                                   const arr = [...formData.workExperiences!]; arr[index].toMonth = e.target.value; handleTextChange("workExperiences", arr);
+                                }} className="h-11 rounded-xl" />
+                             </div>
+                          </div>
+                          <div className="space-y-1.5 md:col-span-2">
+                             <Label className="text-xs">Tên Công ty / Đơn vị</Label>
+                             <Input placeholder="VD: Công ty công nghệ VNFT" value={work.companyName || ''} onChange={(e) => {
+                                const arr = [...formData.workExperiences!]; arr[index].companyName = e.target.value; handleTextChange("workExperiences", arr);
+                             }} className="h-11 rounded-xl" />
+                          </div>
+                          <div className="space-y-1.5 md:col-span-2">
+                             <Label className="text-xs">Vị trí công tác</Label>
+                             <Input placeholder="VD: Nhân viên Phát triển phần mềm" value={work.position || ''} onChange={(e) => {
+                                const arr = [...formData.workExperiences!]; arr[index].position = e.target.value; handleTextChange("workExperiences", arr);
+                             }} className="h-11 rounded-xl" />
+                          </div>
+                          <div className="space-y-1.5">
+                             <Label className="text-xs">Người tham chiếu</Label>
+                             <Input placeholder="VD: Nguyễn Văn B (Trưởng phòng)" value={work.referencePerson || ''} onChange={(e) => {
+                                const arr = [...formData.workExperiences!]; arr[index].referencePerson = e.target.value; handleTextChange("workExperiences", arr);
+                             }} className="h-11 rounded-xl" />
+                          </div>
+                          <div className="space-y-1.5">
+                             <Label className="text-xs">SĐT người tham chiếu</Label>
+                             <Input placeholder="VD: 0912345678" value={work.phoneNumber || ''} onChange={(e) => {
+                                const arr = [...formData.workExperiences!]; arr[index].phoneNumber = e.target.value; handleTextChange("workExperiences", arr);
+                             }} className="h-11 rounded-xl" />
+                          </div>
+                          <div className="space-y-1.5 md:col-span-2">
+                             <Label className="text-xs">Mô tả công việc</Label>
+                             <Textarea placeholder="Liệt kê ngắn gọn vai trò và các công việc chuyên môn bạn đã đảm nhận tại đơn vị này..." rows={4} value={work.jobDescription || ''} onChange={(e) => {
+                                const arr = [...formData.workExperiences!]; arr[index].jobDescription = e.target.value; handleTextChange("workExperiences", arr);
+                             }} className="rounded-xl resize-none" />
+                          </div>
                        </div>
                        <Button type="button" variant="destructive" size="icon" className="shrink-0 rounded-xl" onClick={() => {
                           handleTextChange("workExperiences", formData.workExperiences!.filter((_, i) => i !== index));

@@ -1,9 +1,16 @@
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetFooter } from '@/components/ui/sheet';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Textarea } from '@/components/ui/textarea';
+import { FileText } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
+import { Textarea } from "@/components/ui/textarea";
 
 interface EmployeeCodeFormProps {
   isOpen: boolean;
@@ -15,34 +22,115 @@ interface EmployeeCodeFormProps {
 }
 
 export default function EmployeeCodeFormSheet({
-  isOpen, onOpenChange, formData, setFormData, isEditing, onSave
+  isOpen,
+  onOpenChange,
+  formData,
+  setFormData,
+  isEditing,
+  onSave,
 }: EmployeeCodeFormProps) {
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
-      <SheetContent className='overflow-y-auto sm:max-w-md w-full bg-card border-none shadow-2xl rounded-l-3xl z-50 flex flex-col h-full right-0 p-0'>
-        <div className='px-6 py-5 border-b border-border bg-linear-to-b from-muted/50 to-transparent'>
-          <SheetHeader><SheetTitle className='text-2xl font-bold text-[#1E2062]'>{isEditing ? 'Cập nhật' : 'Tạo mới'} Prefix</SheetTitle></SheetHeader>
+      <SheetContent className="sm:max-w-[550px] w-full border-l-slate-200 shadow-2xl flex flex-col h-full p-0">
+        <div className="p-6 border-b border-border shrink-0 bg-muted/50">
+          <SheetHeader>
+            <SheetTitle className="text-xl font-bold text-[#1E2062] flex items-center gap-2">
+              <span className="p-1.5 bg-[#2E3192]/10 text-[#2E3192] rounded-md">
+                <FileText size={18} />
+              </span>
+              {isEditing ? "Cập nhật Prefix" : "Tạo mới Prefix"}
+            </SheetTitle>
+            <SheetDescription className="text-muted-foreground">
+              Thông tin cấu hình cho mã định danh nhân viên.
+            </SheetDescription>
+          </SheetHeader>
         </div>
-        <div className='px-6 py-6 flex flex-col gap-6 flex-1'>
-          <div className='space-y-2'>
-            <Label>Prefix <span className='text-rose-500'>*</span></Label>
-            <Input value={formData.prefix} onChange={(e) => setFormData({...formData, prefix: e.target.value})} placeholder='VD: VN, SGN' className='h-12 rounded-xl focus-visible:ring-[#2E3192]' />
+
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (formData.prefix.trim()) {
+              onSave();
+            }
+          }}
+          className="flex flex-col flex-1 overflow-hidden"
+        >
+          <div className="flex-1 overflow-y-auto p-6 space-y-8">
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label
+                  htmlFor="prefix"
+                  className="text-sm font-semibold text-foreground"
+                >
+                  Prefix <span className="text-rose-500">*</span>
+                </Label>
+                <Input
+                  id="prefix"
+                  value={formData.prefix}
+                  onChange={(e) =>
+                    setFormData({ ...formData, prefix: e.target.value })
+                  }
+                  placeholder="VD: VN, SGN"
+                  className="rounded-xl border-border focus-visible:ring-[#2E3192]"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label
+                  htmlFor="desc"
+                  className="text-sm font-semibold text-foreground"
+                >
+                  Mô tả
+                </Label>
+                <Textarea
+                  id="desc"
+                  value={formData.description}
+                  onChange={(e) =>
+                    setFormData({ ...formData, description: e.target.value })
+                  }
+                  placeholder="Nhập mô tả"
+                  rows={3}
+                  className="rounded-xl border-border focus-visible:ring-[#2E3192] resize-none"
+                />
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between rounded-xl border border-border bg-card text-card-foreground p-4 shadow-sm">
+              <div className="space-y-1">
+                <Label className="text-foreground text-sm font-semibold block">
+                  Trạng thái hoạt động
+                </Label>
+                <p className="text-xs text-muted-foreground">
+                  Cho phép hoặc vô hiệu hóa prefix này trên hệ thống
+                </p>
+              </div>
+              <Switch
+                checked={formData.active}
+                onCheckedChange={(checked) =>
+                  setFormData({ ...formData, active: checked })
+                }
+              />
+            </div>
           </div>
-          <div className='space-y-2'>
-            <Label>Mô tả</Label>
-            <Textarea value={formData.description} onChange={(e) => setFormData({...formData, description: e.target.value})} placeholder='Nhập mô tả' className='rounded-xl focus-visible:ring-[#2E3192] min-h-[120px]' />
+
+          <div className="p-4 border-t border-border shrink-0 bg-card text-card-foreground flex justify-end gap-3">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => onOpenChange(false)}
+              className="rounded-xl border-border text-muted-foreground hover:bg-muted w-32 transition-all"
+            >
+              Hủy
+            </Button>
+            <Button
+              type="submit"
+              className="rounded-xl bg-[#2E3192] hover:bg-[#1E2062] text-white w-auto px-6 transition-all shadow-md shadow-[#2E3192]/20"
+              disabled={!formData.prefix.trim()}
+            >
+              {isEditing ? "Lưu thay đổi" : "Tạo mới"}
+            </Button>
           </div>
-          <div className='flex items-center space-x-2 pt-2'>
-            <Checkbox id='active' checked={formData.active} onCheckedChange={(c) => setFormData({...formData, active: !!c})} />
-            <Label htmlFor='active'>Cho phép hoạt động</Label>
-          </div>
-        </div>
-        <div className='px-6 py-5 border-t border-border mt-auto bg-card'>
-          <SheetFooter className='flex-col-reverse sm:flex-row gap-3'>
-            <Button variant='outline' onClick={() => onOpenChange(false)} className='h-12 w-full rounded-xl border-border hover:bg-muted text-foreground'>Hủy</Button>
-            <Button onClick={onSave} className='h-12 w-full rounded-xl bg-[#2E3192] hover:bg-[#1E2062] text-white'>{isEditing ? 'Cập nhật' : 'Tạo mới'}</Button>
-          </SheetFooter>
-        </div>
+        </form>
       </SheetContent>
     </Sheet>
   );

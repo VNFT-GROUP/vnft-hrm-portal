@@ -10,6 +10,7 @@ import {
   ContextMenuItem,
   ContextMenuSeparator,
 } from "@/components/ui/context-menu";
+import { AvatarPlaceholder } from "@/components/custom/AvatarPlaceholder";
 
 export interface Employee {
   id: string;
@@ -86,9 +87,12 @@ export default function EmployeeTable({ employees, onEdit, onDelete }: EmployeeT
                   {emp.attendanceCode || "-"}
                 </TableCell>
                 <TableCell className="py-4 border-r border-border text-left align-middle px-6 whitespace-nowrap">
-                  <div className="flex flex-col">
-                    <span className="font-bold text-[#1E2062]">{emp.fullName || "-"}</span>
-                    {emp.email && <span className="text-xs text-muted-foreground">{emp.email}</span>}
+                  <div className="flex items-center gap-3">
+                    <AvatarPlaceholder name={emp.fullName} className="w-10 h-10 text-sm" />
+                    <div className="flex flex-col">
+                      <span className="font-bold text-[#1E2062]">{emp.fullName || "-"}</span>
+                      {emp.email && <span className="text-xs text-muted-foreground">{emp.email}</span>}
+                    </div>
                   </div>
                 </TableCell>
                 <TableCell className="font-medium text-muted-foreground py-4 border-r border-border text-left align-middle px-6 whitespace-nowrap">

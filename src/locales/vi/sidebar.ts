@@ -8,7 +8,7 @@ export default {
   employeeCodes: "Mã nhân viên",
   departments: "Phòng ban",
   positions: "Vị trí",
-  roles: "Nhóm",
+  groups: "Nhóm",
   attendance: "Chấm công",
   evaluationCriteria: "Tiêu chí đánh giá",
   permissions: "Vai trò",

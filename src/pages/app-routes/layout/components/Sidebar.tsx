@@ -80,7 +80,7 @@ export default function Sidebar() {
             { label: t('sidebar.employees'), path: "/app/management/employees", icon: <Users size={16} /> },
             { label: t('sidebar.departments'), path: "/app/management/departments", icon: <Building2 size={16} /> },
             { label: t('sidebar.positions', 'Vị trí'), path: "/app/management/positions", icon: <Briefcase size={16} /> },
-            { label: t('sidebar.roles', 'Nhóm'), path: "/app/management/roles", icon: <CheckSquare size={16} /> },
+            { label: t('sidebar.groups', 'Nhóm'), path: "/app/management/groups", icon: <CheckSquare size={16} /> },
           ]
         },
         { label: t('sidebar.evaluation'), path: "/app/evaluation", icon: <ClipboardCheck size={20} /> },

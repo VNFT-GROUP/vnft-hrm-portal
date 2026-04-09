@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 
-interface RoleFormSheetProps {
+interface GroupFormSheetProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
   formData: { name: string; description: string; active: boolean };
@@ -16,7 +16,7 @@ interface RoleFormSheetProps {
   onSave: () => void;
 }
 
-export default function RoleFormSheet({ isOpen, onOpenChange, formData, setFormData, isEditing, onSave }: RoleFormSheetProps) {
+export default function GroupFormSheet({ isOpen, onOpenChange, formData, setFormData, isEditing, onSave }: GroupFormSheetProps) {
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
       <SheetContent className="sm:max-w-[550px] w-full border-l-slate-200 shadow-2xl flex flex-col h-full p-0">

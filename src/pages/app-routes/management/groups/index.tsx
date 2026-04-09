@@ -5,20 +5,20 @@ import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
 import { useLayoutStore } from "@/store/useLayoutStore";
 
-import RoleTable from "./components/RoleTable";
-import RoleFormSheet from "./components/RoleFormSheet";
-import type { RoleResponse } from "@/types/response/role/RoleResponse";
-import type { UpsertRoleRequest } from "@/types/request/role/UpsertRoleRequest";
+import GroupTable from "./components/GroupTable";
+import GroupFormSheet from "./components/GroupFormSheet";
+import type { GroupResponse } from "@/types/response/group/GroupResponse";
+import type { UpsertGroupRequest } from "@/types/request/group/UpsertGroupRequest";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { roleService } from "@/services/role/roleService";
+import { groupService } from "@/services/group/groupService";
 import { toast } from "sonner";
 
-export default function RolesPage() {
+export default function GroupsPage() {
   const showRoleLegend = useLayoutStore((state) => state.showRoleLegend);
   const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-  const [editingRole, setEditingRole] = useState<RoleResponse | null>(null);
+  const [editingGroup, setEditingGroup] = useState<GroupResponse | null>(null);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -26,34 +26,34 @@ export default function RolesPage() {
     active: true,
   });
 
-  const { data: rolesData, isLoading } = useQuery({
-    queryKey: ["roles", searchTerm],
-    queryFn: () => roleService.getRoles(searchTerm),
+  const { data: groupsData, isLoading } = useQuery({
+    queryKey: ["groups", searchTerm],
+    queryFn: () => groupService.getGroups(searchTerm),
   });
 
-  const roles = rolesData?.data || [];
+  const groups = groupsData?.data || [];
 
-  const handleOpenForm = (role?: RoleResponse) => {
-    if (role) {
-      setEditingRole(role);
+  const handleOpenForm = (group?: GroupResponse) => {
+    if (group) {
+      setEditingGroup(group);
       setFormData({
-        name: role.name,
-        description: role.description || "",
-        active: role.active ?? true,
+        name: group.name,
+        description: group.description || "",
+        active: group.active ?? true,
       });
     } else {
-      setEditingRole(null);
+      setEditingGroup(null);
       setFormData({ name: "", description: "", active: true });
     }
     setIsOpen(true);
   };
 
   const createMutation = useMutation({
-    mutationFn: (data: UpsertRoleRequest) =>
-      roleService.createRole(data),
+    mutationFn: (data: UpsertGroupRequest) =>
+      groupService.createGroup(data),
     onSuccess: () => {
       toast.success("Thêm nhóm thành công!");
-      queryClient.invalidateQueries({ queryKey: ["roles"] });
+      queryClient.invalidateQueries({ queryKey: ["groups"] });
       setIsOpen(false);
     },
     onError: () => {
@@ -62,11 +62,11 @@ export default function RolesPage() {
   });
 
   const updateMutation = useMutation({
-    mutationFn: ({ id, data }: { id: string; data: UpsertRoleRequest }) =>
-      roleService.updateRole(id, data),
+    mutationFn: ({ id, data }: { id: string; data: UpsertGroupRequest }) =>
+      groupService.updateGroup(id, data),
     onSuccess: () => {
       toast.success("Cập nhật nhóm thành công!");
-      queryClient.invalidateQueries({ queryKey: ["roles"] });
+      queryClient.invalidateQueries({ queryKey: ["groups"] });
       setIsOpen(false);
     },
     onError: () => {
@@ -75,10 +75,10 @@ export default function RolesPage() {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id: string) => roleService.deleteRole(id),
+    mutationFn: (id: string) => groupService.deleteGroup(id),
     onSuccess: () => {
       toast.success("Xóa/Tạm ngưng nhóm thành công!");
-      queryClient.invalidateQueries({ queryKey: ["roles"] });
+      queryClient.invalidateQueries({ queryKey: ["groups"] });
     },
     onError: () => {
       toast.error("Xóa nhóm thất bại!");
@@ -88,14 +88,14 @@ export default function RolesPage() {
   const handleSave = () => {
     if (!formData.name.trim()) return;
 
-    const payload: UpsertRoleRequest = {
+    const payload: UpsertGroupRequest = {
       name: formData.name,
       description: formData.description || undefined,
       active: formData.active,
     };
 
-    if (editingRole) {
-      updateMutation.mutate({ id: editingRole.id, data: payload });
+    if (editingGroup) {
+      updateMutation.mutate({ id: editingGroup.id, data: payload });
     } else {
       createMutation.mutate(payload);
     }
@@ -190,8 +190,8 @@ export default function RolesPage() {
             <p className="animate-pulse">Đang tải danh sách nhóm...</p>
           </div>
         ) : (
-          <RoleTable
-            roles={roles}
+          <GroupTable
+            groups={groups}
             onEdit={handleOpenForm}
             onDelete={handleDelete}
           />
@@ -199,12 +199,12 @@ export default function RolesPage() {
       </motion.div>
 
       {/* Side Form (Sheet) */}
-      <RoleFormSheet
+      <GroupFormSheet
         isOpen={isOpen}
         onOpenChange={setIsOpen}
         formData={formData}
         setFormData={setFormData}
-        isEditing={!!editingRole}
+        isEditing={!!editingGroup}
         onSave={handleSave}
       />
     </div>

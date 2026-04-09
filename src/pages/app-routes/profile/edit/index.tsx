@@ -330,7 +330,17 @@ export default function EditProfilePage() {
                       value={formData.employeeCode}
                       onChange={(e) => handleTextChange("employeeCode", e.target.value)}
                       placeholder={t("editProfile.basicInfo.employeeCodePlaceholder", { defaultValue: "VD: VNSGN090" })}
-                      className="h-11 rounded-xl bg-muted"
+                      className="h-11 rounded-xl bg-[#2E3192]/5 border-[#2E3192]/20 text-[#2E3192] font-semibold opacity-100 pointer-events-none"
+                      disabled
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>{t("editProfile.basicInfo.englishName", { defaultValue: "Tên tiếng Anh (English Name)" })}</Label>
+                    <Input 
+                      value={formData.englishName}
+                      onChange={(e) => handleTextChange("englishName", e.target.value)}
+                      placeholder={t("editProfile.basicInfo.englishNamePlaceholder", { defaultValue: "VD: Ethan Truong" })} 
+                      className="h-11 rounded-xl bg-[#2E3192]/5 border-[#2E3192]/20 text-[#2E3192] font-semibold opacity-100 pointer-events-none"
                       disabled
                     />
                   </div>
@@ -340,17 +350,7 @@ export default function EditProfilePage() {
                       value={formData.fullName}
                       onChange={(e) => handleTextChange("fullName", e.target.value)}
                       placeholder={t("editProfile.basicInfo.fullNamePlaceholder", { defaultValue: "VD: Trương Thành Nhân" })} 
-                      className="h-11 rounded-xl"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>{t("editProfile.basicInfo.englishName", { defaultValue: "Tên tiếng Anh (English Name)" })}</Label>
-                    <Input 
-                      value={formData.englishName}
-                      onChange={(e) => handleTextChange("englishName", e.target.value)}
-                      placeholder={t("editProfile.basicInfo.englishNamePlaceholder", { defaultValue: "VD: Ethan Truong" })} 
-                      className="h-11 rounded-xl bg-muted"
-                      disabled
+                      className="h-11 rounded-xl bg-muted/40 border-transparent hover:border-border hover:bg-muted/60 focus:bg-card focus:border-ring transition-colors"
                     />
                   </div>
                   <div className="space-y-2">
@@ -359,7 +359,7 @@ export default function EditProfilePage() {
                       value={formData.phoneNumber || ''}
                       onChange={(e) => handleTextChange("phoneNumber", e.target.value)}
                       placeholder={t("editProfile.basicInfo.phoneNumberPlaceholder", { defaultValue: "VD: 0987654321" })} 
-                      className="h-11 rounded-xl"
+                      className="h-11 rounded-xl bg-muted/40 border-transparent hover:border-border hover:bg-muted/60 focus:bg-card focus:border-ring transition-colors"
                     />
                   </div>
                   <div className="space-y-2">

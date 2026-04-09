@@ -5,11 +5,29 @@ import Sidebar from "./components/Sidebar.tsx";
 import Topbar from "./components/Topbar.tsx";
 import ScrollToTopButton from "../../../components/custom/ScrollToTopButton";
 import LoadingPage from "../../../components/custom/loadingPage/LoadingPage";
+import { useAuthStore } from "@/store/useAuthStore";
+import { currentUserProfileService } from "@/services/user/currentUserProfileService";
 import "./AppLayout.css";
 
 export default function AppLayout() {
   const scrollViewportRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
+  const updateSession = useAuthStore((state) => state.updateSession);
+
+  // Fetch current user session once when Layout mounts
+  useEffect(() => {
+    const fetchSession = async () => {
+      try {
+        const res = await currentUserProfileService.getUserSession();
+        if (res.data) {
+          updateSession(res.data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch user session", error);
+      }
+    };
+    fetchSession();
+  }, [updateSession]);
 
   // Automatically scroll to the top of the view when the page route changes.
   useEffect(() => {

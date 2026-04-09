@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 export default function ProfileHeader() {
   const { t } = useTranslation();
   return (
-    <div className="bg-card text-card-foreground rounded-2xl p-6 shadow-sm border border-border mb-6 relative overflow-hidden group/header hover:shadow-md transition-all duration-300 animate-in fade-in slide-in-from-top-4 duration-500">
+    <div className="bg-card text-card-foreground rounded-2xl p-6 shadow-sm border border-border mb-6 relative overflow-hidden group/header hover:shadow-md transition-all animate-in fade-in slide-in-from-top-4 duration-500">
       
       {/* Floating Ambient Blobs */}
       <motion.div 
@@ -26,7 +26,7 @@ export default function ProfileHeader() {
           dragConstraints={{ top: 0, left: 0, bottom: 0, right: 0 }}
           dragElastic={0.4}
           whileTap={{ cursor: "grabbing", scale: 0.95 }}
-          className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-muted shadow-[0_0_0_4px_white,0_4px_20px_rgba(0,0,0,0.08)] flex-shrink-0 flex items-center justify-center text-4xl relative z-10 cursor-grab group-hover/header:shadow-[0_0_0_4px_white,0_8px_30px_rgba(0,0,0,0.12)] transition-shadow duration-300"
+          className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-muted shadow-[0_0_0_4px_white,0_4px_20px_rgba(0,0,0,0.08)] shrink-0 flex items-center justify-center text-4xl relative z-10 cursor-grab group-hover/header:shadow-[0_0_0_4px_white,0_8px_30px_rgba(0,0,0,0.12)] transition-shadow duration-300"
         >
           <div className="w-full h-full overflow-hidden rounded-full pointer-events-none group-hover/header:scale-110 transition-transform duration-500">
             <img 
@@ -38,7 +38,8 @@ export default function ProfileHeader() {
         </motion.div>
         
         {/* Basic Info */}
-        <div className="flex-1 pb-2">
+        <div className="flex-1 pb-2 flex flex-col md:flex-row md:items-start justify-between gap-4">
+          <div>
           <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4 mb-2">
             <h1 className="text-2xl font-bold text-foreground">Trương Thành Nhân</h1>
             <span className="px-3 py-1 bg-muted text-muted-foreground rounded-full text-xs font-medium">
@@ -67,6 +68,21 @@ export default function ProfileHeader() {
               <span>Hồ Chí Minh</span>
             </div>
           </div>
+          </div>
+          
+          <motion.button 
+            whileHover={{ scale: 1.03 }} 
+            whileTap={{ scale: 0.97 }}
+            className="group relative overflow-hidden px-5 py-2.5 rounded-full font-semibold text-white shadow-md shadow-[#2E3192]/20 border border-white/10 transition-all self-start flex items-center justify-center bg-linear-to-r from-[#2E3192] via-[#4d51d8] to-[#2E3192] bg-size-[200%_auto] hover:bg-position-[100%_0] duration-500 ease-out z-10"
+          >
+            {/* Gleam Shimmer Effect */}
+            <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full bg-linear-to-r from-transparent via-white/25 to-transparent transition-transform duration-700 ease-in-out"></span>
+
+            <span className="relative flex items-center gap-2 text-sm tracking-wide">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"/><path d="M16 4a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L16 4Z"/></svg>
+              {t("profile.editBtn", { defaultValue: "Cập nhật hồ sơ" })}
+            </span>
+          </motion.button>
         </div>
       </div>
     </div>

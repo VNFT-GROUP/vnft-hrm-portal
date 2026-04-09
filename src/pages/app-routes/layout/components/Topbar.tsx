@@ -42,7 +42,7 @@ export default function Topbar() {
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
 
-  const { user, logout: logoutAction } = useAuthStore();
+  const { session, logout: logoutAction } = useAuthStore();
 
   const handleLogout = async () => {
     setIsProfileOpen(false);
@@ -145,19 +145,19 @@ export default function Topbar() {
 
           <div className="user-profile" onClick={() => setIsProfileOpen(!isProfileOpen)}>
             <div className="user-info">
-               <span className="user-name">{user?.username || t('profile.defaultUser')}</span>
+               <span className="user-name">{session?.username || t('profile.defaultUser')}</span>
                <span className="user-role">{t('profile.roleAdmin')}</span>
             </div>
-            <div className="user-avatar-circle">{user?.username ? user.username.charAt(0).toUpperCase() : "U"}</div>
+            <div className="user-avatar-circle">{session?.username ? session.username.charAt(0).toUpperCase() : "U"}</div>
           </div>
 
         {/* PROFILE DROPDOWN */}
         {isProfileOpen && (
           <div className="profile-dropdown">
             <div className="pd-header">
-              <div className="pd-avatar-large">{user?.username ? user.username.charAt(0).toUpperCase() : "U"}</div>
+              <div className="pd-avatar-large">{session?.username ? session.username.charAt(0).toUpperCase() : "U"}</div>
               <div className="pd-info">
-                <h3 className="pd-name">{user?.username || t('profile.defaultUser')}</h3>
+                <h3 className="pd-name">{session?.username || t('profile.defaultUser')}</h3>
                 <div className="pd-role-item"><Briefcase size={15}/> HR & ADM</div>
                 <div className="pd-role-item"><BadgeCheck size={15}/> {t('profile.roleStaff')}</div>
               </div>

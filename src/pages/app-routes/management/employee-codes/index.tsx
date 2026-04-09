@@ -15,7 +15,6 @@ export default function EmployeeCodesPage() {
   const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState('');
   const [isOpen, setIsOpen] = useState(false);
-  const [editingItem, setEditingItem] = useState<EmployeeCodeResponse | null>(null);
 
   const [formData, setFormData] = useState<{prefix: string, description: string, active: boolean}>({ 
     prefix: '', description: '', active: true
@@ -29,18 +28,8 @@ export default function EmployeeCodesPage() {
   const codes: EmployeeCodeResponse[] = qData?.data || [];
   const filtered = codes.filter(c => c.prefix.toLowerCase().includes(searchTerm.toLowerCase()));
 
-  const handleOpenForm = (item?: EmployeeCodeResponse) => {
-    if (item) {
-      setEditingItem(item);
-      setFormData({ 
-        prefix: item.prefix, 
-        description: item.description || '', 
-        active: item.active ?? false
-      });
-    } else {
-      setEditingItem(null);
-      setFormData({ prefix: '', description: '', active: true });
-    }
+  const handleOpenForm = () => {
+    setFormData({ prefix: '', description: '', active: true });
     setIsOpen(true);
   };
 
@@ -48,16 +37,6 @@ export default function EmployeeCodesPage() {
     mutationFn: (data: UpsertEmployeeCodeRequest) => employeeCodeService.createEmployeeCode(data),
     onSuccess: () => {
       toast.success('Tạo thành công');
-      queryClient.invalidateQueries({ queryKey: ['employee-codes'] });
-      setIsOpen(false);
-    },
-  });
-
-  const updateMutation = useMutation({
-    mutationFn: ({ id, data }: { id: string; data: UpsertEmployeeCodeRequest }) =>
-      employeeCodeService.updateEmployeeCode(id, data),
-    onSuccess: () => {
-      toast.success('Cập nhật thành công');
       queryClient.invalidateQueries({ queryKey: ['employee-codes'] });
       setIsOpen(false);
     },
@@ -71,6 +50,7 @@ export default function EmployeeCodesPage() {
     },
   });
 
+
   const handleSave = () => {
     if (!formData.prefix.trim()) return;
 
@@ -80,16 +60,13 @@ export default function EmployeeCodesPage() {
       active: formData.active,
     };
 
-    if (editingItem) {
-      updateMutation.mutate({ id: editingItem.id, data: payload });
-    } else {
-      createMutation.mutate(payload);
-    }
+    createMutation.mutate(payload);
   };
 
   const handleDelete = (id: string) => {
     deleteMutation.mutate(id);
   };
+
 
   return (
     <div className='p-4 md:p-8 w-full max-w-6xl mx-auto min-h-full flex flex-col gap-6 md:gap-8'>
@@ -112,10 +89,10 @@ export default function EmployeeCodesPage() {
       </motion.div>
 
       <motion.div className='bg-card rounded-2xl shadow-sm border border-border overflow-hidden flex-1 group hover:shadow-md transition-shadow duration-300'>
-        <EmployeeCodeTable data={filtered} onEdit={handleOpenForm} onDelete={handleDelete} />
+        <EmployeeCodeTable data={filtered} onDelete={handleDelete} />
       </motion.div>
 
-      <EmployeeCodeFormSheet isOpen={isOpen} onOpenChange={setIsOpen} formData={formData} setFormData={setFormData} isEditing={!!editingItem} onSave={handleSave} />
+      <EmployeeCodeFormSheet isOpen={isOpen} onOpenChange={setIsOpen} formData={formData} setFormData={setFormData} onSave={handleSave} />
     </div>
   );
 }

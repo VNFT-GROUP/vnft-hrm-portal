@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Edit2, SearchX, Trash2 } from 'lucide-react';
+import { SearchX, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
@@ -9,11 +9,10 @@ import {
   ContextMenuTrigger,
   ContextMenuContent,
   ContextMenuItem,
-  ContextMenuSeparator,
 } from '@/components/ui/context-menu';
 import type { EmployeeCodeResponse } from '@/types/response/user/EmployeeCodeResponse';
 
-export default function EmployeeCodeTable({ data, onEdit, onDelete }: { data: EmployeeCodeResponse[], onEdit: (i: EmployeeCodeResponse) => void, onDelete: (id: string) => void }) {
+export default function EmployeeCodeTable({ data, onDelete }: { data: EmployeeCodeResponse[], onDelete: (id: string) => void }) {
   const [rightClickedId, setRightClickedId] = useState<string | null>(null);
 
   const activeItem = data.find(d => d.id === rightClickedId);
@@ -62,10 +61,7 @@ export default function EmployeeCodeTable({ data, onEdit, onDelete }: { data: Em
                     </TableCell>
                     <TableCell className="py-4 text-center align-middle">
                       <div className="flex justify-center gap-2">
-                        <Button variant="ghost" size="icon" onClick={() => onEdit(item)} className="h-8 w-8 text-[#2E3192] hover:bg-[#2E3192]/10 hover:text-[#2E3192] rounded-lg">
-                          <Edit2 size={16} />
-                        </Button>
-                        <Button variant="ghost" size="icon" onClick={() => { if(window.confirm('Bạn có chắc chắn?')) onDelete(item.id); }} className="h-8 w-8 text-rose-500 hover:bg-rose-50 hover:text-rose-600 rounded-lg">
+                        <Button variant="ghost" size="icon" onClick={() => { if(window.confirm('Bạn có chắc chắn muốn xóa mã này?')) onDelete(item.id); }} className="h-8 w-8 text-rose-500 hover:bg-rose-50 hover:text-rose-600 rounded-lg">
                           <Trash2 size={16} />
                         </Button>
                       </div>
@@ -90,14 +86,9 @@ export default function EmployeeCodeTable({ data, onEdit, onDelete }: { data: Em
         {/* RENDER CONTEXT MENU FOR THE ROW */}
         {activeItem && (
           <ContextMenuContent className="w-56 z-50">
-            <ContextMenuItem className="cursor-pointer" onClick={() => onEdit(activeItem)}>
-              <Edit2 className="mr-2 h-4 w-4 text-[#2E3192]" />
-              <span>Chỉnh sửa Prefix</span>
-            </ContextMenuItem>
-            <ContextMenuSeparator />
             <ContextMenuItem 
               className="cursor-pointer text-rose-600 focus:text-rose-700 focus:bg-rose-50 dark:focus:bg-rose-500/10" 
-              onClick={() => { if(window.confirm('Bạn có chắc chắn?')) onDelete(activeItem.id); }}
+              onClick={() => { if(window.confirm('Bạn có chắc chắn muốn xóa mã này?')) onDelete(activeItem.id); }}
             >
               <Trash2 className="mr-2 h-4 w-4 text-rose-500" />
               <span>Xóa Prefix</span>

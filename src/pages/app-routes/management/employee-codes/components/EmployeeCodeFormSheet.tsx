@@ -17,7 +17,6 @@ interface EmployeeCodeFormProps {
   onOpenChange: (open: boolean) => void;
   formData: { prefix: string; description: string; active: boolean };
   setFormData: (data: { prefix: string; description: string; active: boolean }) => void;
-  isEditing: boolean;
   onSave: () => void;
 }
 
@@ -26,7 +25,6 @@ export default function EmployeeCodeFormSheet({
   onOpenChange,
   formData,
   setFormData,
-  isEditing,
   onSave,
 }: EmployeeCodeFormProps) {
   return (
@@ -38,7 +36,7 @@ export default function EmployeeCodeFormSheet({
               <span className="p-1.5 bg-[#2E3192]/10 text-[#2E3192] rounded-md">
                 <FileText size={18} />
               </span>
-              {isEditing ? "Cập nhật Prefix" : "Tạo mới Prefix"}
+              Tạo mới Prefix
             </SheetTitle>
             <SheetDescription className="text-muted-foreground">
               Thông tin cấu hình cho mã định danh nhân viên.
@@ -127,7 +125,7 @@ export default function EmployeeCodeFormSheet({
               className="rounded-xl bg-[#2E3192] hover:bg-[#1E2062] text-white w-auto px-6 transition-all shadow-md shadow-[#2E3192]/20"
               disabled={!formData.prefix.trim()}
             >
-              {isEditing ? "Lưu thay đổi" : "Tạo mới"}
+              Tạo mới
             </Button>
           </div>
         </form>

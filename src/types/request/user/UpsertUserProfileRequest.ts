@@ -10,6 +10,7 @@ export interface UpsertUserProfileRequest {
   fullName: string;
   englishName?: string;
   employeeCode: string;
+  phoneNumber?: string;
   gender?: Gender;
   dateOfBirth?: string;
   maritalStatus?: MaritalStatus;

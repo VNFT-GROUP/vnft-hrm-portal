@@ -104,7 +104,7 @@ export default function PositionFormSheet({ isOpen, onOpenChange, formData, setF
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)} className="rounded-xl border-border text-muted-foreground hover:bg-muted w-32 transition-all">
               {t("position.form.cancel")}
             </Button>
-            <Button type="submit" onClick={onSave} className="rounded-xl bg-[#2E3192] hover:bg-[#1E2062] text-white w-auto px-6 transition-all shadow-md shadow-[#2E3192]/20" disabled={!formData.name.trim()}>
+            <Button type="submit" className="rounded-xl bg-[#2E3192] hover:bg-[#1E2062] text-white w-auto px-6 transition-all shadow-md shadow-[#2E3192]/20" disabled={!formData.name.trim()}>
               {isEditing ? t("position.form.saveChanges") : t("position.form.saveBtn")}
             </Button>
           </div>

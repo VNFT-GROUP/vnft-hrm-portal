@@ -8,6 +8,7 @@ const AppLayout = lazy(() => import("../pages/app-routes/layout/AppLayout"));
 // Dynamic Imports for Inner Pages
 const HomePage = lazy(() => import("../pages/app-routes/dashboard/HomePage"));
 const ProfilePage = lazy(() => import("../pages/app-routes/profile"));
+const EditProfilePage = lazy(() => import("../pages/app-routes/profile/edit"));
 const CalendarPage = lazy(() => import("../pages/app-routes/calendar"));
 const ManagementOverviewPage = lazy(() => import("../pages/app-routes/management/overview/ManagementOverviewPage"));
 const EmployeesPage = lazy(() => import("../pages/app-routes/management/employees"));
@@ -78,6 +79,7 @@ export default function AppRoutes() {
           
           {/* Core Menu */}
           <Route path="profile" element={<ProfilePage />} />
+          <Route path="profile/edit" element={<EditProfilePage />} />
           <Route path="calendar" element={<CalendarPage />} />
           <Route path="evaluation" element={<EvaluationPage />} />
           <Route path="voting" element={<VotingPage />} />

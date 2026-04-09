@@ -1,9 +1,11 @@
 import { Mail, Phone, MapPin, Briefcase } from "lucide-react";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 export default function ProfileHeader() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   return (
     <div className="bg-card text-card-foreground rounded-2xl p-6 shadow-sm border border-border mb-6 relative overflow-hidden group/header hover:shadow-md transition-all animate-in fade-in slide-in-from-top-4 duration-500">
       
@@ -71,6 +73,7 @@ export default function ProfileHeader() {
           </div>
           
           <motion.button 
+            onClick={() => navigate('/app/profile/edit')}
             whileHover={{ scale: 1.03 }} 
             whileTap={{ scale: 0.97 }}
             className="group relative overflow-hidden px-5 py-2.5 rounded-full font-semibold text-white shadow-md shadow-[#2E3192]/20 border border-white/10 transition-all self-start flex items-center justify-center bg-linear-to-r from-[#2E3192] via-[#4d51d8] to-[#2E3192] bg-size-[200%_auto] hover:bg-position-[100%_0] duration-500 ease-out z-10"

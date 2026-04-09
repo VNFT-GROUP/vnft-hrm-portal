@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Save, User, Shield, BookOpen, Briefcase, MapPin, Plus, Trash2, Users, Camera } from "lucide-react";
+import { ArrowLeft, Save, User, Shield, BookOpen, Briefcase, MapPin, Plus, Trash2, Users, Camera, Check, ChevronsUpDown } from "lucide-react";
 import { useAuthStore } from "@/store/useAuthStore";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import type { UpsertUserProfileRequest } from "@/types/request/user/UpsertUserProfileRequest";
 import countries from "i18n-iso-countries";
 import viLocale from "i18n-iso-countries/langs/vi.json";
@@ -65,6 +67,81 @@ const WORLD_RELIGIONS = [
   "Samaritan giáo",
   "Khác"
 ];
+
+const ETHNICITIES_VN = [
+  "Kinh", "Tày", "Thái", "Hoa", "Khơ-me", "Mường", "Nùng", "HMông", "Dao", "Gia-rai",
+  "Ngái", "Ê-đê", "Ba na", "Xơ-Đăng", "Sán Chay", "Cơ-ho", "Chăm", "Sán Dìu", "Hrê", 
+  "Mnông", "Ra-glai", "Xtiêng", "Bru-Vân Kiều", "Thổ", "Giáy", "Cơ-tu", "Gié Triêng", 
+  "Mạ", "Khơ-mú", "Co", "Tà-ôi", "Chơ-ro", "Kháng", "Xinh-mun", "Hà Nhì", "Chu ru", 
+  "Lào", "La Chí", "La Ha", "Phù Lá", "La Hủ", "Lự", "Lô Lô", "Chứt", "Mảng", 
+  "Pà Thẻn", "Co Lao", "Cống", "Bố Y", "Si La", "Pu Péo", "Brâu", "Ơ Đu", "Rơ măm"
+];
+
+const GLOBAL_ETHNICITIES = [
+  "Asian or Asian British",
+  "Indian",
+  "Pakistani",
+  "Bangladeshi",
+  "Chinese",
+  "Any other Asian background",
+  "Black, Black British, Caribbean or African",
+  "Caribbean",
+  "African",
+  "Any other Black, Black British, or Caribbean background",
+  "Mixed or multiple ethnic groups",
+  "White and Black Caribbean",
+  "White and Black African",
+  "White and Asian",
+  "Any other Mixed or multiple ethnic background",
+  "White",
+  "English, Welsh, Scottish, Northern Irish or British",
+  "Irish",
+  "Gypsy or Irish Traveller",
+  "Roma",
+  "Any other White background",
+  "Arab",
+  "Any other ethnic group"
+];
+
+function SearchableSelect({ options, value, onChange, placeholder }: { options: string[], value: string, onChange: (val: string) => void, placeholder: string }) {
+  const [open, setOpen] = useState(false);
+  const { t } = useTranslation();
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger 
+        className="flex h-11 w-full items-center justify-between rounded-xl border border-input bg-card px-3 text-sm text-foreground shadow-sm hover:bg-muted/30 focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 overflow-hidden"
+      >
+        <span className="truncate">{value ? t(value) : t(placeholder)}</span>
+        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+      </PopoverTrigger>
+      <PopoverContent className="p-0 rounded-xl w-[calc(100vw-2rem)] sm:w-[350px] md:w-[450px]" align="start">
+        <Command>
+          <CommandInput placeholder={t("Tìm kiếm...")} />
+          <CommandList className="max-h-[350px]">
+            <CommandEmpty>{t("Không tìm thấy kết quả.")}</CommandEmpty>
+            <CommandGroup>
+              {options.map((opt) => (
+                <CommandItem
+                  key={opt}
+                  value={opt}
+                  onSelect={() => {
+                    onChange(opt);
+                    setOpen(false);
+                  }}
+                >
+                  <Check
+                    className={`mr-2 h-4 w-4 ${value === opt ? "opacity-100" : "opacity-0"}`}
+                  />
+                  {t(opt)}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
+  );
+}
 
 export default function EditProfilePage() {
   const { t } = useTranslation();
@@ -309,21 +386,30 @@ export default function EditProfilePage() {
                   <div className="grid grid-cols-3 gap-4 md:col-span-2">
                      <div className="space-y-2">
                        <Label>Quốc tịch</Label>
-                       <select className={selectClassName} value={formData.nationality || "Việt Nam"} onChange={(e) => handleTextChange("nationality", e.target.value)}>
-                          {ALL_COUNTRIES_SORTED.map(n => <option key={n} value={n}>{n}</option>)}
-                       </select>
+                       <SearchableSelect 
+                         options={ALL_COUNTRIES_SORTED} 
+                         value={formData.nationality || "Việt Nam"} 
+                         onChange={(v) => handleTextChange("nationality", v)} 
+                         placeholder="Chọn Quốc tịch..." 
+                       />
                      </div>
                      <div className="space-y-2">
                        <Label>Dân tộc</Label>
-                       <select className={selectClassName} value={formData.ethnicity || "Kinh"} onChange={(e) => handleTextChange("ethnicity", e.target.value)}>
-                          {["Kinh", "Tày", "Thái", "Mường", "Khmer", "Hoa", "Nùng", "H'Mông", "Dao", "Gia Rai", "Ê Đê", "Ba Na", "Chăm", "Khác"].map(n => <option key={n} value={n}>{n}</option>)}
-                       </select>
+                       <SearchableSelect 
+                         options={[...ETHNICITIES_VN, ...GLOBAL_ETHNICITIES, "Khác"]} 
+                         value={formData.ethnicity || "Kinh"} 
+                         onChange={(v) => handleTextChange("ethnicity", v)} 
+                         placeholder="Chọn Dân tộc..." 
+                       />
                      </div>
                      <div className="space-y-2">
                        <Label>Tôn giáo</Label>
-                       <select className={selectClassName} value={formData.religion || "Không"} onChange={(e) => handleTextChange("religion", e.target.value)}>
-                          {WORLD_RELIGIONS.map(n => <option key={n} value={n}>{n}</option>)}
-                       </select>
+                       <SearchableSelect 
+                         options={WORLD_RELIGIONS} 
+                         value={formData.religion || "Không"} 
+                         onChange={(v) => handleTextChange("religion", v)} 
+                         placeholder="Chọn Tôn giáo..." 
+                       />
                      </div>
                   </div>
                 </div>

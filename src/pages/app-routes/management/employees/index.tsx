@@ -7,6 +7,11 @@ import { useLayoutStore } from "@/store/useLayoutStore";
 
 import EmployeeTable, { type Employee } from "./components/EmployeeTable";
 import EmployeeFormSheet from "./components/EmployeeFormSheet";
+import UserFormSheet from "../users/components/UserFormSheet";
+import { useMutation } from "@tanstack/react-query";
+import { userService } from "@/services/user/userService";
+import { toast } from "sonner";
+import type { CreateUserRequest } from "@/types/request/CreateUserRequest";
 
 const initEmployees: Employee[] = [
   {
@@ -47,6 +52,7 @@ export default function EmployeesPage() {
   const [employees, setEmployees] = useState<Employee[]>(initEmployees);
   const [searchTerm, setSearchTerm] = useState("");
   const [isOpen, setIsOpen] = useState(false);
+  const [isUserFormOpen, setIsUserFormOpen] = useState(false);
   const showEmployeeLegend = useLayoutStore(state => state.showEmployeeLegend);
   const [editingEmployee, setEditingEmployee] = useState<Employee | null>(null);
 
@@ -72,6 +78,21 @@ export default function EmployeesPage() {
     e.fullName.toLowerCase().includes(searchTerm.toLowerCase()) || 
     `${e.empCodePrefix}${e.empCodeId}`.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const createUserMutation = useMutation({
+    mutationFn: (data: CreateUserRequest) => userService.createUser(data),
+    onSuccess: () => {
+      toast.success("Tạo tài khoản hệ thống thành công!");
+      setIsUserFormOpen(false);
+    },
+    onError: () => {
+      toast.error("Đã có lỗi xảy ra khi tạo tài khoản hệ thống.");
+    }
+  });
+
+  const handleSaveUser = (data: CreateUserRequest) => {
+    createUserMutation.mutate(data);
+  };
 
   const handleOpenForm = (emp?: Employee) => {
     if (emp) {
@@ -181,12 +202,14 @@ export default function EmployeesPage() {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
-        <Button 
-          onClick={() => handleOpenForm()} 
-          className="w-full md:w-auto h-12 px-6 rounded-xl bg-[#2E3192] hover:bg-[#1E2062] text-white shadow-md shadow-[#2E3192]/20 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 text-base font-semibold"
-        >
-          <UserPlus size={20} className="mr-2" /> Thêm nhân viên
-        </Button>
+        <div className="flex gap-3 w-full md:w-auto flex-col md:flex-row">
+          <Button 
+            onClick={() => setIsUserFormOpen(true)} 
+            className="w-full md:w-auto h-12 px-6 rounded-xl bg-[#2E3192] hover:bg-[#1E2062] text-white shadow-md shadow-[#2E3192]/20 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 text-base font-semibold"
+          >
+            <UserPlus size={20} className="mr-2" /> Thêm nhân viên
+          </Button>
+        </div>
       </motion.div>
 
 
@@ -208,6 +231,13 @@ export default function EmployeesPage() {
         setFormData={setFormData}
         isEditing={!!editingEmployee}
         onSave={handleSave}
+      />
+      
+      <UserFormSheet 
+        isOpen={isUserFormOpen}
+        onOpenChange={setIsUserFormOpen}
+        onSave={handleSaveUser}
+        isPending={createUserMutation.isPending}
       />
     </div>
   );

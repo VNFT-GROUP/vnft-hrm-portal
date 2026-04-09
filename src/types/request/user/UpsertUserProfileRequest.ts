@@ -4,7 +4,7 @@ import type { EducationRecordRequest } from './EducationRecordRequest';
 import type { WorkExperienceRequest } from './WorkExperienceRequest';
 import type { Gender } from '../../response/user/UserSessionResponse';
 
-export type MaritalStatus = 'SINGLE' | 'MARRIED' | 'DIVORCED' | 'WIDOWED';
+export type MaritalStatus = 'SINGLE' | 'MARRIED';
 
 export interface UpsertUserProfileRequest {
   fullName: string;

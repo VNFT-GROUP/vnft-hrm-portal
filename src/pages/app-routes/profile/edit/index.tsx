@@ -9,6 +9,62 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import type { UpsertUserProfileRequest } from "@/types/request/user/UpsertUserProfileRequest";
+import countries from "i18n-iso-countries";
+import viLocale from "i18n-iso-countries/langs/vi.json";
+
+countries.registerLocale(viLocale);
+const COUNTRIES_VI = Object.values(countries.getNames("vi"));
+const ALL_COUNTRIES_SORTED = [
+  "Việt Nam", 
+  ...COUNTRIES_VI.filter(c => c !== "Việt Nam").sort((a, b) => a.localeCompare(b, 'vi'))
+];
+
+const WORLD_RELIGIONS = [
+  "Không",
+  "Phật giáo",
+  "Công giáo (Thiên chúa / Tin Lành)",
+  "Đạo Cao Đài",
+  "Phật giáo Hòa Hảo",
+  "Hồi giáo",
+  "Ấn Độ giáo (Hindu)",
+  "Tín ngưỡng dân gian",
+  "Thần đạo (Shinto)",
+  "Đạo giáo",
+  "Tôn giáo Yoruba",
+  "Voodoo",
+  "Đạo Sikh",
+  "Ahmadiyya",
+  "Do Thái giáo",
+  "Thông linh học",
+  "Đạo Mu (Mu-ism)",
+  "Giáo hội Thống nhất",
+  "Ayyavazhi",
+  "Đạo Baháʼí",
+  "Nho giáo",
+  "Sarna giáo",
+  "Kỳ Na giáo (Jainism)",
+  "Thiên đạo giáo (Cheondoism)",
+  "Hội thánh Đức Chúa Trời",
+  "Iglesia ni Cristo",
+  "Ravidassia",
+  "Thiên Lý giáo (Tenriism)",
+  "Druze",
+  "Đạo Tengri",
+  "Rastafari",
+  "Yarsanism",
+  "Wicca",
+  "Yazidi giáo",
+  "Assian giáo",
+  "Donyi-Polo",
+  "Giáo hội truyền thống Châu Mỹ",
+  "Sanamahi giáo",
+  "Bái hỏa giáo (Zoroastrianism)",
+  "Mandae giáo",
+  "Khoa học Hạnh phúc",
+  "Tu nghiệm đạo (Shugendō)",
+  "Samaritan giáo",
+  "Khác"
+];
 
 export default function EditProfilePage() {
   const { t } = useTranslation();
@@ -52,6 +108,14 @@ export default function EditProfilePage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
+    // Mandatory field validation
+    if (!formData.employeeCode?.trim() || !formData.fullName?.trim() || !formData.dateOfBirth?.trim() || !formData.maritalStatus || !formData.phoneNumber?.trim() || !formData.currentAddress?.trim() || !formData.currentCity?.trim() || !formData.citizenIdNumber?.trim() || !formData.citizenIdIssueDate?.trim() || !formData.citizenIdIssuePlace?.trim()) {
+      toast.error("Thiếu thông tin bắt buộc", {
+        description: "Vui lòng điền đầy đủ thông tin cho các trường có đánh dấu (*)."
+      });
+      return;
+    }
+
     // Auto-filter out empty template rows before submitting
     const payload = { ...formData };
     
@@ -194,7 +258,7 @@ export default function EditProfilePage() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>Số điện thoại</Label>
+                    <Label>Số điện thoại <span className="text-destructive">*</span></Label>
                     <Input 
                       value={formData.phoneNumber || ''}
                       onChange={(e) => handleTextChange("phoneNumber", e.target.value)}
@@ -203,7 +267,7 @@ export default function EditProfilePage() {
                     />
                   </div>
                   <div className="space-y-2">
-                     <Label>Ngày sinh (Date of Birth)</Label>
+                     <Label>Ngày sinh (Date of Birth) <span className="text-destructive">*</span></Label>
                      <Input 
                        type="date"
                        value={formData.dateOfBirth} 
@@ -224,7 +288,7 @@ export default function EditProfilePage() {
                     </select>
                   </div>
                   <div className="space-y-2">
-                    <Label>Tình trạng hôn nhân</Label>
+                    <Label>Tình trạng hôn nhân <span className="text-destructive">*</span></Label>
                     <select 
                       className={selectClassName} 
                       value={formData.maritalStatus} 
@@ -232,8 +296,6 @@ export default function EditProfilePage() {
                     >
                        <option value="SINGLE">Độc thân</option>
                        <option value="MARRIED">Đã kết hôn</option>
-                       <option value="DIVORCED">Đã ly hôn</option>
-                       <option value="WIDOWED">Góa</option>
                     </select>
                   </div>
                   <div className="space-y-2">
@@ -247,15 +309,21 @@ export default function EditProfilePage() {
                   <div className="grid grid-cols-3 gap-4 md:col-span-2">
                      <div className="space-y-2">
                        <Label>Quốc tịch</Label>
-                       <Input value={formData.nationality} onChange={(e) => handleTextChange("nationality", e.target.value)} className="h-11 rounded-xl" />
+                       <select className={selectClassName} value={formData.nationality || "Việt Nam"} onChange={(e) => handleTextChange("nationality", e.target.value)}>
+                          {ALL_COUNTRIES_SORTED.map(n => <option key={n} value={n}>{n}</option>)}
+                       </select>
                      </div>
                      <div className="space-y-2">
                        <Label>Dân tộc</Label>
-                       <Input value={formData.ethnicity} onChange={(e) => handleTextChange("ethnicity", e.target.value)} className="h-11 rounded-xl" />
+                       <select className={selectClassName} value={formData.ethnicity || "Kinh"} onChange={(e) => handleTextChange("ethnicity", e.target.value)}>
+                          {["Kinh", "Tày", "Thái", "Mường", "Khmer", "Hoa", "Nùng", "H'Mông", "Dao", "Gia Rai", "Ê Đê", "Ba Na", "Chăm", "Khác"].map(n => <option key={n} value={n}>{n}</option>)}
+                       </select>
                      </div>
                      <div className="space-y-2">
                        <Label>Tôn giáo</Label>
-                       <Input value={formData.religion} onChange={(e) => handleTextChange("religion", e.target.value)} className="h-11 rounded-xl" />
+                       <select className={selectClassName} value={formData.religion || "Không"} onChange={(e) => handleTextChange("religion", e.target.value)}>
+                          {WORLD_RELIGIONS.map(n => <option key={n} value={n}>{n}</option>)}
+                       </select>
                      </div>
                   </div>
                 </div>
@@ -289,11 +357,11 @@ export default function EditProfilePage() {
                      <h3 className="font-semibold text-sm flex items-center gap-2"><MapPin size={16}/> Chỗ ở hiện tại</h3>
                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-2">
-                          <Label>Tỉnh/Thành phố hiện tại</Label>
-                          <Input value={formData.currentCity} onChange={(e) => handleTextChange("currentCity", e.target.value)} className="h-11 rounded-xl" />
+                          <Label>Tỉnh/Thành phố hiện tại <span className="text-destructive">*</span></Label>
+                          <Input value={formData.currentCity || ''} onChange={(e) => handleTextChange("currentCity", e.target.value)} className="h-11 rounded-xl" />
                         </div>
                         <div className="space-y-2">
-                          <Label>Địa chỉ hiện tại</Label>
+                          <Label>Địa chỉ hiện tại <span className="text-destructive">*</span></Label>
                           <Input value={formData.currentAddress} onChange={(e) => handleTextChange("currentAddress", e.target.value)} className="h-11 rounded-xl" />
                         </div>
                      </div>
@@ -311,15 +379,15 @@ export default function EditProfilePage() {
                 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div className="space-y-2 md:col-span-1">
-                    <Label>Số CCCD</Label>
+                    <Label>Số CCCD <span className="text-destructive">*</span></Label>
                     <Input value={formData.citizenIdNumber} onChange={(e) => handleTextChange("citizenIdNumber", e.target.value)} className="h-11 rounded-xl" />
                   </div>
                   <div className="space-y-2">
-                    <Label>Ngày cấp</Label>
+                    <Label>Ngày cấp <span className="text-destructive">*</span></Label>
                     <Input type="date" value={formData.citizenIdIssueDate} onChange={(e) => handleTextChange("citizenIdIssueDate", e.target.value)} className="h-11 rounded-xl" />
                   </div>
                   <div className="space-y-2">
-                    <Label>Nơi cấp</Label>
+                    <Label>Nơi cấp <span className="text-destructive">*</span></Label>
                     <Input value={formData.citizenIdIssuePlace} onChange={(e) => handleTextChange("citizenIdIssuePlace", e.target.value)} className="h-11 rounded-xl" />
                   </div>
                 </div>

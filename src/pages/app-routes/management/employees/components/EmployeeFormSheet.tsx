@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { toast } from "sonner";
 
 const DEPARTMENTS = ["Phòng Nhân Sự", "Phòng Kế Toán", "Phòng IT", "Phòng Kinh Doanh"];
 const POSITIONS = ["Giám đốc", "Trưởng phòng", "Nhân viên", "Thực tập sinh"];
@@ -40,7 +41,21 @@ export default function EmployeeFormSheet({ isOpen, onOpenChange, formData, setF
           </SheetHeader>
         </div>
         
-        <form onSubmit={(e) => { e.preventDefault(); if (formData.fullName?.trim()) onSave(); }} className="flex flex-col flex-1 overflow-hidden">
+        <form onSubmit={(e) => { 
+          e.preventDefault(); 
+          if (formData.fullName?.trim()) {
+            try {
+              onSave();
+              toast.success("Thành công!", {
+                description: isEditing ? "Đã lưu thay đổi hồ sơ nhân viên." : "Nhân viên mới đã được thêm thành công."
+              });
+            } catch {
+              toast.error("Có lỗi xảy ra", {
+                description: "Không thể cập nhật hồ sơ, vui lòng thử lại sau."
+              });
+            }
+          }
+        }} className="flex flex-col flex-1 overflow-hidden">
         <div className="flex-1 overflow-y-auto p-6 space-y-8">
           
           {/* Section 1: Basic Info */}

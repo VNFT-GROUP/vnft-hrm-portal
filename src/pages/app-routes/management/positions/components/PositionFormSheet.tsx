@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 
 interface PositionFormSheetProps {
   isOpen: boolean;
@@ -35,7 +36,21 @@ export default function PositionFormSheet({ isOpen, onOpenChange, formData, setF
           </SheetHeader>
         </div>
         
-        <form onSubmit={(e) => { e.preventDefault(); if (formData.name.trim()) onSave(); }} className="flex flex-col flex-1 overflow-hidden">
+        <form onSubmit={(e) => { 
+          e.preventDefault(); 
+          if (formData.name.trim()) {
+            try {
+              onSave();
+              toast.success("Thành công!", {
+                description: isEditing ? "Thay đổi chức vụ đã được lưu thành công." : "Chức vụ mới đã được thêm vào hệ thống."
+              });
+            } catch {
+              toast.error("Có lỗi xảy ra", {
+                description: "Không thể lưu dữ liệu, vui lòng thử lại sau."
+              });
+            }
+          } 
+        }} className="flex flex-col flex-1 overflow-hidden">
           <div className="flex-1 overflow-y-auto p-6 space-y-6">
             <div className="space-y-3">
             <Label htmlFor="name" className="text-sm font-semibold text-foreground">

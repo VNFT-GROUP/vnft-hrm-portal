@@ -7,7 +7,7 @@ This is the **VNFT Group Human Resource Management Portal** — a web-based HR m
 - **Company**: VNFT Group (Vietnam Freight Transport)
 - **Slogan**: "Your Success, Our Target"
 - **Industry**: Logistics, Freight, Transportation
-- **Application Language**: Vietnamese (vi-VN)
+- **Application Languages**: Vietnamese (vi-VN), English (en-US), Chinese Simplified (zh-CN)
 
 ## Brand Identity & Color Palette
 
@@ -55,6 +55,7 @@ When implementing dark mode, use these as base reference:
 - Accent: `#FBBD6A` (lighter version of Brand Orange)
 - Text: `#F3F4F6`
 - Muted Text: `#9CA3AF`
+- **Implementation**: Managed globally via `next-themes` and CSS root variables (following OKLCH token mapping). Theme toggle is placed in `Topbar`.
 
 ## Typography
 
@@ -120,10 +121,11 @@ src/
 1. **Layout Encapsulation**: Structural UI pieces (Topbar, Sidebar, floating modals like ChangePasswordModal) strictly belong to `layout/components/` to follow a clean Domain-Driven organization instead of cluttering global `components/`.
 2. **Scroll Restoration**: A specialized `ScrollArea` component manages SPA overscrolling constraints. We strictly intercept generic navigation via `[location.pathname]` at the `AppLayout` layer to cleanly trigger viewport `.scrollTo({ top: 0 })` resets.
 3. **Multi-language Support (i18n)**: Integrated completely at the Topbar level, modifying global state cleanly without external page reloads. Default fallback is `vi`.
-4. **Logistics Micro-Interactions**: The public-facing entry points (Login, Loading) implement dynamic SVG backdrops via `AnimatedLogisticsBackground.tsx`. We scale complexity using pure CSS `animation-delay` and `animation-duration` inline mapped to static `.bg-ship`, `.bg-truck`, `.bg-airplane` tracks, allowing rich, cheap pseudo-random traffic generation without JS overhead. The Loading UI features a micro progress trucking system that anchors an SVG to dynamic width percentages.
+4. **Logistics Micro-Interactions & Viewport Control**: The public-facing entry points (Login, Loading) implement dynamic SVG backdrops via `AnimatedLogisticsBackground.tsx`. We scale complexity using pure CSS `animation-delay` and `animation-duration` inline mapped to static `.bg-ship`, `.bg-truck`, `.bg-airplane` tracks. To enhance immersion, we enforce realistic logistics iconography, replacing abstract shapes with custom `ContainerTruck` and `ContainerShip` SVG components detailing explicit container corrugations and brand-colored cargo blocks. The scenery incorporates a bright sky-blue gradient, flattened stratus clouds, and a pulsating sun glow. For viewport rigidity and an app-like feel, the login screen explicitly utilizes `height: 100dvh` and `position: fixed` to prevent arbitrary overflow and scroll-bleeding. To secure visual hierarchy on bright canvases, core typography enforces Brand Orange (`#D4780F`) for high-contrast readability.
 5. **Lazy Loading**: Entire application is chunked utilizing `React.lazy()` with `Suspense` inside `AppLayout.tsx` for optimal bundle delivery, removing initial boot lag.
-6. **Settings & Global UI Sync**: Modular system under `/app/settings/` integrated with Zustand (`useLayoutStore`). E.g. `showEmployeeLegend` enables user-preference synced context legends dynamically unmounting via state without reload.
+6. **Settings & Global UI Sync**: Modular system under `/app/settings/` integrated with Zustand (`useLayoutStore`). E.g. `showEmployeeLegend` enables user-preference synced context legends dynamically unmounting via state without reload. We also implemented a dynamic **Custom Cursor** switching system defined entirely via global state presets.
 7. **Smart Tables & Context Menus**: Advanced interaction model generalized across core management modules (**Employee**, **Department**, and **Position** Management). Implements Shadcn UI ContextMenu at the Table level interacting intelligently with `onContextMenu` ID traps replacing structural HTML reflows inside `<tbody>` for seamless CRUD operation triggers.
+8. **Form & Data UX**: Form submissions adhere to standardized "Enter-key" catching (wrapped in explicit `<form>` tags alongside `type="submit"` buttons). Instant visual feedback guarantees are universally configured via `sonner` Toast success/error callbacks triggered immediately upon save resolution.
 
 ## Global Standard Shortcuts
 To ensure highly productive navigation, the HR Portal utilizes the following standard global shortcuts:
@@ -131,5 +133,6 @@ To ensure highly productive navigation, the HR Portal utilizes the following sta
 2. **`Ctrl + I`** (or Cmd + I): Quick toggle Profile Menu (Top Right)
 3. **`Alt + I`** (or Option + I): Navigate directly to User Profile page
 4. **`Alt + S`** (or Option + S): Navigate directly to System Settings page
-5. **`Shift + K`**: Navigate to User Guide & Auto-scroll to Shortcuts list
-6. **`Esc`**: General close hook for overlays, popups, profile menus
+5. **`Alt + P`** (or Option + P): Quick open 'Change Password' modal globally
+6. **`Shift + K`**: Navigate to User Guide & Auto-scroll to Shortcuts list
+7. **`Esc`**: General close hook for overlays, popups, profile menus

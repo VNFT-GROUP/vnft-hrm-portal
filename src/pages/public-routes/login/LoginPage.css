@@ -4,14 +4,17 @@
    ========================================= */
 
 .login-page {
-  position: relative;
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
-  min-height: 100vh;
+  height: 100vh;
+  height: 100dvh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(160deg, #e0ebf5 0%, #ebf0f5 40%, #dbe4ef 100%);
+  background: linear-gradient(160deg, #e0f2fe 0%, #bae6fd 40%, #7dd3fc 100%);
   font-family: "Geist Variable", system-ui, sans-serif;
   padding: 4rem 1.5rem; /* more padding so it doesn't collide with fixed headers */
   gap: 0;
@@ -44,8 +47,8 @@
 }
 .login-tagline {
   font-size: 0.72rem;
-  font-weight: 600;
-  color: #8b8b8b;
+  font-weight: 700;
+  color: #D4780F;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   margin: 0 0 1rem;

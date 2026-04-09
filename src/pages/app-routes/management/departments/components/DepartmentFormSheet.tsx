@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 
 interface DepartmentFormSheetProps {
   isOpen: boolean;
@@ -36,7 +37,21 @@ export default function DepartmentFormSheet({ isOpen, onOpenChange, formData, se
           </SheetHeader>
         </div>
         
-        <form onSubmit={(e) => { e.preventDefault(); if (formData.name.trim()) onSave(); }} className="flex flex-col flex-1 overflow-hidden">
+        <form onSubmit={(e) => { 
+          e.preventDefault(); 
+          if (formData.name.trim()) {
+            try {
+              onSave();
+              toast.success("Thành công!", {
+                description: isEditing ? "Thông tin phòng ban đã được cập nhật." : "Phòng ban mới đã được tạo thành công."
+              });
+            } catch {
+              toast.error("Có lỗi xảy ra", {
+                description: "Không thể lưu thay đổi vào hệ thống."
+              });
+            }
+          }
+        }} className="flex flex-col flex-1 overflow-hidden">
         <div className="flex-1 overflow-y-auto p-6 space-y-8">
           <div className="space-y-4">
             <div className="space-y-2">

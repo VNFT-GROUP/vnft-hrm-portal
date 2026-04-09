@@ -1,6 +1,61 @@
 
 import "./AnimatedLogisticsBackground.css";
 
+const ContainerTruck = ({ containerColor, cabColor, opacity = 1, flipped = false }: { containerColor: string; cabColor: string; opacity?: number; flipped?: boolean; }) => (
+  <svg width="48" height="24" viewBox="0 0 64 32" opacity={opacity} style={{ transform: flipped ? "scaleX(-1)" : "none" }}>
+    <path d="M52 16 L54 20 V26 H46 V16 H52 Z" fill={cabColor} />
+    <rect x="48" y="18" width="3" height="3" fill="#ffffff" opacity="0.8"/>
+    <rect x="2" y="26" width="44" height="2" fill="#1e293b" />
+    <rect x="4" y="6" width="40" height="20" rx="1" fill={containerColor} />
+    <rect x="10" y="6" width="1.5" height="20" fill="#ffffff" opacity="0.15" />
+    <rect x="16" y="6" width="1.5" height="20" fill="#ffffff" opacity="0.15" />
+    <rect x="22" y="6" width="1.5" height="20" fill="#ffffff" opacity="0.15" />
+    <rect x="28" y="6" width="1.5" height="20" fill="#ffffff" opacity="0.15" />
+    <rect x="34" y="6" width="1.5" height="20" fill="#ffffff" opacity="0.15" />
+    <rect x="40" y="6" width="1.5" height="20" fill="#ffffff" opacity="0.15" />
+    <circle cx="50" cy="28" r="4" fill="#0f172a" />
+    <circle cx="50" cy="28" r="1.5" fill="#94a3b8" />
+    <circle cx="42" cy="28" r="4" fill="#0f172a" />
+    <circle cx="42" cy="28" r="1.5" fill="#94a3b8" />
+    <circle cx="10" cy="28" r="4" fill="#0f172a" />
+    <circle cx="10" cy="28" r="1.5" fill="#94a3b8" />
+    <circle cx="18" cy="28" r="4" fill="#0f172a" />
+    <circle cx="18" cy="28" r="1.5" fill="#94a3b8" />
+  </svg>
+);
+
+const ContainerShip = ({ mainColor, accentColor, opacity = 1 }: { mainColor: string; accentColor: string; opacity?: number; }) => (
+  <svg width="60" height="30" viewBox="0 0 80 40" opacity={opacity}>
+    <path d="M4 28 L10 36 H64 L76 28 Z" fill="#334155" />
+    <path d="M7 32 H67 L64 36 H10 Z" fill="#94a3b8" opacity="0.3" />
+    <rect x="12" y="14" width="10" height="14" fill="#E2E8F0" />
+    <rect x="14" y="10" width="6" height="4" fill="#cbd5e1" />
+    <rect x="14" y="16" width="6" height="3" fill="#64748b" />
+    <rect x="14" y="21" width="6" height="3" fill="#64748b" />
+    <rect x="25" y="20" width="8" height="8" rx="0.5" fill={mainColor} />
+    <rect x="25" y="12" width="8" height="8" rx="0.5" fill={accentColor} />
+    <rect x="34" y="20" width="8" height="8" rx="0.5" fill={accentColor} />
+    <rect x="34" y="12" width="8" height="8" rx="0.5" fill="#eab308" />
+    <rect x="43" y="12" width="8" height="16" rx="0.5" fill={mainColor} />
+    <rect x="52" y="20" width="8" height="8" rx="0.5" fill={accentColor} />
+    <rect x="52" y="12" width="8" height="8" rx="0.5" fill="#ef4444" />
+    <g fill="#ffffff" opacity="0.25">
+      <rect x="27" y="13" width="1" height="14" />
+      <rect x="29" y="13" width="1" height="14" />
+      <rect x="31" y="13" width="1" height="14" />
+      <rect x="36" y="13" width="1" height="14" />
+      <rect x="38" y="13" width="1" height="14" />
+      <rect x="40" y="13" width="1" height="14" />
+      <rect x="45" y="13" width="1" height="14" />
+      <rect x="47" y="13" width="1" height="14" />
+      <rect x="49" y="13" width="1" height="14" />
+      <rect x="54" y="13" width="1" height="14" />
+      <rect x="56" y="13" width="1" height="14" />
+      <rect x="58" y="13" width="1" height="14" />
+    </g>
+  </svg>
+);
+
 export default function AnimatedLogisticsBackground() {
   return (
     <div className="login-animated-bg">
@@ -38,60 +93,41 @@ export default function AnimatedLogisticsBackground() {
       {/* Clouds Layer */}
       <div className="bg-clouds-wrapper">
         <div className="bg-cloud cloud-big">
-          <svg width="180" height="60" viewBox="0 0 120 40" fill="#ffffff" opacity="0.65">
-            <ellipse cx="60" cy="20" rx="40" ry="15" />
-            <ellipse cx="40" cy="24" rx="25" ry="12" />
-            <ellipse cx="80" cy="22" rx="25" ry="12" />
+          <svg width="220" height="60" viewBox="0 0 24 24" preserveAspectRatio="none" fill="#ffffff" opacity="0.8">
+             <path d="M17.5 19C19.9853 19 22 16.9853 22 14.5C22 12.2217 20.3094 10.3392 18.1219 10.0401C17.6534 6.64016 14.7431 4 11.5 4C8.58334 4 6.09637 5.92218 5.30907 8.52044C2.86877 8.78441 1 10.8407 1 13.5C1 16.5376 3.46243 19 6.5 19H17.5Z"/>
           </svg>
         </div>
         <div className="bg-cloud cloud-medium">
-          <svg width="120" height="40" viewBox="0 0 90 30" fill="#ffffff" opacity="0.5">
-            <ellipse cx="45" cy="15" rx="30" ry="12" />
-            <ellipse cx="25" cy="18" rx="20" ry="10" />
-            <ellipse cx="65" cy="18" rx="20" ry="10" />
+          <svg width="160" height="40" viewBox="0 0 24 24" preserveAspectRatio="none" fill="#ffffff" opacity="0.6">
+             <path d="M17.5 19C19.9853 19 22 16.9853 22 14.5C22 12.2217 20.3094 10.3392 18.1219 10.0401C17.6534 6.64016 14.7431 4 11.5 4C8.58334 4 6.09637 5.92218 5.30907 8.52044C2.86877 8.78441 1 10.8407 1 13.5C1 16.5376 3.46243 19 6.5 19H17.5Z"/>
           </svg>
         </div>
         <div className="bg-cloud cloud-small">
-          <svg width="100" height="35" viewBox="0 0 90 30" fill="#ffffff" opacity="0.55">
-            <ellipse cx="45" cy="15" rx="25" ry="10" />
-            <ellipse cx="25" cy="18" rx="15" ry="8" />
-            <ellipse cx="60" cy="16" rx="18" ry="9" />
+          <svg width="110" height="28" viewBox="0 0 24 24" preserveAspectRatio="none" fill="#ffffff" opacity="0.7">
+             <path d="M17.5 19C19.9853 19 22 16.9853 22 14.5C22 12.2217 20.3094 10.3392 18.1219 10.0401C17.6534 6.64016 14.7431 4 11.5 4C8.58334 4 6.09637 5.92218 5.30907 8.52044C2.86877 8.78441 1 10.8407 1 13.5C1 16.5376 3.46243 19 6.5 19H17.5Z"/>
           </svg>
         </div>
       </div>
 
       {/* Airplanes */}
       <div className="bg-airplane track-1">
-        <svg width="64" height="32" viewBox="0 0 64 32" fill="none" opacity="0.5">
-          <ellipse cx="32" cy="16" rx="22" ry="5" fill="#94a3b8" />
-          <path d="M54 16 L64 15 L54 14 Z" fill="#64748b" />
-          <path d="M10 16 L6 6 L16 14 Z" fill="#2E3192" />
-          <path d="M28 14 L22 2 L38 12 Z" fill="#2E3192" />
-          <ellipse cx="30" cy="12" rx="3" ry="1.5" fill="#f1f5f9" />
+        <svg fill="#2E3192" width="36" height="36" viewBox="0 0 24 24" style={{ transform: 'rotate(90deg)' }} opacity="0.6">
+          <path d="M21 16v-2l-8-5V3.5c0-.82-.67-1.5-1.5-1.5S10 2.68 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/>
         </svg>
       </div>
       <div className="bg-airplane track-2">
-        <svg width="48" height="24" viewBox="0 0 64 32" fill="none" opacity="0.3">
-          <ellipse cx="32" cy="16" rx="22" ry="5" fill="#94a3b8" />
-          <path d="M54 16 L64 15 L54 14 Z" fill="#64748b" />
-          <path d="M10 16 L6 6 L16 14 Z" fill="#F7941D" />
-          <path d="M28 14 L22 2 L38 12 Z" fill="#F7941D" />
+        <svg fill="#F7941D" width="28" height="28" viewBox="0 0 24 24" style={{ transform: 'rotate(90deg)' }} opacity="0.45">
+          <path d="M21 16v-2l-8-5V3.5c0-.82-.67-1.5-1.5-1.5S10 2.68 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/>
         </svg>
       </div>
       <div className="bg-airplane track-1" style={{ top: '8%', animationDelay: '-12s', animationDuration: '35s' }}>
-        <svg width="50" height="25" viewBox="0 0 64 32" fill="none" opacity="0.4">
-          <ellipse cx="32" cy="16" rx="22" ry="5" fill="#94a3b8" />
-          <path d="M54 16 L64 15 L54 14 Z" fill="#64748b" />
-          <path d="M10 16 L6 6 L16 14 Z" fill="#2E3192" />
-          <path d="M28 14 L22 2 L38 12 Z" fill="#2E3192" />
+        <svg fill="#64748b" width="30" height="30" viewBox="0 0 24 24" style={{ transform: 'rotate(90deg)' }} opacity="0.5">
+          <path d="M21 16v-2l-8-5V3.5c0-.82-.67-1.5-1.5-1.5S10 2.68 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/>
         </svg>
       </div>
       <div className="bg-airplane track-2" style={{ top: '28%', animationDelay: '-2s', animationDuration: '40s' }}>
-        <svg width="35" height="18" viewBox="0 0 64 32" fill="none" opacity="0.2">
-          <ellipse cx="32" cy="16" rx="22" ry="5" fill="#94a3b8" />
-          <path d="M54 16 L64 15 L54 14 Z" fill="#64748b" />
-          <path d="M10 16 L6 6 L16 14 Z" fill="#1e293b" />
-          <path d="M28 14 L22 2 L38 12 Z" fill="#1e293b" />
+        <svg fill="#94a3b8" width="22" height="22" viewBox="0 0 24 24" style={{ transform: 'rotate(90deg)' }} opacity="0.3">
+          <path d="M21 16v-2l-8-5V3.5c0-.82-.67-1.5-1.5-1.5S10 2.68 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/>
         </svg>
       </div>
 
@@ -120,58 +156,26 @@ export default function AnimatedLogisticsBackground() {
         <div className="highway-line" />
         {/* Fast lane trucks (moving right) */}
         <div className="bg-truck track-right">
-          <svg width="40" height="24" viewBox="0 0 80 48" fill="none" opacity="0.5">
-            <rect x="2" y="8" width="42" height="26" rx="3" fill="#2E3192" />
-            <rect x="44" y="14" width="22" height="20" rx="3" fill="#4A4FC7" />
-            <rect x="48" y="17" width="14" height="8" rx="2" fill="#93a5f0" opacity="0.8" />
-            <rect x="66" y="26" width="4" height="5" rx="1.5" fill="#F7941D" />
-            <circle cx="14" cy="37" r="6" fill="#374151" />
-            <circle cx="54" cy="37" r="6" fill="#374151" />
-          </svg>
+          <ContainerTruck containerColor="#2E3192" cabColor="#475569" opacity={0.75} />
         </div>
         <div className="bg-truck track-right" style={{ animationDelay: '-11s', animationDuration: '26s' }}>
-          <svg width="45" height="26" viewBox="0 0 80 48" fill="none" opacity="0.4">
-            <rect x="2" y="8" width="45" height="28" rx="3" fill="#F7941D" />
-            <rect x="49" y="14" width="22" height="22" rx="3" fill="#475569" />
-            <circle cx="14" cy="39" r="6" fill="#1e293b" />
-            <circle cx="60" cy="39" r="6" fill="#1e293b" />
-          </svg>
+          <ContainerTruck containerColor="#F7941D" cabColor="#64748b" opacity={0.7} />
         </div>
         
         {/* Slow lane trucks (moving right) */}
         <div className="bg-truck track-right" style={{ animationDelay: '-4s', animationDuration: '30s', bottom: '-1px' }}>
-          <svg width="35" height="22" viewBox="0 0 80 48" fill="none" opacity="0.3">
-            <rect x="2" y="12" width="38" height="22" rx="2" fill="#cbd5e1" />
-            <rect x="42" y="18" width="20" height="16" rx="2" fill="#94a3b8" />
-            <circle cx="12" cy="37" r="5" fill="#475569" />
-            <circle cx="52" cy="37" r="5" fill="#475569" />
-          </svg>
+          <ContainerTruck containerColor="#94a3b8" cabColor="#475569" opacity={0.6} />
         </div>
 
         {/* Opposite lane trucks (moving left) */}
         <div className="bg-truck track-left">
-          <svg width="32" height="20" viewBox="0 0 80 48" fill="none" opacity="0.4" style={{ transform: "scaleX(-1)" }}>
-            <rect x="2" y="8" width="42" height="26" rx="3" fill="#64748b" />
-            <rect x="44" y="14" width="22" height="20" rx="3" fill="#94a3b8" />
-            <circle cx="14" cy="37" r="6" fill="#475569" />
-            <circle cx="54" cy="37" r="6" fill="#475569" />
-          </svg>
+          <ContainerTruck containerColor="#4A4FC7" cabColor="#64748b" opacity={0.55} flipped={true} />
         </div>
         <div className="bg-truck track-left" style={{ animationDelay: '-14s', animationDuration: '24s', bottom: '1px' }}>
-          <svg width="40" height="24" viewBox="0 0 80 48" fill="none" opacity="0.35" style={{ transform: "scaleX(-1)" }}>
-            <rect x="2" y="8" width="50" height="26" rx="3" fill="#1e293b" />
-            <rect x="54" y="14" width="20" height="20" rx="3" fill="#64748b" />
-            <circle cx="16" cy="37" r="6" fill="#0f172a" />
-            <circle cx="64" cy="37" r="6" fill="#0f172a" />
-          </svg>
+          <ContainerTruck containerColor="#475569" cabColor="#94a3b8" opacity={0.5} flipped={true} />
         </div>
         <div className="bg-truck track-left" style={{ animationDelay: '-5s', animationDuration: '19s', bottom: '4px' }}>
-          <svg width="30" height="18" viewBox="0 0 80 48" fill="none" opacity="0.25" style={{ transform: "scaleX(-1)" }}>
-            <rect x="2" y="8" width="40" height="26" rx="3" fill="#f59e0b" />
-            <rect x="44" y="14" width="18" height="20" rx="3" fill="#cbd5e1" />
-            <circle cx="14" cy="37" r="6" fill="#334155" />
-            <circle cx="52" cy="37" r="6" fill="#334155" />
-          </svg>
+          <ContainerTruck containerColor="#f59e0b" cabColor="#cbd5e1" opacity={0.45} flipped={true} />
         </div>
       </div>
 
@@ -182,25 +186,10 @@ export default function AnimatedLogisticsBackground() {
           <path className="wave wave-2" d="M0 24 Q13 18 26 24 T52 24 T78 24 T104 24 T130 24 T156 24 T182 24 T208 24 T234 24 T260 24 T286 24 T312 24 T338 24 T364 24 T390 24 T416 24 T442 24 T468 24 T494 24 T520 24 V40 H0 Z" fill="#6B6FD6" opacity="0.1" />
         </svg>
         <div className="bg-ship cargo-ship" style={{ animationDelay: '-25s', animationDuration: '60s' }}>
-          <svg width="45" height="22" viewBox="0 0 72 36" fill="none" opacity="0.3">
-            <path d="M4 22 L8 32 L64 32 L68 22 Z" fill="#475569" />
-            <rect x="8" y="18" width="56" height="5" rx="1" fill="#cbd5e1" />
-            <rect x="12" y="10" width="10" height="8" rx="1" fill="#1e293b" />
-            <rect x="23" y="10" width="10" height="8" rx="1" fill="#1e293b" />
-            <rect x="34" y="10" width="10" height="8" rx="1" fill="#64748b" />
-            <rect x="56" y="8" width="8" height="10" rx="1" fill="#cbd5e1" />
-          </svg>
+          <ContainerShip mainColor="#F7941D" accentColor="#475569" opacity={0.65} />
         </div>
         <div className="bg-ship cargo-ship">
-          <svg width="56" height="28" viewBox="0 0 72 36" fill="none" opacity="0.45">
-            <path d="M4 22 L8 32 L64 32 L68 22 Z" fill="#374151" />
-            <rect x="8" y="18" width="56" height="5" rx="1" fill="#d1d5db" />
-            <rect x="12" y="10" width="10" height="8" rx="1" fill="#2E3192" />
-            <rect x="23" y="10" width="10" height="8" rx="1" fill="#F7941D" />
-            <rect x="34" y="10" width="10" height="8" rx="1" fill="#2E3192" />
-            <rect x="45" y="10" width="10" height="8" rx="1" fill="#F7941D" />
-            <rect x="56" y="8" width="8" height="10" rx="1" fill="#f8fafc" />
-          </svg>
+          <ContainerShip mainColor="#2E3192" accentColor="#F7941D" opacity={0.85} />
         </div>
       </div>
     </div>

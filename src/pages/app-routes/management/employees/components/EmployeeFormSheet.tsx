@@ -40,6 +40,7 @@ export default function EmployeeFormSheet({ isOpen, onOpenChange, formData, setF
           </SheetHeader>
         </div>
         
+        <form onSubmit={(e) => { e.preventDefault(); if (formData.fullName?.trim()) onSave(); }} className="flex flex-col flex-1 overflow-hidden">
         <div className="flex-1 overflow-y-auto p-6 space-y-8">
           
           {/* Section 1: Basic Info */}
@@ -221,13 +222,14 @@ export default function EmployeeFormSheet({ isOpen, onOpenChange, formData, setF
         </div>
         
         <div className="p-4 border-t border-border flex-shrink-0 bg-card text-card-foreground flex justify-end gap-3">
-           <Button variant="outline" onClick={() => onOpenChange(false)} className="rounded-xl border-border text-muted-foreground hover:bg-muted w-32 transition-all">
+           <Button type="button" variant="outline" onClick={() => onOpenChange(false)} className="rounded-xl border-border text-muted-foreground hover:bg-muted w-32 transition-all">
              Hủy
            </Button>
-           <Button onClick={onSave} className="rounded-xl bg-[#2E3192] hover:bg-[#1E2062] text-white w-auto px-6 transition-all shadow-md shadow-[#2E3192]/20" disabled={!formData.fullName?.trim()}>
+           <Button type="submit" onClick={onSave} className="rounded-xl bg-[#2E3192] hover:bg-[#1E2062] text-white w-auto px-6 transition-all shadow-md shadow-[#2E3192]/20" disabled={!formData.fullName?.trim()}>
              {isEditing ? "Lưu thay đổi" : "Tạo nhân viên"}
            </Button>
         </div>
+        </form>
       </SheetContent>
     </Sheet>
   );

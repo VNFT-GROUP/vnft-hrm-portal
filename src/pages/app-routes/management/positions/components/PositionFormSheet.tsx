@@ -35,8 +35,9 @@ export default function PositionFormSheet({ isOpen, onOpenChange, formData, setF
           </SheetHeader>
         </div>
         
-        <div className="flex-1 overflow-y-auto p-6 space-y-6">
-          <div className="space-y-3">
+        <form onSubmit={(e) => { e.preventDefault(); if (formData.name.trim()) onSave(); }} className="flex flex-col flex-1 overflow-hidden">
+          <div className="flex-1 overflow-y-auto p-6 space-y-6">
+            <div className="space-y-3">
             <Label htmlFor="name" className="text-sm font-semibold text-foreground">
               {t("position.form.nameLabel")} <span className="text-rose-500">*</span>
             </Label>
@@ -82,16 +83,17 @@ export default function PositionFormSheet({ isOpen, onOpenChange, formData, setF
               onCheckedChange={checked => setFormData({...formData, active: checked})} 
             />
           </div>
-        </div>
-        
-        <div className="p-4 border-t border-border shrink-0 bg-card text-card-foreground flex justify-end gap-3">
-          <Button variant="outline" onClick={() => onOpenChange(false)} className="rounded-xl border-border text-muted-foreground hover:bg-muted w-32 transition-all">
-            {t("position.form.cancel")}
-          </Button>
-          <Button onClick={onSave} className="rounded-xl bg-[#2E3192] hover:bg-[#1E2062] text-white w-auto px-6 transition-all shadow-md shadow-[#2E3192]/20" disabled={!formData.name.trim()}>
-            {isEditing ? t("position.form.saveChanges") : t("position.form.saveBtn")}
-          </Button>
-        </div>
+          </div>
+          
+          <div className="p-4 border-t border-border shrink-0 bg-card text-card-foreground flex justify-end gap-3">
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)} className="rounded-xl border-border text-muted-foreground hover:bg-muted w-32 transition-all">
+              {t("position.form.cancel")}
+            </Button>
+            <Button type="submit" onClick={onSave} className="rounded-xl bg-[#2E3192] hover:bg-[#1E2062] text-white w-auto px-6 transition-all shadow-md shadow-[#2E3192]/20" disabled={!formData.name.trim()}>
+              {isEditing ? t("position.form.saveChanges") : t("position.form.saveBtn")}
+            </Button>
+          </div>
+        </form>
       </SheetContent>
     </Sheet>
   );

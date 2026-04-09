@@ -36,6 +36,7 @@ export default function DepartmentFormSheet({ isOpen, onOpenChange, formData, se
           </SheetHeader>
         </div>
         
+        <form onSubmit={(e) => { e.preventDefault(); if (formData.name.trim()) onSave(); }} className="flex flex-col flex-1 overflow-hidden">
         <div className="flex-1 overflow-y-auto p-6 space-y-8">
           <div className="space-y-4">
             <div className="space-y-2">
@@ -77,13 +78,14 @@ export default function DepartmentFormSheet({ isOpen, onOpenChange, formData, se
         </div>
         
         <div className="p-4 border-t border-border flex-shrink-0 bg-card text-card-foreground flex justify-end gap-3">
-          <Button variant="outline" onClick={() => onOpenChange(false)} className="rounded-xl border-border text-muted-foreground hover:bg-muted w-32 transition-all">
+          <Button type="button" variant="outline" onClick={() => onOpenChange(false)} className="rounded-xl border-border text-muted-foreground hover:bg-muted w-32 transition-all">
             {t("department.form.cancel")}
           </Button>
-          <Button onClick={onSave} className="rounded-xl bg-[#2E3192] hover:bg-[#1E2062] text-white w-auto px-6 transition-all shadow-md shadow-[#2E3192]/20" disabled={!formData.name.trim()}>
+          <Button type="submit" onClick={onSave} className="rounded-xl bg-[#2E3192] hover:bg-[#1E2062] text-white w-auto px-6 transition-all shadow-md shadow-[#2E3192]/20" disabled={!formData.name.trim()}>
             {isEditing ? t("department.form.saveChanges") : t("department.form.saveBtn")}
           </Button>
         </div>
+        </form>
       </SheetContent>
     </Sheet>
   );

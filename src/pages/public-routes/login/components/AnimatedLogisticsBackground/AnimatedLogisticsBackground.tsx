@@ -154,28 +154,20 @@ export default function AnimatedLogisticsBackground() {
       {/* Cargo Highway & Trucks */}
       <div className="bg-highway">
         <div className="highway-line" />
-        {/* Fast lane trucks (moving right) */}
+        
+        {/* Fast lane truck (moving right) */}
         <div className="bg-truck track-right">
           <ContainerTruck containerColor="#2E3192" cabColor="#475569" opacity={0.75} />
         </div>
-        <div className="bg-truck track-right" style={{ animationDelay: '-11s', animationDuration: '26s' }}>
+        
+        {/* Slow lane truck (moving right) */}
+        <div className="bg-truck track-right" style={{ animationDelay: '-4s', animationDuration: '30s', bottom: '-1px' }}>
           <ContainerTruck containerColor="#F7941D" cabColor="#64748b" opacity={0.7} />
         </div>
-        
-        {/* Slow lane trucks (moving right) */}
-        <div className="bg-truck track-right" style={{ animationDelay: '-4s', animationDuration: '30s', bottom: '-1px' }}>
-          <ContainerTruck containerColor="#94a3b8" cabColor="#475569" opacity={0.6} />
-        </div>
 
-        {/* Opposite lane trucks (moving left) */}
-        <div className="bg-truck track-left">
-          <ContainerTruck containerColor="#4A4FC7" cabColor="#64748b" opacity={0.55} flipped={true} />
-        </div>
+        {/* Opposite lane truck (moving left) */}
         <div className="bg-truck track-left" style={{ animationDelay: '-14s', animationDuration: '24s', bottom: '1px' }}>
-          <ContainerTruck containerColor="#475569" cabColor="#94a3b8" opacity={0.5} flipped={true} />
-        </div>
-        <div className="bg-truck track-left" style={{ animationDelay: '-5s', animationDuration: '19s', bottom: '4px' }}>
-          <ContainerTruck containerColor="#f59e0b" cabColor="#cbd5e1" opacity={0.45} flipped={true} />
+          <ContainerTruck containerColor="#4A4FC7" cabColor="#64748b" opacity={0.55} flipped={true} />
         </div>
       </div>
 

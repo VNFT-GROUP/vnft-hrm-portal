@@ -407,26 +407,46 @@ export default function EditProfilePage() {
                 
                 <div className="space-y-4">
                   {formData.educationRecords?.map((edu, index) => (
-                    <div key={index} className="flex gap-4 items-start bg-muted/30 p-4 rounded-xl border border-border">
+                    <div key={index} className="flex gap-4 items-start bg-muted/30 p-5 rounded-2xl border border-border">
                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1">
-                          <Input type="date" placeholder="Từ ngày" value={edu.fromDate || ''} onChange={(e) => {
-                             const arr = [...formData.educationRecords!]; arr[index].fromDate = e.target.value; handleTextChange("educationRecords", arr);
-                          }} />
-                          <Input type="date" placeholder="Đến ngày" value={edu.toDate || ''} onChange={(e) => {
-                             const arr = [...formData.educationRecords!]; arr[index].toDate = e.target.value; handleTextChange("educationRecords", arr);
-                          }} />
-                          <Input placeholder="Hình thức đào tạo" value={edu.trainingMode || ''} onChange={(e) => {
-                             const arr = [...formData.educationRecords!]; arr[index].trainingMode = e.target.value; handleTextChange("educationRecords", arr);
-                          }} />
-                          <Input placeholder="Chuyên ngành" value={edu.major || ''} onChange={(e) => {
-                             const arr = [...formData.educationRecords!]; arr[index].major = e.target.value; handleTextChange("educationRecords", arr);
-                          }} />
-                          <Input placeholder="Trình độ" value={edu.educationLevel || ''} onChange={(e) => {
-                             const arr = [...formData.educationRecords!]; arr[index].educationLevel = e.target.value; handleTextChange("educationRecords", arr);
-                          }} />
-                          <Input placeholder="Cơ sở đào tạo (Trường)" value={edu.institutionName || ''} onChange={(e) => {
-                             const arr = [...formData.educationRecords!]; arr[index].institutionName = e.target.value; handleTextChange("educationRecords", arr);
-                          }} />
+                          <div className="grid grid-cols-2 gap-4 md:col-span-2">
+                             <div className="space-y-1.5">
+                                <Label className="text-xs">Từ ngày</Label>
+                                <Input type="date" value={edu.fromDate || ''} onChange={(e) => {
+                                   const arr = [...formData.educationRecords!]; arr[index].fromDate = e.target.value; handleTextChange("educationRecords", arr);
+                                }} className="h-11 rounded-xl" />
+                             </div>
+                             <div className="space-y-1.5">
+                                <Label className="text-xs">Đến ngày</Label>
+                                <Input type="date" value={edu.toDate || ''} onChange={(e) => {
+                                   const arr = [...formData.educationRecords!]; arr[index].toDate = e.target.value; handleTextChange("educationRecords", arr);
+                                }} className="h-11 rounded-xl" />
+                             </div>
+                          </div>
+                          <div className="space-y-1.5 md:col-span-2">
+                             <Label className="text-xs">Cơ sở đào tạo (Trường học / Trung tâm)</Label>
+                             <Input placeholder="VD: Đại học Khoa học Tự nhiên" value={edu.institutionName || ''} onChange={(e) => {
+                                const arr = [...formData.educationRecords!]; arr[index].institutionName = e.target.value; handleTextChange("educationRecords", arr);
+                             }} className="h-11 rounded-xl" />
+                          </div>
+                          <div className="space-y-1.5">
+                             <Label className="text-xs">Hình thức đào tạo</Label>
+                             <Input placeholder="VD: Chính quy, Từ xa, Vừa làm vừa học" value={edu.trainingMode || ''} onChange={(e) => {
+                                const arr = [...formData.educationRecords!]; arr[index].trainingMode = e.target.value; handleTextChange("educationRecords", arr);
+                             }} className="h-11 rounded-xl" />
+                          </div>
+                          <div className="space-y-1.5">
+                             <Label className="text-xs">Trình độ học vấn</Label>
+                             <Input placeholder="VD: Cử nhân, Thạc sĩ, Cao đẳng" value={edu.educationLevel || ''} onChange={(e) => {
+                                const arr = [...formData.educationRecords!]; arr[index].educationLevel = e.target.value; handleTextChange("educationRecords", arr);
+                             }} className="h-11 rounded-xl" />
+                          </div>
+                          <div className="space-y-1.5 md:col-span-2">
+                             <Label className="text-xs">Chuyên ngành</Label>
+                             <Input placeholder="VD: Công nghệ Thông tin" value={edu.major || ''} onChange={(e) => {
+                                const arr = [...formData.educationRecords!]; arr[index].major = e.target.value; handleTextChange("educationRecords", arr);
+                             }} className="h-11 rounded-xl" />
+                          </div>
                        </div>
                        <Button type="button" variant="destructive" size="icon" className="shrink-0 rounded-xl" onClick={() => {
                           handleTextChange("educationRecords", formData.educationRecords!.filter((_, i) => i !== index));

@@ -43,7 +43,7 @@ export default function EmployeesPage() {
     position: "",
     func: "",
     status: "Đang làm",
-    checkInTime: "08:30",
+    checkInTime: "08:00",
     checkOutTime: "17:30",
     sysRole: "",
     password: "",

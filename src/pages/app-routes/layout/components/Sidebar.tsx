@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { LayoutDashboard, UserCircle, Calendar, FolderOpen, Users, Building2, Briefcase, FileText, ClipboardCheck, Calculator, FileSpreadsheet, CheckSquare, FileEdit, Wallet, FileBarChart, History, ChevronLeft, Menu, ChevronDown, ChevronRight as ChevronRightIcon } from "lucide-react";
+import { LayoutDashboard, UserCircle, Calendar, FolderOpen, Users, Building2, Briefcase, FileText, CheckSquare, FileEdit, ChevronLeft, Menu, ChevronDown, ChevronRight as ChevronRightIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { ScrollArea } from "../../../../components/ui/scroll-area";
 import { useLayoutStore } from "../../../../store/useLayoutStore";
@@ -71,6 +71,7 @@ export default function Sidebar() {
         { label: t('sidebar.dashboard'), path: "/app", icon: <LayoutDashboard size={20} /> },
         { label: t('sidebar.profile'), path: "/app/profile", icon: <UserCircle size={20} /> },
         { label: t('sidebar.calendar'), path: "/app/calendar", icon: <Calendar size={20} /> },
+        { label: t('sidebar.requests'), path: "/app/requests", icon: <FileEdit size={20} /> },
         { 
           label: t('sidebar.management'), 
           icon: <FolderOpen size={20} />, 
@@ -82,27 +83,7 @@ export default function Sidebar() {
             { label: t('sidebar.positions', 'Vị trí'), path: "/app/management/positions", icon: <Briefcase size={16} /> },
             { label: t('sidebar.groups', 'Nhóm'), path: "/app/management/groups", icon: <CheckSquare size={16} /> },
           ]
-        },
-        { label: t('sidebar.evaluation'), path: "/app/evaluation", icon: <ClipboardCheck size={20} /> },
-        { 
-          label: "ACC", 
-          icon: <Calculator size={20} />,
-          subItems: [
-            { label: "Import Profit Report", path: "/app/acc/profit-report", icon: <FileSpreadsheet size={16} /> }
-          ]
-        },
-        { label: t('sidebar.voting'), path: "/app/voting", icon: <CheckSquare size={20} /> },
-        { label: t('sidebar.requests'), path: "/app/requests", icon: <FileEdit size={20} /> },
-        { 
-          label: t('sidebar.finance'), 
-          icon: <Wallet size={20} />,
-          subItems: [
-            { label: t('sidebar.financeReports'), path: "/app/finance/reports", icon: <FileBarChart size={16} /> }
-          ]
-        },
-        { label: t('sidebar.reports'), path: "/app/reports", icon: <FileText size={20} /> },
-
-        { label: t('sidebar.activityLogs'), path: "/app/activity-logs", icon: <History size={20} /> },
+        }
       ]
     }
   ];

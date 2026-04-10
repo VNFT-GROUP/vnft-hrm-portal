@@ -1,4 +1,4 @@
-import { Edit2, Trash2, Users, Eye, CircleDollarSign } from "lucide-react";
+import { Trash2, Users, Eye, CircleDollarSign } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
@@ -31,13 +31,12 @@ export interface Employee {
 
 interface EmployeeTableProps {
   employees: Employee[];
-  onEdit: (emp: Employee) => void;
   onDelete: (id: string) => void;
 }
 
 import { useState } from "react";
 
-export default function EmployeeTable({ employees, onEdit, onDelete }: EmployeeTableProps) {
+export default function EmployeeTable({ employees, onDelete }: EmployeeTableProps) {
   const [rightClickedEmpId, setRightClickedEmpId] = useState<string | null>(null);
   const getStatusColor = (status: string) => {
     switch(status) {
@@ -114,9 +113,6 @@ export default function EmployeeTable({ employees, onEdit, onDelete }: EmployeeT
                     <Button variant="ghost" size="icon" title="Xem chi tiết" className="h-8 w-8 text-sky-500 hover:bg-sky-50 hover:text-sky-600 rounded-lg transition-colors">
                       <Eye size={16} />
                     </Button>
-                    <Button variant="ghost" size="icon" title="Chỉnh sửa" onClick={() => onEdit(emp)} className="h-8 w-8 text-amber-500 hover:bg-amber-50 hover:text-amber-600 rounded-lg transition-colors">
-                      <Edit2 size={16} />
-                    </Button>
                     <Button variant="ghost" size="icon" title="Chỉnh lương" className="h-8 w-8 text-emerald-500 hover:bg-emerald-50 hover:text-emerald-600 rounded-lg transition-colors">
                       <CircleDollarSign size={16} />
                     </Button>
@@ -148,10 +144,6 @@ export default function EmployeeTable({ employees, onEdit, onDelete }: EmployeeT
           <ContextMenuItem className="cursor-pointer">
             <Eye className="mr-2 h-4 w-4 text-sky-500" />
             <span>Xem chi tiết thông tin chung</span>
-          </ContextMenuItem>
-          <ContextMenuItem className="cursor-pointer" onClick={() => onEdit(activeEmp)}>
-            <Edit2 className="mr-2 h-4 w-4 text-amber-500" />
-            <span>Chỉnh sửa thông tin chung</span>
           </ContextMenuItem>
           <ContextMenuItem className="cursor-pointer">
             <CircleDollarSign className="mr-2 h-4 w-4 text-emerald-500" />

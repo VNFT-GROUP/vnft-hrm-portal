@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Plus, Search, FileText } from 'lucide-react';
+import { Plus, Search, FileText, MousePointerClick } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { motion } from 'framer-motion';
@@ -102,6 +102,22 @@ export default function EmployeeCodesPage() {
           Quản lý Mã nhân viên
         </h1>
         <p className='text-muted-foreground text-base md:text-lg ml-1'>Thiết lập cấu hình tiền tố mã nhân viên (Prefix)</p>
+      </motion.div>
+
+      <motion.div 
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.1, ease: 'easeOut' }}
+        className='bg-card text-card-foreground p-4 rounded-xl border border-border flex flex-col gap-3 text-sm text-muted-foreground w-full shadow-sm'
+      >
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-3 w-full">
+            <span className="font-semibold text-[#1E2062] mr-2">Chú thích thao tác:</span>
+        </div>
+        <div className="w-full h-px bg-border/50 hidden md:block" />
+        <div className="flex items-center gap-1.5 text-[#2E3192]">
+          <MousePointerClick size={16} />
+          <span className="italic">Mẹo: Click chuột phải vào dòng dữ liệu để thao tác nhanh.</span>
+        </div>
       </motion.div>
 
       <motion.div className='bg-card p-5 rounded-2xl shadow-sm border border-border flex flex-col md:flex-row justify-between items-center gap-4'>

@@ -1,51 +1,25 @@
-# VNFT Group — HRM Portal 🚀
+# VNFT Group — HRM Portal
 
-Chào mừng đến với dự án **VNFT Group Human Resource Management Portal** — Hệ thống quản trị Nhân sự dành riêng cho công ty vận tải và tiếp vận VNFT Group.
+**⚠️ DỰ ÁN NỘI BỘ VÀ BẢO MẬT TUYỆT ĐỐI (RESTRICTED INTERNAL PROJECT)**
 
-## 🌟 Giới Thiệu
-Dự án được xây dựng dựa trên nguyên tắc **chuyên nghiệp, mượt mà và trực quan**. Hệ thống theo sát bộ nhận diện thương hiệu VNFT Group ("Your Success, Our Target") đi kèm công nghệ Frontend tối tân. 
-
-## ⚙️ Công Nghệ (Tech Stack)
-Hệ thống sử dụng các bộ thư viện mạnh mẽ:
-- **Framework:** React 19 + TypeScript (Vite 8)
-- **UI & Styling:** Tailwind CSS v4, Vanilla CSS, `shadcn/ui` (Base UI/Radix)
-- **Animation:** Framer Motion
-- **Quản lý state:** Zustand, TanStack React Query
-- **Routing & i18n:** React Router DOM v7, `i18next`
-
-## ⌨️ Hướng Dẫn Sử Dụng (User Guide)
-
-Hệ thống được thiết kế tối ưu nhất cho tương tác người dùng, với bộ phím tắt và thao tác thông minh:
-
-### 👉 **Phím Tắt Toàn Cầu (Global Shortcuts)**
-- **`Alt + S`**: Chuyển hướng nhanh truy cập mọi lúc vào trang **Cài Đặt (Settings)**.
-- **`Ctrl + B`** (hoặc Cmd + B): Ẩn/Hiện thanh điều hướng bên trái (Sidebar) nhanh chóng.
-- **`Ctrl + I`** (hoặc Cmd + I): Đóng/Mở Dropdown hồ sơ ở góc trên bên phải.
-- **`Shift + K`**: Di chuyển tốc hành vào mục Hướng Dẫn Sử Dụng.
-- **`Esc`**: Thoát ngay mọi cửa sổ ảo, Pop-up và Popup menu.
-
-### 👉 **Bảng Quản Lý Nhân Viên (Smart Table)**
-Ở danh sách giao diện bảng nhân sự, chúng ta có một cải tiến lớn:
-- Bạn chỉ cần **Click Chuột Phải (Right Click)** ngay trên dòng của nhân viên bất kỳ để mở ra một **Context Menu** y hệt như Native App bao gồm các tác vụ: Xem chi tiết, Chỉnh sửa thông tin, Chỉnh mức lương, và Hủy kích hoạt tài khoản. 
-- Tính năng này giúp loại bỏ hoàn toàn việc phải cuộn chuột dài còng lưng tìm kiếm nút chức năng ở góc khuất, trong khi vẫn không hề vi phạm cấu trúc mượt mà nguyên thủy của HTML `<tbody>`.
-
-### 👉 **Cấu Hình Cá Nhân (Personalization)**
-Tất cả các cấu hình như: Thu gọn Sidebar hay *Tắt/hiển thị thanh Chú thích Context Menu* ở màn Quản lý, đều tự động được lưu bền vững vào `localStorage` qua bộ State Control của **Zustand**. Tắt máy mở lại vẫn giữ nguyên ý bạn!
+*(ENGLISH BELOW)*
 
 ---
 
-## 🛠️ Yêu Cầu Cài Đặt (Getting Started)
-Để bắt đầu cài đặt và sử dụng ứng dụng ở môi trường cục bộ (Local):
+## VN - BẢN QUYỀN VÀ QUYỀN SỞ HỮU TRÍ TUỆ
 
-```bash
-# 1. Cài đặt các gói phụ thuộc
-npm install
+**Bản quyền © 2026 thuộc về VNFT Group. Giữ toàn quyền.**
 
-# 2. Khởi động môi trường dev
-npm run dev
+**LƯU Ý PHÁP LÝ:** Mọi thông tin, mã nguồn và dữ liệu chứa trong kho lưu trữ này là tài sản sở hữu trí tuệ độc quyền của VNFT Group và các bên cung cấp liên quan. Cấu trúc hệ thống và kỹ thuật phần mềm tại đây được bảo hộ bởi luật sở hữu trí tuệ, luật bảo vệ bí mật thương mại và luật bản quyền hiện hành.
 
-# 3. Chạy build trước khi release
-npm run build
-```
+**NGHIÊM CẤM** mọi hành vi sao chép, chia sẻ, phân phối hoặc tái sử dụng bất kỳ phần nào của mã nguồn này dưới mọi hình thức nếu chưa có sự đồng ý chính thức bằng văn bản từ VNFT Group. Mã nguồn này chỉ được lưu hành nội bộ và cấp quyền truy cập duy nhất cho các nhân sự, quản trị viên hoặc nhà thầu được VNFT Group chỉ định. Bất kỳ hành vi vi phạm, cố tình làm lộ lọt mã nguồn nào cũng sẽ phải chịu trách nhiệm hoàn toàn trước pháp luật và đối mặt với các thủ tục bồi thường thiệt hại ngay lập tức.
 
-_© 2026 Bản quyền thuộc về **VNFT Group**. Developed for Advanced Human Resources Administration._
+---
+
+## EN - LICENSE & COPYRIGHT
+
+**Copyright © 2026 VNFT Group. All Rights Reserved.**
+
+**LEGAL NOTICE:** All information contained herein is, and remains the property of VNFT Group and its suppliers, if any. The intellectual and technical concepts contained herein are proprietary to VNFT Group and may be covered by Vietnamese and Foreign Patents, patents in process, and are protected by trade secret or copyright law. 
+
+**PROHIBITION:** Dissemination of this information or reproduction of this material is strictly forbidden unless prior written permission is obtained from VNFT Group. This repository and its source code are intended solely for authorized employees, administrators, and designated contractors of VNFT Group. Any breach of this confidentiality policy, including unauthorized sharing or leaking of source code, will lead to immediate legal action and compensatory damages.

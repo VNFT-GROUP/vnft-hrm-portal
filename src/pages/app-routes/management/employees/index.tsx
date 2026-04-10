@@ -68,8 +68,8 @@ export default function EmployeesPage() {
       position: "",
       func: "",
       status: user.active ? "Đang làm" : "Đã nghỉ việc",
-      checkInTime: "",
-      checkOutTime: "",
+      checkInTime: "08:00",
+      checkOutTime: "17:30",
       sysRole: "",
     })) || [];
 
@@ -127,7 +127,7 @@ export default function EmployeesPage() {
         position: "",
         func: "",
         status: "Đang làm",
-        checkInTime: "08:30",
+        checkInTime: "08:00",
         checkOutTime: "17:30",
         sysRole: "",
         password: "",

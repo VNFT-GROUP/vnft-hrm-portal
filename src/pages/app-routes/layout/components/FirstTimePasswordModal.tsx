@@ -6,7 +6,6 @@ import {
   DialogContent,
   DialogTitle,
   DialogDescription,
-  DialogFooter,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -84,23 +83,28 @@ export default function FirstTimePasswordModal({ isOpen, onSuccess }: FirstTimeP
 
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
-      <DialogContent showCloseButton={false} className="sm:max-w-[400px]! p-0 border-none bg-transparent shadow-none max-h-[90vh] flex flex-col ftpm-dialog-content">
+      <DialogContent showCloseButton={false} className="w-[95%]! max-w-[95%]! lg:w-1/2! lg:max-w-1/2! md:w-[70%]! md:max-w-[70%]! p-0 border-none bg-transparent shadow-none max-h-[90vh] flex flex-col ftpm-dialog-content">
         {/* Animated Background Effects */}
         <div className="ftpm-glow-orange" />
         <div className="ftpm-glow-blue" />
         
         {/* Real wrapper card */}
-        <div className="bg-card shadow-2xl border border-border ftpm-inner-wrapper">
-          {/* Scrollable Container */}
-          <div className="overflow-y-auto flex-1 w-full custom-scrollbar">
-          {/* Illustration Header */}
-        <div className="relative w-full h-32 sm:h-36 bg-[#F8FAFC] flex items-center justify-center overflow-hidden border-b border-border shrink-0">
-          <img 
-            src="/common/first-time-password-illustration.webp" 
-            alt="Welcome to PingMe" 
-            className="w-full h-full object-cover"
-          />
-        </div>
+        <div className="bg-card shadow-2xl border border-border ftpm-inner-wrapper flex flex-col overflow-hidden">
+          
+          {/* Scrollable Container for Image and Form */}
+          <div className="overflow-y-auto flex-1 w-full custom-scrollbar flex flex-col relative bg-card/50 backdrop-blur-sm">
+            
+            {/* Top Illustration */}
+            <div className="w-full bg-[#F0F4F8] flex items-center justify-center p-4 relative overflow-hidden shrink-0">
+               <div className="absolute top-0 -left-10 w-40 h-40 bg-[#2E3192]/10 rounded-full blur-2xl"></div>
+               <div className="absolute top-0 -right-10 w-40 h-40 bg-[#F7941D]/10 rounded-full blur-2xl"></div>
+               
+               <img 
+                src="/common/first-time-password-illustration.webp" 
+                alt="Welcome to PingMe" 
+                className="w-full max-h-[250px] object-contain drop-shadow-2xl hover:scale-105 transition-transform duration-700 ease-out z-10"
+              />
+            </div>
 
         {/* Welcome Text */}
         <div className="px-6 pt-5 pb-1 text-center flex flex-col items-center">
@@ -210,24 +214,32 @@ export default function FirstTimePasswordModal({ isOpen, onSuccess }: FirstTimeP
           </div>
 
           {/* Footer Actions */}
-          <DialogFooter className="mt-2 pt-5 border-t border-border/50 flex-col sm:flex-row gap-3">
-            <Button 
-              type="button"
-              onClick={handleLogout}
-              className="w-full sm:w-auto h-11 bg-rose-500 hover:bg-rose-600 text-white shadow-md shadow-rose-500/20 transition-all font-semibold rounded-xl gap-2 z-10"
-            >
-              <LogOut size={16} /> Đăng xuất
-            </Button>
+          <div className="mt-2 pt-5 border-t border-border/50 flex flex-col gap-3">
             <Button 
               type="submit"
               disabled={!currentPassword || !newPassword || newPassword !== confirmPassword || newPassword.length < 8 || changePasswordMutation.isPending}
-              className="w-full h-11 flex-1 bg-[#F7941D] hover:bg-[#D4780F] text-white shadow-lg shadow-orange-500/20 hover:shadow-orange-500/30 transition-all font-bold text-sm lg:text-base rounded-xl"
+              className="w-full h-11 bg-[#F7941D] hover:bg-[#D4780F] text-white shadow-lg shadow-orange-500/20 hover:shadow-orange-500/30 transition-all font-bold text-sm lg:text-base rounded-xl"
             >
               {changePasswordMutation.isPending ? "Đang xử lý..." : "Khởi tạo & Bắt đầu trải nghiệm"}
             </Button>
-          </DialogFooter>
+
+            <div className="flex items-center w-full gap-3 mt-1 mb-1">
+              <div className="flex-1 h-px bg-border"></div>
+              <span className="text-xs text-muted-foreground uppercase font-medium">Hoặc</span>
+              <div className="flex-1 h-px bg-border"></div>
+            </div>
+
+            <Button 
+              type="button"
+              onClick={handleLogout}
+              variant="ghost"
+              className="w-full h-11 text-muted-foreground hover:text-rose-600 hover:bg-rose-50 font-semibold rounded-xl gap-2 transition-all"
+            >
+              <LogOut size={16} /> Đăng xuất
+            </Button>
+          </div>
         </form>
-        </div>
+          </div>
         </div>
       </DialogContent>
     </Dialog>

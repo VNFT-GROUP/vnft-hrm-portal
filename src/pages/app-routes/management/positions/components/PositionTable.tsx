@@ -108,7 +108,7 @@ export default function PositionTable({ positions, onEdit, onDelete }: PositionT
 
       {/* RENDER CONTEXT MENU FOR THE ROW */}
       {activePosition && (
-        <ContextMenuContent className="w-56 z-50">
+        <ContextMenuContent className="w-56 z-[100]">
           <ContextMenuItem className="cursor-pointer" onClick={() => onEdit(activePosition)}>
             <Edit2 className="mr-2 h-4 w-4 text-[#2E3192]" />
             <span>{t("position.legendEdit")}</span>

@@ -134,7 +134,7 @@ export default function EmployeeTable({ employees, onDelete }: EmployeeTableProp
 
       {/* RENDER CONTEXT MENU FOR THE HOVERED ROW */}
       {activeEmp && (
-        <ContextMenuContent className="w-56 z-50">
+        <ContextMenuContent className="w-56 z-[100]">
           <ContextMenuItem className="cursor-pointer">
             <Eye className="mr-2 h-4 w-4 text-sky-500" />
             <span>{t('management.viewLegend', { defaultValue: 'Xem chi tiết thông tin chung' })}</span>

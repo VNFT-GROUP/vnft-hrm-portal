@@ -115,7 +115,7 @@ export default function EmployeeCodesPage() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1, ease: 'easeOut' }}
-          className='bg-card text-card-foreground p-4 rounded-xl border border-border flex flex-col gap-3 text-sm text-muted-foreground w-full shadow-sm'
+          className='bg-card p-4 rounded-xl border border-border flex flex-col gap-3 text-sm text-muted-foreground w-full shadow-sm'
         >
           <div className="flex flex-wrap items-center gap-x-6 gap-y-3 w-full">
             <span className="font-semibold text-[#1E2062] mr-2">

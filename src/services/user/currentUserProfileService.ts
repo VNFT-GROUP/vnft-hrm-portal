@@ -1,10 +1,22 @@
 import { apiClient } from "@/lib/apiClient";
 import type { ApiResponse } from "@/types/base/ApiResponse";
 import type { UserProfileResponse } from "@/types/user/UserProfileResponse";
+import type { UserSessionResponse } from "@/types/user/UserSessionResponse";
 import type { UpdateCurrentUserProfileRequest } from "@/types/user/UpdateCurrentUserProfileRequest";
 import type { ChangePasswordRequest } from "@/types/user/ChangePasswordRequest";
 
 export const currentUserProfileService = {
+  /**
+   * API lấy session hiện tại của user.
+   */
+  getCurrentUserSession: async (): Promise<
+    ApiResponse<UserSessionResponse>
+  > => {
+    const response =
+      await apiClient.get<ApiResponse<UserSessionResponse>>("/users/me");
+    return response.data;
+  },
+
   /**
    * API lấy hồ sơ của user hiện tại.
    */

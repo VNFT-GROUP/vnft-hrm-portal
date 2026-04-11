@@ -72,16 +72,20 @@ export default function Sidebar() {
       items: [
         { label: t('sidebar.dashboard'), path: "/app", icon: <LayoutDashboard size={20} /> },
         { 
+          id: 'profile',
           label: t('sidebar.profile'), 
           path: "/app/profile", 
           icon: (
             <div className="relative">
               <UserCircle size={20} />
               {session?.requiredProfileCompleted === false && (
-                <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-[#1E2062] animate-pulse"></span>
+                <>
+                  <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-ping opacity-80"></span>
+                  <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-[#1E2062]"></span>
+                </>
               )}
             </div>
-          ) 
+          )
         },
         { label: t('sidebar.calendar'), path: "/app/calendar", icon: <Calendar size={20} /> },
         { label: t('sidebar.requests'), path: "/app/requests", icon: <FileEdit size={20} /> },

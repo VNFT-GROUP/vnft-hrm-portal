@@ -20,7 +20,7 @@ export default function AppLayout() {
   useEffect(() => {
     const fetchSession = async () => {
       try {
-        const res = await currentUserProfileService.getCurrentUserProfile();
+        const res = await currentUserProfileService.getCurrentUserSession();
         if (res.data) {
           updateSession(res.data);
           

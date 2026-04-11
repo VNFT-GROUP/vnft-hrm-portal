@@ -130,7 +130,7 @@ export default function UserFormSheet({
                         username: e.target.value.trim(),
                       })
                     }
-                    placeholder="VD: john.doe"
+                    placeholder="Nhập tên đăng nhập"
                     className="rounded-xl pl-9 border-border focus-visible:ring-[#2E3192]"
                   />
                 </div>
@@ -166,7 +166,7 @@ export default function UserFormSheet({
                   onChange={(e) =>
                     setFormData({ ...formData, fullName: e.target.value })
                   }
-                  placeholder="VD: Nguyễn Văn A"
+                  placeholder="Nhập họ và tên đầy đủ"
                   className="rounded-xl border-border focus-visible:ring-[#2E3192]"
                 />
               </div>
@@ -180,7 +180,7 @@ export default function UserFormSheet({
                   onChange={(e) =>
                     setFormData({ ...formData, englishName: e.target.value })
                   }
-                  placeholder="VD: John Doe"
+                  placeholder="Nhập tên Tiếng Anh"
                   className="rounded-xl border-border focus-visible:ring-[#2E3192]"
                 />
               </div>

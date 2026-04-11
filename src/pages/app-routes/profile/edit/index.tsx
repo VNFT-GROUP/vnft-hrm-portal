@@ -408,7 +408,7 @@ export default function EditProfilePage() {
                     <Input 
                       value={formData.employeeCode}
                       onChange={(e) => handleTextChange("employeeCode", e.target.value)}
-                      placeholder={t("editProfile.basicInfo.employeeCodePlaceholder", { defaultValue: "VD: VNSGN090" })}
+                      placeholder={t("editProfile.basicInfo.employeeCodePlaceholder", { defaultValue: "VD: VNSGN001" })}
                       className="h-11 rounded-xl bg-[#2E3192]/5 border-[#2E3192]/20 text-[#2E3192] font-semibold opacity-100 pointer-events-none"
                       disabled
                     />
@@ -418,7 +418,7 @@ export default function EditProfilePage() {
                     <Input 
                       value={formData.englishName}
                       onChange={(e) => handleTextChange("englishName", e.target.value)}
-                      placeholder={t("editProfile.basicInfo.englishNamePlaceholder", { defaultValue: "VD: Ethan Truong" })} 
+                      placeholder={t("editProfile.basicInfo.englishNamePlaceholder", { defaultValue: "Nhập tên Tiếng Anh" })} 
                       className="h-11 rounded-xl bg-[#2E3192]/5 border-[#2E3192]/20 text-[#2E3192] font-semibold opacity-100 pointer-events-none"
                       disabled
                     />
@@ -428,7 +428,7 @@ export default function EditProfilePage() {
                     <Input 
                       value={formData.fullName}
                       onChange={(e) => handleTextChange("fullName", e.target.value)}
-                      placeholder={t("editProfile.basicInfo.fullNamePlaceholder", { defaultValue: "VD: Trương Thành Nhân" })} 
+                      placeholder={t("editProfile.basicInfo.fullNamePlaceholder", { defaultValue: "Nhập họ và tên đầy đủ" })} 
                       className="h-11 rounded-xl bg-[#2E3192]/5 border-[#2E3192]/20 text-[#2E3192] font-semibold opacity-100 pointer-events-none"
                       disabled
                     />
@@ -438,7 +438,7 @@ export default function EditProfilePage() {
                     <Input 
                       value={formData.phoneNumber || ''}
                       onChange={(e) => handleTextChange("phoneNumber", e.target.value)}
-                      placeholder={t("editProfile.basicInfo.phoneNumberPlaceholder", { defaultValue: "VD: 0987654321" })} 
+                      placeholder={t("editProfile.basicInfo.phoneNumberPlaceholder", { defaultValue: "VD: 09xxxxxxxx" })} 
                       className="h-11 rounded-xl bg-muted/40 border-transparent hover:border-border hover:bg-muted/60 focus:bg-card focus:border-ring transition-colors"
                     />
                   </div>
@@ -626,7 +626,7 @@ export default function EditProfilePage() {
                           </div>
                           <div className="space-y-1">
                              <Label className="text-xs">{t("editProfile.bank.accountName", { defaultValue: "Tên chủ tài khoản" })}</Label>
-                             <Input placeholder={t("editProfile.bank.accountNamePlaceholder", { defaultValue: "VD: TRUONG THANH NHAN" })} value={bank.bankAccountName || ''} onChange={e => {
+                             <Input placeholder={t("editProfile.bank.accountNamePlaceholder", { defaultValue: "Nhập tên chủ tài khoản" })} value={bank.bankAccountName || ''} onChange={e => {
                                const newBanks = [...formData.bankInformations!];
                                newBanks[index].bankAccountName = e.target.value;
                                handleTextChange("bankInformations", newBanks);
@@ -634,7 +634,7 @@ export default function EditProfilePage() {
                           </div>
                           <div className="space-y-1">
                              <Label className="text-xs">{t("editProfile.bank.accountNumber", { defaultValue: "Số tài khoản" })}</Label>
-                             <Input placeholder={t("editProfile.bank.accountNumberPlaceholder", { defaultValue: "VD: 99120..." })} value={bank.bankAccountNumber||''} onChange={e => {
+                             <Input placeholder={t("editProfile.bank.accountNumberPlaceholder", { defaultValue: "VD: 99120xxxxx" })} value={bank.bankAccountNumber||''} onChange={e => {
                                const newBanks = [...formData.bankInformations!];
                                newBanks[index].bankAccountNumber = e.target.value;
                                handleTextChange("bankInformations", newBanks);
@@ -756,13 +756,13 @@ export default function EditProfilePage() {
                           </div>
                           <div className="space-y-1.5">
                              <Label className="text-xs">{t("editProfile.experience.referencePerson", { defaultValue: "Người tham chiếu" })}</Label>
-                             <Input placeholder={t("editProfile.experience.referencePersonPlaceholder", { defaultValue: "VD: Nguyễn Văn B (Trưởng phòng)" })} value={work.referencePerson || ''} onChange={(e) => {
+                             <Input placeholder={t("editProfile.experience.referencePersonPlaceholder", { defaultValue: "VD: Tên người quản lý / Trưởng phòng" })} value={work.referencePerson || ''} onChange={(e) => {
                                 const arr = [...formData.workExperiences!]; arr[index].referencePerson = e.target.value; handleTextChange("workExperiences", arr);
                              }} className="h-11 rounded-xl" />
                           </div>
                           <div className="space-y-1.5">
                              <Label className="text-xs">{t("editProfile.experience.phoneNumber", { defaultValue: "SĐT người tham chiếu" })}</Label>
-                             <Input placeholder={t("editProfile.experience.phoneNumberPlaceholder", { defaultValue: "VD: 0912345678" })} value={work.phoneNumber || ''} onChange={(e) => {
+                             <Input placeholder={t("editProfile.experience.phoneNumberPlaceholder", { defaultValue: "VD: 09xxxxxxxx" })} value={work.phoneNumber || ''} onChange={(e) => {
                                 const arr = [...formData.workExperiences!]; arr[index].phoneNumber = e.target.value; handleTextChange("workExperiences", arr);
                              }} className="h-11 rounded-xl" />
                           </div>

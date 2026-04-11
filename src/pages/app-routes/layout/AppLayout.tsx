@@ -1,4 +1,4 @@
-import { useRef, useEffect, Suspense } from "react";
+import { useRef, useEffect, Suspense, useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import { ScrollArea } from "../../../components/ui/scroll-area";
 import Sidebar from "./components/Sidebar.tsx";
@@ -7,9 +7,11 @@ import ScrollToTopButton from "../../../components/custom/ScrollToTopButton";
 import LoadingPage from "../../../components/custom/loadingPage/LoadingPage";
 import { useAuthStore } from "@/store/useAuthStore";
 import { currentUserProfileService } from "@/services/user/currentUserProfileService";
+import ChangePasswordModal from "./components/ChangePasswordModal";
 import "./AppLayout.css";
 
 export default function AppLayout() {
+  const [isForcePasswordOpen, setIsForcePasswordOpen] = useState(false);
   const scrollViewportRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
   const updateSession = useAuthStore((state) => state.updateSession);
@@ -21,6 +23,9 @@ export default function AppLayout() {
         const res = await currentUserProfileService.getUserSession();
         if (res.data) {
           updateSession(res.data);
+          if (!res.data.passwordChangedAt) {
+            setIsForcePasswordOpen(true);
+          }
         }
       } catch (error) {
         console.error("Failed to fetch user session", error);
@@ -70,6 +75,13 @@ export default function AppLayout() {
         </ScrollArea>
         <ScrollToTopButton scrollViewportRef={scrollViewportRef} />
       </div>
+      
+      {/* Forced Password Change Modal */}
+      <ChangePasswordModal 
+        isOpen={isForcePasswordOpen} 
+        onClose={() => setIsForcePasswordOpen(false)} 
+        isForced={true} 
+      />
     </div>
   );
 }

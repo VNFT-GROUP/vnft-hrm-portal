@@ -19,9 +19,10 @@ import { currentUserProfileService } from '@/services/user/currentUserProfileSer
 interface ChangePasswordModalProps {
   isOpen: boolean;
   onClose: () => void;
+  isForced?: boolean;
 }
 
-export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordModalProps) {
+export default function ChangePasswordModal({ isOpen, onClose, isForced = false }: ChangePasswordModalProps) {
   const { t } = useTranslation();
   
   const [showCurrent, setShowCurrent] = useState(false);
@@ -70,6 +71,7 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
   };
 
   const handleOpenChange = (open: boolean) => {
+     if (isForced) return; // Prevent closing if forced
      if (!open) {
          onClose();
          // Reset fields on close
@@ -92,16 +94,18 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
               {t('profile.passwordForm.title')}
             </DialogTitle>
             <DialogDescription className="text-indigo-200 text-[13px] mt-1 text-left">
-              {t('profile.passwordForm.subtitle')}
+              {isForced ? "Đây là lần đầu bạn đăng nhập, vui lòng đổi mật khẩu để tiếp tục." : t('profile.passwordForm.subtitle')}
             </DialogDescription>
           </div>
-          <button 
-            type="button"
-            onClick={onClose}
-            className="absolute right-4 top-1/2 -translate-y-1/2 text-white/70 hover:text-white hover:bg-white/10 p-2 rounded-full transition-colors"
-          >
-            <X size={18} />
-          </button>
+          {!isForced && (
+            <button 
+              type="button"
+              onClick={onClose}
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-white/70 hover:text-white hover:bg-white/10 p-2 rounded-full transition-colors"
+            >
+              <X size={18} />
+            </button>
+          )}
         </div>
 
         {/* Form Body */}
@@ -200,14 +204,16 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
 
           {/* Footer Actions */}
           <DialogFooter className="mt-4 pt-4 border-t border-border/50 gap-2 sm:gap-3">
-            <Button 
-              type="button"
-              variant="outline"
-              onClick={onClose}
-              className="w-full sm:w-auto h-10"
-            >
-              {t('profile.passwordForm.cancel')}
-            </Button>
+            {!isForced && (
+              <Button 
+                type="button"
+                variant="outline"
+                onClick={onClose}
+                className="w-full sm:w-auto h-10"
+              >
+                {t('profile.passwordForm.cancel')}
+              </Button>
+            )}
             <Button 
               type="submit"
               disabled={!currentPassword || !newPassword || newPassword !== confirmPassword || newPassword.length < 8 || changePasswordMutation.isPending}

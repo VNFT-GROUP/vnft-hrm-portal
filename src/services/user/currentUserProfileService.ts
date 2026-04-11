@@ -1,7 +1,7 @@
 import { apiClient } from '@/lib/apiClient';
 import type { ApiResponse } from '@/types/base/ApiResponse';
 import type { UserSessionResponse } from '@/types/response/user/UserSessionResponse';
-import type { ChangePasswordRequest } from '@/types/request/auth/ChangePasswordRequest';
+import type { ChangeCurrentUserPasswordRequest } from '@/types/request/auth/ChangeCurrentUserPasswordRequest';
 
 export const currentUserProfileService = {
   /**
@@ -15,7 +15,7 @@ export const currentUserProfileService = {
   /**
    * Change current user's password
    */
-  changePassword: async (data: ChangePasswordRequest): Promise<ApiResponse<void>> => {
+  changePassword: async (data: ChangeCurrentUserPasswordRequest): Promise<ApiResponse<void>> => {
     const response = await apiClient.post<ApiResponse<void>>('/users/me/change-password', data);
     return response.data;
   },

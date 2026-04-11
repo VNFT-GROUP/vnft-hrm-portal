@@ -10,7 +10,13 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
-import type { UpsertUserProfileRequest } from "@/types/request/user/UpsertUserProfileRequest";
+import type { UpdateCurrentUserProfileRequest } from "@/types/request/user/UpdateCurrentUserProfileRequest";
+
+type ProfileFormData = Partial<UpdateCurrentUserProfileRequest> & {
+  fullName?: string;
+  englishName?: string;
+  employeeCode?: string;
+};
 import countries from "i18n-iso-countries";
 import viLocale from "i18n-iso-countries/langs/vi.json";
 import enLocale from "i18n-iso-countries/langs/en.json";
@@ -169,7 +175,7 @@ export default function EditProfilePage() {
   // Common select styles matching Shadcn Input
   const selectClassName = "flex h-11 w-full rounded-xl border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring bg-card";
 
-  const [formData, setFormData] = useState<Partial<UpsertUserProfileRequest>>({
+  const [formData, setFormData] = useState<ProfileFormData>({
      fullName: session?.fullName || "",
      englishName: session?.englishName || "",
      employeeCode: session?.username || "", // Typically mapped to code
@@ -195,7 +201,7 @@ export default function EditProfilePage() {
      workExperiences: [{ fromMonth: "", toMonth: "", companyName: "", position: "", referencePerson: "", phoneNumber: "", jobDescription: "" }]
   });
 
-  const handleTextChange = <K extends keyof UpsertUserProfileRequest>(field: K, value: UpsertUserProfileRequest[K]) => {
+  const handleTextChange = <K extends keyof ProfileFormData>(field: K, value: ProfileFormData[K]) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
@@ -376,7 +382,7 @@ export default function EditProfilePage() {
                     <select 
                       className={selectClassName} 
                       value={formData.gender} 
-                      onChange={(e) => handleTextChange("gender", e.target.value as UpsertUserProfileRequest['gender'])}
+                      onChange={(e) => handleTextChange("gender", e.target.value as ProfileFormData['gender'])}
                     >
                        <option value="MALE">{t("editProfile.basicInfo.genderMale", { defaultValue: "Nam" })}</option>
                        <option value="FEMALE">{t("editProfile.basicInfo.genderFemale", { defaultValue: "Nữ" })}</option>
@@ -388,7 +394,7 @@ export default function EditProfilePage() {
                     <select 
                       className={selectClassName} 
                       value={formData.maritalStatus} 
-                      onChange={(e) => handleTextChange("maritalStatus", e.target.value as UpsertUserProfileRequest['maritalStatus'])}
+                      onChange={(e) => handleTextChange("maritalStatus", e.target.value as ProfileFormData['maritalStatus'])}
                     >
                        <option value="SINGLE">{t("editProfile.basicInfo.statusSingle", { defaultValue: "Độc thân" })}</option>
                        <option value="MARRIED">{t("editProfile.basicInfo.statusMarried", { defaultValue: "Đã kết hôn" })}</option>

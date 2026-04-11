@@ -9,5 +9,5 @@ export default {
   employeeCodes: "Employee Codes",
   departments: "Departments",
   positions: "Positions",
-  groups: "Groups"
+  groups: "Permission Groups"
 };

@@ -98,8 +98,8 @@ export default function Sidebar() {
             { label: t('sidebar.employeeCodes'), path: "/app/management/employee-codes", icon: <FileText size={16} /> },
             { label: t('sidebar.departments'), path: "/app/management/departments", icon: <Building2 size={16} /> },
             { label: t('sidebar.positions', { defaultValue: 'Vị trí' }), path: "/app/management/positions", icon: <Briefcase size={16} /> },
-            { label: t('sidebar.roles', { defaultValue: 'Vai trò (Role)' }), path: "/app/management/roles", icon: <Layers size={16} /> },
-            { label: t('sidebar.groups', { defaultValue: 'Nhóm quyền' }), path: "/app/management/groups", icon: <CheckSquare size={16} />, badge: "Admin" },
+            { label: t('sidebar.roles', { defaultValue: 'Chức vụ' }), path: "/app/management/roles", icon: <Layers size={16} /> },
+            { label: t('sidebar.groups', { defaultValue: 'Nhóm quyền' }), path: "/app/management/groups", icon: <CheckSquare size={16} />, badge: "System" },
           ]
         }
       ]

@@ -29,12 +29,12 @@ export default function RoleFormSheet({ isOpen, onOpenChange, formData, setFormD
               <span className="p-1.5 bg-[#2E3192]/10 text-[#2E3192] rounded-md">
                 <Layers size={18} />
               </span>
-              {isEditing ? t('management.editRole', { defaultValue: 'Cập nhật Vai Trò' }) : t('management.addNewRole', { defaultValue: 'Thêm Mới Vai Trò' })}
+              {isEditing ? t('management.editRole', { defaultValue: 'Cập nhật Chức Vụ' }) : t('management.addNewRole', { defaultValue: 'Thêm Mới Chức Vụ' })}
             </SheetTitle>
             <SheetDescription className="text-muted-foreground">
               {isEditing 
-                 ? t('management.editRoleDesc', { defaultValue: 'Chỉnh sửa thông tin chi tiết của vai trò hiện tại.' }) 
-                 : t('management.addNewRoleDesc', { defaultValue: 'Nhập đầy đủ thông tin để tạo master-data vai trò mới.' })}
+                 ? t('management.editRoleDesc', { defaultValue: 'Chỉnh sửa thông tin chi tiết của chức vụ hiện tại.' }) 
+                 : t('management.addNewRoleDesc', { defaultValue: 'Nhập đầy đủ thông tin để tạo master-data chức vụ mới.' })}
             </SheetDescription>
           </SheetHeader>
         </div>
@@ -54,7 +54,7 @@ export default function RoleFormSheet({ isOpen, onOpenChange, formData, setFormD
           <div className="flex-1 overflow-y-auto p-6 space-y-6">
             <div className="space-y-3">
             <Label htmlFor="name" className="text-sm font-semibold text-foreground">
-              {t('management.colRoleName', { defaultValue: 'Tên Vai Trò' })} <span className="text-rose-500">*</span>
+              {t('management.colRoleName', { defaultValue: 'Tên Chức Vụ' })} <span className="text-rose-500">*</span>
             </Label>
             <Input 
               id="name" 
@@ -71,7 +71,7 @@ export default function RoleFormSheet({ isOpen, onOpenChange, formData, setFormD
               id="desc" 
               value={formData.description} 
               onChange={e => setFormData({...formData, description: e.target.value})} 
-              placeholder="Nhập mô tả cho vai trò..." 
+              placeholder="Nhập mô tả cho chức vụ..." 
               rows={5}
               className="rounded-xl border-border focus-visible:ring-[#2E3192] bg-muted focus:bg-card text-card-foreground transition-colors resize-none"
             />
@@ -80,7 +80,7 @@ export default function RoleFormSheet({ isOpen, onOpenChange, formData, setFormD
           <div className="flex items-center justify-between rounded-xl border border-border bg-card text-card-foreground p-4 shadow-sm">
             <div className="space-y-1">
               <Label className="text-foreground text-sm font-semibold block">{t('management.colStatus', { defaultValue: 'Trạng thái hoạt động' })}</Label>
-              <p className="text-xs text-muted-foreground">{t('management.statusRoleHint', { defaultValue: 'Chỉ vai trò ở trạng thái Hoạt động mới có thể sử dụng.' })}</p>
+              <p className="text-xs text-muted-foreground">{t('management.statusRoleHint', { defaultValue: 'Chỉ chức vụ ở trạng thái Hoạt động mới có thể sử dụng.' })}</p>
             </div>
             <Switch 
               checked={formData.active} 
@@ -94,7 +94,7 @@ export default function RoleFormSheet({ isOpen, onOpenChange, formData, setFormD
               Hủy bỏ
             </Button>
             <Button type="submit" className="rounded-xl bg-[#2E3192] hover:bg-[#1E2062] text-white w-auto px-6 transition-all shadow-md shadow-[#2E3192]/20" disabled={!formData.name.trim()}>
-              {isEditing ? "Lưu thay đổi" : "Lưu vai trò"}
+              {isEditing ? "Lưu thay đổi" : "Lưu chức vụ"}
             </Button>
           </div>
         </form>

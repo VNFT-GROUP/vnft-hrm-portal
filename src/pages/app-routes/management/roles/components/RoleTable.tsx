@@ -34,7 +34,7 @@ export default function RoleTable({ roles, onEdit, onDelete }: RoleTableProps) {
           <Table className="border-collapse">
         <TableHeader className="bg-muted/80">
           <TableRow className="border-b border-border hover:bg-transparent">
-            <TableHead className="font-semibold text-foreground w-[250px] border-r border-border text-left align-middle px-6">{t('management.colRoleName', { defaultValue: 'Tên Vai Trò' })}</TableHead>
+            <TableHead className="font-semibold text-foreground w-[250px] border-r border-border text-left align-middle px-6">{t('management.colRoleName', { defaultValue: 'Tên Chức Vụ' })}</TableHead>
             <TableHead className="font-semibold text-foreground border-r border-border text-left align-middle px-6">{t('management.colDesc', { defaultValue: 'Mô tả' })}</TableHead>
             <TableHead className="font-semibold text-foreground w-[150px] border-r border-border text-center align-middle px-4">{t('management.colStatus', { defaultValue: 'Trạng thái' })}</TableHead>
             <TableHead className="font-semibold text-foreground w-[120px] text-center align-middle px-4">{t('management.colAction', { defaultValue: 'Thao tác' })}</TableHead>
@@ -87,7 +87,7 @@ export default function RoleTable({ roles, onEdit, onDelete }: RoleTableProps) {
               <TableCell colSpan={4} className="h-40 text-center">
                 <div className="flex flex-col items-center justify-center text-muted-foreground">
                   <Layers size={32} className="mb-2 opacity-50" />
-                  <p>{t('management.emptyRole', { defaultValue: 'Không tìm thấy vai trò nào' })}</p>
+                  <p>{t('management.emptyRole', { defaultValue: 'Không tìm thấy chức vụ nào' })}</p>
                 </div>
               </TableCell>
             </TableRow>
@@ -98,7 +98,7 @@ export default function RoleTable({ roles, onEdit, onDelete }: RoleTableProps) {
 
       {/* RENDER CONTEXT MENU FOR THE ROW */}
       {activeItem && (
-        <ContextMenuContent className="w-56 z-[100]">
+        <ContextMenuContent className="w-56 z-100">
           <ContextMenuItem className="cursor-pointer" onClick={() => onEdit(activeItem)}>
             <Edit2 className="mr-2 h-4 w-4 text-[#2E3192]" />
             <span>{t('management.editLegend', { defaultValue: 'Chỉnh sửa thông tin' })}</span>
@@ -109,7 +109,7 @@ export default function RoleTable({ roles, onEdit, onDelete }: RoleTableProps) {
             onClick={() => onDelete(activeItem.id)}
           >
             <Trash2 className="mr-2 h-4 w-4 text-rose-500" />
-            <span>{t('management.deleteRole', { defaultValue: 'Xóa vai trò' })}</span>
+            <span>{t('management.deleteRole', { defaultValue: 'Xóa chức vụ' })}</span>
           </ContextMenuItem>
         </ContextMenuContent>
       )}

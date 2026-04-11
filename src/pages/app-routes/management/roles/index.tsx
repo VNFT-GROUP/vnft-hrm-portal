@@ -54,12 +54,12 @@ export default function RolesPage() {
     mutationFn: (data: UpsertRoleRequest) =>
       roleService.createRole(data),
     onSuccess: () => {
-      toast.success(t('management.createRoleSuccess', { defaultValue: 'Thêm vai trò thành công!' }));
+      toast.success(t('management.createRoleSuccess', { defaultValue: 'Thêm chức vụ thành công!' }));
       queryClient.invalidateQueries({ queryKey: ["roles"] });
       setIsOpen(false);
     },
     onError: () => {
-      toast.error(t('management.createRoleError', { defaultValue: 'Thêm vai trò thất bại!' }));
+      toast.error(t('management.createRoleError', { defaultValue: 'Thêm chức vụ thất bại!' }));
     }
   });
 
@@ -67,23 +67,23 @@ export default function RolesPage() {
     mutationFn: ({ id, data }: { id: string; data: UpsertRoleRequest }) =>
       roleService.updateRole(id, data),
     onSuccess: () => {
-      toast.success(t('management.updateRoleSuccess', { defaultValue: 'Cập nhật vai trò thành công!' }));
+      toast.success(t('management.updateRoleSuccess', { defaultValue: 'Cập nhật chức vụ thành công!' }));
       queryClient.invalidateQueries({ queryKey: ["roles"] });
       setIsOpen(false);
     },
     onError: () => {
-      toast.error(t('management.updateRoleError', { defaultValue: 'Cập nhật vai trò thất bại!' }));
+      toast.error(t('management.updateRoleError', { defaultValue: 'Cập nhật chức vụ thất bại!' }));
     }
   });
 
   const deleteMutation = useMutation({
     mutationFn: (id: string) => roleService.deleteRole(id),
     onSuccess: () => {
-      toast.success(t('management.deleteRoleSuccess', { defaultValue: 'Xóa/Tạm ngưng vai trò thành công!' }));
+      toast.success(t('management.deleteRoleSuccess', { defaultValue: 'Xóa/Tạm ngưng chức vụ thành công!' }));
       queryClient.invalidateQueries({ queryKey: ["roles"] });
     },
     onError: () => {
-      toast.error(t('management.deleteRoleError', { defaultValue: 'Xóa vai trò thất bại!' }));
+      toast.error(t('management.deleteRoleError', { defaultValue: 'Xóa chức vụ thất bại!' }));
     }
   });
 
@@ -120,10 +120,10 @@ export default function RolesPage() {
           <span className="p-2.5 bg-[#2E3192]/10 text-[#2E3192] rounded-xl">
             <Layers size={28} />
           </span>
-          {t('management.rolesTitle', { defaultValue: 'Data Vai Trò (Role)' })}
+          {t('management.rolesTitle', { defaultValue: 'Danh Sách Chức Vụ' })}
         </h1>
         <p className="text-muted-foreground text-base md:text-lg ml-1">
-          {t('management.rolesDesc', { defaultValue: 'Quản lý danh sách master data các vai trò trong hệ thống.' })}
+          {t('management.rolesDesc', { defaultValue: 'Quản lý danh sách master data các chức vụ trong hệ thống.' })}
         </p>
       </motion.div>
 
@@ -169,7 +169,7 @@ export default function RolesPage() {
             size={20}
           />
           <Input
-            placeholder={t('management.searchRolePlaceholder', { defaultValue: 'Tìm kiếm vai trò theo tên...' })}
+            placeholder={t('management.searchRolePlaceholder', { defaultValue: 'Tìm kiếm chức vụ theo tên...' })}
             className="pl-12 h-12 rounded-xl bg-muted border-border focus-visible:ring-[#2E3192] text-base hover:bg-card transition-colors"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -179,7 +179,7 @@ export default function RolesPage() {
           onClick={() => handleOpenForm()}
           className="w-full md:w-auto h-12 px-6 rounded-xl bg-[#2E3192] hover:bg-[#1E2062] text-white shadow-md shadow-[#2E3192]/20 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 text-base font-semibold"
         >
-          <Plus size={20} className="mr-2" /> {t('management.addRole', { defaultValue: 'Thêm Vai Trò' })}
+          <Plus size={20} className="mr-2" /> {t('management.addRole', { defaultValue: 'Thêm Chức Vụ' })}
         </Button>
       </motion.div>
 
@@ -193,7 +193,7 @@ export default function RolesPage() {
         {isLoading ? (
           <div className="flex flex-col items-center justify-center p-20 text-muted-foreground h-64">
             <Loader2 className="w-8 h-8 animate-spin mb-4 text-[#2E3192]" />
-            <p className="animate-pulse">Đang tải danh sách vai trò...</p>
+            <p className="animate-pulse">Đang tải danh sách chức vụ...</p>
           </div>
         ) : (
           <RoleTable

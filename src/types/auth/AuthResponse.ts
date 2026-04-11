@@ -1,6 +1,6 @@
-import type { UserSummaryResponse } from '../user/UserSummaryResponse';
+import type { UserSessionResponse } from '../user/UserSessionResponse';
 
 export interface AuthResponse {
-  user: UserSummaryResponse;
+  user: UserSessionResponse;
   accessToken: string;
 }

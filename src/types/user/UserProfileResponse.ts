@@ -1,4 +1,3 @@
-import type { UserSummaryResponse } from './UserSummaryResponse';
 import type { Gender } from './UserSessionResponse';
 import type { MaritalStatus } from './UpdateCurrentUserProfileRequest';
 import type { BankInformationResponse } from './BankInformation/BankInformationResponse';
@@ -7,8 +6,8 @@ import type { EducationRecordResponse } from './EducationRecord/EducationRecordR
 import type { WorkExperienceResponse } from './WorkExperience/WorkExperienceResponse';
 
 export interface UserProfileResponse {
-  id?: string;
-  user?: UserSummaryResponse;
+  id: string;
+  username: string;
   fullName?: string;
   englishName?: string;
   employeeCode?: string;

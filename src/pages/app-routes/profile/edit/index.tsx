@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Save, User, Shield, BookOpen, Briefcase, MapPin, Plus, Trash2, Users, Camera, Check, ChevronsUpDown } from "lucide-react";
 import { useAuthStore } from "@/store/useAuthStore";
 import { toast } from "sonner";
+import { currentUserProfileService } from "@/services/user/currentUserProfileService";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -175,6 +176,9 @@ export default function EditProfilePage() {
   // Common select styles matching Shadcn Input
   const selectClassName = "flex h-11 w-full rounded-xl border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring bg-card";
 
+  const [loading, setLoading] = useState(false);
+  const [isFetching, setIsFetching] = useState(true);
+
   const [formData, setFormData] = useState<ProfileFormData>({
      fullName: session?.fullName || "",
      englishName: session?.englishName || "",
@@ -201,11 +205,56 @@ export default function EditProfilePage() {
      workExperiences: [{ fromMonth: "", toMonth: "", companyName: "", position: "", referencePerson: "", phoneNumber: "", jobDescription: "" }]
   });
 
+  React.useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        setIsFetching(true);
+        const res = await currentUserProfileService.getCurrentUserProfile();
+        if (res.data) {
+           const d = res.data;
+           setFormData((prev) => ({
+             ...prev,
+             fullName: d.fullName || prev.fullName,
+             englishName: d.englishName || prev.englishName,
+             employeeCode: d.employeeCode || prev.employeeCode,
+             phoneNumber: d.phoneNumber || "",
+             gender: d.gender || prev.gender,
+             dateOfBirth: d.dateOfBirth?.substring(0, 10) || "",
+             maritalStatus: d.maritalStatus || "SINGLE",
+             placeOfBirth: d.placeOfBirth || "",
+             placeOfOrigin: d.placeOfOrigin || "",
+             nationality: d.nationality || "Việt Nam",
+             religion: d.religion || "Không",
+             ethnicity: d.ethnicity || "Kinh",
+             permanentAddress: d.permanentAddress || "",
+             permanentCity: d.permanentCity || "",
+             currentAddress: d.currentAddress || "",
+             currentCity: d.currentCity || "",
+             citizenIdNumber: d.citizenIdNumber || "",
+             citizenIdIssueDate: d.citizenIdIssueDate?.substring(0, 10) || "",
+             citizenIdIssuePlace: d.citizenIdIssuePlace || "",
+             citizenIdFrontImageUrl: d.citizenIdFrontImageUrl || "",
+             citizenIdBackImageUrl: d.citizenIdBackImageUrl || "",
+             bankInformations: d.bankInformations?.length ? d.bankInformations : prev.bankInformations,
+             dependents: d.dependents?.length ? d.dependents : prev.dependents,
+             educationRecords: d.educationRecords?.length ? d.educationRecords : prev.educationRecords,
+             workExperiences: d.workExperiences?.length ? d.workExperiences : prev.workExperiences,
+           }));
+        }
+      } catch (err) {
+        console.error("Failed to load profile:", err);
+      } finally {
+        setIsFetching(false);
+      }
+    };
+    fetchProfile();
+  }, []);
+
   const handleTextChange = <K extends keyof ProfileFormData>(field: K, value: ProfileFormData[K]) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     // Mandatory field validation
@@ -219,18 +268,41 @@ export default function EditProfilePage() {
     // Auto-filter out empty template rows before submitting
     const payload = { ...formData };
     
+    // Remove read-only UI tracking fields from the request payload
+    delete payload.fullName;
+    delete payload.englishName;
+    delete payload.employeeCode;
+    
+    // Convert dates back to Instant-compatible format for Java backend
+    if (payload.dateOfBirth && /^\d{4}-\d{2}-\d{2}$/.test(payload.dateOfBirth)) {
+      payload.dateOfBirth = `${payload.dateOfBirth}T00:00:00Z`;
+    }
+    if (payload.citizenIdIssueDate && /^\d{4}-\d{2}-\d{2}$/.test(payload.citizenIdIssueDate)) {
+      payload.citizenIdIssueDate = `${payload.citizenIdIssueDate}T00:00:00Z`;
+    }
+    
     payload.bankInformations = payload.bankInformations?.filter(b => b.bankAccountNumber?.trim() || b.bankName?.trim());
     payload.dependents = payload.dependents?.filter(d => d.dependentFullName?.trim() || d.dependentRelationship?.trim());
     payload.educationRecords = payload.educationRecords?.filter(ed => ed.institutionName?.trim() || ed.major?.trim());
     payload.workExperiences = payload.workExperiences?.filter(w => w.companyName?.trim() || w.position?.trim());
 
     console.log("Submitting payload:", payload);
-    
-    // Simulate updating API request
-    toast.success(t("profile.updateSuccess", { defaultValue: "Cập nhật hồ sơ thành công" }), {
-      description: t("editProfile.validation.updateSuccessDesc", { defaultValue: "Toàn bộ thông tin cá nhân và lý lịch đã được đối soát." })
-    });
-    navigate("/app/profile");
+    setLoading(true);
+    try {
+      await currentUserProfileService.upsertCurrentUserProfile(payload as UpdateCurrentUserProfileRequest);
+      toast.success(t("profile.updateSuccess", { defaultValue: "Cập nhật hồ sơ thành công" }), {
+        description: t("editProfile.validation.updateSuccessDesc", { defaultValue: "Toàn bộ thông tin cá nhân và lý lịch đã được lưu trữ an toàn." })
+      });
+      navigate("/app/profile");
+    } catch (error) {
+      console.error(error);
+      const err = error as Error & { response?: { data?: { message?: string } } };
+      toast.error(t("editProfile.validation.updateFailed", { defaultValue: "Cập nhật thất bại" }), {
+        description: err?.response?.data?.message || err?.message || "Lỗi không xác định khi lưu thông tin"
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const tabs = [
@@ -262,10 +334,11 @@ export default function EditProfilePage() {
         
         <Button 
           onClick={handleSubmit}
+          disabled={loading || isFetching}
           className="rounded-xl bg-[#F7941D] hover:bg-[#D87D12] text-white shadow-md shadow-[#F7941D]/20 hover:shadow-[#F7941D]/40 transition-all gap-2 h-11 px-7 font-semibold"
         >
-          <Save size={18} /> 
-          {t("editProfile.header.saveBtn", { defaultValue: "Lưu thay đổi hồ sơ" })}
+          <Save size={18} className={loading ? "opacity-50" : ""} /> 
+          {loading ? t("editProfile.header.savingBtn", { defaultValue: "Đang lưu..." }) : t("editProfile.header.saveBtn", { defaultValue: "Lưu thay đổi hồ sơ" })}
         </Button>
       </div>
 
@@ -356,7 +429,8 @@ export default function EditProfilePage() {
                       value={formData.fullName}
                       onChange={(e) => handleTextChange("fullName", e.target.value)}
                       placeholder={t("editProfile.basicInfo.fullNamePlaceholder", { defaultValue: "VD: Trương Thành Nhân" })} 
-                      className="h-11 rounded-xl bg-muted/40 border-transparent hover:border-border hover:bg-muted/60 focus:bg-card focus:border-ring transition-colors"
+                      className="h-11 rounded-xl bg-[#2E3192]/5 border-[#2E3192]/20 text-[#2E3192] font-semibold opacity-100 pointer-events-none"
+                      disabled
                     />
                   </div>
                   <div className="space-y-2">

@@ -1,6 +1,8 @@
 import { User, FileText, Home, Map } from "lucide-react";
 import { motion, type Variants } from "framer-motion";
 import { useTranslation } from "react-i18next";
+import { useContext } from "react";
+import { ProfileContext } from "../contexts/ProfileContext";
 
 const Label = ({ children }: { children: React.ReactNode }) => (
   <div className="text-xs font-medium text-muted-foreground uppercase tracking-widest mb-1">{children}</div>
@@ -21,6 +23,7 @@ const SectionHeader = ({ icon, title }: { icon: React.ReactNode, title: string }
 
 export default function PersonalInfoTab() {
   const { t } = useTranslation();
+  const { profile } = useContext(ProfileContext);
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
     show: {
@@ -34,6 +37,8 @@ export default function PersonalInfoTab() {
     show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
   };
 
+  if (!profile) return null;
+
   return (
     <motion.div 
       variants={containerVariants}
@@ -43,51 +48,47 @@ export default function PersonalInfoTab() {
     >
       {/* Thông tin cơ bản */}
       <motion.div variants={itemVariants} className="bg-card text-card-foreground p-6 rounded-2xl shadow-sm border border-border hover:border-primary/50 hover:shadow-md transition-all duration-300 group hover:-translate-y-1">
-        <SectionHeader icon={<User size={18} />} title={t("profile.fields.basicInfo")} />
+        <SectionHeader icon={<User size={18} />} title={t("profile.fields.basicInfo", { defaultValue: "Thông tin cơ bản" })} />
         <div className="grid grid-cols-2 gap-y-6 gap-x-4">
-          <div><Label>{t("profile.fields.fullName")}</Label><Value>Trương Thành Nhân</Value></div>
-          <div><Label>{t("profile.fields.engName")}</Label><Value>Ethan</Value></div>
-          <div><Label>{t("profile.fields.empId")}</Label><Value>VNSGN090</Value></div>
-          <div><Label>{t("profile.fields.gender")}</Label><Value>Nam</Value></div>
-          <div><Label>{t("profile.fields.dob")}</Label><Value>2003-03-19</Value></div>
-          <div><Label>{t("profile.fields.maritalStatus")}</Label><Value>Độc thân</Value></div>
-          <div><Label>{t("profile.fields.birthPlace")}</Label><Value>Hồ Chí Minh, VN</Value></div>
-          <div><Label>{t("profile.fields.hometown")}</Label><Value>—</Value></div>
-          <div><Label>{t("profile.fields.nationality")}</Label><Value>Việt Nam</Value></div>
-          <div><Label>{t("profile.fields.religion")}</Label><Value>Phật giáo</Value></div>
-          <div><Label>{t("profile.fields.ethnicity")}</Label><Value>Kinh</Value></div>
+          <div><Label>{t("profile.fields.fullName", { defaultValue: "Họ và tên" })}</Label><Value>{profile.fullName}</Value></div>
+          <div><Label>{t("profile.fields.engName", { defaultValue: "Tên tiếng Anh" })}</Label><Value>{profile.englishName}</Value></div>
+          <div><Label>{t("profile.fields.empId", { defaultValue: "Mã nhân viên" })}</Label><Value>{profile.employeeCode}</Value></div>
+          <div><Label>{t("profile.fields.gender", { defaultValue: "Giới tính" })}</Label><Value>{profile.gender === 'MALE' ? 'Nam' : profile.gender === 'FEMALE' ? 'Nữ' : 'Khác'}</Value></div>
+          <div><Label>{t("profile.fields.dob", { defaultValue: "Ngày sinh" })}</Label><Value>{profile.dateOfBirth?.substring(0,10)}</Value></div>
+          <div><Label>{t("profile.fields.maritalStatus", { defaultValue: "Hôn nhân" })}</Label><Value>{profile.maritalStatus === 'MARRIED' ? 'Đã kết hôn' : 'Độc thân'}</Value></div>
+          <div><Label>{t("profile.fields.birthPlace", { defaultValue: "Nơi sinh" })}</Label><Value>{profile.placeOfBirth}</Value></div>
+          <div><Label>{t("profile.fields.hometown", { defaultValue: "Quê quán" })}</Label><Value>{profile.placeOfOrigin}</Value></div>
+          <div><Label>{t("profile.fields.nationality", { defaultValue: "Quốc tịch" })}</Label><Value>{profile.nationality}</Value></div>
+          <div><Label>{t("profile.fields.religion", { defaultValue: "Tôn giáo" })}</Label><Value>{profile.religion}</Value></div>
+          <div><Label>{t("profile.fields.ethnicity", { defaultValue: "Dân tộc" })}</Label><Value>{profile.ethnicity}</Value></div>
         </div>
       </motion.div>
 
       {/* Giấy tờ tùy thân */}
       <motion.div variants={itemVariants} className="bg-card text-card-foreground p-6 rounded-2xl shadow-sm border border-border hover:border-primary/50 hover:shadow-md transition-all duration-300 group hover:-translate-y-1">
-        <SectionHeader icon={<FileText size={18} />} title={t("profile.fields.idDocs")} />
+        <SectionHeader icon={<FileText size={18} />} title={t("profile.fields.idDocs", { defaultValue: "Giấy tờ tùy thân" })} />
         <div className="grid grid-cols-2 gap-y-6 gap-x-4">
-          <div className="col-span-2"><Label>{t("profile.fields.idNumber")}</Label><Value>079203000285</Value></div>
-          <div><Label>{t("profile.fields.issueDate")}</Label><Value>2021-12-20</Value></div>
-          <div className="col-span-2"><Label>{t("profile.fields.issuePlace")}</Label><Value>Cục cảnh sát quản lý hành chính về trật tự xã hội</Value></div>
+          <div className="col-span-2"><Label>{t("profile.fields.idNumber", { defaultValue: "Số CCCD" })}</Label><Value>{profile.citizenIdNumber}</Value></div>
+          <div><Label>{t("profile.fields.issueDate", { defaultValue: "Ngày cấp" })}</Label><Value>{profile.citizenIdIssueDate}</Value></div>
+          <div className="col-span-2"><Label>{t("profile.fields.issuePlace", { defaultValue: "Nơi cấp" })}</Label><Value>{profile.citizenIdIssuePlace}</Value></div>
         </div>
       </motion.div>
 
       {/* Địa chỉ thường trú */}
       <motion.div variants={itemVariants} className="bg-card text-card-foreground p-6 rounded-2xl shadow-sm border border-border hover:border-primary/50 hover:shadow-md transition-all duration-300 group hover:-translate-y-1">
-        <SectionHeader icon={<Home size={18} />} title={t("profile.fields.permanentAddress")} />
+        <SectionHeader icon={<Home size={18} />} title={t("profile.fields.permanentAddress", { defaultValue: "Địa chỉ thường trú" })} />
         <div className="grid grid-cols-2 gap-y-6 gap-x-4">
-          <div className="col-span-2"><Label>{t("profile.fields.street")}</Label><Value>165/75K Tôn Thất Thuyết</Value></div>
-          <div><Label>{t("profile.fields.ward")}</Label><Value>Phường 15</Value></div>
-          <div><Label>{t("profile.fields.district")}</Label><Value>Quận 4</Value></div>
-          <div className="col-span-2"><Label>{t("profile.fields.province")}</Label><Value>Thành phố Hồ Chí Minh</Value></div>
+          <div className="col-span-2"><Label>{t("profile.fields.street", { defaultValue: "Số nhà/Đường" })}</Label><Value>{profile.permanentAddress}</Value></div>
+          <div className="col-span-2"><Label>{t("profile.fields.province", { defaultValue: "Tỉnh/Thành phố" })}</Label><Value>{profile.permanentCity}</Value></div>
         </div>
       </motion.div>
 
       {/* Chỗ ở hiện nay */}
       <motion.div variants={itemVariants} className="bg-card text-card-foreground p-6 rounded-2xl shadow-sm border border-border hover:border-primary/50 hover:shadow-md transition-all duration-300 group hover:-translate-y-1">
-        <SectionHeader icon={<Map size={18} />} title={t("profile.fields.currentAddress")} />
+        <SectionHeader icon={<Map size={18} />} title={t("profile.fields.currentAddress", { defaultValue: "Chỗ ở hiện tại" })} />
         <div className="grid grid-cols-2 gap-y-6 gap-x-4">
-          <div className="col-span-2"><Label>{t("profile.fields.street")}</Label><Value>165/75K Tôn Thất Thuyết</Value></div>
-          <div><Label>{t("profile.fields.ward")}</Label><Value>Phường 15</Value></div>
-          <div><Label>{t("profile.fields.district")}</Label><Value>Quận 4</Value></div>
-          <div className="col-span-2"><Label>{t("profile.fields.province")}</Label><Value>Thành phố Hồ Chí Minh</Value></div>
+          <div className="col-span-2"><Label>{t("profile.fields.street", { defaultValue: "Số nhà/Đường" })}</Label><Value>{profile.currentAddress}</Value></div>
+          <div className="col-span-2"><Label>{t("profile.fields.province", { defaultValue: "Tỉnh/Thành phố" })}</Label><Value>{profile.currentCity}</Value></div>
         </div>
       </motion.div>
     </motion.div>

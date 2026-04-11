@@ -1,4 +1,7 @@
-import { GraduationCap, Users, UserPlus } from "lucide-react";
+import { GraduationCap, Users } from "lucide-react";
+import { useContext } from "react";
+import { ProfileContext } from "../contexts/ProfileContext";
+import { useTranslation } from "react-i18next";
 
 const Label = ({ children }: { children: React.ReactNode }) => (
   <div className="text-xs font-medium text-muted-foreground uppercase tracking-widest mb-1">{children}</div>
@@ -18,36 +21,55 @@ const SectionHeader = ({ icon, title }: { icon: React.ReactNode, title: string }
 );
 
 export default function FamilyEduTab() {
+  const { t } = useTranslation();
+  const { profile } = useContext(ProfileContext);
+
+  if (!profile) return null;
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500 fill-mode-both">
       
       {/* Trình độ học vấn */}
       <div className="bg-card text-card-foreground p-6 rounded-2xl shadow-sm border border-border hover:border-border hover:shadow-md transition-all duration-300 group hover:-translate-y-1 lg:col-span-2">
-        <SectionHeader icon={<GraduationCap size={18} />} title="Trình độ học vấn" />
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-y-6 gap-x-4">
-          <div><Label>Trình độ học vấn</Label><Value>Trung cấp nghề</Value></div>
-          <div><Label>Nơi đào tạo</Label><Value>—</Value></div>
-          <div><Label>Chuyên ngành</Label><Value>—</Value></div>
+        <SectionHeader icon={<GraduationCap size={18} />} title={t("profile.fields.education", { defaultValue: "Trình độ học vấn" })} />
+        <div className="space-y-6">
+          {profile.educationRecords && profile.educationRecords.length > 0 ? (
+             profile.educationRecords.map((edu, idx) => (
+                <div key={idx} className="grid grid-cols-1 md:grid-cols-4 gap-y-4 gap-x-4 pb-4 border-b border-border last:border-0 last:pb-0">
+                  <div><Label>{t("profile.fields.eduLevel", { defaultValue: "Trình độ" })}</Label><Value>{edu.educationLevel}</Value></div>
+                  <div><Label>{t("profile.fields.institutionName", { defaultValue: "Nơi đào tạo" })}</Label><Value>{edu.institutionName}</Value></div>
+                  <div><Label>{t("profile.fields.major", { defaultValue: "Chuyên ngành" })}</Label><Value>{edu.major}</Value></div>
+                  <div><Label>{t("profile.fields.eduTime", { defaultValue: "Thời gian" })}</Label><Value>{edu.fromDate ? `${edu.fromDate} - ${edu.toDate || 'Hiện nay'}` : '—'}</Value></div>
+                </div>
+             ))
+          ) : (
+             <div className="flex flex-col items-center justify-center p-8 text-center bg-muted/50 rounded-xl border border-dashed border-border">
+                <p className="text-muted-foreground font-medium text-sm">Chưa có dữ liệu học vấn</p>
+             </div>
+          )}
         </div>
       </div>
 
       {/* Thông tin gia đình */}
-      <div className="bg-card text-card-foreground p-6 rounded-2xl shadow-sm border border-border hover:border-border hover:shadow-md transition-all duration-300 group hover:-translate-y-1">
-        <SectionHeader icon={<Users size={18} />} title="Thông tin gia đình" />
-        <div className="grid grid-cols-2 gap-y-6 gap-x-4">
-          <div><Label>Số người phụ thuộc</Label><Value>0</Value></div>
-          <div><Label>Tình trạng con cái</Label><Value>Chưa có dữ liệu</Value></div>
-        </div>
-      </div>
-
-      {/* Chi tiết thành viên gia đình */}
-      <div className="bg-card text-card-foreground p-6 rounded-2xl shadow-sm border border-border hover:border-border hover:shadow-md transition-all duration-300 group hover:-translate-y-1 relative overflow-hidden">
-        <SectionHeader icon={<UserPlus size={18} />} title="Chi tiết thành viên gia đình" />
-        
-        <div className="flex flex-col items-center justify-center p-8 text-center bg-muted/50 rounded-xl border border-dashed border-border h-[150px]">
-          <Users size={32} className="text-slate-300 mb-2" />
-          <p className="text-muted-foreground font-medium text-sm">Chưa có dữ liệu</p>
+      <div className="bg-card text-card-foreground p-6 rounded-2xl shadow-sm border border-border hover:border-border hover:shadow-md transition-all duration-300 group hover:-translate-y-1 lg:col-span-2">
+        <SectionHeader icon={<Users size={18} />} title={t("profile.fields.dependentsInfo", { defaultValue: "Thông tin người phụ thuộc / Gia đình" })} />
+        <div className="space-y-6 mt-4">
+          {profile.dependents && profile.dependents.length > 0 ? (
+             profile.dependents.map((dep, idx) => (
+                <div key={idx} className="grid grid-cols-1 md:grid-cols-5 gap-y-4 gap-x-4 pb-4 border-b border-border last:border-0 last:pb-0">
+                  <div><Label>Họ và tên</Label><Value>{dep.dependentFullName}</Value></div>
+                  <div><Label>Mối quan hệ</Label><Value>{dep.dependentRelationship}</Value></div>
+                  <div><Label>Ngày sinh</Label><Value>{dep.dependentDateOfBirth}</Value></div>
+                  <div><Label>Số ĐT</Label><Value>{dep.dependentPhoneNumber}</Value></div>
+                  <div><Label>Căn cước</Label><Value>{dep.dependentIdentityNumber}</Value></div>
+                </div>
+             ))
+          ) : (
+             <div className="flex flex-col items-center justify-center p-8 text-center bg-muted/50 rounded-xl border border-dashed border-border">
+                <Users size={32} className="text-muted-foreground/30 mb-2" />
+                <p className="text-muted-foreground font-medium text-sm">Chưa có người phụ thuộc</p>
+             </div>
+          )}
         </div>
       </div>
 

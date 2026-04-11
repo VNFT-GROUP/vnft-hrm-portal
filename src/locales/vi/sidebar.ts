@@ -9,5 +9,6 @@ export default {
   employeeCodes: "Mã nhân viên",
   departments: "Phòng ban",
   positions: "Vị trí",
+  roles: "Vai trò",
   groups: "Nhóm quyền"
 };

@@ -38,6 +38,7 @@ export default function UserFormSheet({
   const [formData, setFormData] = useState<CreateUserRequest>({
     username: "",
     password: "",
+    fullName: "",
     englishName: "",
     employeeCodeId: "",
   });
@@ -49,6 +50,7 @@ export default function UserFormSheet({
         setFormData({
           username: "",
           password: "",
+          fullName: "",
           englishName: "",
           employeeCodeId: "",
         });
@@ -73,6 +75,7 @@ export default function UserFormSheet({
     if (
       !formData.username ||
       !formData.password ||
+      !formData.fullName ||
       !formData.englishName ||
       !formData.employeeCodeId
     ) {
@@ -152,6 +155,20 @@ export default function UserFormSheet({
                     className="rounded-xl pl-9 border-border focus-visible:ring-[#2E3192]"
                   />
                 </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-sm font-semibold text-foreground">
+                  Họ và tên <span className="text-rose-500">*</span>
+                </Label>
+                <Input
+                  value={formData.fullName}
+                  onChange={(e) =>
+                    setFormData({ ...formData, fullName: e.target.value })
+                  }
+                  placeholder="VD: Nguyễn Văn A"
+                  className="rounded-xl border-border focus-visible:ring-[#2E3192]"
+                />
               </div>
 
               <div className="space-y-2">
@@ -236,6 +253,7 @@ export default function UserFormSheet({
                 isPending ||
                 !formData.username ||
                 !formData.password ||
+                !formData.fullName ||
                 !formData.englishName ||
                 !formData.employeeCodeId
               }

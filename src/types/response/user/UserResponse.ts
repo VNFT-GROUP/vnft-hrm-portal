@@ -4,6 +4,12 @@ export interface UserResponse {
   fullName?: string;
   englishName?: string;
   employeeCode?: string;
+  attendanceCode?: string;
+  departmentId?: string;
+  groupId?: string;
+  positionId?: string;
+  checkInTime?: string;
+  checkOutTime?: string;
   passwordChangedAt?: string;
   active?: boolean;
   createdAt?: string;

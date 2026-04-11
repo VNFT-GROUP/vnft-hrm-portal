@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Label } from "@/components/ui/label";
-import { toast } from "sonner";
 import { useQuery } from "@tanstack/react-query";
 import { departmentService } from "@/services/department";
 import { positionService } from "@/services/position";
@@ -134,8 +133,8 @@ export default function EmployeeFormSheet({ isOpen, onOpenChange, formData, setF
 
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
-      <SheetContent className="sm:!max-w-[900px] w-full border-l-slate-200 shadow-2xl flex flex-col h-full p-0">
-        <div className="p-6 border-b border-border flex-shrink-0 bg-muted/50">
+      <SheetContent className="sm:max-w-[900px]! w-full border-l-slate-200 shadow-2xl flex flex-col h-full p-0">
+        <div className="p-6 border-b border-border shrink-0 bg-muted/50">
           <SheetHeader>
             <SheetTitle className="text-xl font-bold text-[#1E2062] flex items-center gap-2">
               <span className="p-1.5 bg-[#2E3192]/10 text-[#2E3192] rounded-md">
@@ -152,16 +151,7 @@ export default function EmployeeFormSheet({ isOpen, onOpenChange, formData, setF
         <form onSubmit={(e) => { 
           e.preventDefault(); 
           if (formData.fullName?.trim() && formData.englishName?.trim() && formData.email?.trim() && formData.password?.trim() && formData.empCodePrefix && formData.checkInTime && formData.checkOutTime) {
-            try {
-              onSave();
-              toast.success("Thành công!", {
-                description: isEditing ? "Đã lưu thay đổi hồ sơ nhân viên." : "Nhân viên mới đã được thêm thành công."
-              });
-            } catch {
-              toast.error("Có lỗi xảy ra", {
-                description: "Không thể cập nhật hồ sơ, vui lòng thử lại sau."
-              });
-            }
+            onSave();
           }
         }} className="flex flex-col flex-1 overflow-hidden">
         <div className="flex-1 overflow-y-auto p-8">
@@ -310,11 +300,11 @@ export default function EmployeeFormSheet({ isOpen, onOpenChange, formData, setF
           </div>
         </div>
         
-        <div className="p-4 border-t border-border flex-shrink-0 bg-card text-card-foreground flex justify-end gap-3">
+        <div className="p-4 border-t border-border shrink-0 bg-card text-card-foreground flex justify-end gap-3">
            <Button type="button" variant="outline" onClick={() => onOpenChange(false)} className="rounded-xl border-border text-muted-foreground hover:bg-muted w-32 transition-all">
              Hủy
            </Button>
-           <Button type="submit" onClick={onSave} className="rounded-xl bg-[#2E3192] hover:bg-[#1E2062] text-white w-auto px-6 transition-all shadow-md shadow-[#2E3192]/20" disabled={!formData.fullName?.trim() || !formData.englishName?.trim() || !formData.email?.trim() || !formData.password?.trim() || !formData.empCodePrefix}>
+           <Button type="submit" className="rounded-xl bg-[#2E3192] hover:bg-[#1E2062] text-white w-auto px-6 transition-all shadow-md shadow-[#2E3192]/20" disabled={!formData.fullName?.trim() || !formData.englishName?.trim() || !formData.email?.trim() || !formData.password?.trim() || !formData.empCodePrefix}>
              {isEditing ? "Lưu thay đổi" : "Tạo nhân viên"}
            </Button>
         </div>

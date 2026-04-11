@@ -21,6 +21,10 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { userService } from "@/services/user/userService";
 import { toast } from "sonner";
 import type { CreateUserRequest } from "@/types/request/CreateUserRequest";
+import { departmentService } from "@/services/department";
+import { positionService } from "@/services/position";
+import { groupService } from "@/services/group/groupService";
+import { mapIdToName } from "@/lib/utils";
 
 export default function EmployeesPage() {
   const queryClient = useQueryClient();
@@ -55,21 +59,40 @@ export default function EmployeesPage() {
     queryFn: () => userService.getUsers(1, 1000),
   });
 
+  const { data: departmentsResponse } = useQuery({
+    queryKey: ["departments"],
+    queryFn: () => departmentService.getDepartments(),
+  });
+
+  const { data: positionsResponse } = useQuery({
+    queryKey: ["positions"],
+    queryFn: () => positionService.getPositions(),
+  });
+
+  const { data: groupsResponse } = useQuery({
+    queryKey: ["groups"],
+    queryFn: () => groupService.getGroups(),
+  });
+
+  const departments = departmentsResponse?.data;
+  const positions = positionsResponse?.data;
+  const groups = groupsResponse?.data;
+
   const apiEmployees: Employee[] =
     usersResponse?.data?.content?.map((user) => ({
       id: user.id,
       empCodePrefix: user.employeeCode || "",
       empCodeId: "",
-      attendanceCode: "",
+      attendanceCode: user.attendanceCode || "",
       fullName: user.fullName || "Chưa cập nhật",
       englishName: user.englishName || "",
       email: user.username || "",
-      department: "",
-      position: "",
-      func: "",
+      department: mapIdToName(user.departmentId, departments),
+      position: mapIdToName(user.positionId, positions),
+      func: mapIdToName(user.groupId, groups),
       status: user.active ? "Đang làm" : "Đã nghỉ việc",
-      checkInTime: "08:00",
-      checkOutTime: "17:30",
+      checkInTime: user.checkInTime || "08:00",
+      checkOutTime: user.checkOutTime || "17:30",
       sysRole: "",
     })) || [];
 
@@ -84,8 +107,9 @@ export default function EmployeesPage() {
   const createUserMutation = useMutation({
     mutationFn: (data: CreateUserRequest) => userService.createUser(data),
     onSuccess: () => {
-      toast.success("Tạo tài khoản hệ thống thành công!");
+      toast.success("Thành công: Tạo nhân viên hệ thống!");
       setIsUserFormOpen(false);
+      setIsOpen(false);
       queryClient.invalidateQueries({ queryKey: ["users"] });
     },
     onError: () => {
@@ -138,9 +162,27 @@ export default function EmployeesPage() {
   };
 
   const handleSave = () => {
-    // Currently UI only, real update needs UserService PUT request.
-    toast.info("Chức năng cập nhật nhân viên chưa có endpoint!");
-    setIsOpen(false);
+    if (editingEmployee) {
+      toast.info("Chức năng cập nhật nhân viên chưa có endpoint!");
+      setIsOpen(false);
+      return;
+    }
+
+    const requestData: CreateUserRequest = {
+      username: formData.email,
+      password: formData.password,
+      employeeCodeId: formData.empCodePrefix,
+      attendanceCode: formData.attendanceCode,
+      fullName: formData.fullName,
+      englishName: formData.englishName,
+      departmentId: formData.department,
+      groupId: formData.func,
+      positionId: formData.position,
+      checkInTime: formData.checkInTime.length === 5 ? `${formData.checkInTime}:00` : formData.checkInTime,
+      checkOutTime: formData.checkOutTime.length === 5 ? `${formData.checkOutTime}:00` : formData.checkOutTime,
+    };
+    
+    createUserMutation.mutate(requestData);
   };
 
   const handleDelete = (id: string) => {

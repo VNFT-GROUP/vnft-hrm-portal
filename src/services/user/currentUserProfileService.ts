@@ -1,22 +1,44 @@
-import { apiClient } from '@/lib/apiClient';
-import type { ApiResponse } from '@/types/base/ApiResponse';
-import type { UserSessionResponse } from '@/types/user/UserSessionResponse';
-import type { ChangeCurrentUserPasswordRequest } from '@/types/auth/ChangeCurrentUserPasswordRequest';
+import { apiClient } from "@/lib/apiClient";
+import type { ApiResponse } from "@/types/base/ApiResponse";
+import type { UserProfileResponse } from "@/types/user/UserProfileResponse";
+import type { UpdateCurrentUserProfileRequest } from "@/types/user/UpdateCurrentUserProfileRequest";
+import type { ChangePasswordRequest } from "@/types/user/ChangePasswordRequest";
 
 export const currentUserProfileService = {
   /**
-   * Get current user session info
+   * API lấy hồ sơ của user hiện tại.
    */
-  getUserSession: async (): Promise<ApiResponse<UserSessionResponse>> => {
-    const response = await apiClient.get<ApiResponse<UserSessionResponse>>('/users/me');
+  getCurrentUserProfile: async (): Promise<
+    ApiResponse<UserProfileResponse>
+  > => {
+    const response =
+      await apiClient.get<ApiResponse<UserProfileResponse>>("/users/me");
     return response.data;
   },
 
   /**
-   * Change current user's password
+   * API tạo mới hoặc cập nhật hồ sơ của user hiện tại.
    */
-  changePassword: async (data: ChangeCurrentUserPasswordRequest): Promise<ApiResponse<void>> => {
-    const response = await apiClient.post<ApiResponse<void>>('/users/me/change-password', data);
+  upsertCurrentUserProfile: async (
+    data: UpdateCurrentUserProfileRequest,
+  ): Promise<ApiResponse<UserProfileResponse>> => {
+    const response = await apiClient.put<ApiResponse<UserProfileResponse>>(
+      "/users/me",
+      data,
+    );
+    return response.data;
+  },
+
+  /**
+   * API đổi mật khẩu cho user hiện tại.
+   */
+  changePassword: async (
+    data: ChangePasswordRequest,
+  ): Promise<ApiResponse<void>> => {
+    const response = await apiClient.post<ApiResponse<void>>(
+      "/users/me/change-password",
+      data,
+    );
     return response.data;
   },
 };

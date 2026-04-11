@@ -1,0 +1,52 @@
+import type { UserSummaryResponse } from './UserSummaryResponse';
+import type { Gender } from './UserSessionResponse';
+import type { MaritalStatus } from './UpdateCurrentUserProfileRequest';
+import type { BankInformationResponse } from './BankInformation/BankInformationResponse';
+import type { DependentResponse } from './Dependent/DependentResponse';
+import type { EducationRecordResponse } from './EducationRecord/EducationRecordResponse';
+import type { WorkExperienceResponse } from './WorkExperience/WorkExperienceResponse';
+
+export interface UserProfileResponse {
+  id?: string;
+  user?: UserSummaryResponse;
+  fullName?: string;
+  englishName?: string;
+  employeeCode?: string;
+  attendanceCode?: string;
+  checkInTime?: string;
+  checkOutTime?: string;
+  departmentId?: string;
+  departmentName?: string;
+  groupId?: string;
+  groupName?: string;
+  positionId?: string;
+  positionName?: string;
+  phoneNumber?: string;
+  gender?: Gender;
+  dateOfBirth?: string;
+  maritalStatus?: MaritalStatus;
+  placeOfBirth?: string;
+  placeOfOrigin?: string;
+  nationality?: string;
+  religion?: string;
+  ethnicity?: string;
+  permanentAddress?: string;
+  permanentCity?: string;
+  currentAddress?: string;
+  currentCity?: string;
+  citizenIdNumber?: string;
+  citizenIdIssueDate?: string;
+  citizenIdIssuePlace?: string;
+  citizenIdFrontImageUrl?: string;
+  citizenIdBackImageUrl?: string;
+  bankInformations?: BankInformationResponse[];
+  dependents?: DependentResponse[];
+  educationRecords?: EducationRecordResponse[];
+  workExperiences?: WorkExperienceResponse[];
+  active?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+  createdBy?: string;
+  updatedBy?: string;
+}
+

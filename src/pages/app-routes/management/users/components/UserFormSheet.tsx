@@ -20,12 +20,12 @@ import {
 import { toast } from "sonner";
 import { useQuery } from "@tanstack/react-query";
 import { employeeCodeService } from "@/services/employeeCode";
-import type { AdminCreateUserRequest } from '@/types/user/AdminCreateUserRequest';
+import type { CreateUserRequest } from '@/types/user/CreateUserRequest';
 
 interface UserFormSheetProps {
   isOpen: boolean;
   onOpenChange: (isOpen: boolean) => void;
-  onSave: (data: AdminCreateUserRequest) => void;
+  onSave: (data: CreateUserRequest) => void;
   isPending?: boolean;
 }
 
@@ -35,7 +35,7 @@ export default function UserFormSheet({
   onSave,
   isPending = false,
 }: UserFormSheetProps) {
-  const [formData, setFormData] = useState<AdminCreateUserRequest>({
+  const [formData, setFormData] = useState<CreateUserRequest>({
     username: "",
     password: "",
     fullName: "",

@@ -1,4 +1,4 @@
-export interface AdminCreateUserRequest {
+export interface CreateUserRequest {
   username: string;
   password: string;
   employeeCodeId: string;

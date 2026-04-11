@@ -1,5 +1,4 @@
-import * as React from "react";
-import { UserPlus, User, Key, Fingerprint, Mail, Building2, MapPin, Users, UserCircle, ChevronsUpDown, Check, RefreshCw, Clock } from "lucide-react";
+import { UserPlus, User, Key, Fingerprint, Mail, Building2, MapPin, Users, UserCircle, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
@@ -10,8 +9,6 @@ import { positionService } from "@/services/position";
 import { groupService } from "@/services/group/groupService";
 import { employeeCodeService } from "@/services/employeeCode";
 import { SearchableSelect } from "@/components/custom/SearchableSelect";
-import { cn } from "@/lib/utils";
-
 
 
 interface EmployeeFormSheetProps {

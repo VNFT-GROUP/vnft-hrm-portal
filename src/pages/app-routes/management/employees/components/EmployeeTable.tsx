@@ -11,6 +11,7 @@ import {
   ContextMenuSeparator,
 } from "@/components/ui/context-menu";
 import { AvatarPlaceholder } from "@/components/custom/AvatarPlaceholder";
+import { getEmployeeStatusColor } from "@/lib/utils";
 
 export interface Employee {
   id: string;
@@ -38,15 +39,6 @@ import { useState } from "react";
 
 export default function EmployeeTable({ employees, onDelete }: EmployeeTableProps) {
   const [rightClickedEmpId, setRightClickedEmpId] = useState<string | null>(null);
-  const getStatusColor = (status: string) => {
-    switch(status) {
-      case "Đang làm": return "bg-[#10b981] hover:bg-[#10b981]/90 shadow-[#10b981]/20";
-      case "Nghỉ sinh": return "bg-pink-500 hover:bg-pink-500/90 shadow-pink-500/20 text-white";
-      case "Tạm hoãn": return "bg-amber-500 hover:bg-amber-500/90 shadow-amber-500/20 text-white";
-      case "Đã nghỉ việc": return "bg-slate-300 hover:bg-slate-400 text-foreground shadow-none border-0";
-      default: return "bg-muted text-muted-foreground border-0";
-    }
-  };
 
   const activeEmp = employees.find(e => e.id === rightClickedEmpId);
 
@@ -104,7 +96,7 @@ export default function EmployeeTable({ employees, onDelete }: EmployeeTableProp
                   {emp.position || "-"}
                 </TableCell>
                 <TableCell className="py-4 border-r border-border text-center align-middle">
-                  <Badge className={`${getStatusColor(emp.status)} shadow-sm font-medium border-0`}>
+                  <Badge className={`${getEmployeeStatusColor(emp.status)} shadow-sm font-medium border-0`}>
                     {emp.status || "-"}
                   </Badge>
                 </TableCell>

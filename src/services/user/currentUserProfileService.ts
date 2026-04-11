@@ -12,7 +12,7 @@ export const currentUserProfileService = {
     ApiResponse<UserProfileResponse>
   > => {
     const response =
-      await apiClient.get<ApiResponse<UserProfileResponse>>("/users/me");
+      await apiClient.get<ApiResponse<UserProfileResponse>>("/users/me/profile");
     return response.data;
   },
 

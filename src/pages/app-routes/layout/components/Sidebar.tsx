@@ -62,6 +62,7 @@ export default function Sidebar() {
     setActiveToast(null);
   };
 
+  const { session } = useAuthStore();
   const { t } = useTranslation();
 
   const menuData = [
@@ -69,7 +70,18 @@ export default function Sidebar() {
       section: "",
       items: [
         { label: t('sidebar.dashboard'), path: "/app", icon: <LayoutDashboard size={20} /> },
-        { label: t('sidebar.profile'), path: "/app/profile", icon: <UserCircle size={20} /> },
+        { 
+          label: t('sidebar.profile'), 
+          path: "/app/profile", 
+          icon: (
+            <div className="relative">
+              <UserCircle size={20} />
+              {session?.requiredProfileCompleted === false && (
+                <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-[#1E2062] animate-pulse"></span>
+              )}
+            </div>
+          ) 
+        },
         { label: t('sidebar.calendar'), path: "/app/calendar", icon: <Calendar size={20} /> },
         { label: t('sidebar.requests'), path: "/app/requests", icon: <FileEdit size={20} /> },
         { 

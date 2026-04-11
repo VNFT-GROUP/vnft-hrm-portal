@@ -151,7 +151,12 @@ export default function Topbar() {
                <span className="user-name">{session?.username || t('profile.defaultUser')}</span>
                <span className="user-role">{t('profile.roleAdmin')}</span>
             </div>
-            <AvatarPlaceholder name={session?.username} className="user-avatar-circle" />
+            <div className="relative">
+              <AvatarPlaceholder name={session?.username} className="user-avatar-circle" />
+              {session?.requiredProfileCompleted === false && (
+                <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white animate-pulse"></span>
+              )}
+            </div>
           </div>
 
         {/* PROFILE DROPDOWN */}

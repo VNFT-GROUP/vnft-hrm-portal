@@ -1,7 +1,7 @@
 import { apiClient } from '@/lib/apiClient';
 import type { ApiResponse } from '@/types/base/ApiResponse';
-import type { UserSessionResponse } from '@/types/response/user/UserSessionResponse';
-import type { ChangeCurrentUserPasswordRequest } from '@/types/request/auth/ChangeCurrentUserPasswordRequest';
+import type { UserSessionResponse } from '@/types/user/UserSessionResponse';
+import type { ChangeCurrentUserPasswordRequest } from '@/types/auth/ChangeCurrentUserPasswordRequest';
 
 export const currentUserProfileService = {
   /**

@@ -20,7 +20,7 @@ import UserFormSheet from "../users/components/UserFormSheet";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { userService } from "@/services/user/userService";
 import { toast } from "sonner";
-import type { CreateUserRequest } from "@/types/request/CreateUserRequest";
+import type { CreateUserRequest } from '@/types/user/CreateUserRequest';
 import { departmentService } from "@/services/department";
 import { positionService } from "@/services/position";
 import { groupService } from "@/services/group/groupService";

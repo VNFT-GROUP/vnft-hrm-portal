@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Eye, EyeOff, Lock, CheckCircle2 } from 'lucide-react';
+import { Eye, EyeOff, Lock, CheckCircle2, LogOut } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -71,6 +71,11 @@ export default function FirstTimePasswordModal({ isOpen, onSuccess }: FirstTimeP
       newPassword,
       confirmNewPassword: confirmPassword,
     });
+  };
+
+  const handleLogout = () => {
+    useAuthStore.getState().logout();
+    window.location.href = '/login';
   };
 
   const handleOpenChange = () => {
@@ -205,11 +210,18 @@ export default function FirstTimePasswordModal({ isOpen, onSuccess }: FirstTimeP
           </div>
 
           {/* Footer Actions */}
-          <DialogFooter className="mt-2 pt-5 border-t border-border/50">
+          <DialogFooter className="mt-2 pt-5 border-t border-border/50 flex-col sm:flex-row gap-3">
+            <Button 
+              type="button"
+              onClick={handleLogout}
+              className="w-full sm:w-auto h-11 bg-rose-500 hover:bg-rose-600 text-white shadow-md shadow-rose-500/20 transition-all font-semibold rounded-xl gap-2 z-10"
+            >
+              <LogOut size={16} /> Đăng xuất
+            </Button>
             <Button 
               type="submit"
               disabled={!currentPassword || !newPassword || newPassword !== confirmPassword || newPassword.length < 8 || changePasswordMutation.isPending}
-              className="w-full h-11 bg-[#F7941D] hover:bg-[#D4780F] text-white shadow-lg shadow-orange-500/20 hover:shadow-orange-500/30 transition-all font-bold text-base rounded-xl"
+              className="w-full h-11 flex-1 bg-[#F7941D] hover:bg-[#D4780F] text-white shadow-lg shadow-orange-500/20 hover:shadow-orange-500/30 transition-all font-bold text-sm lg:text-base rounded-xl"
             >
               {changePasswordMutation.isPending ? "Đang xử lý..." : "Khởi tạo & Bắt đầu trải nghiệm"}
             </Button>

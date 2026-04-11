@@ -1,7 +1,7 @@
 import { apiClient } from "@/lib/apiClient";
 import type { ApiResponse } from "@/types/base/ApiResponse";
-import type { GroupResponse } from "@/types/response/group/GroupResponse";
-import type { UpsertGroupRequest } from "@/types/request/group/UpsertGroupRequest";
+import type { GroupResponse } from '@/types/group/GroupResponse';
+import type { UpsertGroupRequest } from '@/types/group/UpsertGroupRequest';
 
 export const groupService = {
   createGroup: async (

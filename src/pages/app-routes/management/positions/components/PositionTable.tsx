@@ -13,7 +13,7 @@ import {
   ContextMenuSeparator,
 } from "@/components/ui/context-menu";
 
-import type { PositionResponse } from "@/types/response/position/PositionResponse";
+import type { PositionResponse } from '@/types/position/PositionResponse';
 
 interface PositionTableProps {
   positions: PositionResponse[];

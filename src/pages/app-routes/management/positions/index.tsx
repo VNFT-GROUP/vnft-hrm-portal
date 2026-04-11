@@ -7,8 +7,8 @@ import { useLayoutStore } from "@/store/useLayoutStore";
 
 import PositionTable from "./components/PositionTable";
 import PositionFormSheet from "./components/PositionFormSheet";
-import type { PositionResponse } from "@/types/response/position/PositionResponse";
-import type { UpsertPositionRequest } from "@/types/request/position/UpsertPositionRequest";
+import type { PositionResponse } from '@/types/position/PositionResponse';
+import type { UpsertPositionRequest } from '@/types/position/UpsertPositionRequest';
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { positionService } from "@/services/position";
 import { toast } from "sonner";

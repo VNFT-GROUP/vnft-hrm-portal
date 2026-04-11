@@ -1,7 +1,7 @@
 import axios, { type InternalAxiosRequestConfig } from 'axios';
 import { useAuthStore } from '@/store/useAuthStore';
 import type { ApiResponse } from '@/types/base/ApiResponse';
-import type { AuthResponse } from '@/types/response/auth/AuthResponse';
+import type { AuthResponse } from '@/types/auth/AuthResponse';
 import { toast } from 'sonner';
 
 const baseURL = import.meta.env.VITE_BACKEND_BASE_URL || 'http://localhost:8080';

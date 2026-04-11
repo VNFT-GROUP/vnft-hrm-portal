@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/context-menu";
 
 
-import type { DepartmentResponse } from "@/types/response/department/DepartmentResponse";
+import type { DepartmentResponse } from '@/types/department/DepartmentResponse';
 
 export type Department = DepartmentResponse;
 

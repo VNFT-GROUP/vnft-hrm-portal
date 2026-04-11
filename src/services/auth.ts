@@ -1,7 +1,7 @@
 import { apiClient } from '@/lib/apiClient';
 import type { ApiResponse } from '@/types/base/ApiResponse';
-import type { AuthResponse } from '@/types/response/auth/AuthResponse';
-import type { DefaultLoginRequest } from '@/types/request/auth/DefaultLoginRequest';
+import type { AuthResponse } from '@/types/auth/AuthResponse';
+import type { DefaultLoginRequest } from '@/types/auth/DefaultLoginRequest';
 
 export const authService = {
   /**

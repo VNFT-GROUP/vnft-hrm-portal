@@ -20,7 +20,7 @@ import {
 import { toast } from "sonner";
 import { useQuery } from "@tanstack/react-query";
 import { employeeCodeService } from "@/services/employeeCode";
-import type { AdminCreateUserRequest } from "@/types/request/AdminCreateUserRequest";
+import type { AdminCreateUserRequest } from '@/types/user/AdminCreateUserRequest';
 
 interface UserFormSheetProps {
   isOpen: boolean;

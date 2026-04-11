@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Switch } from '@/components/ui/switch';
 import { motion, AnimatePresence } from 'framer-motion';
-import type { EmployeeCodeResponse } from '@/types/response/user/EmployeeCodeResponse';
+import type { EmployeeCodeResponse } from '@/types/user/EmployeeCodeResponse';
 
 export default function EmployeeCodeTable({ data, onToggleActive, onEdit }: { data: EmployeeCodeResponse[], onToggleActive: (id: string) => void, onEdit: (i: EmployeeCodeResponse) => void }) {
   return (

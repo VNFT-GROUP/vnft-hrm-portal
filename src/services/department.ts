@@ -1,7 +1,7 @@
 import { apiClient } from '@/lib/apiClient';
 import type { ApiResponse } from '@/types/base/ApiResponse';
-import type { DepartmentResponse } from '@/types/response/department/DepartmentResponse';
-import type { UpsertDepartmentRequest } from '@/types/request/department/UpsertDepartmentRequest';
+import type { DepartmentResponse } from '@/types/department/DepartmentResponse';
+import type { UpsertDepartmentRequest } from '@/types/department/UpsertDepartmentRequest';
 
 export const departmentService = {
   getDepartments: async (search?: string): Promise<ApiResponse<DepartmentResponse[]>> => {

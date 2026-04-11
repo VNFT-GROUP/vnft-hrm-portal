@@ -8,9 +8,9 @@ import EmployeeCodeFormSheet from './components/EmployeeCodeFormSheet';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { employeeCodeService } from '@/services/employeeCode';
 import { toast } from 'sonner';
-import type { UpsertEmployeeCodeRequest } from '@/types/request/user/UpsertEmployeeCodeRequest';
-import type { UpdateEmployeeCodeDescriptionRequest } from '@/types/request/user/UpdateEmployeeCodeDescriptionRequest';
-import type { EmployeeCodeResponse } from '@/types/response/user/EmployeeCodeResponse';
+import type { UpsertEmployeeCodeRequest } from '@/types/user/UpsertEmployeeCodeRequest';
+import type { UpdateEmployeeCodeDescriptionRequest } from '@/types/user/UpdateEmployeeCodeDescriptionRequest';
+import type { EmployeeCodeResponse } from '@/types/user/EmployeeCodeResponse';
 
 export default function EmployeeCodesPage() {
   const queryClient = useQueryClient();

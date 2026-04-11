@@ -69,6 +69,8 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
     });
   };
 
+
+
   const handleOpenChange = (open: boolean) => {
      if (!open) {
          onClose();
@@ -199,19 +201,19 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
           </div>
 
           {/* Footer Actions */}
-          <DialogFooter className="mt-4 pt-4 border-t border-border/50 gap-2 sm:gap-3">
+          <DialogFooter className="mt-4 pt-4 border-t border-border/50 gap-2 sm:gap-3 flex-col sm:flex-row">
             <Button 
               type="button"
               variant="outline"
               onClick={onClose}
-              className="w-full sm:w-auto h-10"
+              className="w-full sm:w-auto h-10 flex-1"
             >
               {t('profile.passwordForm.cancel')}
             </Button>
             <Button 
               type="submit"
               disabled={!currentPassword || !newPassword || newPassword !== confirmPassword || newPassword.length < 8 || changePasswordMutation.isPending}
-              className="w-full sm:w-auto h-10 bg-[#F7941D] hover:bg-[#D4780F] text-white shadow-md shadow-orange-500/20 hover:shadow-orange-500/30 transition-all font-semibold"
+              className="w-full sm:w-auto h-10 bg-[#F7941D] hover:bg-[#D4780F] text-white shadow-md shadow-orange-500/20 hover:shadow-orange-500/30 transition-all font-semibold flex-1"
             >
               {changePasswordMutation.isPending ? "Đang xử lý..." : t('profile.passwordForm.update')}
             </Button>

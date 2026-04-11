@@ -2,7 +2,7 @@ import type { BankInformationRequest } from './BankInformationRequest';
 import type { DependentRequest } from './DependentRequest';
 import type { EducationRecordRequest } from './EducationRecordRequest';
 import type { WorkExperienceRequest } from './WorkExperienceRequest';
-import type { Gender } from '../../response/user/UserSessionResponse';
+import type { Gender } from './UserSessionResponse';
 
 export type MaritalStatus = 'SINGLE' | 'MARRIED';
 

@@ -7,8 +7,8 @@ import { useLayoutStore } from "@/store/useLayoutStore";
 
 import GroupTable from "./components/GroupTable";
 import GroupFormSheet from "./components/GroupFormSheet";
-import type { GroupResponse } from "@/types/response/group/GroupResponse";
-import type { UpsertGroupRequest } from "@/types/request/group/UpsertGroupRequest";
+import type { GroupResponse } from '@/types/group/GroupResponse';
+import type { UpsertGroupRequest } from '@/types/group/UpsertGroupRequest';
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { groupService } from "@/services/group/groupService";
 import { toast } from "sonner";

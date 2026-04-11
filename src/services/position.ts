@@ -1,7 +1,7 @@
 import { apiClient } from '@/lib/apiClient';
 import type { ApiResponse } from '@/types/base/ApiResponse';
-import type { PositionResponse } from '@/types/response/position/PositionResponse';
-import type { UpsertPositionRequest } from '@/types/request/position/UpsertPositionRequest';
+import type { PositionResponse } from '@/types/position/PositionResponse';
+import type { UpsertPositionRequest } from '@/types/position/UpsertPositionRequest';
 
 export const positionService = {
   getPositions: async (search?: string): Promise<ApiResponse<PositionResponse[]>> => {

@@ -1,8 +1,8 @@
 import { apiClient } from '@/lib/apiClient';
 import type { ApiResponse } from '@/types/base/ApiResponse';
-import type { EmployeeCodeResponse } from '@/types/response/user/EmployeeCodeResponse';
-import type { UpsertEmployeeCodeRequest } from '@/types/request/user/UpsertEmployeeCodeRequest';
-import type { UpdateEmployeeCodeDescriptionRequest } from '@/types/request/user/UpdateEmployeeCodeDescriptionRequest';
+import type { EmployeeCodeResponse } from '@/types/user/EmployeeCodeResponse';
+import type { UpsertEmployeeCodeRequest } from '@/types/user/UpsertEmployeeCodeRequest';
+import type { UpdateEmployeeCodeDescriptionRequest } from '@/types/user/UpdateEmployeeCodeDescriptionRequest';
 
 export const employeeCodeService = {
   getEmployeeCodes: async (): Promise<ApiResponse<EmployeeCodeResponse[]>> => {

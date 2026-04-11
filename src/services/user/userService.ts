@@ -1,9 +1,9 @@
 import { apiClient } from "@/lib/apiClient";
 import type { ApiResponse } from "@/types/base/ApiResponse";
 import type { PageResponse } from "@/types/base/PageResponse";
-import type { UserResponse } from "@/types/response/user/UserResponse";
-import type { AdminCreateUserRequest } from "@/types/request/AdminCreateUserRequest";
-import type { UpdateUserPasswordRequest } from "@/types/request/UpdateUserPasswordRequest";
+import type { UserResponse } from '@/types/user/UserResponse';
+import type { AdminCreateUserRequest } from '@/types/user/AdminCreateUserRequest';
+import type { UpdateUserPasswordRequest } from '@/types/user/UpdateUserPasswordRequest';
 
 export const userService = {
   createUser: async (

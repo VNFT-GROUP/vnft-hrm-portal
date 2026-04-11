@@ -12,7 +12,7 @@ import {
   ContextMenuSeparator,
 } from "@/components/ui/context-menu";
 
-import type { GroupResponse } from "@/types/response/group/GroupResponse";
+import type { GroupResponse } from '@/types/group/GroupResponse';
 
 interface GroupTableProps {
   groups: GroupResponse[];

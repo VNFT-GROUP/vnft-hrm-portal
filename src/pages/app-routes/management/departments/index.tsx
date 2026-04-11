@@ -10,7 +10,7 @@ import DepartmentFormSheet from "./components/DepartmentFormSheet";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { departmentService } from "@/services/department";
 import { toast } from "sonner";
-import type { UpsertDepartmentRequest } from "@/types/request/department/UpsertDepartmentRequest";
+import type { UpsertDepartmentRequest } from '@/types/department/UpsertDepartmentRequest';
 import { useTranslation } from "react-i18next";
 
 export default function DepartmentsPage() {

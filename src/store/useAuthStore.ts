@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { UserSummaryResponse } from '@/types/response/user/UserSummaryResponse';
-import type { UserSessionResponse } from '@/types/response/user/UserSessionResponse';
+import type { UserSummaryResponse } from '@/types/user/UserSummaryResponse';
+import type { UserSessionResponse } from '@/types/user/UserSessionResponse';
 
 interface AuthState {
   id: string | null;

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Plus, Search, ShieldCheck, Edit2, Trash2, Loader2, MousePointerClick } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
@@ -14,6 +15,7 @@ import { groupService } from "@/services/group/groupService";
 import { toast } from "sonner";
 
 export default function GroupsPage() {
+  const { t } = useTranslation();
   const showRoleLegend = useLayoutStore((state) => state.showRoleLegend);
   const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState("");
@@ -118,10 +120,10 @@ export default function GroupsPage() {
           <span className="p-2.5 bg-[#2E3192]/10 text-[#2E3192] rounded-xl">
             <ShieldCheck size={28} />
           </span>
-          Danh Sách Nhóm
+          {t('management.groupsTitle', { defaultValue: 'Danh Sách Nhóm' })}
         </h1>
         <p className="text-muted-foreground text-base md:text-lg ml-1">
-          Quản lý danh sách các nhóm quyền của người dùng trong hệ thống.
+          {t('management.groupsDesc', { defaultValue: 'Quản lý danh sách các nhóm quyền của người dùng trong hệ thống.' })}
         </p>
       </motion.div>
 
@@ -135,24 +137,24 @@ export default function GroupsPage() {
         >
           <div className="flex flex-wrap items-center gap-x-6 gap-y-3 w-full">
             <span className="font-semibold text-[#1E2062] mr-2">
-              Chú thích thao tác:
+              {t('management.actionLegend', { defaultValue: 'Chú thích thao tác:' })}
             </span>
             <div className="flex items-center gap-2">
               <Edit2 size={16} className="text-[#2E3192]" />
-              <span>Chỉnh sửa thông tin</span>
+              <span>{t('management.editLegend', { defaultValue: 'Chỉnh sửa thông tin' })}</span>
             </div>
             <div className="flex items-center gap-2">
               <Trash2 size={16} className="text-rose-500" />
-              <span>Xóa / Hủy kích hoạt</span>
+              <span>{t('management.deleteLegend', { defaultValue: 'Xóa / Hủy kích hoạt' })}</span>
             </div>
             <div className="ml-auto flex items-center text-xs text-muted-foreground bg-muted/40 px-2 py-1 rounded-md border border-border opacity-70 hover:opacity-100 transition-opacity">
-              Nhấn <span className="mx-1 font-mono text-[10px] font-semibold bg-background py-0.5 px-1.5 rounded border border-border shadow-sm">Alt + S</span> để bật tắt mục này.
+              {t('management.hideLegendHint', { defaultValue: 'Nhấn Alt + S để bật tắt mục này' })}
             </div>
           </div>
           <div className="w-full h-px bg-border/50 hidden md:block" />
           <div className="flex items-center gap-1.5 text-[#2E3192]">
             <MousePointerClick size={16} />
-            <span className="italic">Mẹo: Click chuột phải vào dòng dữ liệu để thao tác nhanh.</span>
+            <span className="italic">{t('management.actionTooltip', { defaultValue: 'Mẹo: Click chuột phải vào dòng dữ liệu để thao tác nhanh.' })}</span>
           </div>
         </motion.div>
       )}
@@ -170,7 +172,7 @@ export default function GroupsPage() {
             size={20}
           />
           <Input
-            placeholder="Tìm kiếm nhóm theo tên..."
+            placeholder={t('management.searchGroupPlaceholder', { defaultValue: 'Tìm kiếm nhóm theo tên...' })}
             className="pl-12 h-12 rounded-xl bg-muted border-border focus-visible:ring-[#2E3192] text-base hover:bg-card transition-colors"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -180,7 +182,7 @@ export default function GroupsPage() {
           onClick={() => handleOpenForm()}
           className="w-full md:w-auto h-12 px-6 rounded-xl bg-[#2E3192] hover:bg-[#1E2062] text-white shadow-md shadow-[#2E3192]/20 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 text-base font-semibold"
         >
-          <Plus size={20} className="mr-2" /> Thêm Nhóm
+          <Plus size={20} className="mr-2" /> {t('management.addGroup', { defaultValue: 'Thêm Nhóm' })}
         </Button>
       </motion.div>
 

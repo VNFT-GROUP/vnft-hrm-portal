@@ -8,6 +8,7 @@ import ndaContent from './ndaContent';
 import department from './department';
 import position from './position';
 import settings from './settings';
+import management from './management';
 
 export default {
   profile,
@@ -19,5 +20,6 @@ export default {
   position,
   settings,
   editProfile,
-  dropdowns
+  dropdowns,
+  management
 };

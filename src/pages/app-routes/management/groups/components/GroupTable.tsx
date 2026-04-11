@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Edit2, Trash2, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -21,6 +22,7 @@ interface GroupTableProps {
 }
 
 export default function GroupTable({ groups, onEdit, onDelete }: GroupTableProps) {
+  const { t } = useTranslation();
   const [rightClickedGroupId, setRightClickedGroupId] = useState<string | null>(null);
   
   const activeGroup = groups.find(r => r.id === rightClickedGroupId);
@@ -32,10 +34,10 @@ export default function GroupTable({ groups, onEdit, onDelete }: GroupTableProps
           <Table className="border-collapse">
         <TableHeader className="bg-muted/80">
           <TableRow className="border-b border-border hover:bg-transparent">
-            <TableHead className="font-semibold text-foreground w-[250px] border-r border-border text-left align-middle px-6">Tên nhóm</TableHead>
-            <TableHead className="font-semibold text-foreground border-r border-border text-left align-middle px-6">Mô tả</TableHead>
-            <TableHead className="font-semibold text-foreground w-[150px] border-r border-border text-center align-middle px-4">Trạng thái</TableHead>
-            <TableHead className="font-semibold text-foreground w-[120px] text-center align-middle px-4">Thao tác</TableHead>
+            <TableHead className="font-semibold text-foreground w-[250px] border-r border-border text-left align-middle px-6">{t('management.colGroupName', { defaultValue: 'Tên nhóm' })}</TableHead>
+            <TableHead className="font-semibold text-foreground border-r border-border text-left align-middle px-6">{t('management.colDesc', { defaultValue: 'Mô tả' })}</TableHead>
+            <TableHead className="font-semibold text-foreground w-[150px] border-r border-border text-center align-middle px-4">{t('management.colStatus', { defaultValue: 'Trạng thái' })}</TableHead>
+            <TableHead className="font-semibold text-foreground w-[120px] text-center align-middle px-4">{t('management.colAction', { defaultValue: 'Thao tác' })}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -64,7 +66,7 @@ export default function GroupTable({ groups, onEdit, onDelete }: GroupTableProps
                       : "bg-muted text-muted-foreground hover:bg-slate-800 dark:bg-slate-700 hover:text-muted-foreground font-medium border-0"
                     }
                   >
-                    {group.active ? "Hoạt động" : "Tạm ngưng"}
+                    {group.active ? t('management.statusActive', { defaultValue: 'Hoạt động' }) : t('management.statusInactive', { defaultValue: 'Tạm ngưng' })}
                   </Badge>
                 </TableCell>
                 <TableCell className="py-4 text-center align-middle">
@@ -85,7 +87,7 @@ export default function GroupTable({ groups, onEdit, onDelete }: GroupTableProps
               <TableCell colSpan={4} className="h-40 text-center">
                 <div className="flex flex-col items-center justify-center text-muted-foreground">
                   <ShieldCheck size={32} className="mb-2 opacity-50" />
-                  <p>Không tìm thấy nhóm nào</p>
+                  <p>{t('management.emptyGroup', { defaultValue: 'Không tìm thấy nhóm nào' })}</p>
                 </div>
               </TableCell>
             </TableRow>
@@ -99,7 +101,7 @@ export default function GroupTable({ groups, onEdit, onDelete }: GroupTableProps
         <ContextMenuContent className="w-56 z-50">
           <ContextMenuItem className="cursor-pointer" onClick={() => onEdit(activeGroup)}>
             <Edit2 className="mr-2 h-4 w-4 text-[#2E3192]" />
-            <span>Chỉnh sửa thông tin</span>
+            <span>{t('management.editLegend', { defaultValue: 'Chỉnh sửa thông tin' })}</span>
           </ContextMenuItem>
           <ContextMenuSeparator />
           <ContextMenuItem 
@@ -107,7 +109,7 @@ export default function GroupTable({ groups, onEdit, onDelete }: GroupTableProps
             onClick={() => onDelete(activeGroup.id)}
           >
             <Trash2 className="mr-2 h-4 w-4 text-rose-500" />
-            <span>Xóa nhóm</span>
+            <span>{t('management.deleteGroup', { defaultValue: 'Xóa nhóm' })}</span>
           </ContextMenuItem>
         </ContextMenuContent>
       )}

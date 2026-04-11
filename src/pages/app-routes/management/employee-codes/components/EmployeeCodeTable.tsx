@@ -1,4 +1,5 @@
 import { SearchX, Edit2 } from 'lucide-react';
+import { useTranslation } from "react-i18next";
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Switch } from '@/components/ui/switch';
@@ -6,15 +7,16 @@ import { motion, AnimatePresence } from 'framer-motion';
 import type { EmployeeCodeResponse } from '@/types/user/EmployeeCodeResponse';
 
 export default function EmployeeCodeTable({ data, onToggleActive, onEdit }: { data: EmployeeCodeResponse[], onToggleActive: (id: string) => void, onEdit: (i: EmployeeCodeResponse) => void }) {
+  const { t } = useTranslation();
   return (
     <div className="overflow-x-auto">
       <Table className="border-collapse">
             <TableHeader className="bg-muted/80">
               <TableRow className="border-b border-border hover:bg-transparent">
-                <TableHead className="font-semibold text-foreground w-[250px] border-r border-border text-left align-middle px-6">Prefix</TableHead>
-                <TableHead className="font-semibold text-foreground border-r border-border text-left align-middle px-6 min-w-[200px]">Mô tả</TableHead>
-                <TableHead className="font-semibold text-foreground w-[150px] border-r border-border text-center align-middle px-4">Trạng thái</TableHead>
-                <TableHead className="font-semibold text-foreground w-[120px] text-center align-middle px-4">Thao tác</TableHead>
+                <TableHead className="font-semibold text-foreground w-[250px] border-r border-border text-left align-middle px-6">{t('management.colPrefix', { defaultValue: 'Prefix' })}</TableHead>
+                <TableHead className="font-semibold text-foreground border-r border-border text-left align-middle px-6 min-w-[200px]">{t('management.colDesc', { defaultValue: 'Mô tả' })}</TableHead>
+                <TableHead className="font-semibold text-foreground w-[150px] border-r border-border text-center align-middle px-4">{t('management.colStatus', { defaultValue: 'Trạng thái' })}</TableHead>
+                <TableHead className="font-semibold text-foreground w-[120px] text-center align-middle px-4">{t('management.colAction', { defaultValue: 'Thao tác' })}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -41,7 +43,7 @@ export default function EmployeeCodeTable({ data, onToggleActive, onEdit }: { da
                           onCheckedChange={() => onToggleActive(item.id)} 
                         />
                         <span className={`text-xs font-medium ${item.active ? 'text-[#10b981]' : 'text-muted-foreground'}`}>
-                          {item.active ? "Hoạt động" : "Tạm ngưng"}
+                          {item.active ? t('management.statusActive', { defaultValue: 'Hoạt động' }) : t('management.statusInactive', { defaultValue: 'Tạm ngưng' })}
                         </span>
                       </div>
                     </TableCell>
@@ -60,7 +62,7 @@ export default function EmployeeCodeTable({ data, onToggleActive, onEdit }: { da
                   <TableCell colSpan={4} className="h-40 text-center">
                     <div className="flex flex-col items-center justify-center text-muted-foreground">
                       <SearchX size={32} className="mb-2 opacity-50" />
-                      <p>Không tìm thấy dữ liệu</p>
+                      <p>{t('management.emptyData', { defaultValue: 'Không tìm thấy dữ liệu' })}</p>
                     </div>
                   </TableCell>
                 </TableRow>

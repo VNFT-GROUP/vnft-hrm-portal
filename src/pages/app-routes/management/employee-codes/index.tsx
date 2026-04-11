@@ -1,5 +1,7 @@
 import { useState } from 'react';
-import { Plus, Search, FileText, MousePointerClick } from 'lucide-react';
+import { Plus, Search, FileText, MousePointerClick, Edit2, Power } from 'lucide-react';
+import { useTranslation } from "react-i18next";
+import { useLayoutStore } from "@/store/useLayoutStore";
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { motion } from 'framer-motion';
@@ -13,6 +15,8 @@ import type { UpdateEmployeeCodeDescriptionRequest } from '@/types/user/UpdateEm
 import type { EmployeeCodeResponse } from '@/types/user/EmployeeCodeResponse';
 
 export default function EmployeeCodesPage() {
+  const { t } = useTranslation();
+  const showRoleLegend = useLayoutStore((state) => state.showRoleLegend);
   const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState('');
   const [isOpen, setIsOpen] = useState(false);
@@ -99,34 +103,51 @@ export default function EmployeeCodesPage() {
       <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className='flex flex-col gap-2'>
         <h1 className='text-2xl md:text-4xl font-bold text-[#1E2062] flex items-center gap-3'>
           <span className='p-2.5 bg-[#2E3192]/10 text-[#2E3192] rounded-xl'><FileText size={28} /></span>
-          Quản lý Mã nhân viên
+          {t('management.employeeCodesTitle', { defaultValue: 'Quản lý Mã nhân viên' })}
         </h1>
-        <p className='text-muted-foreground text-base md:text-lg ml-1'>Thiết lập cấu hình tiền tố mã nhân viên (Prefix)</p>
+        <p className='text-muted-foreground text-base md:text-lg ml-1'>
+          {t('management.employeeCodesDesc', { defaultValue: 'Thiết lập cấu hình tiền tố mã nhân viên (Prefix)' })}
+        </p>
       </motion.div>
 
-      <motion.div 
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.1, ease: 'easeOut' }}
-        className='bg-card text-card-foreground p-4 rounded-xl border border-border flex flex-col gap-3 text-sm text-muted-foreground w-full shadow-sm'
-      >
-        <div className="flex flex-wrap items-center gap-x-6 gap-y-3 w-full">
-            <span className="font-semibold text-[#1E2062] mr-2">Chú thích thao tác:</span>
-        </div>
-        <div className="w-full h-px bg-border/50 hidden md:block" />
-        <div className="flex items-center gap-1.5 text-[#2E3192]">
-          <MousePointerClick size={16} />
-          <span className="italic">Mẹo: Click chuột phải vào dòng dữ liệu để thao tác nhanh.</span>
-        </div>
-      </motion.div>
+      {showRoleLegend && (
+        <motion.div 
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1, ease: 'easeOut' }}
+          className='bg-card text-card-foreground p-4 rounded-xl border border-border flex flex-col gap-3 text-sm text-muted-foreground w-full shadow-sm'
+        >
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-3 w-full">
+            <span className="font-semibold text-[#1E2062] mr-2">
+              {t('management.actionLegend', { defaultValue: 'Chú thích thao tác:' })}
+            </span>
+            <div className="flex items-center gap-2">
+              <Edit2 size={16} className="text-[#2E3192]" />
+              <span>{t('management.editLegend', { defaultValue: 'Chỉnh sửa thông tin' })}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Power size={16} className="text-emerald-500" />
+              <span>{t('management.toggleLegend', { defaultValue: 'Bật / Tắt hoạt động' })}</span>
+            </div>
+            <div className="ml-auto flex items-center text-xs text-muted-foreground bg-muted/40 px-2 py-1 rounded-md border border-border opacity-70 hover:opacity-100 transition-opacity">
+              {t('management.hideLegendHint', { defaultValue: 'Nhấn Alt + S để bật tắt mục này' })}
+            </div>
+          </div>
+          <div className="w-full h-px bg-border/50 hidden md:block" />
+          <div className="flex items-center gap-1.5 text-[#2E3192]">
+            <MousePointerClick size={16} />
+            <span className="italic">{t('management.actionTooltip', { defaultValue: 'Mẹo: Click chuột phải vào dòng dữ liệu để thao tác nhanh.' })}</span>
+          </div>
+        </motion.div>
+      )}
 
       <motion.div className='bg-card p-5 rounded-2xl shadow-sm border border-border flex flex-col md:flex-row justify-between items-center gap-4'>
         <div className='relative w-full md:w-96'>
           <Search className='absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground' size={20} />
-          <Input placeholder='Tìm kiếm prefix...' className='pl-12 h-12 rounded-xl bg-muted border-border focus-visible:ring-[#2E3192] hover:bg-card transition-colors' value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+          <Input placeholder={t('management.searchPrefixPlaceholder', { defaultValue: 'Tìm kiếm prefix...' })} className='pl-12 h-12 rounded-xl bg-muted border-border focus-visible:ring-[#2E3192] hover:bg-card transition-colors' value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
         </div>
         <Button onClick={() => handleOpenForm()} className='w-full md:w-auto h-12 px-6 rounded-xl bg-[#2E3192] hover:bg-[#1E2062] text-white shadow-[#2E3192]/20 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300'>
-          <Plus size={20} className='mr-2' /> Tạo mới
+          <Plus size={20} className='mr-2' /> {t('management.addNew', { defaultValue: 'Tạo mới' })}
         </Button>
       </motion.div>
 

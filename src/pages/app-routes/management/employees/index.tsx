@@ -12,6 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 import { useLayoutStore } from "@/store/useLayoutStore";
 
 import EmployeeTable, { type Employee } from "./components/EmployeeTable";
@@ -27,6 +28,7 @@ import { groupService } from "@/services/group/groupService";
 import { mapIdToName } from "@/lib/utils";
 
 export default function EmployeesPage() {
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -202,11 +204,10 @@ export default function EmployeesPage() {
           <span className="p-2.5 bg-[#2E3192]/10 text-[#2E3192] rounded-xl">
             <Users size={28} />
           </span>
-          Hồ sơ nhân viên
+          {t('management.employeesTitle', { defaultValue: 'Hồ sơ nhân viên' })}
         </h1>
         <p className="text-muted-foreground text-base md:text-lg ml-1">
-          Quản lý toàn bộ thông tin nhân sự và cấp phát tài khoản trong hệ
-          thống.
+          {t('management.employeesDesc', { defaultValue: 'Quản lý toàn bộ thông tin nhân sự và cấp phát tài khoản trong hệ thống.' })}
         </p>
       </motion.div>
 
@@ -220,32 +221,28 @@ export default function EmployeesPage() {
         >
           <div className="flex flex-wrap items-center gap-x-6 gap-y-3 w-full">
             <span className="font-semibold text-[#1E2062] mr-2">
-              Chú thích thao tác:
+              {t('management.actionLegend', { defaultValue: 'Chú thích thao tác:' })}
             </span>
             <div className="flex items-center gap-2">
               <Eye size={16} className="text-sky-500" />
-              <span>Xem chi tiết thông tin chung</span>
+              <span>{t('management.viewLegend', { defaultValue: 'Xem chi tiết thông tin chung' })}</span>
             </div>
             <div className="flex items-center gap-2">
               <CircleDollarSign size={16} className="text-emerald-500" />
-              <span>Xem/chỉnh sửa lương</span>
+              <span>{t('management.salaryLegend', { defaultValue: 'Xem/chỉnh sửa lương' })}</span>
             </div>
             <div className="flex items-center gap-2">
               <Trash2 size={16} className="text-rose-500" />
-              <span>Hủy kích hoạt tài khoản</span>
+              <span>{t('management.deactivateLegend', { defaultValue: 'Hủy kích hoạt tài khoản' })}</span>
             </div>
             <div className="ml-auto flex items-center text-xs text-muted-foreground bg-muted/40 px-2 py-1 rounded-md border border-border opacity-70 hover:opacity-100 transition-opacity">
-              (Tắt chú thích trong tùy chỉnh{" "}
-              <span className="ml-1 font-mono text-[10px] font-semibold bg-background py-0.5 px-1.5 rounded border border-border shadow-sm">
-                Alt + S
-              </span>
-              )
+              {t('management.hideLegendHint', { defaultValue: 'Nhấn Alt + S để bật tắt mục này' })}
             </div>
           </div>
           <div className="w-full h-px bg-border/50 hidden md:block" />
           <div className="flex items-center gap-1.5 text-[#2E3192]">
             <MousePointerClick size={16} />
-            <span className="italic">Mẹo: Click chuột phải vào dòng dữ liệu để thao tác nhanh.</span>
+            <span className="italic">{t('management.actionTooltip', { defaultValue: 'Mẹo: Click chuột phải vào dòng dữ liệu để thao tác nhanh.' })}</span>
           </div>
         </motion.div>
       )}
@@ -263,7 +260,7 @@ export default function EmployeesPage() {
             size={20}
           />
           <Input
-            placeholder="Tìm kiếm theo Tên hoặc Mã NV..."
+            placeholder={t('management.searchEmployeePlaceholder', { defaultValue: 'Tìm kiếm theo Tên hoặc Mã NV...' })}
             className="pl-12 h-12 rounded-xl bg-muted border-border focus-visible:ring-[#2E3192] text-base hover:bg-card text-card-foreground transition-colors"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -274,7 +271,7 @@ export default function EmployeesPage() {
             onClick={() => handleOpenForm()}
             className="w-full md:w-auto h-12 px-6 rounded-xl bg-[#2E3192] hover:bg-[#1E2062] text-white shadow-md shadow-[#2E3192]/20 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 text-base font-semibold"
           >
-            <UserPlus size={20} className="mr-2" /> Thêm nhân viên
+            <UserPlus size={20} className="mr-2" /> {t('management.addEmployee', { defaultValue: 'Thêm nhân viên' })}
           </Button>
         </div>
       </motion.div>

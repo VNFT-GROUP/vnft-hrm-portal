@@ -36,8 +36,10 @@ interface EmployeeTableProps {
 }
 
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function EmployeeTable({ employees, onDelete }: EmployeeTableProps) {
+  const { t } = useTranslation();
   const [rightClickedEmpId, setRightClickedEmpId] = useState<string | null>(null);
 
   const activeEmp = employees.find(e => e.id === rightClickedEmpId);
@@ -49,14 +51,14 @@ export default function EmployeeTable({ employees, onDelete }: EmployeeTableProp
           <Table className="border-collapse">
             <TableHeader className="bg-muted/80">
           <TableRow className="border-b border-border hover:bg-transparent">
-            <TableHead className="font-semibold text-foreground w-[120px] border-r border-border text-center align-middle px-4">EMP.CODE</TableHead>
-            <TableHead className="font-semibold text-foreground w-[120px] border-r border-border text-center align-middle px-4">ATT.CODE</TableHead>
-            <TableHead className="font-semibold text-foreground border-r border-border text-left align-middle px-6 min-w-[250px]">FULLNAME</TableHead>
-            <TableHead className="font-semibold text-foreground border-r border-border text-left align-middle px-6 min-w-[180px]">ENGLISHNAME</TableHead>
-            <TableHead className="font-semibold text-foreground w-[180px] border-r border-border text-left align-middle px-6">DEPARTMENT</TableHead>
-            <TableHead className="font-semibold text-foreground w-[180px] border-r border-border text-left align-middle px-6">POSITION</TableHead>
-            <TableHead className="font-semibold text-foreground w-[150px] border-r border-border text-center align-middle px-4">STATUS</TableHead>
-            <TableHead className="font-semibold text-foreground w-[180px] text-center align-middle px-4">THAO TÁC</TableHead>
+            <TableHead className="font-semibold text-foreground w-[120px] border-r border-border text-center align-middle px-4">{t('management.colEmpCode', { defaultValue: 'EMP.CODE' })}</TableHead>
+            <TableHead className="font-semibold text-foreground w-[120px] border-r border-border text-center align-middle px-4">{t('management.colAttCode', { defaultValue: 'ATT.CODE' })}</TableHead>
+            <TableHead className="font-semibold text-foreground border-r border-border text-left align-middle px-6 min-w-[250px]">{t('management.colFullName', { defaultValue: 'FULLNAME' })}</TableHead>
+            <TableHead className="font-semibold text-foreground border-r border-border text-left align-middle px-6 min-w-[180px]">{t('management.colEnglishName', { defaultValue: 'ENGLISH NAME' })}</TableHead>
+            <TableHead className="font-semibold text-foreground w-[180px] border-r border-border text-left align-middle px-6">{t('management.colDepartment', { defaultValue: 'DEPARTMENT' })}</TableHead>
+            <TableHead className="font-semibold text-foreground w-[180px] border-r border-border text-left align-middle px-6">{t('management.colPosition', { defaultValue: 'POSITION' })}</TableHead>
+            <TableHead className="font-semibold text-foreground w-[150px] border-r border-border text-center align-middle px-4">{t('management.colStatus', { defaultValue: 'STATUS' })}</TableHead>
+            <TableHead className="font-semibold text-foreground w-[180px] text-center align-middle px-4">{t('management.colAction', { defaultValue: 'THAO TÁC' })}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -97,18 +99,18 @@ export default function EmployeeTable({ employees, onDelete }: EmployeeTableProp
                 </TableCell>
                 <TableCell className="py-4 border-r border-border text-center align-middle">
                   <Badge className={`${getEmployeeStatusColor(emp.status)} shadow-sm font-medium border-0`}>
-                    {emp.status || "-"}
+                    {emp.status === "Đang làm" ? t('management.statusWorking', { defaultValue: 'Đang làm' }) : t('management.statusResigned', { defaultValue: 'Đã nghỉ việc' })}
                   </Badge>
                 </TableCell>
                 <TableCell className="py-4 text-center align-middle whitespace-nowrap">
                   <div className="flex justify-center gap-1">
-                    <Button variant="ghost" size="icon" title="Xem chi tiết" className="h-8 w-8 text-sky-500 hover:bg-sky-50 hover:text-sky-600 rounded-lg transition-colors">
+                    <Button variant="ghost" size="icon" title={t('management.titleViewDetail', { defaultValue: 'Xem chi tiết' })} className="h-8 w-8 text-sky-500 hover:bg-sky-50 hover:text-sky-600 rounded-lg transition-colors">
                       <Eye size={16} />
                     </Button>
-                    <Button variant="ghost" size="icon" title="Chỉnh lương" className="h-8 w-8 text-emerald-500 hover:bg-emerald-50 hover:text-emerald-600 rounded-lg transition-colors">
+                    <Button variant="ghost" size="icon" title={t('management.titleEditSalary', { defaultValue: 'Chỉnh lương' })} className="h-8 w-8 text-emerald-500 hover:bg-emerald-50 hover:text-emerald-600 rounded-lg transition-colors">
                       <CircleDollarSign size={16} />
                     </Button>
-                    <Button variant="ghost" size="icon" title="Xóa" onClick={() => onDelete(emp.id)} className="h-8 w-8 text-rose-500 hover:bg-rose-50 hover:text-rose-600 rounded-lg transition-colors">
+                    <Button variant="ghost" size="icon" title={t('management.titleDelete', { defaultValue: 'Xóa' })} onClick={() => onDelete(emp.id)} className="h-8 w-8 text-rose-500 hover:bg-rose-50 hover:text-rose-600 rounded-lg transition-colors">
                       <Trash2 size={16} />
                     </Button>
                   </div>
@@ -121,7 +123,7 @@ export default function EmployeeTable({ employees, onDelete }: EmployeeTableProp
               <TableCell colSpan={8} className="h-40 text-center">
                 <div className="flex flex-col items-center justify-center text-muted-foreground">
                   <Users size={32} className="mb-2 opacity-50" />
-                  <p>Không tìm thấy nhân viên nào</p>
+                  <p>{t('management.emptyEmployee', { defaultValue: 'Không tìm thấy nhân viên nào' })}</p>
                 </div>
               </TableCell>
             </TableRow>
@@ -135,11 +137,11 @@ export default function EmployeeTable({ employees, onDelete }: EmployeeTableProp
         <ContextMenuContent className="w-56 z-50">
           <ContextMenuItem className="cursor-pointer">
             <Eye className="mr-2 h-4 w-4 text-sky-500" />
-            <span>Xem chi tiết thông tin chung</span>
+            <span>{t('management.viewLegend', { defaultValue: 'Xem chi tiết thông tin chung' })}</span>
           </ContextMenuItem>
           <ContextMenuItem className="cursor-pointer">
             <CircleDollarSign className="mr-2 h-4 w-4 text-emerald-500" />
-            <span>Xem/chỉnh sửa lương</span>
+            <span>{t('management.salaryLegend', { defaultValue: 'Xem/chỉnh sửa lương' })}</span>
           </ContextMenuItem>
           <ContextMenuSeparator />
           <ContextMenuItem 
@@ -147,7 +149,7 @@ export default function EmployeeTable({ employees, onDelete }: EmployeeTableProp
             onClick={() => onDelete(activeEmp.id)}
           >
             <Trash2 className="mr-2 h-4 w-4 text-rose-500" />
-            <span>Hủy kích hoạt tài khoản</span>
+            <span>{t('management.deactivateLegend', { defaultValue: 'Hủy kích hoạt tài khoản' })}</span>
           </ContextMenuItem>
         </ContextMenuContent>
       )}

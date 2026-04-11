@@ -98,7 +98,7 @@ export default function Sidebar() {
             { label: t('sidebar.employeeCodes'), path: "/app/management/employee-codes", icon: <FileText size={16} /> },
             { label: t('sidebar.departments'), path: "/app/management/departments", icon: <Building2 size={16} /> },
             { label: t('sidebar.positions', { defaultValue: 'Vị trí' }), path: "/app/management/positions", icon: <Briefcase size={16} /> },
-            { label: t('sidebar.groups', { defaultValue: 'Nhóm phân quyền hệ thống' }), path: "/app/management/groups", icon: <CheckSquare size={16} /> },
+            { label: t('sidebar.groups', { defaultValue: 'Nhóm quyền' }), path: "/app/management/groups", icon: <CheckSquare size={16} /> },
           ]
         }
       ]

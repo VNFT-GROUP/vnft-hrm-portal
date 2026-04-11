@@ -151,12 +151,7 @@ export default function Topbar() {
                <span className="user-name">{session?.username || t('profile.defaultUser')}</span>
                <span className="user-role">{t('profile.roleAdmin')}</span>
             </div>
-            <div className="relative">
-              <AvatarPlaceholder name={session?.username} className="user-avatar-circle" />
-              {session?.requiredProfileCompleted === false && (
-                <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white animate-pulse"></span>
-              )}
-            </div>
+            <AvatarPlaceholder name={session?.username} className="user-avatar-circle" />
           </div>
 
         {/* PROFILE DROPDOWN */}
@@ -165,9 +160,9 @@ export default function Topbar() {
             <div className="pd-header">
               <AvatarPlaceholder name={session?.username} className="pd-avatar-large" />
               <div className="pd-info">
-                <h3 className="pd-name">{session?.username || t('profile.defaultUser')}</h3>
-                <div className="pd-role-item"><Briefcase size={15}/> HR & ADM</div>
-                <div className="pd-role-item"><BadgeCheck size={15}/> {t('profile.roleStaff')}</div>
+                <h3 className="pd-name">{session?.username || t('profile.defaultUser', { defaultValue: 'Người Dùng' })}</h3>
+                <div className="pd-role-item"><Briefcase size={15}/> {t('profile.department', { defaultValue: 'HR & ADM' })}</div>
+                <div className="pd-role-item"><BadgeCheck size={15}/> {t('profile.roleStaff', { defaultValue: 'Nhân viên' })}</div>
               </div>
             </div>
             
@@ -178,13 +173,13 @@ export default function Topbar() {
                 setIsProfileOpen(false);
                 navigate('/app/profile');
               }}>
-                <User size={18} className="pd-icon" /> <span>{t('profile.title')}</span>
+                <User size={18} className="pd-icon" /> <span>{t('profile.title', { defaultValue: 'Hồ sơ cá nhân' })}</span>
               </div>
               <div className="pd-item" onClick={() => {
                 setIsProfileOpen(false);
                 navigate('/app/settings');
               }}>
-                <Settings size={18} className="pd-icon" /> <span className="flex-1">{t('sidebar.settings')}</span>
+                <Settings size={18} className="pd-icon" /> <span className="flex-1">{t('sidebar.settings', { defaultValue: 'Cài đặt hệ thống' })}</span>
                 <div className="flex items-center text-[0.7rem] font-mono text-muted-foreground bg-muted px-1.5 py-0.5 rounded border border-border">
                   Alt + S
                 </div>
@@ -193,13 +188,13 @@ export default function Topbar() {
                 setIsProfileOpen(false);
                 navigate('/app/user-guide');
               }}>
-                <Book size={18} className="pd-icon" /> <span>{t('profile.guide')}</span>
+                <Book size={18} className="pd-icon" /> <span>{t('profile.guide', { defaultValue: 'Hướng dẫn sử dụng' })}</span>
               </div>
               <div className="pd-item" onClick={() => {
                 setIsProfileOpen(false);
                 navigate('/app/user-guide#shortcuts');
               }}>
-                <Keyboard size={18} className="pd-icon" /> <span className="flex-1">{t('profile.shortcuts')}</span>
+                <Keyboard size={18} className="pd-icon" /> <span className="flex-1">{t('profile.shortcuts', { defaultValue: 'Phím tắt' })}</span>
                 <div className="flex items-center text-[0.7rem] font-mono text-muted-foreground bg-muted px-1.5 py-0.5 rounded border border-border">
                   Alt + K
                 </div>

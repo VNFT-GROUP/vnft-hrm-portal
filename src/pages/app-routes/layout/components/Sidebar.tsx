@@ -4,6 +4,7 @@ import { LayoutDashboard, UserCircle, Calendar, FolderOpen, Users, Building2, Br
 import { useNavigate } from "react-router-dom";
 import { ScrollArea } from "../../../../components/ui/scroll-area";
 import { useLayoutStore } from "../../../../store/useLayoutStore";
+import { useAuthStore } from "../../../../store/useAuthStore";
 import "./Sidebar.css";
 
 export default function Sidebar() {
@@ -92,8 +93,8 @@ export default function Sidebar() {
             { label: t('sidebar.employees'), path: "/app/management/employees", icon: <Users size={16} /> },
             { label: t('sidebar.employeeCodes'), path: "/app/management/employee-codes", icon: <FileText size={16} /> },
             { label: t('sidebar.departments'), path: "/app/management/departments", icon: <Building2 size={16} /> },
-            { label: t('sidebar.positions', 'Vị trí'), path: "/app/management/positions", icon: <Briefcase size={16} /> },
-            { label: t('sidebar.groups', 'Nhóm'), path: "/app/management/groups", icon: <CheckSquare size={16} /> },
+            { label: t('sidebar.positions', { defaultValue: 'Vị trí' }), path: "/app/management/positions", icon: <Briefcase size={16} /> },
+            { label: t('sidebar.groups', { defaultValue: 'Nhóm' }), path: "/app/management/groups", icon: <CheckSquare size={16} /> },
           ]
         }
       ]

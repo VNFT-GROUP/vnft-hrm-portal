@@ -9,7 +9,7 @@ const Label = ({ children }: { children: React.ReactNode }) => (
 );
 
 const Value = ({ children }: { children: React.ReactNode }) => (
-  <div className="text-sm font-semibold text-foreground break-words">{children || "—"}</div>
+  <div className="text-sm font-semibold text-foreground wrap-break-word">{children || "—"}</div>
 );
 
 const SectionHeader = ({ icon, title }: { icon: React.ReactNode, title: string }) => (

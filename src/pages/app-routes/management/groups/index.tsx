@@ -54,12 +54,12 @@ export default function GroupsPage() {
     mutationFn: (data: UpsertGroupRequest) =>
       groupService.createGroup(data),
     onSuccess: () => {
-      toast.success("Thêm nhóm thành công!");
+      toast.success("Thêm nhóm quyền thành công!");
       queryClient.invalidateQueries({ queryKey: ["groups"] });
       setIsOpen(false);
     },
     onError: () => {
-      toast.error("Thêm nhóm thất bại!");
+      toast.error("Thêm nhóm quyền thất bại!");
     }
   });
 
@@ -67,23 +67,23 @@ export default function GroupsPage() {
     mutationFn: ({ id, data }: { id: string; data: UpsertGroupRequest }) =>
       groupService.updateGroup(id, data),
     onSuccess: () => {
-      toast.success("Cập nhật nhóm thành công!");
+      toast.success("Cập nhật nhóm quyền thành công!");
       queryClient.invalidateQueries({ queryKey: ["groups"] });
       setIsOpen(false);
     },
     onError: () => {
-      toast.error("Cập nhật nhóm thất bại!");
+      toast.error("Cập nhật nhóm quyền thất bại!");
     }
   });
 
   const deleteMutation = useMutation({
     mutationFn: (id: string) => groupService.deleteGroup(id),
     onSuccess: () => {
-      toast.success("Xóa/Tạm ngưng nhóm thành công!");
+      toast.success("Xóa/Tạm ngưng nhóm quyền thành công!");
       queryClient.invalidateQueries({ queryKey: ["groups"] });
     },
     onError: () => {
-      toast.error("Xóa nhóm thất bại!");
+      toast.error("Xóa nhóm quyền thất bại!");
     }
   });
 
@@ -120,7 +120,7 @@ export default function GroupsPage() {
           <span className="p-2.5 bg-[#2E3192]/10 text-[#2E3192] rounded-xl">
             <ShieldCheck size={28} />
           </span>
-          {t('management.groupsTitle', { defaultValue: 'Danh Sách Nhóm' })}
+          {t('management.groupsTitle', { defaultValue: 'Danh Sách Nhóm Quyền' })}
         </h1>
         <p className="text-muted-foreground text-base md:text-lg ml-1">
           {t('management.groupsDesc', { defaultValue: 'Quản lý danh sách các nhóm quyền của người dùng trong hệ thống.' })}
@@ -182,7 +182,7 @@ export default function GroupsPage() {
           onClick={() => handleOpenForm()}
           className="w-full md:w-auto h-12 px-6 rounded-xl bg-[#2E3192] hover:bg-[#1E2062] text-white shadow-md shadow-[#2E3192]/20 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 text-base font-semibold"
         >
-          <Plus size={20} className="mr-2" /> {t('management.addGroup', { defaultValue: 'Thêm Nhóm' })}
+          <Plus size={20} className="mr-2" /> {t('management.addGroup', { defaultValue: 'Thêm Nhóm Quyền' })}
         </Button>
       </motion.div>
 
@@ -196,7 +196,7 @@ export default function GroupsPage() {
         {isLoading ? (
           <div className="flex flex-col items-center justify-center p-20 text-muted-foreground h-64">
             <Loader2 className="w-8 h-8 animate-spin mb-4 text-[#2E3192]" />
-            <p className="animate-pulse">Đang tải danh sách nhóm...</p>
+            <p className="animate-pulse">Đang tải danh sách nhóm quyền...</p>
           </div>
         ) : (
           <GroupTable

@@ -1,8 +1,8 @@
 export default {
-  groupsTitle: "Danh Sách Nhóm",
+  groupsTitle: "Danh Sách Nhóm Quyền",
   groupsDesc: "Quản lý danh sách các nhóm quyền của người dùng trong hệ thống.",
-  searchGroupPlaceholder: "Tìm kiếm nhóm theo tên...",
-  addGroup: "Thêm Nhóm",
+  searchGroupPlaceholder: "Tìm kiếm nhóm quyền theo tên...",
+  addGroup: "Thêm Nhóm Quyền",
   
   employeeCodesTitle: "Quản lý Mã nhân viên",
   employeeCodesDesc: "Thiết lập cấu hình tiền tố mã nhân viên (Prefix)",
@@ -25,7 +25,7 @@ export default {
   salaryLegend: "Xem/chỉnh sửa lương",
   deactivateLegend: "Hủy kích hoạt tài khoản",
   
-  colGroupName: "Tên nhóm",
+  colGroupName: "Tên nhóm quyền",
   colDesc: "Mô tả",
   colStatus: "Trạng thái",
   colAction: "Thao tác",
@@ -42,12 +42,12 @@ export default {
   statusWorking: "Đang làm",
   statusResigned: "Đã nghỉ việc",
   
-  emptyGroup: "Không tìm thấy nhóm nào",
+  emptyGroup: "Không tìm thấy nhóm quyền nào",
   emptyData: "Không tìm thấy dữ liệu",
   emptyEmployee: "Không tìm thấy nhân viên nào",
   
-  editGroup: "Chỉnh sửa nhóm",
-  deleteGroup: "Xóa nhóm",
+  editGroup: "Chỉnh sửa nhóm quyền",
+  deleteGroup: "Xóa nhóm quyền",
   
   titleViewDetail: "Xem chi tiết",
   titleEditSalary: "Chỉnh lương",

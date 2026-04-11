@@ -34,7 +34,7 @@ export default function GroupTable({ groups, onEdit, onDelete }: GroupTableProps
           <Table className="border-collapse">
         <TableHeader className="bg-muted/80">
           <TableRow className="border-b border-border hover:bg-transparent">
-            <TableHead className="font-semibold text-foreground w-[250px] border-r border-border text-left align-middle px-6">{t('management.colGroupName', { defaultValue: 'Tên nhóm' })}</TableHead>
+            <TableHead className="font-semibold text-foreground w-[250px] border-r border-border text-left align-middle px-6">{t('management.colGroupName', { defaultValue: 'Tên nhóm quyền' })}</TableHead>
             <TableHead className="font-semibold text-foreground border-r border-border text-left align-middle px-6">{t('management.colDesc', { defaultValue: 'Mô tả' })}</TableHead>
             <TableHead className="font-semibold text-foreground w-[150px] border-r border-border text-center align-middle px-4">{t('management.colStatus', { defaultValue: 'Trạng thái' })}</TableHead>
             <TableHead className="font-semibold text-foreground w-[120px] text-center align-middle px-4">{t('management.colAction', { defaultValue: 'Thao tác' })}</TableHead>
@@ -87,7 +87,7 @@ export default function GroupTable({ groups, onEdit, onDelete }: GroupTableProps
               <TableCell colSpan={4} className="h-40 text-center">
                 <div className="flex flex-col items-center justify-center text-muted-foreground">
                   <ShieldCheck size={32} className="mb-2 opacity-50" />
-                  <p>{t('management.emptyGroup', { defaultValue: 'Không tìm thấy nhóm nào' })}</p>
+                  <p>{t('management.emptyGroup', { defaultValue: 'Không tìm thấy nhóm quyền nào' })}</p>
                 </div>
               </TableCell>
             </TableRow>
@@ -109,7 +109,7 @@ export default function GroupTable({ groups, onEdit, onDelete }: GroupTableProps
             onClick={() => onDelete(activeGroup.id)}
           >
             <Trash2 className="mr-2 h-4 w-4 text-rose-500" />
-            <span>{t('management.deleteGroup', { defaultValue: 'Xóa nhóm' })}</span>
+            <span>{t('management.deleteGroup', { defaultValue: 'Xóa nhóm quyền' })}</span>
           </ContextMenuItem>
         </ContextMenuContent>
       )}

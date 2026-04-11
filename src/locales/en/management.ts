@@ -1,8 +1,8 @@
 export default {
-  groupsTitle: "Group List",
+  groupsTitle: "Permission Group List",
   groupsDesc: "Manage all permission user groups within the system.",
-  searchGroupPlaceholder: "Search group by name...",
-  addGroup: "Add Group",
+  searchGroupPlaceholder: "Search permission group by name...",
+  addGroup: "Add Permission Group",
   
   employeeCodesTitle: "Employee Code Management",
   employeeCodesDesc: "Configure employee code prefixes.",
@@ -25,7 +25,7 @@ export default {
   salaryLegend: "View / Edit Salary",
   deactivateLegend: "Deactivate account",
   
-  colGroupName: "Group Name",
+  colGroupName: "Permission Group Name",
   colDesc: "Description",
   colStatus: "Status",
   colAction: "Actions",
@@ -42,12 +42,12 @@ export default {
   statusWorking: "Working",
   statusResigned: "Resigned",
   
-  emptyGroup: "No groups found",
+  emptyGroup: "No permission groups found",
   emptyData: "No data found",
   emptyEmployee: "No employees found",
   
-  editGroup: "Edit group",
-  deleteGroup: "Delete group",
+  editGroup: "Edit permission group",
+  deleteGroup: "Delete permission group",
   
   titleViewDetail: "View Details",
   titleEditSalary: "Edit Salary",

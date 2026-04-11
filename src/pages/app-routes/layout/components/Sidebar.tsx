@@ -98,7 +98,7 @@ export default function Sidebar() {
             { label: t('sidebar.employeeCodes'), path: "/app/management/employee-codes", icon: <FileText size={16} /> },
             { label: t('sidebar.departments'), path: "/app/management/departments", icon: <Building2 size={16} /> },
             { label: t('sidebar.positions', { defaultValue: 'Vị trí' }), path: "/app/management/positions", icon: <Briefcase size={16} /> },
-            { label: t('sidebar.groups', { defaultValue: 'Nhóm quyền' }), path: "/app/management/groups", icon: <CheckSquare size={16} /> },
+            { label: t('sidebar.groups', { defaultValue: 'Nhóm quyền' }), path: "/app/management/groups", icon: <CheckSquare size={16} />, badge: "Admin" },
           ]
         }
       ]
@@ -188,7 +188,12 @@ export default function Sidebar() {
                               }}
                             >
                               {sub.icon ? sub.icon : <div className="sub-item-bullet" />}
-                              <span className="sub-nav-label" style={{ color: isChildActive ? "white" : undefined }}>{sub.label}</span>
+                              <span className="sub-nav-label flex-1" style={{ color: isChildActive ? "white" : undefined }}>{sub.label}</span>
+                              {(sub as any).badge && (
+                                <span className="text-[9px] uppercase font-bold tracking-[0.08em] bg-red-500/20 text-red-400 px-1.5 py-0.5 rounded border border-red-500/30 whitespace-nowrap ml-auto">
+                                  {(sub as any).badge}
+                                </span>
+                              )}
                             </li>
                           );
                         })}

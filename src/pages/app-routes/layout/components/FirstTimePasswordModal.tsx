@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { X, Eye, EyeOff, Lock, CheckCircle2 } from 'lucide-react';
+import { Eye, EyeOff, Lock, CheckCircle2 } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -15,13 +15,15 @@ import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { isAxiosError } from 'axios';
 import { currentUserProfileService } from '@/services/user/currentUserProfileService';
+import { useAuthStore } from '@/store/useAuthStore';
+import './FirstTimePasswordModal.css';
 
-interface ChangePasswordModalProps {
+interface FirstTimePasswordModalProps {
   isOpen: boolean;
-  onClose: () => void;
+  onSuccess: () => void;
 }
 
-export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordModalProps) {
+export default function FirstTimePasswordModal({ isOpen, onSuccess }: FirstTimePasswordModalProps) {
   const { t } = useTranslation();
   
   const [showCurrent, setShowCurrent] = useState(false);
@@ -36,10 +38,12 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
   const changePasswordMutation = useMutation({
     mutationFn: currentUserProfileService.changePassword,
     onSuccess: () => {
-      toast.success(t('profile.passwordForm.success') || "Thành công", {
-        description: "Mật khẩu của bạn đã được cập nhật.",
+      toast.success("Thay đổi mật khẩu thành công!", {
+        description: "Mật khẩu của bạn đã được cập nhật an toàn.",
       });
-      onClose();
+      // Force update the auth store to mark the password as changed
+      useAuthStore.getState().updateSession({ passwordChangedAt: new Date().toISOString() });
+      onSuccess();
       // Reset fields
       setCurrentPassword('');
       setNewPassword('');
@@ -69,39 +73,41 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
     });
   };
 
-  const handleOpenChange = (open: boolean) => {
-     if (!open) {
-         onClose();
-         // Reset fields on close
-         setCurrentPassword('');
-         setNewPassword('');
-         setConfirmPassword('');
-     }
+  const handleOpenChange = () => {
+     // Component strictly prevents closing. So we do nothing.
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
-      <DialogContent showCloseButton={false} className="sm:max-w-md p-0 overflow-hidden border-border bg-card shadow-2xl">
-        {/* Header - Keeps the premium gradient look but adapted for the Dialog */}
-        <div className="relative bg-linear-to-r from-[#2E3192] to-[#1E2062] px-6 py-5 flex items-center gap-4">
-          <div className="bg-white/10 p-2.5 rounded-xl backdrop-blur-sm shadow-inner hidden sm:block">
-            <Lock size={24} className="text-white" />
+      <DialogContent showCloseButton={false} className="sm:max-w-[400px]! p-0 border-none bg-transparent shadow-none max-h-[90vh] flex flex-col ftpm-dialog-content">
+        {/* Animated Background Effects */}
+        <div className="ftpm-glow-orange" />
+        <div className="ftpm-glow-blue" />
+        
+        {/* Real wrapper card */}
+        <div className="bg-card shadow-2xl border border-border ftpm-inner-wrapper">
+          {/* Scrollable Container */}
+          <div className="overflow-y-auto flex-1 w-full custom-scrollbar">
+          {/* Illustration Header */}
+        <div className="relative w-full h-32 sm:h-36 bg-[#F8FAFC] flex items-center justify-center overflow-hidden border-b border-border shrink-0">
+          <img 
+            src="/common/first-time-password-illustration.webp" 
+            alt="Welcome to PingMe" 
+            className="w-full h-full object-cover"
+          />
+        </div>
+
+        {/* Welcome Text */}
+        <div className="px-6 pt-5 pb-1 text-center flex flex-col items-center">
+          <div className="bg-[#2E3192]/10 p-2.5 rounded-full mb-2">
+             <Lock size={18} className="text-[#2E3192]" />
           </div>
-          <div>
-            <DialogTitle className="text-white font-bold text-xl leading-tight text-left">
-              {t('profile.passwordForm.title')}
-            </DialogTitle>
-            <DialogDescription className="text-indigo-200 text-[13px] mt-1 text-left">
-              {t('profile.passwordForm.subtitle')}
-            </DialogDescription>
-          </div>
-          <button 
-            type="button"
-            onClick={onClose}
-            className="absolute right-4 top-1/2 -translate-y-1/2 text-white/70 hover:text-white hover:bg-white/10 p-2 rounded-full transition-colors"
-          >
-            <X size={18} />
-          </button>
+          <DialogTitle className="text-[#1E2062] font-bold text-xl sm:text-2xl leading-tight mb-2">
+            Chào mừng bạn đến với hệ thống! ✨
+          </DialogTitle>
+          <DialogDescription className="text-muted-foreground text-sm max-w-[90%]">
+            Rất vui được đồng hành cùng bạn. Để bảo mật thông tin và bắt đầu công việc, xin vui lòng tạo lại một mật khẩu mới cho riêng mình nhé.
+          </DialogDescription>
         </div>
 
         {/* Form Body */}
@@ -199,24 +205,18 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
           </div>
 
           {/* Footer Actions */}
-          <DialogFooter className="mt-4 pt-4 border-t border-border/50 gap-2 sm:gap-3">
-            <Button 
-              type="button"
-              variant="outline"
-              onClick={onClose}
-              className="w-full sm:w-auto h-10"
-            >
-              {t('profile.passwordForm.cancel')}
-            </Button>
+          <DialogFooter className="mt-2 pt-5 border-t border-border/50">
             <Button 
               type="submit"
               disabled={!currentPassword || !newPassword || newPassword !== confirmPassword || newPassword.length < 8 || changePasswordMutation.isPending}
-              className="w-full sm:w-auto h-10 bg-[#F7941D] hover:bg-[#D4780F] text-white shadow-md shadow-orange-500/20 hover:shadow-orange-500/30 transition-all font-semibold"
+              className="w-full h-11 bg-[#F7941D] hover:bg-[#D4780F] text-white shadow-lg shadow-orange-500/20 hover:shadow-orange-500/30 transition-all font-bold text-base rounded-xl"
             >
-              {changePasswordMutation.isPending ? "Đang xử lý..." : t('profile.passwordForm.update')}
+              {changePasswordMutation.isPending ? "Đang xử lý..." : "Khởi tạo & Bắt đầu trải nghiệm"}
             </Button>
           </DialogFooter>
         </form>
+        </div>
+        </div>
       </DialogContent>
     </Dialog>
   );

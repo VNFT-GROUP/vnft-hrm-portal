@@ -7,7 +7,7 @@ import ScrollToTopButton from "../../../components/custom/ScrollToTopButton";
 import LoadingPage from "../../../components/custom/loadingPage/LoadingPage";
 import { useAuthStore } from "@/store/useAuthStore";
 import { currentUserProfileService } from "@/services/user/currentUserProfileService";
-import ChangePasswordModal from "./components/ChangePasswordModal";
+import FirstTimePasswordModal from "./components/FirstTimePasswordModal";
 import "./AppLayout.css";
 
 export default function AppLayout() {
@@ -23,7 +23,12 @@ export default function AppLayout() {
         const res = await currentUserProfileService.getUserSession();
         if (res.data) {
           updateSession(res.data);
-          if (!res.data.passwordChangedAt) {
+          
+          // Trust the store's existing passwordChangedAt if the API returns null/undefined
+          const storedSession = useAuthStore.getState().session;
+          const finalChangedAt = res.data.passwordChangedAt || storedSession?.passwordChangedAt;
+          
+          if (!finalChangedAt) {
             setIsForcePasswordOpen(true);
           }
         }
@@ -77,10 +82,9 @@ export default function AppLayout() {
       </div>
       
       {/* Forced Password Change Modal */}
-      <ChangePasswordModal 
+      <FirstTimePasswordModal 
         isOpen={isForcePasswordOpen} 
-        onClose={() => setIsForcePasswordOpen(false)} 
-        isForced={true} 
+        onSuccess={() => setIsForcePasswordOpen(false)} 
       />
     </div>
   );

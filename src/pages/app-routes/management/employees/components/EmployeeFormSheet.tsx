@@ -81,7 +81,7 @@ export default function EmployeeFormSheet({ isOpen, onOpenChange, formData, setF
         
         <form onSubmit={(e) => { 
           e.preventDefault(); 
-          if (formData.fullName?.trim() && formData.englishName?.trim() && formData.email?.trim() && formData.password?.trim() && formData.empCodePrefix && formData.checkInTime && formData.checkOutTime) {
+          if (formData.fullName?.trim() && formData.englishName?.trim() && formData.email?.trim() && formData.password?.trim() && formData.empCodePrefix && formData.checkInTime && formData.checkOutTime && formData.func) {
             onSave();
           }
         }} className="flex flex-col flex-1 overflow-hidden">
@@ -203,7 +203,7 @@ export default function EmployeeFormSheet({ isOpen, onOpenChange, formData, setF
 
             <div className="space-y-2">
               <Label className="text-sm font-semibold text-foreground flex items-center justify-between">
-                <span className="flex items-center gap-1.5"><Users size={14} className="text-muted-foreground"/> Nhóm/Chức năng</span>
+                <span className="flex items-center gap-1.5"><Users size={14} className="text-muted-foreground"/> Nhóm/Chức năng <span className="text-rose-500">*</span></span>
                 <Badge variant="outline" className="text-[10px] bg-sky-50 text-sky-600 border-sky-200 uppercase pointer-events-none tracking-widest px-1.5 flex h-5 items-center">Phân quyền</Badge>
               </Label>
               <SearchableSelect 
@@ -250,7 +250,7 @@ export default function EmployeeFormSheet({ isOpen, onOpenChange, formData, setF
            <Button type="button" variant="outline" onClick={() => onOpenChange(false)} className="rounded-xl border-border text-muted-foreground hover:bg-muted w-32 transition-all">
              Hủy
            </Button>
-           <Button type="submit" className="rounded-xl bg-[#2E3192] hover:bg-[#1E2062] text-white w-auto px-6 transition-all shadow-md shadow-[#2E3192]/20" disabled={!formData.fullName?.trim() || !formData.englishName?.trim() || !formData.email?.trim() || !formData.password?.trim() || !formData.empCodePrefix}>
+           <Button type="submit" className="rounded-xl bg-[#2E3192] hover:bg-[#1E2062] text-white w-auto px-6 transition-all shadow-md shadow-[#2E3192]/20" disabled={!formData.fullName?.trim() || !formData.englishName?.trim() || !formData.email?.trim() || !formData.password?.trim() || !formData.empCodePrefix || !formData.func}>
              {isEditing ? "Lưu thay đổi" : "Tạo nhân viên"}
            </Button>
         </div>

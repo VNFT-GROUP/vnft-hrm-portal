@@ -1,4 +1,4 @@
-import { Trash2, Users, Eye, CircleDollarSign, UserCog, Briefcase } from "lucide-react";
+import { Trash2, Users, Eye, Shield, CircleDollarSign, UserCog, Briefcase } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
@@ -34,12 +34,13 @@ interface EmployeeTableProps {
   employees: Employee[];
   onDelete: (id: string) => void;
   onEditWorkInfo: (id: string) => void;
+  onEditGroupInfo: (id: string) => void;
 }
 
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
-export default function EmployeeTable({ employees, onDelete, onEditWorkInfo }: EmployeeTableProps) {
+export default function EmployeeTable({ employees, onDelete, onEditWorkInfo, onEditGroupInfo }: EmployeeTableProps) {
   const { t } = useTranslation();
   const [rightClickedEmpId, setRightClickedEmpId] = useState<string | null>(null);
 
@@ -119,8 +120,11 @@ export default function EmployeeTable({ employees, onDelete, onEditWorkInfo }: E
                     </div>
                     {/* Hàng 2 */}
                     <div className="flex justify-center gap-1">
-                      <Button variant="ghost" size="icon" title={t('management.titleEditWorkInfo', { defaultValue: 'Tùy chỉnh công việc' })} onClick={() => onEditWorkInfo(emp.id)} className="h-8 w-8 text-indigo-500 hover:bg-indigo-50 hover:text-indigo-600 rounded-lg transition-colors">
+                      <Button variant="ghost" size="icon" title={t('management.titleEditWorkInfo', { defaultValue: 'Xem/tùy chỉnh công việc' })} onClick={() => onEditWorkInfo(emp.id)} className="h-8 w-8 text-indigo-500 hover:bg-indigo-50 hover:text-indigo-600 rounded-lg transition-colors">
                         <Briefcase size={16} />
+                      </Button>
+                      <Button variant="ghost" size="icon" title={t('management.titleEditGroupInfo', { defaultValue: 'Xem/tùy chỉnh nhóm quyền' })} onClick={() => onEditGroupInfo(emp.id)} className="h-8 w-8 text-violet-500 hover:bg-violet-50 hover:text-violet-600 rounded-lg transition-colors">
+                        <Shield size={16} />
                       </Button>
                       <Button variant="ghost" size="icon" title={t('management.titleDeactivate', { defaultValue: 'Hủy kích hoạt tài khoản' })} onClick={() => onDelete(emp.id)} className="h-8 w-8 text-rose-500 hover:bg-rose-50 hover:text-rose-600 rounded-lg transition-colors">
                         <Trash2 size={16} />
@@ -147,7 +151,7 @@ export default function EmployeeTable({ employees, onDelete, onEditWorkInfo }: E
 
       {/* RENDER CONTEXT MENU FOR THE HOVERED ROW */}
       {activeEmp && (
-        <ContextMenuContent className="w-64 z-[100]">
+        <ContextMenuContent className="w-64 z-100">
           <ContextMenuItem className="cursor-pointer">
             <Eye className="mr-2 h-4 w-4 text-sky-500" />
             <span>{t('management.titleViewDetail', { defaultValue: 'Xem chi tiết' })}</span>
@@ -162,7 +166,11 @@ export default function EmployeeTable({ employees, onDelete, onEditWorkInfo }: E
           </ContextMenuItem>
           <ContextMenuItem className="cursor-pointer" onClick={() => onEditWorkInfo(activeEmp.id)}>
             <Briefcase className="mr-2 h-4 w-4 text-indigo-500" />
-            <span>{t('management.titleEditWorkInfo', { defaultValue: 'Tùy chỉnh công việc' })}</span>
+            <span>{t('management.titleEditWorkInfo', { defaultValue: 'Xem/tùy chỉnh công việc' })}</span>
+          </ContextMenuItem>
+          <ContextMenuItem className="cursor-pointer" onClick={() => onEditGroupInfo(activeEmp.id)}>
+            <Shield className="mr-2 h-4 w-4 text-violet-500" />
+            <span>{t('management.titleEditGroupInfo', { defaultValue: 'Xem/tùy chỉnh nhóm quyền' })}</span>
           </ContextMenuItem>
           <ContextMenuSeparator />
           <ContextMenuItem 

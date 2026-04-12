@@ -9,7 +9,8 @@ import {
   Loader2,
   MousePointerClick,
   UserCog,
-  Briefcase
+  Briefcase,
+  Shield
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,6 +21,7 @@ import { useLayoutStore } from "@/store/useLayoutStore";
 import EmployeeTable, { type Employee } from "./components/EmployeeTable";
 import EmployeeFormSheet from "./components/EmployeeFormSheet";
 import WorkInformationSheet from "./components/WorkInformationSheet";
+import GroupInformationSheet from "./components/GroupInformationSheet";
 import UserFormSheet from "../users/components/UserFormSheet";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { userService } from "@/services/user/userService";
@@ -41,6 +43,7 @@ export default function EmployeesPage() {
   );
   const [editingEmployee, setEditingEmployee] = useState<Employee | null>(null);
   const [workInfoEmpId, setWorkInfoEmpId] = useState<string | null>(null);
+  const [groupInfoEmpId, setGroupInfoEmpId] = useState<string | null>(null);
 
   const [formData, setFormData] = useState({
     empCodePrefix: "VNSGN",
@@ -242,7 +245,11 @@ export default function EmployeesPage() {
               </div>
               <div className="flex items-center gap-2">
                 <Briefcase size={16} className="text-indigo-500" />
-                <span>{t('management.titleEditWorkInfo', { defaultValue: 'Tùy chỉnh công việc' })}</span>
+                <span>{t('management.titleEditWorkInfo', { defaultValue: 'Xem/tùy chỉnh công việc' })}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Shield size={16} className="text-violet-500" />
+                <span>{t('management.titleEditGroupInfo', { defaultValue: 'Xem/tùy chỉnh nhóm quyền' })}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Trash2 size={16} className="text-rose-500" />
@@ -306,6 +313,7 @@ export default function EmployeesPage() {
             employees={filteredData}
             onDelete={handleDelete}
             onEditWorkInfo={(id) => setWorkInfoEmpId(id)}
+            onEditGroupInfo={(id) => setGroupInfoEmpId(id)}
           />
         )}
       </motion.div>
@@ -333,6 +341,14 @@ export default function EmployeesPage() {
           if (!open) setWorkInfoEmpId(null);
         }}
         userId={workInfoEmpId}
+      />
+      
+      <GroupInformationSheet
+        isOpen={!!groupInfoEmpId}
+        onOpenChange={(open) => {
+          if (!open) setGroupInfoEmpId(null);
+        }}
+        userId={groupInfoEmpId}
       />
     </div>
   );

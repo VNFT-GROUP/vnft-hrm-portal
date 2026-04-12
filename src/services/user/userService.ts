@@ -6,6 +6,8 @@ import type { CreateUserRequest } from '@/types/user/CreateUserRequest';
 import type { UpdateUserPasswordRequest } from '@/types/user/UpdateUserPasswordRequest';
 import type { UpdateUserWorkInformationRequest } from '@/types/user/UpdateUserWorkInformationRequest';
 import type { UserWorkInformationResponse } from '@/types/user/UserWorkInformationResponse';
+import type { UpdateUserGroupRequest } from '@/types/user/UpdateUserGroupRequest';
+import type { UserGroupResponse } from '@/types/user/UserGroupResponse';
 
 export const userService = {
   createUser: async (
@@ -55,6 +57,21 @@ export const userService = {
     id: string,
   ): Promise<ApiResponse<UserWorkInformationResponse>> => {
     const response = await apiClient.get(`/users/${id}/work-information`);
+    return response.data;
+  },
+
+  getGroup: async (
+    id: string,
+  ): Promise<ApiResponse<UserGroupResponse>> => {
+    const response = await apiClient.get(`/users/${id}/group`);
+    return response.data;
+  },
+
+  updateGroup: async (
+    id: string,
+    data: UpdateUserGroupRequest,
+  ): Promise<ApiResponse<UserGroupResponse>> => {
+    const response = await apiClient.put(`/users/${id}/group`, data);
     return response.data;
   },
 };

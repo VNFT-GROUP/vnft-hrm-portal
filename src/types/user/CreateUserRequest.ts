@@ -6,7 +6,7 @@ export interface CreateUserRequest {
   fullName: string;
   englishName: string;
   departmentId?: string;
-  groupId?: string;
+  groupId: string;
   positionId?: string;
   roleId?: string;
   checkInTime?: string;

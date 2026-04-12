@@ -22,7 +22,7 @@ import EmployeeTable, { type Employee } from "./components/EmployeeTable";
 import EmployeeFormSheet from "./components/EmployeeFormSheet";
 import WorkInformationSheet from "./components/WorkInformationSheet";
 import GroupInformationSheet from "./components/GroupInformationSheet";
-import ChangePasswordDialog from "./components/ChangePasswordDialog";
+import ChangePasswordSheet from "./components/ChangePasswordSheet";
 import UserFormSheet from "../users/components/UserFormSheet";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { userService } from "@/services/user/userService";
@@ -354,7 +354,7 @@ export default function EmployeesPage() {
         userId={groupInfoEmpId}
       />
       
-      <ChangePasswordDialog
+      <ChangePasswordSheet
         isOpen={!!passwordEmpId}
         onOpenChange={(open) => {
           if (!open) setPasswordEmpId(null);

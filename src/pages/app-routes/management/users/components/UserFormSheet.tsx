@@ -21,6 +21,7 @@ import { toast } from "sonner";
 import { useQuery } from "@tanstack/react-query";
 import { employeeCodeService } from "@/services/employeeCode";
 import { roleService } from "@/services/role/roleService";
+import { groupService } from "@/services/group/groupService";
 import type { CreateUserRequest } from '@/types/user/CreateUserRequest';
 
 interface UserFormSheetProps {
@@ -42,6 +43,7 @@ export default function UserFormSheet({
     fullName: "",
     englishName: "",
     employeeCodeId: "",
+    groupId: "",
   });
 
   // Reset form khi mở Sheet
@@ -54,6 +56,7 @@ export default function UserFormSheet({
           fullName: "",
           englishName: "",
           employeeCodeId: "",
+          groupId: "",
         });
       }, 0);
       return () => clearTimeout(timeout);
@@ -74,12 +77,21 @@ export default function UserFormSheet({
     enabled: isOpen,
   });
 
+  // Lấy danh sách Groups
+  const { data: groupsData, isLoading: isLoadingGroups } = useQuery({
+    queryKey: ["groups"],
+    queryFn: () => groupService.getGroups(),
+    enabled: isOpen,
+  });
+
   const employeeCodes = codesData?.data || [];
   // Lọc ra các mã đang active (nếu cần)
   const activeCodes = employeeCodes.filter((c) => c.active);
 
   const roles = rolesData?.data || [];
   const activeRoles = roles.filter((r) => r.active !== false);
+
+  const groups = groupsData?.data || [];
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -88,7 +100,8 @@ export default function UserFormSheet({
       !formData.password ||
       !formData.fullName ||
       !formData.englishName ||
-      !formData.employeeCodeId
+      !formData.employeeCodeId ||
+      !formData.groupId
     ) {
       toast.error("Vui lòng điền đầy đủ các trường bắt buộc!");
       return;
@@ -248,6 +261,46 @@ export default function UserFormSheet({
               <div className="space-y-2 pb-2">
                 <Label className="text-sm font-semibold text-foreground flex items-center justify-between">
                   <span>
+                    Nhóm / Phân quyền <span className="text-rose-500">*</span>
+                  </span>
+                  {isLoadingGroups && (
+                    <span className="text-xs text-muted-foreground animate-pulse">
+                      Đang tải...
+                    </span>
+                  )}
+                </Label>
+                <Select
+                  value={formData.groupId || ""}
+                  onValueChange={(val) =>
+                    setFormData({ ...formData, groupId: val || "" })
+                  }
+                  disabled={isLoadingGroups}
+                >
+                  <SelectTrigger className="rounded-xl border-border focus:ring-[#2E3192]">
+                    <SelectValue placeholder="-- Chọn nhóm phân quyền --" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {groups.map((group) => (
+                      <SelectItem key={group.id} value={group.id}>
+                        <div className="flex items-center gap-2">
+                          <span className="font-semibold text-[#1E2062]">
+                            {group.name}
+                          </span>
+                        </div>
+                      </SelectItem>
+                    ))}
+                    {groups.length === 0 && !isLoadingGroups && (
+                      <div className="p-2 text-sm text-center text-muted-foreground">
+                        Không có nhóm phân quyền nào
+                      </div>
+                    )}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2 pb-2">
+                <Label className="text-sm font-semibold text-foreground flex items-center justify-between">
+                  <span>
                     Chức vụ
                   </span>
                   {isLoadingRoles && (
@@ -306,7 +359,8 @@ export default function UserFormSheet({
                 !formData.password ||
                 !formData.fullName ||
                 !formData.englishName ||
-                !formData.employeeCodeId
+                !formData.employeeCodeId ||
+                !formData.groupId
               }
             >
               {isPending ? "Đang tạo..." : "Tạo tài khoản"}

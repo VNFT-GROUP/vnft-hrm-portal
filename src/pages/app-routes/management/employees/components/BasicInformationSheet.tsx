@@ -3,8 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Switch } from "@/components/ui/switch";
 import { Loader2 } from "lucide-react";
-import { ArrowLeft, Save, User, Shield, BookOpen, Briefcase, MapPin, Plus, Trash2, Users, Camera, Check, ChevronsUpDown } from "lucide-react";
-import { useAuthStore } from "@/store/useAuthStore";
+import { Save, User, Shield, BookOpen, Briefcase, MapPin, Plus, Trash2, Users, Camera, Check, ChevronsUpDown } from "lucide-react";
 import { toast } from "sonner";
 import { userService } from "@/services/user/userService";
 import { Button } from "@/components/ui/button";
@@ -117,7 +116,7 @@ const GLOBAL_ETHNICITIES = [
   "Any other ethnic group"
 ];
 
-function SearchableSelect({ options, value, onChange, placeholder, getTranslation, disabled }: any: { options: string[], value: string, onChange: (val: string) => void, placeholder: string, getTranslation?: (val: string) => string }) {
+function SearchableSelect({ options, value, onChange, placeholder, getTranslation, disabled }: { options: string[], value: string, onChange: (val: string) => void, placeholder: string, getTranslation?: (val: string) => string, disabled?: boolean }) {
   const [open, setOpen] = useState(false);
   const { t } = useTranslation();
   
@@ -165,8 +164,6 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
   const [isEditingMode, setIsEditingMode] = useState(false);
   const queryClient = useQueryClient();
   const { t, i18n } = useTranslation();
-  const navigate = useNavigate();
-  const session = useAuthStore((state) => state.session);
   const [activeTab, setActiveTab] = useState("basic");
 
   const getCountryTranslation = (viName: string) => {
@@ -179,18 +176,17 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
     return viName;
   };
 
-  // Common select styles matching Shadcn Input
   const selectClassName = "flex h-11 w-full rounded-xl border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring bg-card";
 
   const [loading, setLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
 
   const [formData, setFormData] = useState<ProfileFormData>({
-     fullName: formData.fullName || "",
-     englishName: formData.englishName || "",
-     employeeCode: formData.username || "", // Typically mapped to code
+     fullName: "",
+     englishName: "",
+     employeeCode: "",
      phoneNumber: "",
-     gender: formData.gender || "MALE",
+     gender: "MALE",
      dateOfBirth: "",
      maritalStatus: "SINGLE",
      placeOfBirth: "",
@@ -241,8 +237,6 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
              citizenIdNumber: d.citizenIdNumber || "",
              citizenIdIssueDate: d.citizenIdIssueDate?.substring(0, 10) || "",
              citizenIdIssuePlace: d.citizenIdIssuePlace || "",
-             citizenIdFrontImageUrl: d.citizenIdFrontImageUrl || "",
-             citizenIdBackImageUrl: d.citizenIdBackImageUrl || "",
              bankInformations: d.bankInformations?.length ? d.bankInformations : prev.bankInformations,
              dependents: d.dependents?.length ? d.dependents : prev.dependents,
              educationRecords: d.educationRecords?.length ? d.educationRecords : prev.educationRecords,
@@ -265,7 +259,6 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Mandatory field validation
     if (!formData.employeeCode?.trim() || !formData.fullName?.trim() || !formData.dateOfBirth?.trim() || !formData.maritalStatus || !formData.phoneNumber?.trim() || !formData.currentAddress?.trim() || !formData.currentCity?.trim() || !formData.citizenIdNumber?.trim() || !formData.citizenIdIssueDate?.trim() || !formData.citizenIdIssuePlace?.trim()) {
       toast.error(t("editProfile.validation.missingInfoTitle", { defaultValue: "Thiếu thông tin bắt buộc" }), {
         description: t("editProfile.validation.missingInfoDesc", { defaultValue: "Vui lòng điền đầy đủ thông tin cho các trường có đánh dấu (*)." })
@@ -273,15 +266,12 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
       return;
     }
 
-    // Auto-filter out empty template rows before submitting
     const payload = { ...formData };
     
-    // Remove read-only UI tracking fields from the request payload
     delete payload.fullName;
     delete payload.englishName;
     delete payload.employeeCode;
     
-    // Convert dates back to Instant-compatible format for Java backend
     if (payload.dateOfBirth && /^\d{4}-\d{2}-\d{2}$/.test(payload.dateOfBirth)) {
       payload.dateOfBirth = `${payload.dateOfBirth}T00:00:00Z`;
     }
@@ -289,15 +279,15 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
       payload.citizenIdIssueDate = `${payload.citizenIdIssueDate}T00:00:00Z`;
     }
     
-    payload.bankInformations = payload.bankInformations?.filter(b => b.bankAccountNumber?.trim() || b.bankName?.trim());
-    payload.dependents = payload.dependents?.filter(d => d.dependentFullName?.trim() || d.dependentRelationship?.trim());
-    payload.educationRecords = payload.educationRecords?.filter(ed => ed.institutionName?.trim() || ed.major?.trim());
-    payload.workExperiences = payload.workExperiences?.filter(w => w.companyName?.trim() || w.position?.trim());
+    payload.bankInformations = payload.bankInformations?.filter((b) => b.bankAccountNumber?.trim() || b.bankName?.trim());
+    payload.dependents = payload.dependents?.filter((d) => d.dependentFullName?.trim() || d.dependentRelationship?.trim());
+    payload.educationRecords = payload.educationRecords?.filter((ed) => ed.institutionName?.trim() || ed.major?.trim());
+    payload.workExperiences = payload.workExperiences?.filter((w) => w.companyName?.trim() || w.position?.trim());
 
     console.log("Submitting payload:", payload);
     setLoading(true);
     try {
-      await userService.updateProfile(userId!, (payload as UpdateUserProfileRequest);
+      await userService.updateProfile(userId!, payload as UpdateUserProfileRequest);
       toast.success(t("profile.updateSuccess", { defaultValue: "Cập nhật hồ sơ thành công" }), {
         description: t("editProfile.validation.updateSuccessDesc", { defaultValue: "Toàn bộ thông tin cá nhân và lý lịch đã được lưu trữ an toàn." })
       });
@@ -325,9 +315,9 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
 
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
-        <SheetContent className="sm:max-w-[700px] md:max-w-[900px] xl:max-w-[1100px] w-full border-l-slate-200 shadow-2xl flex flex-col h-full overflow-y-auto bg-muted/10 p-6">
-      {/* Header */}
-       <SheetHeader className="mb-6 px-2">
+        <SheetContent className="sm:max-w-[700px] md:max-w-[900px] xl:max-w-[1100px] w-full border-l-slate-200 shadow-2xl flex flex-col h-full bg-background p-0">
+      <div className="flex-none p-6 border-b border-border bg-card">
+      <SheetHeader className="mb-0 px-2">
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
                   <SheetTitle className="text-2xl font-bold text-foreground">{t("editProfile.header.title", { defaultValue: "Cập nhật hồ sơ" })}</SheetTitle>
@@ -344,6 +334,7 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
                   {isEditingMode && (
                     <Button 
                       type="submit"
+                      form="profile-form"
                       disabled={loading || isFetching}
                       className="rounded-xl bg-[#F7941D] hover:bg-[#D87D12] text-white shadow-md transition-all gap-2 px-5 font-semibold"
                     >
@@ -354,11 +345,10 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
                 </div>
               </div>
             </SheetHeader>
+      </div>
   
-
-      <div className="flex flex-col md:flex-row gap-6 lg:gap-8">
-        {/* Sidebar Tabs */}
-        <div className="w-full md:w-[260px] shrink-0 flex flex-row md:flex-col gap-2 overflow-x-auto md:overflow-visible pb-2 md:pb-0 scrollbar-none">
+      <div className="flex-1 flex flex-col md:flex-row gap-6 lg:gap-8 overflow-hidden p-6">
+        <div className="w-full md:w-[260px] shrink-0 flex flex-row md:flex-col gap-2 overflow-x-auto md:overflow-y-auto pb-2 md:pb-0 scrollbar-none">
           {tabs.map((tab) => {
             const isActive = activeTab === tab.id;
             return (
@@ -381,11 +371,9 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
           })}
         </div>
 
-        {/* Content Area */}
-        <div className="flex-1 bg-card rounded-2xl border border-border shadow-sm p-6 lg:p-8 min-h-[600px]">
+        <div className="flex-1 bg-card rounded-2xl border border-border shadow-sm p-6 lg:p-8 overflow-y-auto relative scrollbar-thin">
           <form id="profile-form" onSubmit={handleSubmit} className="space-y-8">
             
-            {/* THÔNG TIN CƠ BẢN */}
             {activeTab === "basic" && (
               <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
                 <div className="border-b border-border pb-4 mb-6">
@@ -393,15 +381,10 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
                   <p className="text-sm text-muted-foreground">{t("editProfile.basicInfo.desc", { defaultValue: "Các thông tin cá nhân và định danh cơ bản." })}</p>
                 </div>
                 
-                {/* AVATAR UPLOAD */}
                 <div className="flex flex-col items-center justify-center sm:justify-start sm:flex-row sm:items-center gap-6 mb-8 bg-muted/20 p-5 rounded-2xl border border-border">
                   <div className="relative group cursor-pointer">
                      <div className="w-28 h-28 rounded-full bg-card border-4 border-background shadow-md overflow-hidden flex items-center justify-center shrink-0 text-muted-foreground group-hover:opacity-80 transition-opacity">
-                        {formData.username ? (
-                          <img src={`https://api.dicebear.com/7.x/notionists/svg?seed=Ethan`} alt="Avatar" className="w-full h-full object-cover" />
-                        ) : (
-                          <User size={48} className="opacity-20" />
-                        )}
+                        <User size={48} className="opacity-20" />
                      </div>
                      <button type="button" className="absolute bottom-1 right-1 p-2 bg-[#F7941D] hover:bg-[#E88915] text-white rounded-full shadow-lg transition-transform hover:scale-105 active:scale-95 border-2 border-background">
                        <Camera size={14} />
@@ -419,12 +402,9 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <Label>{t("editProfile.basicInfo.employeeCode", { defaultValue: "Mã nhân viên (Bắt buộc)" })}</Label>
-                    <Input disabled={!isEditingMode || loading} 
+                    <Input disabled={true} 
                       value={formData.employeeCode}
-                      onChange={(e) => handleTextChange("employeeCode", e.target.value)}
-                      placeholder={t("editProfile.basicInfo.employeeCodePlaceholder", { defaultValue: "VD: VNSGN001" })}
                       className="h-11 rounded-xl bg-[#2E3192]/5 border-[#2E3192]/20 text-[#2E3192] font-semibold opacity-100 pointer-events-none"
-                      disabled
                     />
                   </div>
                   <div className="space-y-2">
@@ -433,8 +413,7 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
                       value={formData.englishName}
                       onChange={(e) => handleTextChange("englishName", e.target.value)}
                       placeholder={t("editProfile.basicInfo.englishNamePlaceholder", { defaultValue: "Nhập tên Tiếng Anh" })} 
-                      className="h-11 rounded-xl bg-[#2E3192]/5 border-[#2E3192]/20 text-[#2E3192] font-semibold opacity-100 pointer-events-none"
-                      disabled
+                      className="h-11 rounded-xl"
                     />
                   </div>
                   <div className="space-y-2">
@@ -443,8 +422,7 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
                       value={formData.fullName}
                       onChange={(e) => handleTextChange("fullName", e.target.value)}
                       placeholder={t("editProfile.basicInfo.fullNamePlaceholder", { defaultValue: "Nhập họ và tên đầy đủ" })} 
-                      className="h-11 rounded-xl bg-[#2E3192]/5 border-[#2E3192]/20 text-[#2E3192] font-semibold opacity-100 pointer-events-none"
-                      disabled
+                      className="h-11 rounded-xl"
                     />
                   </div>
                   <div className="space-y-2">
@@ -453,7 +431,7 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
                       value={formData.phoneNumber || ''}
                       onChange={(e) => handleTextChange("phoneNumber", e.target.value)}
                       placeholder={t("editProfile.basicInfo.phoneNumberPlaceholder", { defaultValue: "VD: 09xxxxxxxx" })} 
-                      className="h-11 rounded-xl bg-muted/40 border-transparent hover:border-border hover:bg-muted/60 focus:bg-card focus:border-ring transition-colors"
+                      className="h-11 rounded-xl"
                     />
                   </div>
                   <div className="space-y-2">
@@ -532,7 +510,6 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
               </div>
             )}
 
-            {/* CƯ TRÚ VÀ LIÊN HỆ */}
             {activeTab === "contact" && (
               <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
                 <div className="border-b border-border pb-4 mb-6">
@@ -572,7 +549,6 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
               </div>
             )}
             
-            {/* CCCD VÀ NGÂN HÀNG */}
             {activeTab === "identity" && (
               <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
                 <div className="border-b border-border pb-4 mb-6">
@@ -594,7 +570,6 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
                   </div>
                 </div>
 
-                {/* CCCD IMAGES UPLOAD */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
                    <div className="space-y-3 relative group">
                       <Label className="font-semibold block">{t("editProfile.identity.frontImg", { defaultValue: "Ảnh mặt trước CCCD" })}</Label>
@@ -655,7 +630,7 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
                             }}/>
                           </div>
                        </div>
-                       <Button disabled={!isEditingMode || loading} type="button" variant="destructive" size="icon" className="shrink-0 rounded-xl" disabled={!isEditingMode || loading} onClick={() => { handleTextChange("bankInformations", formData.bankInformations!.filter((_, i) => i !== index));
+                       <Button disabled={!isEditingMode || loading} type="button" variant="destructive" size="icon" className="shrink-0 rounded-xl" onClick={() => { handleTextChange("bankInformations", formData.bankInformations!.filter((_, i: number) => i !== index));
                        }}><Trash2 size={16}/></Button>
                     </div>
                   ))}
@@ -666,7 +641,6 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
               </div>
             )}
 
-            {/* HỌC VẤN */}
             {activeTab === "education" && (
               <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
                 <div className="border-b border-border pb-4 mb-6">
@@ -716,7 +690,7 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
                              }} className="h-11 rounded-xl" />
                           </div>
                        </div>
-                       <Button disabled={!isEditingMode || loading} type="button" variant="destructive" size="icon" className="shrink-0 rounded-xl" disabled={!isEditingMode || loading} onClick={() => { handleTextChange("educationRecords", formData.educationRecords!.filter((_, i) => i !== index));
+                       <Button disabled={!isEditingMode || loading} type="button" variant="destructive" size="icon" className="shrink-0 rounded-xl" onClick={() => { handleTextChange("educationRecords", formData.educationRecords!.filter((_, i: number) => i !== index));
                        }}><Trash2 size={16}/></Button>
                     </div>
                   ))}
@@ -727,7 +701,6 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
               </div>
             )}
 
-            {/* KINH NGHIỆM */}
             {activeTab === "experience" && (
               <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
                 <div className="border-b border-border pb-4 mb-6">
@@ -783,7 +756,7 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
                              }} className="rounded-xl resize-none" />
                           </div>
                        </div>
-                       <Button disabled={!isEditingMode || loading} type="button" variant="destructive" size="icon" className="shrink-0 rounded-xl" disabled={!isEditingMode || loading} onClick={() => { handleTextChange("workExperiences", formData.workExperiences!.filter((_, i) => i !== index));
+                       <Button disabled={!isEditingMode || loading} type="button" variant="destructive" size="icon" className="shrink-0 rounded-xl" onClick={() => { handleTextChange("workExperiences", formData.workExperiences!.filter((_, i: number) => i !== index));
                        }}><Trash2 size={16}/></Button>
                     </div>
                   ))}
@@ -794,7 +767,6 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
               </div>
             )}
 
-            {/* NGƯỜI PHỤ THUỘC */}
             {activeTab === "dependents" && (
               <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
                 <div className="border-b border-border pb-4 mb-6">
@@ -824,7 +796,7 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
                              const arr = [...formData.dependents!]; arr[index].dependentTaxCode = e.target.value; handleTextChange("dependents", arr);
                           }} />
                        </div>
-                       <Button disabled={!isEditingMode || loading} type="button" variant="destructive" size="icon" className="shrink-0 rounded-xl" disabled={!isEditingMode || loading} onClick={() => { handleTextChange("dependents", formData.dependents!.filter((_, i) => i !== index));
+                       <Button disabled={!isEditingMode || loading} type="button" variant="destructive" size="icon" className="shrink-0 rounded-xl" onClick={() => { handleTextChange("dependents", formData.dependents!.filter((_, i: number) => i !== index));
                        }}><Trash2 size={16}/></Button>
                     </div>
                   ))}
@@ -838,6 +810,7 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
           </form>
         </div>
       </div>
-    </div>
+      </SheetContent>
+    </Sheet>
   );
 }

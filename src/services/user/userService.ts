@@ -4,6 +4,7 @@ import type { PageResponse } from "@/types/base/PageResponse";
 import type { UserResponse } from '@/types/user/UserResponse';
 import type { CreateUserRequest } from '@/types/user/CreateUserRequest';
 import type { UpdateUserPasswordRequest } from '@/types/user/UpdateUserPasswordRequest';
+import type { UpdateUserWorkInformationRequest } from '@/types/user/UpdateUserWorkInformationRequest';
 
 export const userService = {
   createUser: async (
@@ -38,6 +39,14 @@ export const userService = {
 
   deleteUser: async (id: string): Promise<ApiResponse<void>> => {
     const response = await apiClient.delete(`/users/${id}`);
+    return response.data;
+  },
+
+  updateWorkInformation: async (
+    id: string,
+    data: UpdateUserWorkInformationRequest,
+  ): Promise<ApiResponse<UserResponse>> => {
+    const response = await apiClient.put(`/users/${id}/work-information`, data);
     return response.data;
   },
 };

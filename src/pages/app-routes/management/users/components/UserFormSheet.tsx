@@ -20,6 +20,7 @@ import {
 import { toast } from "sonner";
 import { useQuery } from "@tanstack/react-query";
 import { employeeCodeService } from "@/services/employeeCode";
+import { roleService } from "@/services/role/roleService";
 import type { CreateUserRequest } from '@/types/user/CreateUserRequest';
 
 interface UserFormSheetProps {
@@ -66,9 +67,19 @@ export default function UserFormSheet({
     enabled: isOpen, // Chỉ fetch khi form được mở
   });
 
+  // Lấy danh sách Roles từ server
+  const { data: rolesData, isLoading: isLoadingRoles } = useQuery({
+    queryKey: ["roles"],
+    queryFn: () => roleService.getRoles(),
+    enabled: isOpen,
+  });
+
   const employeeCodes = codesData?.data || [];
   // Lọc ra các mã đang active (nếu cần)
   const activeCodes = employeeCodes.filter((c) => c.active);
+
+  const roles = rolesData?.data || [];
+  const activeRoles = roles.filter((r) => r.active !== false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -232,6 +243,46 @@ export default function UserFormSheet({
                   Mã này sẽ được gắn cố định với Employee Code của cơ sở tương
                   ứng.
                 </p>
+              </div>
+
+              <div className="space-y-2 pb-2">
+                <Label className="text-sm font-semibold text-foreground flex items-center justify-between">
+                  <span>
+                    Chức vụ
+                  </span>
+                  {isLoadingRoles && (
+                    <span className="text-xs text-muted-foreground animate-pulse">
+                      Đang tải...
+                    </span>
+                  )}
+                </Label>
+                <Select
+                  value={formData.roleId || ""}
+                  onValueChange={(val) =>
+                    setFormData({ ...formData, roleId: val || undefined })
+                  }
+                  disabled={isLoadingRoles}
+                >
+                  <SelectTrigger className="rounded-xl border-border focus:ring-[#2E3192]">
+                    <SelectValue placeholder="-- Chọn một chức vụ --" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {activeRoles.map((role) => (
+                      <SelectItem key={role.id} value={role.id}>
+                        <div className="flex items-center gap-2">
+                          <span className="font-semibold text-[#1E2062]">
+                            {role.name}
+                          </span>
+                        </div>
+                      </SelectItem>
+                    ))}
+                    {activeRoles.length === 0 && !isLoadingRoles && (
+                      <div className="p-2 text-sm text-center text-muted-foreground">
+                        Không có chức vụ nào
+                      </div>
+                    )}
+                  </SelectContent>
+                </Select>
               </div>
             </div>
           </div>

@@ -1,13 +1,15 @@
-import { UserPlus, User, Key, Fingerprint, Mail, Building2, MapPin, Users, UserCircle, Clock } from "lucide-react";
+import { UserPlus, User, Key, Fingerprint, Mail, Building2, MapPin, Users, UserCircle, Clock, Layers } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
 import { useQuery } from "@tanstack/react-query";
 import { departmentService } from "@/services/department";
 import { positionService } from "@/services/position";
 import { groupService } from "@/services/group/groupService";
 import { employeeCodeService } from "@/services/employeeCode";
+import { roleService } from "@/services/role/roleService";
 import { SearchableSelect } from "@/components/custom/SearchableSelect";
 
 
@@ -48,10 +50,17 @@ export default function EmployeeFormSheet({ isOpen, onOpenChange, formData, setF
     enabled: isOpen,
   });
 
+  const { data: rolesResponse, refetch: refetchRoles, isFetching: isFetchingRoles } = useQuery({
+    queryKey: ['roles'],
+    queryFn: () => roleService.getRoles(),
+    enabled: isOpen,
+  });
+
   const departments = departmentsResponse?.data?.map(d => ({ value: d.id, label: d.name })) || [];
   const positions = positionsResponse?.data?.map(p => ({ value: p.id, label: p.name })) || [];
   const groups = groupsResponse?.data?.map(g => ({ value: g.id, label: g.name })) || [];
   const employeeCodes = employeeCodesResponse?.data?.filter(c => c.active).map(c => ({ value: c.id, label: c.prefix })) || [];
+  const roles = rolesResponse?.data?.filter(r => r.active !== false).map(r => ({ value: r.id, label: r.name })) || [];
 
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
@@ -169,18 +178,6 @@ export default function EmployeeFormSheet({ isOpen, onOpenChange, formData, setF
             </div>
 
             <div className="space-y-2">
-              <Label className="text-sm font-semibold text-foreground flex items-center gap-1.5"><Users size={14} className="text-muted-foreground"/> Nhóm/Chức năng</Label>
-              <SearchableSelect 
-                options={groups}
-                value={formData.func || ""}
-                onChange={(val) => setFormData({...formData, func: val})}
-                placeholder="-- Chọn nhóm/chức năng --"
-                onRefresh={() => refetchGroups()}
-                isLoading={isFetchingGroups}
-              />
-            </div>
-
-            <div className="space-y-2 md:col-span-2">
               <Label className="text-sm font-semibold text-foreground flex items-center gap-1.5"><MapPin size={14} className="text-muted-foreground"/> Vị trí</Label>
               <SearchableSelect 
                 options={positions}
@@ -189,6 +186,33 @@ export default function EmployeeFormSheet({ isOpen, onOpenChange, formData, setF
                 placeholder="-- Chọn vị trí --"
                 onRefresh={() => refetchPositions()}
                 isLoading={isFetchingPositions}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label className="text-sm font-semibold text-foreground flex items-center gap-1.5"><Layers size={14} className="text-muted-foreground"/> Chức vụ</Label>
+              <SearchableSelect 
+                options={roles}
+                value={formData.sysRole || ""}
+                onChange={(val) => setFormData({...formData, sysRole: val})}
+                placeholder="-- Chọn chức vụ --"
+                onRefresh={() => refetchRoles()}
+                isLoading={isFetchingRoles}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label className="text-sm font-semibold text-foreground flex items-center justify-between">
+                <span className="flex items-center gap-1.5"><Users size={14} className="text-muted-foreground"/> Nhóm/Chức năng</span>
+                <Badge variant="outline" className="text-[10px] bg-sky-50 text-sky-600 border-sky-200 uppercase pointer-events-none tracking-widest px-1.5 flex h-5 items-center">Phân quyền</Badge>
+              </Label>
+              <SearchableSelect 
+                options={groups}
+                value={formData.func || ""}
+                onChange={(val) => setFormData({...formData, func: val})}
+                placeholder="-- Chọn nhóm/chức năng --"
+                onRefresh={() => refetchGroups()}
+                isLoading={isFetchingGroups}
               />
             </div>
 

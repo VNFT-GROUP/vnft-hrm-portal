@@ -8,6 +8,7 @@ export interface CreateUserRequest {
   departmentId?: string;
   groupId?: string;
   positionId?: string;
+  roleId?: string;
   checkInTime?: string;
   checkOutTime?: string;
 }

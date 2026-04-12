@@ -8,6 +8,8 @@ import {
   Trash2,
   Loader2,
   MousePointerClick,
+  UserCog,
+  Briefcase
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -179,6 +181,7 @@ export default function EmployeesPage() {
       englishName: formData.englishName,
       departmentId: formData.department,
       groupId: formData.func,
+      roleId: formData.sysRole,
       positionId: formData.position,
       checkInTime: formData.checkInTime.length === 5 ? `${formData.checkInTime}:00` : formData.checkInTime,
       checkOutTime: formData.checkOutTime.length === 5 ? `${formData.checkOutTime}:00` : formData.checkOutTime,
@@ -219,26 +222,34 @@ export default function EmployeesPage() {
           transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
           className="bg-card p-4 rounded-xl border border-border flex flex-col gap-3 text-sm text-muted-foreground w-full shadow-sm"
         >
-          <div className="flex flex-wrap items-center gap-x-6 gap-y-3 w-full">
-            <span className="font-semibold text-[#1E2062] mr-2">
-              {t('management.actionLegend', { defaultValue: 'Chú thích thao tác:' })}
-            </span>
-            <div className="flex items-center gap-2">
-              <Eye size={16} className="text-sky-500" />
-              <span>{t('management.viewLegend', { defaultValue: 'Xem chi tiết thông tin chung' })}</span>
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-3 w-full">
+              <span className="font-semibold text-[#1E2062] mr-2">
+                {t('management.actionLegend', { defaultValue: 'Chú thích thao tác:' })}
+              </span>
+              <div className="flex items-center gap-2">
+                <Eye size={16} className="text-sky-500" />
+                <span>{t('management.titleViewDetail', { defaultValue: 'Xem chi tiết' })}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <CircleDollarSign size={16} className="text-emerald-500" />
+                <span>{t('management.titleEditSalary', { defaultValue: 'Xem/tùy chỉnh lương' })}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <UserCog size={16} className="text-amber-500" />
+                <span>{t('management.titleEditBasicInfo', { defaultValue: 'Xem/tùy chỉnh thông tin cơ bản' })}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Briefcase size={16} className="text-indigo-500" />
+                <span>{t('management.titleEditWorkInfo', { defaultValue: 'Tùy chỉnh công việc' })}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Trash2 size={16} className="text-rose-500" />
+                <span>{t('management.titleDeactivate', { defaultValue: 'Hủy kích hoạt tài khoản' })}</span>
+              </div>
+              <div className="ml-auto flex items-center text-xs text-muted-foreground bg-muted/40 px-2 py-1 rounded-md border border-border opacity-70 hover:opacity-100 transition-opacity">
+                {t('management.hideLegendHint', { defaultValue: 'Nhấn Alt + S để bật tắt mục này' })}
+              </div>
             </div>
-            <div className="flex items-center gap-2">
-              <CircleDollarSign size={16} className="text-emerald-500" />
-              <span>{t('management.salaryLegend', { defaultValue: 'Xem/chỉnh sửa lương' })}</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Trash2 size={16} className="text-rose-500" />
-              <span>{t('management.deactivateLegend', { defaultValue: 'Hủy kích hoạt tài khoản' })}</span>
-            </div>
-            <div className="ml-auto flex items-center text-xs text-muted-foreground bg-muted/40 px-2 py-1 rounded-md border border-border opacity-70 hover:opacity-100 transition-opacity">
-              {t('management.hideLegendHint', { defaultValue: 'Nhấn Alt + S để bật tắt mục này' })}
-            </div>
-          </div>
           <div className="w-full h-px bg-border/50 hidden md:block" />
           <div className="flex items-center gap-1.5 text-[#2E3192]">
             <MousePointerClick size={16} />

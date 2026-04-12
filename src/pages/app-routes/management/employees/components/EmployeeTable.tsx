@@ -1,4 +1,4 @@
-import { Trash2, Users, Eye, CircleDollarSign } from "lucide-react";
+import { Trash2, Users, Eye, CircleDollarSign, UserCog, Briefcase } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
@@ -102,17 +102,29 @@ export default function EmployeeTable({ employees, onDelete }: EmployeeTableProp
                     {emp.status === "Đang làm" ? t('management.statusWorking', { defaultValue: 'Đang làm' }) : t('management.statusResigned', { defaultValue: 'Đã nghỉ việc' })}
                   </Badge>
                 </TableCell>
-                <TableCell className="py-4 text-center align-middle whitespace-nowrap">
-                  <div className="flex justify-center gap-1">
-                    <Button variant="ghost" size="icon" title={t('management.titleViewDetail', { defaultValue: 'Xem chi tiết' })} className="h-8 w-8 text-sky-500 hover:bg-sky-50 hover:text-sky-600 rounded-lg transition-colors">
-                      <Eye size={16} />
-                    </Button>
-                    <Button variant="ghost" size="icon" title={t('management.titleEditSalary', { defaultValue: 'Chỉnh lương' })} className="h-8 w-8 text-emerald-500 hover:bg-emerald-50 hover:text-emerald-600 rounded-lg transition-colors">
-                      <CircleDollarSign size={16} />
-                    </Button>
-                    <Button variant="ghost" size="icon" title={t('management.titleDelete', { defaultValue: 'Xóa' })} onClick={() => onDelete(emp.id)} className="h-8 w-8 text-rose-500 hover:bg-rose-50 hover:text-rose-600 rounded-lg transition-colors">
-                      <Trash2 size={16} />
-                    </Button>
+                <TableCell className="py-2 text-center align-middle whitespace-nowrap">
+                  <div className="flex flex-col items-center gap-1.5">
+                    {/* Hàng 1 */}
+                    <div className="flex justify-center gap-1">
+                      <Button variant="ghost" size="icon" title={t('management.titleViewDetail', { defaultValue: 'Xem chi tiết' })} className="h-8 w-8 text-sky-500 hover:bg-sky-50 hover:text-sky-600 rounded-lg transition-colors">
+                        <Eye size={16} />
+                      </Button>
+                      <Button variant="ghost" size="icon" title={t('management.titleEditSalary', { defaultValue: 'Xem/tùy chỉnh lương' })} className="h-8 w-8 text-emerald-500 hover:bg-emerald-50 hover:text-emerald-600 rounded-lg transition-colors">
+                        <CircleDollarSign size={16} />
+                      </Button>
+                      <Button variant="ghost" size="icon" title={t('management.titleEditBasicInfo', { defaultValue: 'Xem/tùy chỉnh thông tin cơ bản' })} className="h-8 w-8 text-amber-500 hover:bg-amber-50 hover:text-amber-600 rounded-lg transition-colors">
+                        <UserCog size={16} />
+                      </Button>
+                    </div>
+                    {/* Hàng 2 */}
+                    <div className="flex justify-center gap-1">
+                      <Button variant="ghost" size="icon" title={t('management.titleEditWorkInfo', { defaultValue: 'Tùy chỉnh công việc' })} className="h-8 w-8 text-indigo-500 hover:bg-indigo-50 hover:text-indigo-600 rounded-lg transition-colors">
+                        <Briefcase size={16} />
+                      </Button>
+                      <Button variant="ghost" size="icon" title={t('management.titleDeactivate', { defaultValue: 'Hủy kích hoạt tài khoản' })} onClick={() => onDelete(emp.id)} className="h-8 w-8 text-rose-500 hover:bg-rose-50 hover:text-rose-600 rounded-lg transition-colors">
+                        <Trash2 size={16} />
+                      </Button>
+                    </div>
                   </div>
                 </TableCell>
               </motion.tr>
@@ -134,14 +146,22 @@ export default function EmployeeTable({ employees, onDelete }: EmployeeTableProp
 
       {/* RENDER CONTEXT MENU FOR THE HOVERED ROW */}
       {activeEmp && (
-        <ContextMenuContent className="w-56 z-[100]">
+        <ContextMenuContent className="w-64 z-[100]">
           <ContextMenuItem className="cursor-pointer">
             <Eye className="mr-2 h-4 w-4 text-sky-500" />
-            <span>{t('management.viewLegend', { defaultValue: 'Xem chi tiết thông tin chung' })}</span>
+            <span>{t('management.titleViewDetail', { defaultValue: 'Xem chi tiết' })}</span>
           </ContextMenuItem>
           <ContextMenuItem className="cursor-pointer">
             <CircleDollarSign className="mr-2 h-4 w-4 text-emerald-500" />
-            <span>{t('management.salaryLegend', { defaultValue: 'Xem/chỉnh sửa lương' })}</span>
+            <span>{t('management.titleEditSalary', { defaultValue: 'Xem/tùy chỉnh lương' })}</span>
+          </ContextMenuItem>
+          <ContextMenuItem className="cursor-pointer">
+            <UserCog className="mr-2 h-4 w-4 text-amber-500" />
+            <span>{t('management.titleEditBasicInfo', { defaultValue: 'Xem/tùy chỉnh thông tin cơ bản' })}</span>
+          </ContextMenuItem>
+          <ContextMenuItem className="cursor-pointer">
+            <Briefcase className="mr-2 h-4 w-4 text-indigo-500" />
+            <span>{t('management.titleEditWorkInfo', { defaultValue: 'Tùy chỉnh công việc' })}</span>
           </ContextMenuItem>
           <ContextMenuSeparator />
           <ContextMenuItem 
@@ -149,7 +169,7 @@ export default function EmployeeTable({ employees, onDelete }: EmployeeTableProp
             onClick={() => onDelete(activeEmp.id)}
           >
             <Trash2 className="mr-2 h-4 w-4 text-rose-500" />
-            <span>{t('management.deactivateLegend', { defaultValue: 'Hủy kích hoạt tài khoản' })}</span>
+            <span>{t('management.titleDeactivate', { defaultValue: 'Hủy kích hoạt tài khoản' })}</span>
           </ContextMenuItem>
         </ContextMenuContent>
       )}

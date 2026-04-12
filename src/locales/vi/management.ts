@@ -69,6 +69,6 @@ export default {
   deleteGroup: "Xóa nhóm quyền",
   
   titleViewDetail: "Xem chi tiết",
-  titleEditSalary: "Chỉnh lương",
+  titleEditSalary: "Xem/tùy chỉnh lương",
   titleDelete: "Xóa"
 };

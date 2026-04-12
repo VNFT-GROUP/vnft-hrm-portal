@@ -1,4 +1,4 @@
-import { Trash2, Users, Eye, Shield, CircleDollarSign, UserCog, Briefcase } from "lucide-react";
+import { Trash2, Users, Shield, CircleDollarSign, UserCog, Briefcase, Key } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
@@ -35,12 +35,13 @@ interface EmployeeTableProps {
   onDelete: (id: string) => void;
   onEditWorkInfo: (id: string) => void;
   onEditGroupInfo: (id: string) => void;
+  onEditPassword: (id: string) => void;
 }
 
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
-export default function EmployeeTable({ employees, onDelete, onEditWorkInfo, onEditGroupInfo }: EmployeeTableProps) {
+export default function EmployeeTable({ employees, onDelete, onEditWorkInfo, onEditGroupInfo, onEditPassword }: EmployeeTableProps) {
   const { t } = useTranslation();
   const [rightClickedEmpId, setRightClickedEmpId] = useState<string | null>(null);
 
@@ -108,23 +109,23 @@ export default function EmployeeTable({ employees, onDelete, onEditWorkInfo, onE
                   <div className="flex flex-col items-center gap-1.5">
                     {/* Hàng 1 */}
                     <div className="flex justify-center gap-1">
-                      <Button variant="ghost" size="icon" title={t('management.titleViewDetail', { defaultValue: 'Xem chi tiết' })} className="h-8 w-8 text-sky-500 hover:bg-sky-50 hover:text-sky-600 rounded-lg transition-colors">
-                        <Eye size={16} />
-                      </Button>
-                      <Button variant="ghost" size="icon" title={t('management.titleEditSalary', { defaultValue: 'Xem/tùy chỉnh lương' })} className="h-8 w-8 text-emerald-500 hover:bg-emerald-50 hover:text-emerald-600 rounded-lg transition-colors">
-                        <CircleDollarSign size={16} />
-                      </Button>
                       <Button variant="ghost" size="icon" title={t('management.titleEditBasicInfo', { defaultValue: 'Xem/tùy chỉnh thông tin cơ bản' })} className="h-8 w-8 text-amber-500 hover:bg-amber-50 hover:text-amber-600 rounded-lg transition-colors">
                         <UserCog size={16} />
                       </Button>
-                    </div>
-                    {/* Hàng 2 */}
-                    <div className="flex justify-center gap-1">
                       <Button variant="ghost" size="icon" title={t('management.titleEditWorkInfo', { defaultValue: 'Xem/tùy chỉnh công việc' })} onClick={() => onEditWorkInfo(emp.id)} className="h-8 w-8 text-indigo-500 hover:bg-indigo-50 hover:text-indigo-600 rounded-lg transition-colors">
                         <Briefcase size={16} />
                       </Button>
                       <Button variant="ghost" size="icon" title={t('management.titleEditGroupInfo', { defaultValue: 'Xem/tùy chỉnh nhóm quyền' })} onClick={() => onEditGroupInfo(emp.id)} className="h-8 w-8 text-violet-500 hover:bg-violet-50 hover:text-violet-600 rounded-lg transition-colors">
                         <Shield size={16} />
+                      </Button>
+                    </div>
+                    {/* Hàng 2 */}
+                    <div className="flex justify-center gap-1 mt-1">
+                      <Button variant="ghost" size="icon" title={t('management.titleEditSalary', { defaultValue: 'Xem/tùy chỉnh lương' })} className="h-8 w-8 text-emerald-500 hover:bg-emerald-50 hover:text-emerald-600 rounded-lg transition-colors">
+                        <CircleDollarSign size={16} />
+                      </Button>
+                      <Button variant="ghost" size="icon" title={t('management.titleEditPassword', { defaultValue: 'Đổi mật khẩu' })} onClick={() => onEditPassword(emp.id)} className="h-8 w-8 text-teal-500 hover:bg-teal-50 hover:text-teal-600 rounded-lg transition-colors">
+                        <Key size={16} />
                       </Button>
                       <Button variant="ghost" size="icon" title={t('management.titleDeactivate', { defaultValue: 'Hủy kích hoạt tài khoản' })} onClick={() => onDelete(emp.id)} className="h-8 w-8 text-rose-500 hover:bg-rose-50 hover:text-rose-600 rounded-lg transition-colors">
                         <Trash2 size={16} />
@@ -153,10 +154,6 @@ export default function EmployeeTable({ employees, onDelete, onEditWorkInfo, onE
       {activeEmp && (
         <ContextMenuContent className="w-64 z-100">
           <ContextMenuItem className="cursor-pointer">
-            <Eye className="mr-2 h-4 w-4 text-sky-500" />
-            <span>{t('management.titleViewDetail', { defaultValue: 'Xem chi tiết' })}</span>
-          </ContextMenuItem>
-          <ContextMenuItem className="cursor-pointer">
             <CircleDollarSign className="mr-2 h-4 w-4 text-emerald-500" />
             <span>{t('management.titleEditSalary', { defaultValue: 'Xem/tùy chỉnh lương' })}</span>
           </ContextMenuItem>
@@ -167,6 +164,10 @@ export default function EmployeeTable({ employees, onDelete, onEditWorkInfo, onE
           <ContextMenuItem className="cursor-pointer" onClick={() => onEditWorkInfo(activeEmp.id)}>
             <Briefcase className="mr-2 h-4 w-4 text-indigo-500" />
             <span>{t('management.titleEditWorkInfo', { defaultValue: 'Xem/tùy chỉnh công việc' })}</span>
+          </ContextMenuItem>
+          <ContextMenuItem className="cursor-pointer" onClick={() => onEditPassword(activeEmp.id)}>
+            <Key className="mr-2 h-4 w-4 text-teal-500" />
+            <span>{t('management.titleEditPassword', { defaultValue: 'Đổi mật khẩu' })}</span>
           </ContextMenuItem>
           <ContextMenuItem className="cursor-pointer" onClick={() => onEditGroupInfo(activeEmp.id)}>
             <Shield className="mr-2 h-4 w-4 text-violet-500" />

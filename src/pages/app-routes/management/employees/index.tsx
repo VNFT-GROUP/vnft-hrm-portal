@@ -3,14 +3,14 @@ import {
   Search,
   Users,
   UserPlus,
-  Eye,
   CircleDollarSign,
   Trash2,
   Loader2,
   MousePointerClick,
   UserCog,
   Briefcase,
-  Shield
+  Shield,
+  Key
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,6 +22,7 @@ import EmployeeTable, { type Employee } from "./components/EmployeeTable";
 import EmployeeFormSheet from "./components/EmployeeFormSheet";
 import WorkInformationSheet from "./components/WorkInformationSheet";
 import GroupInformationSheet from "./components/GroupInformationSheet";
+import ChangePasswordDialog from "./components/ChangePasswordDialog";
 import UserFormSheet from "../users/components/UserFormSheet";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { userService } from "@/services/user/userService";
@@ -44,6 +45,7 @@ export default function EmployeesPage() {
   const [editingEmployee, setEditingEmployee] = useState<Employee | null>(null);
   const [workInfoEmpId, setWorkInfoEmpId] = useState<string | null>(null);
   const [groupInfoEmpId, setGroupInfoEmpId] = useState<string | null>(null);
+  const [passwordEmpId, setPasswordEmpId] = useState<string | null>(null);
 
   const [formData, setFormData] = useState({
     empCodePrefix: "VNSGN",
@@ -232,10 +234,6 @@ export default function EmployeesPage() {
                 {t('management.actionLegend', { defaultValue: 'Chú thích thao tác:' })}
               </span>
               <div className="flex items-center gap-2">
-                <Eye size={16} className="text-sky-500" />
-                <span>{t('management.titleViewDetail', { defaultValue: 'Xem chi tiết' })}</span>
-              </div>
-              <div className="flex items-center gap-2">
                 <CircleDollarSign size={16} className="text-emerald-500" />
                 <span>{t('management.titleEditSalary', { defaultValue: 'Xem/tùy chỉnh lương' })}</span>
               </div>
@@ -250,6 +248,10 @@ export default function EmployeesPage() {
               <div className="flex items-center gap-2">
                 <Shield size={16} className="text-violet-500" />
                 <span>{t('management.titleEditGroupInfo', { defaultValue: 'Xem/tùy chỉnh nhóm quyền' })}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Key size={16} className="text-teal-500" />
+                <span>{t('management.titleEditPassword', { defaultValue: 'Đổi mật khẩu' })}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Trash2 size={16} className="text-rose-500" />
@@ -314,6 +316,7 @@ export default function EmployeesPage() {
             onDelete={handleDelete}
             onEditWorkInfo={(id) => setWorkInfoEmpId(id)}
             onEditGroupInfo={(id) => setGroupInfoEmpId(id)}
+            onEditPassword={(id) => setPasswordEmpId(id)}
           />
         )}
       </motion.div>
@@ -349,6 +352,14 @@ export default function EmployeesPage() {
           if (!open) setGroupInfoEmpId(null);
         }}
         userId={groupInfoEmpId}
+      />
+      
+      <ChangePasswordDialog
+        isOpen={!!passwordEmpId}
+        onOpenChange={(open) => {
+          if (!open) setPasswordEmpId(null);
+        }}
+        userId={passwordEmpId}
       />
     </div>
   );

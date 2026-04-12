@@ -23,6 +23,7 @@ import EmployeeFormSheet from "./components/EmployeeFormSheet";
 import WorkInformationSheet from "./components/WorkInformationSheet";
 import GroupInformationSheet from "./components/GroupInformationSheet";
 import ChangePasswordSheet from "./components/ChangePasswordSheet";
+import BasicInformationSheet from "./components/BasicInformationSheet";
 import UserFormSheet from "../users/components/UserFormSheet";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { userService } from "@/services/user/userService";
@@ -46,6 +47,7 @@ export default function EmployeesPage() {
   const [workInfoEmpId, setWorkInfoEmpId] = useState<string | null>(null);
   const [groupInfoEmpId, setGroupInfoEmpId] = useState<string | null>(null);
   const [passwordEmpId, setPasswordEmpId] = useState<string | null>(null);
+  const [basicInfoEmpId, setBasicInfoEmpId] = useState<string | null>(null);
 
   const [formData, setFormData] = useState({
     empCodePrefix: "VNSGN",
@@ -314,6 +316,7 @@ export default function EmployeesPage() {
           <EmployeeTable
             employees={filteredData}
             onDelete={handleDelete}
+            onEditBasicInfo={(emp) => setBasicInfoEmpId(emp.id)}
             onEditWorkInfo={(id) => setWorkInfoEmpId(id)}
             onEditGroupInfo={(id) => setGroupInfoEmpId(id)}
             onEditPassword={(id) => setPasswordEmpId(id)}
@@ -360,6 +363,14 @@ export default function EmployeesPage() {
           if (!open) setPasswordEmpId(null);
         }}
         userId={passwordEmpId}
+      />
+      
+      <BasicInformationSheet
+        isOpen={!!basicInfoEmpId}
+        onOpenChange={(open) => {
+          if (!open) setBasicInfoEmpId(null);
+        }}
+        userId={basicInfoEmpId}
       />
     </div>
   );

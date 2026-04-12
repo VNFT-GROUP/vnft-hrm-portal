@@ -189,9 +189,9 @@ export default function Sidebar() {
                             >
                               {sub.icon ? sub.icon : <div className="sub-item-bullet" />}
                               <span className="sub-nav-label flex-1" style={{ color: isChildActive ? "white" : undefined }}>{sub.label}</span>
-                              {(sub as any).badge && (
+                              {'badge' in sub && sub.badge && (
                                 <span className="text-[9px] uppercase font-bold tracking-[0.08em] bg-red-500/20 text-red-400 px-1.5 py-0.5 rounded border border-red-500/30 whitespace-nowrap ml-auto">
-                                  {(sub as any).badge}
+                                  {sub.badge as string}
                                 </span>
                               )}
                             </li>

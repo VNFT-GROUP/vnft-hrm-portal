@@ -33,6 +33,7 @@ export interface Employee {
 interface EmployeeTableProps {
   employees: Employee[];
   onDelete: (id: string) => void;
+  onEditBasicInfo: (emp: Employee) => void;
   onEditWorkInfo: (id: string) => void;
   onEditGroupInfo: (id: string) => void;
   onEditPassword: (id: string) => void;
@@ -41,7 +42,7 @@ interface EmployeeTableProps {
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
-export default function EmployeeTable({ employees, onDelete, onEditWorkInfo, onEditGroupInfo, onEditPassword }: EmployeeTableProps) {
+export default function EmployeeTable({ employees, onDelete, onEditBasicInfo, onEditWorkInfo, onEditGroupInfo, onEditPassword }: EmployeeTableProps) {
   const { t } = useTranslation();
   const [rightClickedEmpId, setRightClickedEmpId] = useState<string | null>(null);
 
@@ -109,7 +110,7 @@ export default function EmployeeTable({ employees, onDelete, onEditWorkInfo, onE
                   <div className="flex flex-col items-center gap-1.5">
                     {/* Hàng 1 */}
                     <div className="flex justify-center gap-1">
-                      <Button variant="ghost" size="icon" title={t('management.titleEditBasicInfo', { defaultValue: 'Xem/tùy chỉnh thông tin cơ bản' })} className="h-8 w-8 text-amber-500 hover:bg-amber-50 hover:text-amber-600 rounded-lg transition-colors">
+                      <Button variant="ghost" size="icon" title={t('management.titleEditBasicInfo', { defaultValue: 'Xem/tùy chỉnh thông tin cơ bản' })} onClick={() => onEditBasicInfo(emp)} className="h-8 w-8 text-amber-500 hover:bg-amber-50 hover:text-amber-600 rounded-lg transition-colors">
                         <UserCog size={16} />
                       </Button>
                       <Button variant="ghost" size="icon" title={t('management.titleEditWorkInfo', { defaultValue: 'Xem/tùy chỉnh công việc' })} onClick={() => onEditWorkInfo(emp.id)} className="h-8 w-8 text-indigo-500 hover:bg-indigo-50 hover:text-indigo-600 rounded-lg transition-colors">
@@ -157,7 +158,7 @@ export default function EmployeeTable({ employees, onDelete, onEditWorkInfo, onE
             <CircleDollarSign className="mr-2 h-4 w-4 text-emerald-500" />
             <span>{t('management.titleEditSalary', { defaultValue: 'Xem/tùy chỉnh lương' })}</span>
           </ContextMenuItem>
-          <ContextMenuItem className="cursor-pointer">
+          <ContextMenuItem className="cursor-pointer" onClick={() => onEditBasicInfo(activeEmp)}>
             <UserCog className="mr-2 h-4 w-4 text-amber-500" />
             <span>{t('management.titleEditBasicInfo', { defaultValue: 'Xem/tùy chỉnh thông tin cơ bản' })}</span>
           </ContextMenuItem>

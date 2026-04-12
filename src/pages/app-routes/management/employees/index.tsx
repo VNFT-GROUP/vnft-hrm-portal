@@ -19,6 +19,7 @@ import { useLayoutStore } from "@/store/useLayoutStore";
 
 import EmployeeTable, { type Employee } from "./components/EmployeeTable";
 import EmployeeFormSheet from "./components/EmployeeFormSheet";
+import WorkInformationSheet from "./components/WorkInformationSheet";
 import UserFormSheet from "../users/components/UserFormSheet";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { userService } from "@/services/user/userService";
@@ -39,6 +40,7 @@ export default function EmployeesPage() {
     (state) => state.showEmployeeLegend,
   );
   const [editingEmployee, setEditingEmployee] = useState<Employee | null>(null);
+  const [workInfoEmpId, setWorkInfoEmpId] = useState<string | null>(null);
 
   const [formData, setFormData] = useState({
     empCodePrefix: "VNSGN",
@@ -303,6 +305,7 @@ export default function EmployeesPage() {
           <EmployeeTable
             employees={filteredData}
             onDelete={handleDelete}
+            onEditWorkInfo={(id) => setWorkInfoEmpId(id)}
           />
         )}
       </motion.div>
@@ -322,6 +325,14 @@ export default function EmployeesPage() {
         onOpenChange={setIsUserFormOpen}
         onSave={handleSaveUser}
         isPending={createUserMutation.isPending}
+      />
+
+      <WorkInformationSheet
+        isOpen={!!workInfoEmpId}
+        onOpenChange={(open) => {
+          if (!open) setWorkInfoEmpId(null);
+        }}
+        userId={workInfoEmpId}
       />
     </div>
   );

@@ -33,12 +33,13 @@ export interface Employee {
 interface EmployeeTableProps {
   employees: Employee[];
   onDelete: (id: string) => void;
+  onEditWorkInfo: (id: string) => void;
 }
 
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
-export default function EmployeeTable({ employees, onDelete }: EmployeeTableProps) {
+export default function EmployeeTable({ employees, onDelete, onEditWorkInfo }: EmployeeTableProps) {
   const { t } = useTranslation();
   const [rightClickedEmpId, setRightClickedEmpId] = useState<string | null>(null);
 
@@ -118,7 +119,7 @@ export default function EmployeeTable({ employees, onDelete }: EmployeeTableProp
                     </div>
                     {/* Hàng 2 */}
                     <div className="flex justify-center gap-1">
-                      <Button variant="ghost" size="icon" title={t('management.titleEditWorkInfo', { defaultValue: 'Tùy chỉnh công việc' })} className="h-8 w-8 text-indigo-500 hover:bg-indigo-50 hover:text-indigo-600 rounded-lg transition-colors">
+                      <Button variant="ghost" size="icon" title={t('management.titleEditWorkInfo', { defaultValue: 'Tùy chỉnh công việc' })} onClick={() => onEditWorkInfo(emp.id)} className="h-8 w-8 text-indigo-500 hover:bg-indigo-50 hover:text-indigo-600 rounded-lg transition-colors">
                         <Briefcase size={16} />
                       </Button>
                       <Button variant="ghost" size="icon" title={t('management.titleDeactivate', { defaultValue: 'Hủy kích hoạt tài khoản' })} onClick={() => onDelete(emp.id)} className="h-8 w-8 text-rose-500 hover:bg-rose-50 hover:text-rose-600 rounded-lg transition-colors">
@@ -159,7 +160,7 @@ export default function EmployeeTable({ employees, onDelete }: EmployeeTableProp
             <UserCog className="mr-2 h-4 w-4 text-amber-500" />
             <span>{t('management.titleEditBasicInfo', { defaultValue: 'Xem/tùy chỉnh thông tin cơ bản' })}</span>
           </ContextMenuItem>
-          <ContextMenuItem className="cursor-pointer">
+          <ContextMenuItem className="cursor-pointer" onClick={() => onEditWorkInfo(activeEmp.id)}>
             <Briefcase className="mr-2 h-4 w-4 text-indigo-500" />
             <span>{t('management.titleEditWorkInfo', { defaultValue: 'Tùy chỉnh công việc' })}</span>
           </ContextMenuItem>

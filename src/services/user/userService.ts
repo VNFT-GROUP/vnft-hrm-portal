@@ -5,6 +5,7 @@ import type { UserResponse } from '@/types/user/UserResponse';
 import type { CreateUserRequest } from '@/types/user/CreateUserRequest';
 import type { UpdateUserPasswordRequest } from '@/types/user/UpdateUserPasswordRequest';
 import type { UpdateUserWorkInformationRequest } from '@/types/user/UpdateUserWorkInformationRequest';
+import type { UserWorkInformationResponse } from '@/types/user/UserWorkInformationResponse';
 
 export const userService = {
   createUser: async (
@@ -47,6 +48,13 @@ export const userService = {
     data: UpdateUserWorkInformationRequest,
   ): Promise<ApiResponse<UserResponse>> => {
     const response = await apiClient.put(`/users/${id}/work-information`, data);
+    return response.data;
+  },
+
+  getWorkInformation: async (
+    id: string,
+  ): Promise<ApiResponse<UserWorkInformationResponse>> => {
+    const response = await apiClient.get(`/users/${id}/work-information`);
     return response.data;
   },
 };

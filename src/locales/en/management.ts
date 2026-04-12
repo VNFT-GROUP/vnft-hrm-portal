@@ -69,6 +69,36 @@ export default {
   deleteGroup: "Delete permission group",
   
   titleViewDetail: "View Details",
-  titleEditSalary: "Edit Salary",
-  titleDelete: "Delete"
+  titleEditSalary: "View / Edit Salary",
+  titleDelete: "Delete",
+
+  titleEditBasicInfo: "View / Edit Basic Info",
+  titleEditWorkInfo: "View / Edit Work Info",
+  titleEditGroupInfo: "View / Edit Permission Group",
+  titleDeactivate: "Deactivate Account",
+  titleEditPassword: "Change Password",
+
+  groupSheetTitle: "Permission Group",
+  groupSheetDesc: "View the employee's current permission group details.",
+  editMode: "Edit Mode",
+  editModeDescGroup: "Toggle to update permission group",
+  groupFunctionLabel: "Group / Function",
+  groupPlaceholder: "-- Select group --",
+  unassignedGroup: "Unassigned",
+  btnSave: "Save Changes",
+  btnClose: "Close",
+  btnSaving: "Saving...",
+  groupUpdateSuccess: "Permission group updated successfully!",
+  groupUpdateError: "An error occurred while updating the permission group.",
+
+  pwdSheetTitle: "Change Password",
+  pwdSheetDesc: "Initialize a new password for the employee to maintain account security.",
+  newPwdLabel: "New Password",
+  newPwdPlaceholder: "Enter new password...",
+  btnUpdate: "Update",
+  btnUpdating: "Processing...",
+  pwdUpdateSuccess: "Password changed successfully!",
+  pwdUpdateError: "An error occurred while changing the password.",
+  pwdEmptyError: "Please enter a new password.",
+  pwdLengthError: "Password must be at least 6 characters long."
 };

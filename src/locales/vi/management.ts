@@ -70,5 +70,35 @@ export default {
   
   titleViewDetail: "Xem chi tiết",
   titleEditSalary: "Xem/tùy chỉnh lương",
-  titleDelete: "Xóa"
+  titleDelete: "Xóa",
+  
+  titleEditBasicInfo: "Xem/tùy chỉnh thông tin cơ bản",
+  titleEditWorkInfo: "Xem/tùy chỉnh công việc",
+  titleEditGroupInfo: "Xem/tùy chỉnh nhóm quyền",
+  titleDeactivate: "Hủy kích hoạt tài khoản",
+  titleEditPassword: "Đổi mật khẩu",
+
+  groupSheetTitle: "Nhóm quyền",
+  groupSheetDesc: "Xem chi tiết nhóm phân quyền hiện tại của nhân viên.",
+  editMode: "Chế độ chỉnh sửa",
+  editModeDescGroup: "Bật để cập nhật nhóm / chức năng",
+  groupFunctionLabel: "Nhóm / Chức năng",
+  groupPlaceholder: "-- Chọn nhóm quyền --",
+  unassignedGroup: "Chưa phân nhóm",
+  btnSave: "Lưu thay đổi",
+  btnClose: "Đóng",
+  btnSaving: "Đang lưu...",
+  groupUpdateSuccess: "Cập nhật nhóm quyền thành công!",
+  groupUpdateError: "Đã có lỗi xảy ra khi cập nhật nhóm quyền.",
+  
+  pwdSheetTitle: "Đổi Mật Khẩu",
+  pwdSheetDesc: "Khởi tạo mật khẩu mới cho nhân viên để duy trì bảo mật tài khoản.",
+  newPwdLabel: "Mật khẩu mới",
+  newPwdPlaceholder: "Nhập mật khẩu mới...",
+  btnUpdate: "Cập nhật",
+  btnUpdating: "Đang xử lý...",
+  pwdUpdateSuccess: "Đổi mật khẩu thành công!",
+  pwdUpdateError: "Đã có lỗi xảy ra khi đổi mật khẩu.",
+  pwdEmptyError: "Vui lòng nhập mật khẩu mới.",
+  pwdLengthError: "Mật khẩu phải có ít nhất 6 ký tự."
 };

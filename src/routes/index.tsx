@@ -10,7 +10,6 @@ const HomePage = lazy(() => import("../pages/app-routes/dashboard/HomePage"));
 const ProfilePage = lazy(() => import("../pages/app-routes/profile"));
 const EditProfilePage = lazy(() => import("../pages/app-routes/profile/edit"));
 const CalendarPage = lazy(() => import("../pages/app-routes/calendar"));
-const ManagementOverviewPage = lazy(() => import("../pages/app-routes/management/overview/ManagementOverviewPage"));
 const EmployeesPage = lazy(() => import("../pages/app-routes/management/employees"));
 const DepartmentsPage = lazy(() => import("../pages/app-routes/management/departments"));
 const PositionsPage = lazy(() => import("../pages/app-routes/management/positions"));
@@ -90,7 +89,6 @@ export default function AppRoutes() {
 
           {/* Cấp 2: Quản lý */}
           <Route path="management">
-             <Route path="overview" element={<ManagementOverviewPage />} />
              <Route path="employees" element={<EmployeesPage />} />
              <Route path="departments" element={<DepartmentsPage />} />
              <Route path="positions" element={<PositionsPage />} />

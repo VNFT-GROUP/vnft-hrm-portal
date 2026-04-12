@@ -9,6 +9,7 @@ import { groupService } from "@/services/group/groupService";
 import { userService } from "@/services/user/userService";
 import { SearchableSelect } from "@/components/custom/SearchableSelect";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 import type { UpdateUserGroupRequest } from "@/types/user/UpdateUserGroupRequest";
 
 interface GroupInformationSheetProps {
@@ -18,6 +19,7 @@ interface GroupInformationSheetProps {
 }
 
 export default function GroupInformationSheet({ isOpen, onOpenChange, userId }: GroupInformationSheetProps) {
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
 
   const [formData, setFormData] = useState<Partial<UpdateUserGroupRequest>>({});
@@ -51,13 +53,13 @@ export default function GroupInformationSheet({ isOpen, onOpenChange, userId }: 
   const updateGroupMutation = useMutation({
     mutationFn: (data: UpdateUserGroupRequest) => userService.updateGroup(userId!, data),
     onSuccess: () => {
-      toast.success("Cập nhật nhóm quyền thành công!");
+      toast.success(t('management.groupUpdateSuccess'));
       queryClient.invalidateQueries({ queryKey: ["users"] });
       queryClient.invalidateQueries({ queryKey: ["userGroupInfo", userId] });
       setIsEditingMode(false);
     },
     onError: () => {
-      toast.error("Đã có lỗi xảy ra khi cập nhật nhóm quyền.");
+      toast.error(t('management.groupUpdateError'));
     },
   });
 
@@ -79,11 +81,11 @@ export default function GroupInformationSheet({ isOpen, onOpenChange, userId }: 
                 <span className="p-1.5 bg-[#1E2062]/10 text-[#1E2062] rounded-md">
                   <Shield size={18} />
                 </span>
-                Nhóm quyền
+                {t('management.groupSheetTitle')}
               </SheetTitle>
             </div>
             <SheetDescription className="text-muted-foreground">
-              Xem chi tiết nhóm phân quyền hiện tại của nhân viên.
+              {t('management.groupSheetDesc')}
             </SheetDescription>
           </SheetHeader>
         </div>
@@ -98,8 +100,8 @@ export default function GroupInformationSheet({ isOpen, onOpenChange, userId }: 
             <>
               <div className="flex items-center justify-between pb-2 border-b border-border/50">
                 <div className="space-y-0.5">
-                  <Label className="text-base font-semibold">Chế độ chỉnh sửa</Label>
-                  <p className="text-xs text-muted-foreground">Bật để cập nhật nhóm / chức năng</p>
+                  <Label className="text-base font-semibold">{t('management.editMode')}</Label>
+                  <p className="text-xs text-muted-foreground">{t('management.editModeDescGroup')}</p>
                 </div>
                 <Switch 
                   checked={isEditingMode}
@@ -109,19 +111,19 @@ export default function GroupInformationSheet({ isOpen, onOpenChange, userId }: 
               </div>
 
               <div className="space-y-2">
-                <Label className="text-sm font-semibold text-foreground flex items-center gap-1.5"><Users size={14} className="text-muted-foreground"/> Nhóm / Chức năng</Label>
+                <Label className="text-sm font-semibold text-foreground flex items-center gap-1.5"><Users size={14} className="text-muted-foreground"/> {t('management.groupFunctionLabel')}</Label>
                 {isEditingMode ? (
                   <SearchableSelect 
                     options={groups}
                     value={formData.groupId ?? groupInfo?.data?.groupId ?? ""}
                     onChange={(val) => setFormData({...formData, groupId: val})}
-                    placeholder="-- Chọn nhóm quyền --"
+                    placeholder={t('management.groupPlaceholder')}
                     onRefresh={() => refetchGroups()}
                     isLoading={isFetchingGroups}
                   />
                 ) : (
                   <div className="p-3 bg-muted/40 rounded-xl border border-border text-sm font-medium text-foreground min-h-[44px] flex items-center">
-                     {groupInfo?.data?.groupName || <span className="text-muted-foreground italic">Chưa phân nhóm</span>}
+                     {groupInfo?.data?.groupName || <span className="text-muted-foreground italic">{t('management.unassignedGroup')}</span>}
                   </div>
                 )}
               </div>
@@ -131,11 +133,11 @@ export default function GroupInformationSheet({ isOpen, onOpenChange, userId }: 
         
         <div className="p-4 border-t border-border shrink-0 bg-card text-card-foreground flex justify-end gap-3">
           <Button type="button" variant="outline" onClick={() => onOpenChange(false)} className="rounded-xl border-border text-muted-foreground hover:bg-muted w-32 transition-all">
-            Đóng
+            {t('management.btnClose')}
           </Button>
           {isEditingMode && (
             <Button type="submit" className="rounded-xl bg-[#1E2062] hover:bg-[#1E2062]/90 text-white w-auto px-6 transition-all shadow-md" disabled={updateGroupMutation.isPending || isFetchingGroupInfo}>
-              {updateGroupMutation.isPending ? "Đang lưu..." : "Lưu thay đổi"}
+              {updateGroupMutation.isPending ? t('management.btnSaving') : t('management.btnSave')}
             </Button>
           )}
         </div>

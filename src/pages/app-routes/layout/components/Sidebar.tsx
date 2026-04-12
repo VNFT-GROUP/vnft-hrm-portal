@@ -93,7 +93,6 @@ export default function Sidebar() {
           label: t('sidebar.management'), 
           icon: <FolderOpen size={20} />, 
           subItems: [
-            { label: t('sidebar.dashboardOverview'), path: "/app/management/overview", icon: <LayoutDashboard size={16} /> },
             { label: t('sidebar.employees'), path: "/app/management/employees", icon: <Users size={16} /> },
             { label: t('sidebar.employeeCodes'), path: "/app/management/employee-codes", icon: <FileText size={16} /> },
             { label: t('sidebar.departments'), path: "/app/management/departments", icon: <Building2 size={16} /> },

@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { useMutation } from "@tanstack/react-query";
 import { userService } from "@/services/user/userService";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 
 interface ChangePasswordSheetProps {
   isOpen: boolean;
@@ -15,17 +16,18 @@ interface ChangePasswordSheetProps {
 }
 
 export default function ChangePasswordSheet({ isOpen, onOpenChange, userId }: ChangePasswordSheetProps) {
+  const { t } = useTranslation();
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   const updatePasswordMutation = useMutation({
     mutationFn: (pwd: string) => userService.updatePassword(userId!, { password: pwd }),
     onSuccess: () => {
-      toast.success("Đổi mật khẩu thành công!");
+      toast.success(t('management.pwdUpdateSuccess'));
       handleClose();
     },
     onError: () => {
-      toast.error("Đã có lỗi xảy ra khi đổi mật khẩu.");
+      toast.error(t('management.pwdUpdateError'));
     },
   });
 
@@ -38,11 +40,11 @@ export default function ChangePasswordSheet({ isOpen, onOpenChange, userId }: Ch
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!password) {
-      toast.error("Vui lòng nhập mật khẩu mới.");
+      toast.error(t('management.pwdEmptyError'));
       return;
     }
     if (password.length < 6) {
-      toast.error("Mật khẩu phải có ít nhất 6 ký tự.");
+      toast.error(t('management.pwdLengthError'));
       return;
     }
     updatePasswordMutation.mutate(password);
@@ -58,11 +60,11 @@ export default function ChangePasswordSheet({ isOpen, onOpenChange, userId }: Ch
                 <span className="p-1.5 bg-[#1E2062]/10 text-[#1E2062] rounded-md">
                   <KeyRound size={18} />
                 </span>
-                Đổi mật khẩu
+                {t('management.pwdSheetTitle')}
               </SheetTitle>
             </div>
             <SheetDescription className="text-muted-foreground">
-               Khởi tạo mật khẩu mới cho nhân viên để duy trì bảo mật tài khoản.
+               {t('management.pwdSheetDesc')}
             </SheetDescription>
           </SheetHeader>
         </div>
@@ -70,13 +72,13 @@ export default function ChangePasswordSheet({ isOpen, onOpenChange, userId }: Ch
         <form onSubmit={handleSubmit} className="flex flex-col flex-1 overflow-hidden">
           <div className="flex-1 overflow-y-auto p-6 space-y-6">
             <div className="space-y-2 relative">
-              <Label className="text-sm font-semibold">Mật khẩu mới</Label>
+              <Label className="text-sm font-semibold">{t('management.newPwdLabel')}</Label>
               <div className="relative">
                 <Input
                   type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Nhập mật khẩu mới..."
+                  placeholder={t('management.newPwdPlaceholder')}
                   className="pr-10 h-11 rounded-xl"
                   disabled={updatePasswordMutation.isPending}
                 />
@@ -99,14 +101,14 @@ export default function ChangePasswordSheet({ isOpen, onOpenChange, userId }: Ch
               className="rounded-xl border-border text-muted-foreground hover:bg-muted w-32 transition-all"
               disabled={updatePasswordMutation.isPending}
             >
-              Đóng
+              {t('management.btnClose')}
             </Button>
             <Button
               type="submit"
               className="rounded-xl bg-[#1E2062] hover:bg-[#1E2062]/90 px-6 text-white shadow-md transition-all"
               disabled={updatePasswordMutation.isPending}
             >
-               {updatePasswordMutation.isPending ? "Đang xử lý..." : <><ShieldCheck size={18} className="mr-2" /> Lưu thay đổi</>}
+               {updatePasswordMutation.isPending ? t('management.btnUpdating') : <><ShieldCheck size={18} className="mr-2" /> {t('management.btnUpdate')}</>}
             </Button>
           </div>
         </form>

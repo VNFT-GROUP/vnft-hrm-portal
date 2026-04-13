@@ -100,5 +100,15 @@ export default {
   pwdUpdateSuccess: "Đổi mật khẩu thành công!",
   pwdUpdateError: "Đã có lỗi xảy ra khi đổi mật khẩu.",
   pwdEmptyError: "Vui lòng nhập mật khẩu mới.",
-  pwdLengthError: "Mật khẩu phải có ít nhất 6 ký tự."
+  pwdLengthError: "Mật khẩu phải có ít nhất 6 ký tự.",
+  
+  groupPermsTitle: "Danh Sách Mã Quyền",
+  groupPermsDesc: "Quản lý danh sách các mã quyền chi tiết của hệ thống.",
+  searchPermPlaceholder: "Tìm kiếm mã quyền...",
+  addPerm: "Thêm Mã Quyền",
+  noPerms: "Chưa có mã quyền nào",
+  noPermsDesc: "Bạn có thể thêm mã quyền mới bằng nút bấm bên trên.",
+  permCode: "Mã Quyền",
+  editPerm: "Cập nhật mã quyền",
+  createPerm: "Thêm mới mã quyền"
 };

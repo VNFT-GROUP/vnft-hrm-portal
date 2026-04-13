@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { LayoutDashboard, UserCircle, Calendar, FolderOpen, Users, Building2, Briefcase, FileText, CheckSquare, Layers, FileEdit, ChevronLeft, Menu, ChevronDown, ChevronRight as ChevronRightIcon, Shield } from "lucide-react";
+import { LayoutDashboard, UserCircle, Calendar, FolderOpen, Users, Building2, Briefcase, FileText, CheckSquare, Layers, FileEdit, ChevronLeft, Menu, ChevronDown, ChevronRight as ChevronRightIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { ScrollArea } from "../../../../components/ui/scroll-area";
 import { useLayoutStore } from "../../../../store/useLayoutStore";
@@ -98,8 +98,7 @@ export default function Sidebar() {
             { label: t('sidebar.departments'), path: "/app/management/departments", icon: <Building2 size={16} /> },
             { label: t('sidebar.positions', { defaultValue: 'Vị trí' }), path: "/app/management/positions", icon: <Briefcase size={16} /> },
             { label: t('sidebar.roles', { defaultValue: 'Chức vụ' }), path: "/app/management/roles", icon: <Layers size={16} /> },
-            { label: t('sidebar.groups', { defaultValue: 'Nhóm quyền' }), path: "/app/management/groups", icon: <CheckSquare size={16} />, badge: "System" },
-            { label: t('sidebar.groupPerms', { defaultValue: 'Mã quyền' }), path: "/app/management/group-permissions", icon: <Shield size={16} />, badge: "System" },
+            { label: t('sidebar.groups', { defaultValue: 'Nhóm quyền / Mã quyền' }), path: "/app/management/groups", icon: <CheckSquare size={16} />, badge: "System" },
           ]
         }
       ]

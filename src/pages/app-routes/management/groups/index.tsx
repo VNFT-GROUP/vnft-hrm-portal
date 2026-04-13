@@ -1,111 +1,15 @@
-import { useState } from "react";
-import { Plus, Search, ShieldCheck, Edit2, Trash2, Loader2, MousePointerClick } from "lucide-react";
+import { ShieldCheck, Edit2, Trash2, MousePointerClick, CheckSquare, Shield } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
 import { useLayoutStore } from "@/store/useLayoutStore";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-import GroupTable from "./components/GroupTable";
-import GroupFormSheet from "./components/GroupFormSheet";
-import type { GroupResponse } from '@/types/group/GroupResponse';
-import type { UpsertGroupRequest } from '@/types/group/UpsertGroupRequest';
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { groupService } from "@/services/group/groupService";
-import { toast } from "sonner";
+import GroupsTabContent from "./components/GroupsTabContent";
+import GroupPermissionsTabContent from "./components/GroupPermissionsTabContent";
 
 export default function GroupsPage() {
   const { t } = useTranslation();
   const showRoleLegend = useLayoutStore((state) => state.showRoleLegend);
-  const queryClient = useQueryClient();
-  const [searchTerm, setSearchTerm] = useState("");
-  const [isOpen, setIsOpen] = useState(false);
-  const [editingGroup, setEditingGroup] = useState<GroupResponse | null>(null);
-
-  const [formData, setFormData] = useState({
-    name: "",
-    description: "",
-    active: true,
-  });
-
-  const { data: groupsData, isLoading } = useQuery({
-    queryKey: ["groups", searchTerm],
-    queryFn: () => groupService.getGroups(searchTerm),
-  });
-
-  const groups = groupsData?.data || [];
-
-  const handleOpenForm = (group?: GroupResponse) => {
-    if (group) {
-      setEditingGroup(group);
-      setFormData({
-        name: group.name,
-        description: group.description || "",
-        active: group.active ?? true,
-      });
-    } else {
-      setEditingGroup(null);
-      setFormData({ name: "", description: "", active: true });
-    }
-    setIsOpen(true);
-  };
-
-  const createMutation = useMutation({
-    mutationFn: (data: UpsertGroupRequest) =>
-      groupService.createGroup(data),
-    onSuccess: () => {
-      toast.success("Thêm nhóm quyền thành công!");
-      queryClient.invalidateQueries({ queryKey: ["groups"] });
-      setIsOpen(false);
-    },
-    onError: () => {
-      toast.error("Thêm nhóm quyền thất bại!");
-    }
-  });
-
-  const updateMutation = useMutation({
-    mutationFn: ({ id, data }: { id: string; data: UpsertGroupRequest }) =>
-      groupService.updateGroup(id, data),
-    onSuccess: () => {
-      toast.success("Cập nhật nhóm quyền thành công!");
-      queryClient.invalidateQueries({ queryKey: ["groups"] });
-      setIsOpen(false);
-    },
-    onError: () => {
-      toast.error("Cập nhật nhóm quyền thất bại!");
-    }
-  });
-
-  const deleteMutation = useMutation({
-    mutationFn: (id: string) => groupService.deleteGroup(id),
-    onSuccess: () => {
-      toast.success("Xóa/Tạm ngưng nhóm quyền thành công!");
-      queryClient.invalidateQueries({ queryKey: ["groups"] });
-    },
-    onError: () => {
-      toast.error("Xóa nhóm quyền thất bại!");
-    }
-  });
-
-  const handleSave = () => {
-    if (!formData.name.trim()) return;
-
-    const payload: UpsertGroupRequest = {
-      name: formData.name,
-      description: formData.description || undefined,
-      active: formData.active,
-    };
-
-    if (editingGroup) {
-      updateMutation.mutate({ id: editingGroup.id, data: payload });
-    } else {
-      createMutation.mutate(payload);
-    }
-  };
-
-  const handleDelete = (id: string) => {
-    deleteMutation.mutate(id);
-  };
 
   return (
     <div className="p-4 md:p-8 w-full max-w-6xl mx-auto min-h-full flex flex-col gap-6 md:gap-8">
@@ -120,10 +24,10 @@ export default function GroupsPage() {
           <span className="p-2.5 bg-[#2E3192]/10 text-[#2E3192] rounded-xl">
             <ShieldCheck size={28} />
           </span>
-          {t('management.groupsTitle', { defaultValue: 'Danh Sách Nhóm Quyền' })}
+          {t('management.groupsTitle', { defaultValue: 'Cấu Hình Quản Trị Phân Quyền' })}
         </h1>
         <p className="text-muted-foreground text-base md:text-lg ml-1">
-          {t('management.groupsDesc', { defaultValue: 'Quản lý danh sách các nhóm quyền của người dùng trong hệ thống.' })}
+          {t('management.groupsDesc', { defaultValue: 'Quản lý toàn bộ thông số về nhóm quyền và danh sách mã quyền trong hệ thống.' })}
         </p>
       </motion.div>
 
@@ -159,63 +63,31 @@ export default function GroupsPage() {
         </motion.div>
       )}
 
-      {/* 2 & 3. Toolbar Section (Tìm Kiếm + Nút tạo) */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.98 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
-        className="bg-card text-card-foreground p-5 rounded-2xl shadow-sm border border-border flex flex-col md:flex-row justify-between items-center gap-4"
-      >
-        <div className="relative w-full md:w-96">
-          <Search
-            className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground"
-            size={20}
-          />
-          <Input
-            placeholder={t('management.searchGroupPlaceholder', { defaultValue: 'Tìm kiếm nhóm theo tên...' })}
-            className="pl-12 h-12 rounded-xl bg-muted border-border focus-visible:ring-[#2E3192] text-base hover:bg-card transition-colors"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
-        <Button
-          onClick={() => handleOpenForm()}
-          className="w-full md:w-auto h-12 px-6 rounded-xl bg-[#2E3192] hover:bg-[#1E2062] text-white shadow-md shadow-[#2E3192]/20 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 text-base font-semibold"
-        >
-          <Plus size={20} className="mr-2" /> {t('management.addGroup', { defaultValue: 'Thêm Nhóm Quyền' })}
-        </Button>
-      </motion.div>
+      {/* TABS CONTAINER */}
+      <Tabs defaultValue="groups" className="flex flex-col gap-6">
+        <TabsList className="bg-muted/50 p-1 rounded-xl h-14 md:w-fit w-full flex items-center justify-start border border-border/80 shadow-sm">
+          <TabsTrigger
+            value="groups"
+            className="flex items-center gap-2 px-6 h-11 text-base font-semibold data-[state=active]:bg-[#1E2062] data-[state=active]:text-white rounded-lg transition-all"
+          >
+            <CheckSquare size={18} /> Nhóm quyền
+          </TabsTrigger>
+          <TabsTrigger
+            value="permissions"
+            className="flex items-center gap-2 px-6 h-11 text-base font-semibold data-[state=active]:bg-[#1E2062] data-[state=active]:text-white rounded-lg transition-all"
+          >
+            <Shield size={18} /> Dữ liệu mã quyền
+          </TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="groups" className="flex-1 mt-0">
+          <GroupsTabContent />
+        </TabsContent>
+        <TabsContent value="permissions" className="flex-1 mt-0">
+          <GroupPermissionsTabContent />
+        </TabsContent>
+      </Tabs>
 
-      {/* 4. Main Table Card Section */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
-        className="bg-card text-card-foreground rounded-2xl shadow-sm border border-border overflow-hidden group hover:shadow-md transition-shadow duration-300 flex-1 flex flex-col"
-      >
-        {isLoading ? (
-          <div className="flex flex-col items-center justify-center p-20 text-muted-foreground h-64">
-            <Loader2 className="w-8 h-8 animate-spin mb-4 text-[#2E3192]" />
-            <p className="animate-pulse">Đang tải danh sách nhóm quyền...</p>
-          </div>
-        ) : (
-          <GroupTable
-            groups={groups}
-            onEdit={handleOpenForm}
-            onDelete={handleDelete}
-          />
-        )}
-      </motion.div>
-
-      {/* Side Form (Sheet) */}
-      <GroupFormSheet
-        isOpen={isOpen}
-        onOpenChange={setIsOpen}
-        formData={formData}
-        setFormData={setFormData}
-        isEditing={!!editingGroup}
-        onSave={handleSave}
-      />
     </div>
   );
 }

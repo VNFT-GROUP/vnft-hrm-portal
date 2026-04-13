@@ -106,10 +106,10 @@ export default function GroupPermissionTable({ items, onEdit, onDelete }: Props)
         {rightClickedItem && (
           <ContextMenuContent className="w-48 shadow-lg border-border/60">
             <ContextMenuItem onClick={() => onEdit(rightClickedItem)} className="gap-2 focus:bg-[#2E3192]/10 focus:text-[#2E3192] cursor-pointer">
-              <Edit2 size={15} /> {t('common.edit')}
+              <Edit2 size={15} /> {t('management.editPerm', { defaultValue: 'Cập nhật mã quyền' })}
             </ContextMenuItem>
             <ContextMenuItem onClick={() => onDelete(rightClickedItem.id)} className="gap-2 text-rose-500 focus:bg-rose-50 focus:text-rose-600 cursor-pointer">
-              <Trash2 size={15} /> {rightClickedItem.active !== false ? "Tạm ngưng" : "Xóa"}
+              <Trash2 size={15} /> {rightClickedItem.active !== false ? t('management.statusInactive', { defaultValue: 'Tạm ngưng' }) : t('common.delete', { defaultValue: 'Xóa' })}
             </ContextMenuItem>
           </ContextMenuContent>
         )}

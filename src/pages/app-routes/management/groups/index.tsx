@@ -64,26 +64,22 @@ export default function GroupsPage() {
       )}
 
       {/* TABS CONTAINER */}
-      <Tabs defaultValue="groups" className="flex flex-col gap-6">
-        <div className="border-b border-border/80 w-full px-2">
-        <TabsList className="bg-transparent h-14 p-0 w-full md:w-auto flex items-end justify-start gap-8">
-          <TabsTrigger
-            value="groups"
-            className="flex items-center gap-2 px-2 pb-3 pt-4 text-base font-semibold transition-all bg-transparent rounded-none border-b-[3px] border-transparent text-muted-foreground hover:text-[#1E2062] data-[state=active]:text-[#2E3192] data-[state=active]:border-[#2E3192] data-[state=active]:bg-transparent shadow-none data-[state=active]:shadow-none"
-          >
-            <div className="flex items-center gap-2 mx-2">
-              <CheckSquare size={18} /> <span>Nhóm Quyền</span>
-            </div>
-          </TabsTrigger>
-          <TabsTrigger
-            value="permissions"
-            className="flex items-center gap-2 px-2 pb-3 pt-4 text-base font-semibold transition-all bg-transparent rounded-none border-b-[3px] border-transparent text-muted-foreground hover:text-[#1E2062] data-[state=active]:text-[#2E3192] data-[state=active]:border-[#2E3192] data-[state=active]:bg-transparent shadow-none data-[state=active]:shadow-none"
-          >
-            <div className="flex items-center gap-2 mx-2">
-              <Shield size={18} /> <span>Dữ Liệu Mã Quyền</span>
-            </div>
-          </TabsTrigger>
-        </TabsList>
+      <Tabs defaultValue="groups" className="flex flex-col gap-6 mt-2">
+        <div className="border-b border-border/80 w-full hide-scrollbar overflow-x-auto">
+          <TabsList className="bg-transparent h-14 p-0 w-max flex items-end justify-start gap-6 md:gap-10 px-2 md:px-0 border-0">
+            <TabsTrigger
+              value="groups"
+              className="flex flex-row items-center gap-2.5 px-3 md:px-5 pb-3.5 pt-4 text-[15px] font-semibold transition-all bg-transparent rounded-none border-b-[3px] border-transparent text-muted-foreground hover:text-foreground data-active:text-[#2E3192] data-active:border-[#2E3192] data-active:shadow-none data-active:bg-transparent tracking-wide"
+            >
+              <CheckSquare size={18} className="mb-0.5" /> <span>Nhóm người dùng</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="permissions"
+              className="flex flex-row items-center gap-2.5 px-3 md:px-5 pb-3.5 pt-4 text-[15px] font-semibold transition-all bg-transparent rounded-none border-b-[3px] border-transparent text-muted-foreground hover:text-foreground data-active:text-[#2E3192] data-active:border-[#2E3192] data-active:shadow-none data-active:bg-transparent tracking-wide"
+            >
+              <Shield size={18} className="mb-0.5" /> <span>Mã quyền</span>
+            </TabsTrigger>
+          </TabsList>
         </div>
         
         <TabsContent value="groups" className="flex-1 mt-0">

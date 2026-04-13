@@ -10,6 +10,7 @@ import type { GroupResponse } from '@/types/group/GroupResponse';
 import type { UpsertGroupRequest } from '@/types/group/UpsertGroupRequest';
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { groupService } from "@/services/group/groupService";
+import { groupPermissionService } from "@/services/group/groupPermissionService";
 import { toast } from "sonner";
 
 export default function GroupsTabContent() {
@@ -19,11 +20,23 @@ export default function GroupsTabContent() {
   const [isOpen, setIsOpen] = useState(false);
   const [editingGroup, setEditingGroup] = useState<GroupResponse | null>(null);
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    name: string;
+    description: string;
+    active: boolean;
+    groupPermissionIds: string[];
+  }>({
     name: "",
     description: "",
     active: true,
+    groupPermissionIds: [],
   });
+
+  const { data: permissionsData } = useQuery({
+    queryKey: ["group-permissions-all"],
+    queryFn: () => groupPermissionService.getGroupPermissions(""),
+  });
+  const availablePermissions = permissionsData?.data || [];
 
   const { data: groupsData, isLoading } = useQuery({
     queryKey: ["groups", searchTerm],
@@ -39,10 +52,11 @@ export default function GroupsTabContent() {
         name: group.name,
         description: group.description || "",
         active: group.active ?? true,
+        groupPermissionIds: group.groupPermissions?.map(p => p.id) || [],
       });
     } else {
       setEditingGroup(null);
-      setFormData({ name: "", description: "", active: true });
+      setFormData({ name: "", description: "", active: true, groupPermissionIds: [] });
     }
     setIsOpen(true);
   };
@@ -88,7 +102,7 @@ export default function GroupsTabContent() {
     const payload: UpsertGroupRequest = {
       name: formData.name,
       description: formData.description || undefined,
-      groupPermissionIds: editingGroup?.groupPermissions?.map(p => p.id) || [],
+      groupPermissionIds: formData.groupPermissionIds,
       active: formData.active,
     };
     if (editingGroup) {
@@ -146,6 +160,7 @@ export default function GroupsTabContent() {
         setFormData={setFormData}
         isEditing={!!editingGroup}
         onSave={handleSave}
+        availablePermissions={availablePermissions}
       />
     </div>
   );

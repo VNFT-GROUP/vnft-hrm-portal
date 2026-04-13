@@ -6,20 +6,33 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
+import { useMemo } from "react";
+import { Checkbox } from "@/components/ui/checkbox";
+import type { GroupPermissionResponse } from "@/types/group/GroupPermissionResponse";
 
 interface GroupFormSheetProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
-  formData: { name: string; description: string; active: boolean };
-  setFormData: (data: { name: string; description: string; active: boolean }) => void;
+  formData: { name: string; description: string; active: boolean; groupPermissionIds: string[] };
+  setFormData: (data: { name: string; description: string; active: boolean; groupPermissionIds: string[] }) => void;
   isEditing: boolean;
   onSave: () => void;
+  availablePermissions: GroupPermissionResponse[];
 }
 
-export default function GroupFormSheet({ isOpen, onOpenChange, formData, setFormData, isEditing, onSave }: GroupFormSheetProps) {
+export default function GroupFormSheet({ isOpen, onOpenChange, formData, setFormData, isEditing, onSave, availablePermissions }: GroupFormSheetProps) {
+  const groupedPermissions = useMemo(() => {
+    const map = new Map<string, GroupPermissionResponse[]>();
+    availablePermissions.forEach(p => {
+      const cat = p.category || "Cơ bản";
+      if (!map.has(cat)) map.set(cat, []);
+      map.get(cat)!.push(p);
+    });
+    return Array.from(map.entries()).sort((a, b) => a[0].localeCompare(b[0]));
+  }, [availablePermissions]);
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
-      <SheetContent className="sm:max-w-[550px] w-full border-l-slate-200 shadow-2xl flex flex-col h-full p-0">
+      <SheetContent className="sm:max-w-[750px] w-full border-l-slate-200 shadow-2xl flex flex-col h-full p-0">
         <div className="p-6 border-b border-border shrink-0 bg-muted/50">
           <SheetHeader>
             <SheetTitle className="text-xl font-bold text-[#1E2062] flex items-center gap-2">
@@ -59,20 +72,60 @@ export default function GroupFormSheet({ isOpen, onOpenChange, formData, setForm
               className="rounded-xl border-border focus-visible:ring-[#2E3192] bg-muted focus:bg-card text-card-foreground transition-colors"
             />
           </div>
-          
-          <div className="space-y-3">
-            <Label htmlFor="desc" className="text-sm font-semibold text-foreground">Mô tả chi tiết</Label>
+
+          <div className="space-y-3 shrink-0">
+            <Label htmlFor="desc" className="text-sm font-semibold text-foreground">Mô tả hệ thống</Label>
             <Textarea 
               id="desc" 
               value={formData.description} 
               onChange={e => setFormData({...formData, description: e.target.value})} 
-              placeholder="Nhập mô tả cho nhóm quyền này..." 
-              rows={5}
+              placeholder="Ghi chú về nhóm quyền này..." 
+              rows={2}
               className="rounded-xl border-border focus-visible:ring-[#2E3192] bg-muted focus:bg-card text-card-foreground transition-colors resize-none"
             />
           </div>
           
-          <div className="flex items-center justify-between rounded-xl border border-border bg-card text-card-foreground p-4 shadow-sm">
+          <div className="space-y-3 flex-1 flex flex-col min-h-0">
+            <Label className="text-sm font-semibold text-foreground">Gán Mã Quyền Thiết Lập</Label>
+            <div className="border border-border rounded-xl flex-1 overflow-y-auto p-4 space-y-5 bg-muted/30">
+              {groupedPermissions.length === 0 ? (
+                <p className="text-sm text-muted-foreground text-center py-6">Chưa có dữ liệu mã quyền nào.</p>
+              ) : (
+                groupedPermissions.map(([category, perms]) => (
+                  <div key={category} className="space-y-3">
+                    <h4 className="text-sm font-bold text-[#1E2062] bg-[#2E3192]/5 px-3 py-1.5 rounded-md border-l-2 border-[#2E3192] uppercase">{category}</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pl-1">
+                      {perms.map(p => (
+                        <Label key={p.id} htmlFor={`perm-${p.id}`} className="flex items-start gap-3 p-3 hover:bg-card rounded-lg transition-colors border border-border/60 shadow-sm hover:border-[#2E3192]/50 hover:shadow-md cursor-pointer font-normal group/item bg-background">
+                          <Checkbox 
+                            id={`perm-${p.id}`} 
+                            checked={formData.groupPermissionIds.includes(p.id)}
+                            onCheckedChange={(checked) => {
+                              const current = new Set(formData.groupPermissionIds);
+                              if (checked) current.add(p.id);
+                              else current.delete(p.id);
+                              setFormData({ ...formData, groupPermissionIds: Array.from(current) });
+                            }}
+                            className="mt-0.5 data-[state=checked]:bg-[#2E3192] data-[state=checked]:border-[#2E3192] data-[state=unchecked]:border-muted-foreground/30"
+                          />
+                          <div className="grid gap-1.5 leading-none mt-0.5 max-w-[280px]">
+                            <span className="text-[14px] font-bold whitespace-nowrap text-[#1E2062] group-data-[state=checked]/item:text-[#2E3192] truncate">
+                              {p.code}
+                            </span>
+                            <span className="text-xs text-muted-foreground leading-relaxed line-clamp-2" title={p.description}>
+                              {p.description || "—"}
+                            </span>
+                          </div>
+                        </Label>
+                      ))}
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+          
+          <div className="flex shrink-0 items-center justify-between rounded-xl border border-border bg-card text-card-foreground p-4 shadow-sm">
             <div className="space-y-1">
               <Label className="text-foreground text-sm font-semibold block">Trạng thái hoạt động</Label>
               <p className="text-xs text-muted-foreground">Chỉ nhóm quyền ở trạng thái Hoạt động mới có thể gán cho user.</p>

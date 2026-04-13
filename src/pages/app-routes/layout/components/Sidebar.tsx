@@ -98,6 +98,7 @@ export default function Sidebar() {
             { label: t('sidebar.departments'), path: "/app/management/departments", icon: <Building2 size={16} /> },
             { label: t('sidebar.positions', { defaultValue: 'Vị trí' }), path: "/app/management/positions", icon: <Briefcase size={16} /> },
             { label: t('sidebar.roles', { defaultValue: 'Chức vụ' }), path: "/app/management/roles", icon: <Layers size={16} /> },
+            { label: t('sidebar.attendance', { defaultValue: 'Chấm công' }), path: "/app/management/attendance", icon: <Calendar size={16} /> },
             { label: t('sidebar.groups', { defaultValue: 'Nhóm quyền / Mã quyền' }), path: "/app/management/groups", icon: <CheckSquare size={16} />, badge: "System" },
           ]
         }

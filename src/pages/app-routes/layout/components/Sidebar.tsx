@@ -89,7 +89,7 @@ export default function Sidebar() {
         },
         { label: t('sidebar.calendar'), path: "/app/calendar", icon: <Calendar size={20} /> },
         { label: t('sidebar.requests'), path: "/app/requests", icon: <FileEdit size={20} /> },
-        { 
+        ...(session?.groupName === 'ADMIN' ? [{ 
           label: t('sidebar.management'), 
           icon: <FolderOpen size={20} />, 
           subItems: [
@@ -101,7 +101,7 @@ export default function Sidebar() {
             { label: t('sidebar.attendance', { defaultValue: 'Chấm công' }), path: "/app/management/attendance", icon: <Calendar size={16} /> },
             { label: t('sidebar.groups', { defaultValue: 'Nhóm quyền / Mã quyền' }), path: "/app/management/groups", icon: <CheckSquare size={16} />, badge: "System" },
           ]
-        }
+        }] : [])
       ]
     }
   ];

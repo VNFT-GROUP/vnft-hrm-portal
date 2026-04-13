@@ -94,7 +94,7 @@ export default function EmployeeCodeTable({ data, onToggleActive, onEdit }: { da
         </ContextMenuTrigger>
 
         {activeItem && (
-          <ContextMenuContent className="w-56 z-[100]">
+          <ContextMenuContent className="w-56 z-100">
             <ContextMenuItem className="cursor-pointer" onClick={() => onEdit(activeItem)}>
               <Edit2 className="mr-2 h-4 w-4 text-[#2E3192]" />
               <span>{t('management.legendEdit', { defaultValue: 'Chỉnh sửa' })}</span>

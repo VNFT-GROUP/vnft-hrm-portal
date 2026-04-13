@@ -112,7 +112,7 @@ export default function DepartmentTable({ departments, onEdit, onDelete }: Depar
 
       {/* RENDER CONTEXT MENU FOR THE ROW */}
       {activeDept && (
-        <ContextMenuContent className="w-56 z-[100]">
+        <ContextMenuContent className="w-56 z-100">
           <ContextMenuItem className="cursor-pointer" onClick={() => onEdit(activeDept)}>
             <Edit2 className="mr-2 h-4 w-4 text-[#2E3192]" />
             <span>{t("department.legendEdit")}</span>

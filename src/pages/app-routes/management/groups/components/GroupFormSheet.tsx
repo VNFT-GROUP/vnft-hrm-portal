@@ -35,7 +35,7 @@ export default function GroupFormSheet({ isOpen, onOpenChange, formData, setForm
   }, [availablePermissions]);
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
-      <SheetContent className="sm:max-w-[750px] w-full border-l-slate-200 shadow-2xl flex flex-col h-full p-0">
+      <SheetContent className="sm:max-w-[600px] w-full border-l-slate-200 shadow-2xl flex flex-col h-full p-0">
         <div className="p-6 border-b border-border shrink-0 bg-muted/50">
           <SheetHeader>
             <SheetTitle className="text-xl font-bold text-[#1E2062] flex items-center gap-2">
@@ -64,7 +64,7 @@ export default function GroupFormSheet({ isOpen, onOpenChange, formData, setForm
         }} className="flex flex-col flex-1 overflow-hidden">
           <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-6 hide-scrollbar relative">
           <div className="space-y-3 shrink-0">
-            <Label htmlFor="code" className="text-sm font-semibold flex mb-1 text-foreground">
+            <Label htmlFor="name" className="text-sm font-semibold flex mb-1 text-foreground">
               {t("management.formNameRequired", "Tên Nhóm Quyền")} <span className="text-red-500 ml-1.5">*</span>
             </Label>
             <Input
@@ -77,7 +77,7 @@ export default function GroupFormSheet({ isOpen, onOpenChange, formData, setForm
           </div>
           
           <div className="space-y-3 shrink-0">
-            <Label htmlFor="category" className="text-sm font-semibold flex mb-1 text-foreground">{t("management.formSystemDesc", "Mô tả hệ thống")}</Label>
+            <Label htmlFor="description" className="text-sm font-semibold flex mb-1 text-foreground">{t("management.formSystemDesc", "Mô tả hệ thống")}</Label>
             <Textarea
               id="description"
               placeholder={t("management.formSystemDescPlaceholder", "Ghi chú về nhóm quyền này...")}
@@ -88,9 +88,9 @@ export default function GroupFormSheet({ isOpen, onOpenChange, formData, setForm
             />
           </div>
           
-          <div className="space-y-3 flex-1 flex flex-col min-h-0">
+          <div className="space-y-3 shrink-0">
             <Label className="text-sm font-semibold text-foreground">{t("management.formAssignPermissions", "Gán Mã Quyền Thiết Lập")}</Label>
-            <div className="border border-border rounded-xl flex-1 overflow-y-auto p-4 space-y-5 bg-muted/30">
+            <div className="border border-border rounded-xl p-4 space-y-5 bg-muted/30">
               {groupedPermissions.length === 0 ? (
                 <p className="text-sm text-muted-foreground text-center py-6">{t("management.formNoPermissions", "Chưa có dữ liệu mã quyền nào.")}</p>
               ) : (
@@ -111,7 +111,7 @@ export default function GroupFormSheet({ isOpen, onOpenChange, formData, setForm
                             }}
                             className="mt-0.5 data-[state=checked]:bg-[#2E3192] data-[state=checked]:border-[#2E3192] data-[state=unchecked]:border-muted-foreground/30"
                           />
-                          <div className="grid gap-1.5 leading-none mt-0.5 max-w-[280px]">
+                          <div className="grid gap-1.5 leading-none mt-0.5 flex-1 min-w-0">
                             <span className="text-[14px] font-bold whitespace-nowrap text-[#1E2062] group-data-[state=checked]/item:text-[#2E3192] truncate">
                               {p.code}
                             </span>

@@ -4,6 +4,9 @@ import { Edit2, Shield, Trash2 } from "lucide-react";
 import { format } from "date-fns";
 import { useTranslation } from "react-i18next";
 import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger } from "@/components/ui/context-menu";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { motion, AnimatePresence } from "framer-motion";
 import type { GroupPermissionResponse } from "@/types/group/GroupPermissionResponse";
 
 interface Props {
@@ -16,85 +19,87 @@ export default function GroupPermissionTable({ items, onEdit, onDelete }: Props)
   const { t } = useTranslation();
   const [rightClickedItem, setRightClickedItem] = useState<GroupPermissionResponse | null>(null);
 
-  if (items.length === 0) {
-    return (
-      <div className="flex flex-col items-center justify-center p-20 text-muted-foreground text-center">
-        <Shield size={48} className="mb-4 opacity-20 text-[#2E3192]" />
-        <p className="text-lg font-medium">{t('management.noPerms', { defaultValue: 'Chưa có mã quyền nào' })}</p>
-        <p className="text-sm opacity-70 mt-1">{t('management.noPermsDesc', { defaultValue: 'Bạn có thể thêm mã quyền mới bằng nút bấm bên trên.' })}</p>
-      </div>
-    );
-  }
-
   return (
     <div className="w-full overflow-x-auto relative min-h-[300px]">
       <ContextMenu>
         <ContextMenuTrigger className="block w-full">
-          <Table>
-            <TableHeader>
-              <TableRow className="bg-muted/60 hover:bg-muted/60 border-b border-border transition-colors">
-                <TableHead className="w-[200px] font-semibold text-foreground">{t('management.permCode', { defaultValue: 'Mã Quyền' })}</TableHead>
-                <TableHead className="font-semibold text-foreground">{t('management.description', { defaultValue: 'Mô Tả' })}</TableHead>
-                <TableHead className="w-[150px] font-semibold text-foreground text-center">{t('management.status', { defaultValue: 'Trạng Thái' })}</TableHead>
-                <TableHead className="w-[200px] font-semibold text-foreground text-right">{t('management.updatedAt', { defaultValue: 'Cập Nhật Lần Cuối' })}</TableHead>
-                <TableHead className="w-[100px] text-right font-semibold text-foreground">{t('management.action', { defaultValue: 'Thao tác' })}</TableHead>
+          <Table className="border-collapse">
+            <TableHeader className="bg-muted/80">
+              <TableRow className="border-b border-border hover:bg-transparent">
+                <TableHead className="font-semibold text-foreground w-[220px] border-r border-border text-center align-middle px-4">{t('management.permCode', { defaultValue: 'Mã Quyền' })}</TableHead>
+                <TableHead className="font-semibold text-foreground border-r border-border text-center align-middle px-4">{t('management.permCategory', { defaultValue: 'Nhóm Tính Năng' })}</TableHead>
+                <TableHead className="font-semibold text-foreground border-r border-border text-center align-middle px-4">{t('management.description', { defaultValue: 'Mô Tả' })}</TableHead>
+                <TableHead className="w-[150px] font-semibold text-foreground text-center border-r border-border align-middle px-4">{t('management.status', { defaultValue: 'Trạng Thái' })}</TableHead>
+                <TableHead className="w-[160px] font-semibold text-foreground text-center border-r border-border align-middle px-4">{t('management.createdAt', { defaultValue: 'Ngày Tạo' })}</TableHead>
+                <TableHead className="w-[180px] font-semibold text-foreground text-center border-r border-border align-middle px-4">{t('management.updatedAt', { defaultValue: 'Cập Nhật Lần Cuối' })}</TableHead>
+                <TableHead className="w-[120px] font-semibold text-foreground text-center align-middle px-4">{t('management.action', { defaultValue: 'Thao tác' })}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {items.map((item) => (
-                <TableRow 
-                  key={item.id}
-                  className="group border-b border-border hover:bg-muted/40 transition-colors cursor-pointer" 
-                  onDoubleClick={() => onEdit(item)}
-                  onContextMenu={() => setRightClickedItem(item)}
-                >
-                  <TableCell className="font-medium">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center">
-                        <Shield size={16} className="text-indigo-600" />
+              <AnimatePresence>
+                {items.map((item) => (
+                  <motion.tr 
+                    layout
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    key={item.id}
+                    className="border-b border-border group/row hover:bg-[#1E2062]/5 transition-colors cursor-pointer" 
+                    onDoubleClick={() => onEdit(item)}
+                    onContextMenu={() => setRightClickedItem(item)}
+                  >
+                    <TableCell className="font-bold text-[#1E2062] border-r border-border text-center align-middle py-4">
+                      {item.code}
+                    </TableCell>
+                    <TableCell className="font-medium text-[#2E3192] border-r border-border text-center align-middle py-4">
+                      {item.category || '—'}
+                    </TableCell>
+                    <TableCell className="text-muted-foreground border-r border-border align-middle max-w-[300px] truncate py-4" title={item.description}>
+                      {item.description || '—'}
+                    </TableCell>
+                    <TableCell className="text-center border-r border-border align-middle py-4">
+                      <Badge 
+                        variant={item.active !== false ? "default" : "secondary"} 
+                        className={item.active !== false 
+                          ? "bg-[#10b981] hover:bg-[#10b981]/90 shadow-sm shadow-[#10b981]/20 font-medium border-0" 
+                          : "bg-muted text-muted-foreground hover:bg-slate-800 dark:bg-slate-700 hover:text-muted-foreground font-medium border-0"
+                        }
+                      >
+                        {item.active !== false
+                          ? t('common.active', { defaultValue: 'Hoạt động' })
+                          : t('common.inactive', { defaultValue: 'Tạm ngưng' })}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="text-center text-muted-foreground text-sm border-r border-border align-middle py-4">
+                      {item.createdAt ? format(new Date(item.createdAt), "dd/MM/yyyy") : "—"}
+                    </TableCell>
+                    <TableCell className="text-center text-muted-foreground text-sm border-r border-border align-middle py-4">
+                      {item.updatedAt ? format(new Date(item.updatedAt), "dd/MM/yyyy") : "—"}
+                    </TableCell>
+                    <TableCell className="text-center align-middle py-4">
+                      <div className="flex justify-center gap-2">
+                        <Button variant="ghost" size="icon" onClick={(e) => { e.stopPropagation(); onEdit(item); }} className="h-8 w-8 text-[#2E3192] hover:bg-[#2E3192]/10 hover:text-[#2E3192] rounded-lg">
+                          <Edit2 size={16} />
+                        </Button>
+                        <Button variant="ghost" size="icon" onClick={(e) => { e.stopPropagation(); onDelete(item.id); }} className="h-8 w-8 text-rose-500 hover:bg-rose-50 hover:text-rose-600 rounded-lg">
+                          <Trash2 size={16} />
+                        </Button>
                       </div>
-                      <span className="text-[#1E2062] font-semibold">{item.code}</span>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <span className="text-muted-foreground line-clamp-1">{item.description || '—'}</span>
-                  </TableCell>
-                  <TableCell className="text-center">
-                    <span
-                      className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold ${
-                        item.active !== false
-                          ? "bg-emerald-50 text-emerald-600"
-                          : "bg-rose-50 text-rose-600"
-                      }`}
-                    >
-                      {item.active !== false
-                        ? t('common.active', { defaultValue: 'Hoạt động' })
-                        : t('common.inactive', { defaultValue: 'Tạm ngưng' })}
-                    </span>
-                  </TableCell>
-                  <TableCell className="text-right text-muted-foreground text-sm">
-                    {item.updatedAt ? format(new Date(item.updatedAt), "dd/MM/yyyy") : "—"}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <button
-                        onClick={(e) => { e.stopPropagation(); onEdit(item); }}
-                        className="p-2 text-[#2E3192] hover:bg-[#2E3192]/10 rounded-lg transition-colors tooltip-trigger"
-                        title={t('common.edit')}
-                      >
-                        <Edit2 size={16} />
-                      </button>
-                      <button
-                        onClick={(e) => { e.stopPropagation(); onDelete(item.id); }}
-                        className="p-2 text-rose-500 hover:bg-rose-50 rounded-lg transition-colors tooltip-trigger"
-                        title={t('common.delete')}
-                      >
-                        <Trash2 size={16} />
-                      </button>
+                    </TableCell>
+                  </motion.tr>
+                ))}
+              </AnimatePresence>
+              {items.length === 0 && (
+                <TableRow>
+                  <TableCell colSpan={7} className="h-40 text-center">
+                    <div className="flex flex-col items-center justify-center text-muted-foreground">
+                      <Shield size={32} className="mb-2 opacity-50 text-[#2E3192]" />
+                      <p className="text-lg font-medium">{t('management.noPerms', { defaultValue: 'Chưa có mã quyền nào' })}</p>
+                      <p className="text-sm opacity-70 mt-1">{t('management.noPermsDesc', { defaultValue: 'Bạn có thể thêm mã quyền mới bằng nút bấm bên trên.' })}</p>
                     </div>
                   </TableCell>
                 </TableRow>
-              ))}
+              )}
             </TableBody>
           </Table>
         </ContextMenuTrigger>

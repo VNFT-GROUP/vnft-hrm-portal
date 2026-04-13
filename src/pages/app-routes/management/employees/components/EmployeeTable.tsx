@@ -57,10 +57,10 @@ export default function EmployeeTable({ employees, onDelete, onEditBasicInfo, on
           <TableRow className="border-b border-border hover:bg-transparent">
             <TableHead className="font-semibold text-foreground w-[120px] border-r border-border text-center align-middle px-4">{t('management.colEmpCode', { defaultValue: 'EMP.CODE' })}</TableHead>
             <TableHead className="font-semibold text-foreground w-[120px] border-r border-border text-center align-middle px-4">{t('management.colAttCode', { defaultValue: 'ATT.CODE' })}</TableHead>
-            <TableHead className="font-semibold text-foreground border-r border-border text-left align-middle px-6 min-w-[250px]">{t('management.colFullName', { defaultValue: 'FULLNAME' })}</TableHead>
-            <TableHead className="font-semibold text-foreground border-r border-border text-left align-middle px-6 min-w-[180px]">{t('management.colEnglishName', { defaultValue: 'ENGLISH NAME' })}</TableHead>
-            <TableHead className="font-semibold text-foreground w-[180px] border-r border-border text-left align-middle px-6">{t('management.colDepartment', { defaultValue: 'DEPARTMENT' })}</TableHead>
-            <TableHead className="font-semibold text-foreground w-[180px] border-r border-border text-left align-middle px-6">{t('management.colPosition', { defaultValue: 'POSITION' })}</TableHead>
+            <TableHead className="font-semibold text-foreground border-r border-border text-center align-middle px-6 min-w-[250px]">{t('management.colFullName', { defaultValue: 'FULLNAME' })}</TableHead>
+            <TableHead className="font-semibold text-foreground border-r border-border text-center align-middle px-6 min-w-[180px]">{t('management.colEnglishName', { defaultValue: 'ENGLISH NAME' })}</TableHead>
+            <TableHead className="font-semibold text-foreground w-[180px] border-r border-border text-center align-middle px-6">{t('management.colDepartment', { defaultValue: 'DEPARTMENT' })}</TableHead>
+            <TableHead className="font-semibold text-foreground w-[180px] border-r border-border text-center align-middle px-6">{t('management.colPosition', { defaultValue: 'POSITION' })}</TableHead>
             <TableHead className="font-semibold text-foreground w-[150px] border-r border-border text-center align-middle px-4">{t('management.colStatus', { defaultValue: 'STATUS' })}</TableHead>
             <TableHead className="font-semibold text-foreground w-[180px] text-center align-middle px-4">{t('management.colAction', { defaultValue: 'THAO TÁC' })}</TableHead>
           </TableRow>

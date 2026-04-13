@@ -109,6 +109,7 @@ export default {
   noPerms: "Chưa có mã quyền nào",
   noPermsDesc: "Bạn có thể thêm mã quyền mới bằng nút bấm bên trên.",
   permCode: "Mã Quyền",
+  permCategory: "Nhóm Tính Năng",
   editPerm: "Cập nhật mã quyền",
   createPerm: "Thêm mới mã quyền"
 };

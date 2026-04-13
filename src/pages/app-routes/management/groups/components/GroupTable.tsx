@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Edit2, Trash2, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { format } from "date-fns";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
@@ -34,9 +35,11 @@ export default function GroupTable({ groups, onEdit, onDelete }: GroupTableProps
           <Table className="border-collapse">
         <TableHeader className="bg-muted/80">
           <TableRow className="border-b border-border hover:bg-transparent">
-            <TableHead className="font-semibold text-foreground w-[250px] border-r border-border text-left align-middle px-6">{t('management.colGroupName', { defaultValue: 'Tên nhóm quyền' })}</TableHead>
-            <TableHead className="font-semibold text-foreground border-r border-border text-left align-middle px-6">{t('management.colDesc', { defaultValue: 'Mô tả' })}</TableHead>
+            <TableHead className="font-semibold text-foreground w-[220px] border-r border-border text-center align-middle px-6">{t('management.colGroupName', { defaultValue: 'Tên nhóm quyền' })}</TableHead>
+            <TableHead className="font-semibold text-foreground border-r border-border text-center align-middle px-6">{t('management.colDesc', { defaultValue: 'Mô tả' })}</TableHead>
             <TableHead className="font-semibold text-foreground w-[150px] border-r border-border text-center align-middle px-4">{t('management.colStatus', { defaultValue: 'Trạng thái' })}</TableHead>
+            <TableHead className="font-semibold text-foreground w-[160px] border-r border-border text-center align-middle px-4">{t('management.createdAt', { defaultValue: 'Ngày Tạo' })}</TableHead>
+            <TableHead className="font-semibold text-foreground w-[180px] border-r border-border text-center align-middle px-4">{t('management.updatedAt', { defaultValue: 'Cập Nhật Lần Cuối' })}</TableHead>
             <TableHead className="font-semibold text-foreground w-[120px] text-center align-middle px-4">{t('management.colAction', { defaultValue: 'Thao tác' })}</TableHead>
           </TableRow>
         </TableHeader>
@@ -69,6 +72,12 @@ export default function GroupTable({ groups, onEdit, onDelete }: GroupTableProps
                     {group.active ? t('management.statusActive', { defaultValue: 'Hoạt động' }) : t('management.statusInactive', { defaultValue: 'Tạm ngưng' })}
                   </Badge>
                 </TableCell>
+                <TableCell className="text-center text-muted-foreground text-sm border-r border-border align-middle py-4">
+                  {group.createdAt ? format(new Date(group.createdAt), "dd/MM/yyyy") : "—"}
+                </TableCell>
+                <TableCell className="text-center text-muted-foreground text-sm border-r border-border align-middle py-4">
+                  {group.updatedAt ? format(new Date(group.updatedAt), "dd/MM/yyyy") : "—"}
+                </TableCell>
                 <TableCell className="py-4 text-center align-middle">
                   <div className="flex justify-center gap-2">
                     <Button variant="ghost" size="icon" onClick={() => onEdit(group)} className="h-8 w-8 text-[#2E3192] hover:bg-[#2E3192]/10 hover:text-[#2E3192] rounded-lg">
@@ -84,7 +93,7 @@ export default function GroupTable({ groups, onEdit, onDelete }: GroupTableProps
           </AnimatePresence>
           {groups.length === 0 && (
             <TableRow>
-              <TableCell colSpan={4} className="h-40 text-center">
+              <TableCell colSpan={6} className="h-40 text-center">
                 <div className="flex flex-col items-center justify-center text-muted-foreground">
                   <ShieldCheck size={32} className="mb-2 opacity-50" />
                   <p>{t('management.emptyGroup', { defaultValue: 'Không tìm thấy nhóm quyền nào' })}</p>

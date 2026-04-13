@@ -3,6 +3,7 @@ import { Edit2, Trash2, Building2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { format } from "date-fns";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import {
@@ -37,9 +38,11 @@ export default function DepartmentTable({ departments, onEdit, onDelete }: Depar
           <Table className="border-collapse">
         <TableHeader className="bg-muted/80">
           <TableRow className="border-b border-border hover:bg-transparent">
-            <TableHead className="font-semibold text-foreground w-[250px] border-r border-border text-left align-middle px-6">{t("department.table.name")}</TableHead>
-            <TableHead className="font-semibold text-foreground border-r border-border text-left align-middle px-6 min-w-[200px]">{t("department.table.description")}</TableHead>
+            <TableHead className="font-semibold text-foreground w-[250px] border-r border-border text-center align-middle px-6">{t("department.table.name")}</TableHead>
+            <TableHead className="font-semibold text-foreground border-r border-border text-center align-middle px-6 min-w-[200px]">{t("department.table.description")}</TableHead>
             <TableHead className="font-semibold text-foreground w-[150px] border-r border-border text-center align-middle px-4">{t("department.table.status")}</TableHead>
+            <TableHead className="font-semibold text-foreground w-[160px] border-r border-border text-center align-middle px-4">{t('management.createdAt', { defaultValue: 'Ngày Tạo' })}</TableHead>
+            <TableHead className="font-semibold text-foreground w-[180px] border-r border-border text-center align-middle px-4">{t('management.updatedAt', { defaultValue: 'Cập Nhật Lần Cuối' })}</TableHead>
             <TableHead className="font-semibold text-foreground w-[120px] text-center align-middle px-4">{t("department.table.actions")}</TableHead>
           </TableRow>
         </TableHeader>
@@ -73,6 +76,12 @@ export default function DepartmentTable({ departments, onEdit, onDelete }: Depar
                       {dept.active ? t("department.table.active") : t("department.table.inactive")}
                     </Badge>
                   </TableCell>
+                  <TableCell className="text-center text-muted-foreground text-sm border-r border-border align-middle py-4">
+                    {dept.createdAt ? format(new Date(dept.createdAt), "dd/MM/yyyy") : "—"}
+                  </TableCell>
+                  <TableCell className="text-center text-muted-foreground text-sm border-r border-border align-middle py-4">
+                    {dept.updatedAt ? format(new Date(dept.updatedAt), "dd/MM/yyyy") : "—"}
+                  </TableCell>
                   <TableCell className="py-4 text-center align-middle">
                     <div className="flex justify-center gap-2">
                       <Button variant="ghost" size="icon" onClick={() => onEdit(dept)} className="h-8 w-8 text-[#2E3192] hover:bg-[#2E3192]/10 hover:text-[#2E3192] rounded-lg">
@@ -89,7 +98,7 @@ export default function DepartmentTable({ departments, onEdit, onDelete }: Depar
           </AnimatePresence>
           {departments.length === 0 && (
             <TableRow>
-              <TableCell colSpan={4} className="h-40 text-center">
+              <TableCell colSpan={6} className="h-40 text-center">
                 <div className="flex flex-col items-center justify-center text-muted-foreground">
                   <Building2 size={32} className="mb-2 opacity-50" />
                   <p>{t("department.table.notFound")}</p>

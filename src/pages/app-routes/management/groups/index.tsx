@@ -65,20 +65,26 @@ export default function GroupsPage() {
 
       {/* TABS CONTAINER */}
       <Tabs defaultValue="groups" className="flex flex-col gap-6">
-        <TabsList className="bg-muted/50 p-1 rounded-xl h-14 md:w-fit w-full flex items-center justify-start border border-border/80 shadow-sm">
+        <div className="border-b border-border/80 w-full px-2">
+        <TabsList className="bg-transparent h-14 p-0 w-full md:w-auto flex items-end justify-start gap-8">
           <TabsTrigger
             value="groups"
-            className="flex items-center gap-2 px-6 h-11 text-base font-semibold data-[state=active]:bg-[#1E2062] data-[state=active]:text-white rounded-lg transition-all"
+            className="flex items-center gap-2 px-2 pb-3 pt-4 text-base font-semibold transition-all bg-transparent rounded-none border-b-[3px] border-transparent text-muted-foreground hover:text-[#1E2062] data-[state=active]:text-[#2E3192] data-[state=active]:border-[#2E3192] data-[state=active]:bg-transparent shadow-none data-[state=active]:shadow-none"
           >
-            <CheckSquare size={18} /> Nhóm quyền
+            <div className="flex items-center gap-2 mx-2">
+              <CheckSquare size={18} /> <span>Nhóm Quyền</span>
+            </div>
           </TabsTrigger>
           <TabsTrigger
             value="permissions"
-            className="flex items-center gap-2 px-6 h-11 text-base font-semibold data-[state=active]:bg-[#1E2062] data-[state=active]:text-white rounded-lg transition-all"
+            className="flex items-center gap-2 px-2 pb-3 pt-4 text-base font-semibold transition-all bg-transparent rounded-none border-b-[3px] border-transparent text-muted-foreground hover:text-[#1E2062] data-[state=active]:text-[#2E3192] data-[state=active]:border-[#2E3192] data-[state=active]:bg-transparent shadow-none data-[state=active]:shadow-none"
           >
-            <Shield size={18} /> Dữ liệu mã quyền
+            <div className="flex items-center gap-2 mx-2">
+              <Shield size={18} /> <span>Dữ Liệu Mã Quyền</span>
+            </div>
           </TabsTrigger>
         </TabsList>
+        </div>
         
         <TabsContent value="groups" className="flex-1 mt-0">
           <GroupsTabContent />

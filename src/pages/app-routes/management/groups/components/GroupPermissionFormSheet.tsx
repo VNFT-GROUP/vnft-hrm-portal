@@ -11,8 +11,8 @@ import { useTranslation } from "react-i18next";
 interface Props {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
-  formData: { code: string; description: string; active: boolean };
-  setFormData: React.Dispatch<React.SetStateAction<{ code: string; description: string; active: boolean }>>;
+  formData: { code: string; category?: string; description: string; active: boolean };
+  setFormData: React.Dispatch<React.SetStateAction<{ code: string; category?: string; description: string; active: boolean }>>;
   isEditing: boolean;
   onSave: () => void;
 }
@@ -53,6 +53,19 @@ export default function GroupPermissionFormSheet({
               onChange={(e) => setFormData({ ...formData, code: e.target.value })}
               placeholder="VD: READ_USER, WRITE_POST..."
               className="h-11 rounded-xl bg-background border-border focus-visible:ring-[#2E3192] font-semibold"
+            />
+          </div>
+
+          <div className="space-y-2 group">
+            <Label htmlFor="category" className="text-sm font-semibold text-foreground group-focus-within:text-[#2E3192] transition-colors">
+              {t('management.permCategory', { defaultValue: 'Nhóm Tính Năng' })}
+            </Label>
+            <Input
+              id="category"
+              value={formData.category || ""}
+              onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+              placeholder="VD: Nhóm người dùng, Quản lý..."
+              className="h-11 rounded-xl bg-background border-border focus-visible:ring-[#2E3192]"
             />
           </div>
 

@@ -19,8 +19,14 @@ export default function GroupPermissionsTabContent() {
   const [isOpen, setIsOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<GroupPermissionResponse | null>(null);
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    code: string;
+    category?: string;
+    description: string;
+    active: boolean;
+  }>({
     code: "",
+    category: "",
     description: "",
     active: true,
   });
@@ -37,12 +43,13 @@ export default function GroupPermissionsTabContent() {
       setEditingItem(item);
       setFormData({
         code: item.code,
+        category: item.category || "",
         description: item.description || "",
         active: item.active ?? true,
       });
     } else {
       setEditingItem(null);
-      setFormData({ code: "", description: "", active: true });
+      setFormData({ code: "", category: "", description: "", active: true });
     }
     setIsOpen(true);
   };
@@ -88,6 +95,7 @@ export default function GroupPermissionsTabContent() {
     if (!formData.code.trim()) return;
     const payload: UpsertGroupPermissionRequest = {
       code: formData.code,
+      category: formData.category || undefined,
       description: formData.description || undefined,
       active: formData.active,
     };

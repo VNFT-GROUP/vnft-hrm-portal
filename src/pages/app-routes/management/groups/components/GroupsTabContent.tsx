@@ -64,12 +64,12 @@ export default function GroupsTabContent() {
   const createMutation = useMutation({
     mutationFn: (data: UpsertGroupRequest) => groupService.createGroup(data),
     onSuccess: () => {
-      toast.success("Thêm nhóm quyền thành công!");
+      toast.success(t("management.createGroupSuccess", "Thêm nhóm người dùng thành công!"));
       queryClient.invalidateQueries({ queryKey: ["groups"] });
       setIsOpen(false);
     },
     onError: () => {
-      toast.error("Thêm nhóm quyền thất bại!");
+      toast.error(t("management.createGroupError", "Thêm nhóm người dùng thất bại!"));
     }
   });
 
@@ -77,23 +77,23 @@ export default function GroupsTabContent() {
     mutationFn: ({ id, data }: { id: string; data: UpsertGroupRequest }) =>
       groupService.updateGroup(id, data),
     onSuccess: () => {
-      toast.success("Cập nhật nhóm quyền thành công!");
+      toast.success(t("management.updateGroupSuccess", "Cập nhật nhóm người dùng thành công!"));
       queryClient.invalidateQueries({ queryKey: ["groups"] });
       setIsOpen(false);
     },
     onError: () => {
-      toast.error("Cập nhật nhóm quyền thất bại!");
+      toast.error(t("management.updateGroupError", "Cập nhật nhóm người dùng thất bại!"));
     }
   });
 
   const deleteMutation = useMutation({
     mutationFn: (id: string) => groupService.deleteGroup(id),
     onSuccess: () => {
-      toast.success("Xóa/Tạm ngưng nhóm quyền thành công!");
+      toast.success(t("management.deleteGroupSuccess", "Xóa/Tạm ngưng nhóm người dùng thành công!"));
       queryClient.invalidateQueries({ queryKey: ["groups"] });
     },
     onError: () => {
-      toast.error("Xóa nhóm quyền thất bại!");
+      toast.error(t("management.deleteGroupError", "Xóa nhóm người dùng thất bại!"));
     }
   });
 
@@ -133,7 +133,7 @@ export default function GroupsTabContent() {
           onClick={() => handleOpenForm()}
           className="w-full md:w-auto h-12 px-6 rounded-xl bg-[#2E3192] hover:bg-[#1E2062] text-white shadow-md shadow-[#2E3192]/20 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 text-base font-semibold"
         >
-          <Plus size={20} className="mr-2" /> {t('management.addGroup', { defaultValue: 'Thêm Nhóm Quyền' })}
+          <Plus size={20} className="mr-2" /> {t('management.addGroup', { defaultValue: 'Thêm nhóm người dùng' })}
         </Button>
       </motion.div>
 
@@ -146,7 +146,7 @@ export default function GroupsTabContent() {
         {isLoading ? (
           <div className="flex flex-col items-center justify-center p-20 text-muted-foreground h-64">
             <Loader2 className="w-8 h-8 animate-spin mb-4 text-[#2E3192]" />
-            <p className="animate-pulse">Đang tải danh sách nhóm quyền...</p>
+            <p className="animate-pulse">{t("management.fetchingGroups", "Đang tải danh sách nhóm người dùng...")}</p>
           </div>
         ) : (
           <GroupTable groups={groups} onEdit={handleOpenForm} onDelete={(id) => deleteMutation.mutate(id)} />

@@ -71,13 +71,13 @@ export default function GroupsPage() {
               value="groups"
               className="flex-1 flex items-center justify-center gap-2 px-6 py-2 text-sm font-semibold rounded-lg data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:text-[#2E3192] data-active:bg-background data-active:shadow-sm data-active:text-[#2E3192] text-muted-foreground transition-all h-full"
             >
-              <CheckSquare size={16} /> <span>Nhóm người dùng</span>
+              <CheckSquare size={16} /> <span>{t('management.groupsTab', { defaultValue: 'Nhóm người dùng' })}</span>
             </TabsTrigger>
             <TabsTrigger
               value="permissions"
               className="flex-1 flex items-center justify-center gap-2 px-6 py-2 text-sm font-semibold rounded-lg data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:text-[#2E3192] data-active:bg-background data-active:shadow-sm data-active:text-[#2E3192] text-muted-foreground transition-all h-full"
             >
-              <Shield size={16} /> <span>Mã quyền</span>
+              <Shield size={16} /> <span>{t('management.permissionsTab', { defaultValue: 'Mã quyền' })}</span>
             </TabsTrigger>
           </TabsList>
         </div>

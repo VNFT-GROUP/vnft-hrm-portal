@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { useMemo } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import type { GroupPermissionResponse } from "@/types/group/GroupPermissionResponse";
+import { useTranslation } from "react-i18next";
 
 interface GroupFormSheetProps {
   isOpen: boolean;
@@ -21,6 +22,8 @@ interface GroupFormSheetProps {
 }
 
 export default function GroupFormSheet({ isOpen, onOpenChange, formData, setFormData, isEditing, onSave, availablePermissions }: GroupFormSheetProps) {
+  const { t } = useTranslation();
+  
   const groupedPermissions = useMemo(() => {
     const map = new Map<string, GroupPermissionResponse[]>();
     availablePermissions.forEach(p => {
@@ -39,10 +42,10 @@ export default function GroupFormSheet({ isOpen, onOpenChange, formData, setForm
               <span className="p-1.5 bg-[#2E3192]/10 text-[#2E3192] rounded-md">
                 <ShieldCheck size={18} />
               </span>
-              {isEditing ? "Cập nhật Nhóm Quyền" : "Thêm Mới Nhóm Quyền"}
+              {isEditing ? t("management.groupEditTitle", "Cập nhật Nhóm Quyền") : t("management.groupAddTitle", "Thêm Mới Nhóm Quyền")}
             </SheetTitle>
             <SheetDescription className="text-muted-foreground">
-              {isEditing ? "Chỉnh sửa thông tin chi tiết của nhóm quyền hiện tại trong hệ thống." : "Nhập đầy đủ thông tin để tạo nhóm quyền mới."}
+              {isEditing ? t("management.groupEditDesc", "Chỉnh sửa thông tin chi tiết của nhóm quyền hiện tại trong hệ thống.") : t("management.groupAddDesc", "Nhập đầy đủ thông tin để tạo nhóm quyền mới.")}
             </SheetDescription>
           </SheetHeader>
         </div>
@@ -59,37 +62,37 @@ export default function GroupFormSheet({ isOpen, onOpenChange, formData, setForm
             }
           } 
         }} className="flex flex-col flex-1 overflow-hidden">
-          <div className="flex-1 overflow-y-auto p-6 space-y-6">
-            <div className="space-y-3">
-            <Label htmlFor="name" className="text-sm font-semibold text-foreground">
-              Tên Nhóm Quyền <span className="text-rose-500">*</span>
+          <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-6 hide-scrollbar relative">
+          <div className="space-y-3 shrink-0">
+            <Label htmlFor="code" className="text-sm font-semibold flex mb-1 text-foreground">
+              {t("management.formNameRequired", "Tên Nhóm Quyền")} <span className="text-red-500 ml-1.5">*</span>
             </Label>
-            <Input 
-              id="name" 
-              value={formData.name} 
-              onChange={e => setFormData({...formData, name: e.target.value})} 
-              placeholder="VD: Quản trị viên hệ thống" 
-              className="rounded-xl border-border focus-visible:ring-[#2E3192] bg-muted focus:bg-card text-card-foreground transition-colors"
+            <Input
+              id="name"
+              placeholder={t("management.formNamePlaceholder", "VD: Quản trị viên hệ thống")}
+              value={formData.name}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              className="h-12 rounded-xl focus-visible:ring-[#2E3192] bg-muted/50 focus:bg-card text-card-foreground text-base transition-colors"
             />
           </div>
-
+          
           <div className="space-y-3 shrink-0">
-            <Label htmlFor="desc" className="text-sm font-semibold text-foreground">Mô tả hệ thống</Label>
-            <Textarea 
-              id="desc" 
-              value={formData.description} 
-              onChange={e => setFormData({...formData, description: e.target.value})} 
-              placeholder="Ghi chú về nhóm quyền này..." 
-              rows={2}
+            <Label htmlFor="category" className="text-sm font-semibold flex mb-1 text-foreground">{t("management.formSystemDesc", "Mô tả hệ thống")}</Label>
+            <Textarea
+              id="description"
+              placeholder={t("management.formSystemDescPlaceholder", "Ghi chú về nhóm quyền này...")}
+              value={formData.description}
+              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              rows={3}
               className="rounded-xl border-border focus-visible:ring-[#2E3192] bg-muted focus:bg-card text-card-foreground transition-colors resize-none"
             />
           </div>
           
           <div className="space-y-3 flex-1 flex flex-col min-h-0">
-            <Label className="text-sm font-semibold text-foreground">Gán Mã Quyền Thiết Lập</Label>
+            <Label className="text-sm font-semibold text-foreground">{t("management.formAssignPermissions", "Gán Mã Quyền Thiết Lập")}</Label>
             <div className="border border-border rounded-xl flex-1 overflow-y-auto p-4 space-y-5 bg-muted/30">
               {groupedPermissions.length === 0 ? (
-                <p className="text-sm text-muted-foreground text-center py-6">Chưa có dữ liệu mã quyền nào.</p>
+                <p className="text-sm text-muted-foreground text-center py-6">{t("management.formNoPermissions", "Chưa có dữ liệu mã quyền nào.")}</p>
               ) : (
                 groupedPermissions.map(([category, perms]) => (
                   <div key={category} className="space-y-3">
@@ -125,24 +128,29 @@ export default function GroupFormSheet({ isOpen, onOpenChange, formData, setForm
             </div>
           </div>
           
-          <div className="flex shrink-0 items-center justify-between rounded-xl border border-border bg-card text-card-foreground p-4 shadow-sm">
-            <div className="space-y-1">
-              <Label className="text-foreground text-sm font-semibold block">Trạng thái hoạt động</Label>
-              <p className="text-xs text-muted-foreground">Chỉ nhóm quyền ở trạng thái Hoạt động mới có thể gán cho user.</p>
-            </div>
-            <Switch 
-              checked={formData.active} 
-              onCheckedChange={checked => setFormData({...formData, active: checked})} 
+          <div className="flex items-start gap-4 p-5 rounded-2xl bg-[#1E2062]/5 border border-[#1E2062]/10 relative overflow-hidden group shrink-0">
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 ease-in-out" />
+            <Switch
+              id="active"
+              checked={formData.active}
+              onCheckedChange={(c) => setFormData({ ...formData, active: c })}
+              className="data-[state=checked]:bg-[#2E3192] shadow-inner mt-0.5"
             />
+            <div className="space-y-1.5">
+              <Label htmlFor="active" className="cursor-pointer font-bold text-[#1E2062]">{t("management.formStatusActive", "Trạng thái hoạt động")}</Label>
+              <p className="text-[13px] text-muted-foreground leading-snug">
+                {t("management.formStatusActiveHint", "Chỉ nhóm quyền ở trạng thái Hoạt động mới có thể gán cho user.")}
+              </p>
+            </div>
           </div>
           </div>
           
-          <div className="p-4 border-t border-border shrink-0 bg-card text-card-foreground flex justify-end gap-3">
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)} className="rounded-xl border-border text-muted-foreground hover:bg-muted w-32 transition-all">
-              Hủy bỏ
+          <div className="p-6 border-t border-border bg-muted/30 flex gap-4 shrink-0 shadow-[0_-4px_10px_rgba(0,0,0,0.02)]">
+            <Button type="button" variant="outline" className="flex-1 h-12 rounded-xl text-base font-semibold border-border hover:bg-card shadow-sm hover:shadow-md transition-all" onClick={() => onOpenChange(false)}>
+              {t("management.formCancel", "Hủy bỏ")}
             </Button>
-            <Button type="submit" className="rounded-xl bg-[#2E3192] hover:bg-[#1E2062] text-white w-auto px-6 transition-all shadow-md shadow-[#2E3192]/20" disabled={!formData.name.trim()}>
-              {isEditing ? "Lưu thay đổi" : "Lưu nhóm quyền"}
+            <Button type="submit" className="flex-1 h-12 rounded-xl bg-[#2E3192] hover:bg-[#1E2062] text-white text-base font-bold shadow-md shadow-[#2E3192]/20 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 disabled:opacity-50 disabled:hover:translate-y-0" disabled={!formData.name.trim()}>
+              {isEditing ? t("management.formSaveChange", "Lưu thay đổi") : t("management.formSaveNew", "Lưu nhóm quyền")}
             </Button>
           </div>
         </form>

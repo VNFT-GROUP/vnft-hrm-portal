@@ -15,6 +15,7 @@ const DepartmentsPage = lazy(() => import("../pages/app-routes/management/depart
 const PositionsPage = lazy(() => import("../pages/app-routes/management/positions"));
 const EmployeeCodesPage = lazy(() => import("../pages/app-routes/management/employee-codes"));
 const GroupsPage = lazy(() => import("../pages/app-routes/management/groups"));
+const GroupPermissionsPage = lazy(() => import("../pages/app-routes/management/group-permissions"));
 const RolesPage = lazy(() => import("../pages/app-routes/management/roles"));
 const EvaluationPage = lazy(() => import("../pages/app-routes/evaluation"));
 const ProfitReportPage = lazy(() => import("../pages/app-routes/acc/profit-report"));
@@ -94,6 +95,7 @@ export default function AppRoutes() {
              <Route path="positions" element={<PositionsPage />} />
              <Route path="employee-codes" element={<EmployeeCodesPage />} />
              <Route path="groups" element={<GroupsPage />} />
+             <Route path="group-permissions" element={<GroupPermissionsPage />} />
              <Route path="roles" element={<RolesPage />} />
           </Route>
 

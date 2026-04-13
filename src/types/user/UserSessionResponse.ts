@@ -9,6 +9,8 @@ export interface UserSessionResponse {
   fullName?: string;
   englishName?: string;
   gender?: Gender;
+  groupId?: string;
+  groupName?: string;
   groupPermissions?: GroupPermissionResponse[];
   requiredProfileCompleted?: boolean;
 }

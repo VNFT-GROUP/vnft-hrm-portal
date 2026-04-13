@@ -65,19 +65,19 @@ export default function GroupsPage() {
 
       {/* TABS CONTAINER */}
       <Tabs defaultValue="groups" className="flex flex-col gap-6 mt-2">
-        <div className="border-b border-border/80 w-full hide-scrollbar overflow-x-auto">
-          <TabsList className="bg-transparent h-14 p-0 w-max flex items-end justify-start gap-6 md:gap-10 px-2 md:px-0 border-0">
+        <div className="w-full flex justify-center md:items-start md:justify-start">
+          <TabsList className="h-12 bg-muted/80 p-1.5 rounded-xl border border-border shadow-inner min-w-[340px]">
             <TabsTrigger
               value="groups"
-              className="flex flex-row items-center gap-2.5 px-3 md:px-5 pb-3.5 pt-4 text-[15px] font-semibold transition-all bg-transparent rounded-none border-b-[3px] border-transparent text-muted-foreground hover:text-foreground data-active:text-[#2E3192] data-active:border-[#2E3192] data-active:shadow-none data-active:bg-transparent tracking-wide"
+              className="flex-1 flex items-center justify-center gap-2 px-6 py-2 text-sm font-semibold rounded-lg data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:text-[#2E3192] data-active:bg-background data-active:shadow-sm data-active:text-[#2E3192] text-muted-foreground transition-all h-full"
             >
-              <CheckSquare size={18} className="mb-0.5" /> <span>Nhóm người dùng</span>
+              <CheckSquare size={16} /> <span>Nhóm người dùng</span>
             </TabsTrigger>
             <TabsTrigger
               value="permissions"
-              className="flex flex-row items-center gap-2.5 px-3 md:px-5 pb-3.5 pt-4 text-[15px] font-semibold transition-all bg-transparent rounded-none border-b-[3px] border-transparent text-muted-foreground hover:text-foreground data-active:text-[#2E3192] data-active:border-[#2E3192] data-active:shadow-none data-active:bg-transparent tracking-wide"
+              className="flex-1 flex items-center justify-center gap-2 px-6 py-2 text-sm font-semibold rounded-lg data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:text-[#2E3192] data-active:bg-background data-active:shadow-sm data-active:text-[#2E3192] text-muted-foreground transition-all h-full"
             >
-              <Shield size={18} className="mb-0.5" /> <span>Mã quyền</span>
+              <Shield size={16} /> <span>Mã quyền</span>
             </TabsTrigger>
           </TabsList>
         </div>

@@ -1,3 +1,5 @@
+import type { GroupPermissionResponse } from '../group/GroupPermissionResponse';
+
 export type Gender = 'MALE' | 'FEMALE' | 'OTHER';
 
 export interface UserSessionResponse {
@@ -7,5 +9,6 @@ export interface UserSessionResponse {
   fullName?: string;
   englishName?: string;
   gender?: Gender;
+  groupPermissions?: GroupPermissionResponse[];
   requiredProfileCompleted?: boolean;
 }

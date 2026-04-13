@@ -6,8 +6,13 @@ export interface UserResponse {
   employeeCode?: string;
   attendanceCode?: string;
   departmentId?: string;
+  departmentName?: string;
   groupId?: string;
+  groupName?: string;
   positionId?: string;
+  positionName?: string;
+  roleId?: string;
+  roleName?: string;
   checkInTime?: string;
   checkOutTime?: string;
   passwordChangedAt?: string;

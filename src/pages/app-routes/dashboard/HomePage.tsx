@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ChevronLeft, ChevronRight, Calendar, Minus, CheckCircle2, Clock, ChevronDown, CalendarDays, FileText, Trophy, Medal, TrendingUp } from "lucide-react";
+import { ChevronLeft, ChevronRight, Calendar, Minus, CheckCircle2, Clock, CalendarDays, FileText } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -8,7 +8,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useAuthStore } from "@/store/useAuthStore";
+import { format, parse, parseISO } from "date-fns";
+import { vi } from "date-fns/locale";
 
+/*
 const mockTopSales = [
   { id: 1, name: "Nguyễn Văn Tuấn", score: "9,850", trend: "+12%", avatar: "https://i.pravatar.cc/150?img=11" },
   { id: 2, name: "Trần Thị Lan Anh", score: "8,720", trend: "+8%", avatar: "https://i.pravatar.cc/150?img=5" },
@@ -44,14 +48,14 @@ const TopSalesTable = () => {
       </div>
 
       <div className="flex flex-col p-2">
-        {/* Header */}
+        {/* Header *\/}
         <div className="grid grid-cols-12 gap-4 px-4 py-3 text-[12px] font-semibold text-gray-400 uppercase tracking-wider border-b border-gray-50 mb-1">
           <div className="col-span-1 text-center">#</div>
           <div className="col-span-6 md:col-span-7">Nhân sự</div>
           <div className="col-span-5 md:col-span-4 text-right">Thành tích</div>
         </div>
 
-        {/* Rows */}
+        {/* Rows *\/}
         <div className="flex flex-col gap-1">
           {mockTopSales.map((user, index) => {
             const isTop1 = index === 0;
@@ -66,9 +70,9 @@ const TopSalesTable = () => {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.3, delay: 0.15 + index * 0.05 }}
                 whileHover={{ scale: 1.01, backgroundColor: '#f8fafc' }}
-                className={`grid grid-cols-12 gap-4 px-4 py-3.5 items-center rounded-xl cursor-default transition-all duration-200 ${isTop1 ? 'bg-gradient-to-r from-amber-50/50 to-transparent border border-amber-100/50 shadow-[0_2px_10px_rgba(245,158,11,0.05)]' : ''}`}
+                className={`grid grid-cols-12 gap-4 px-4 py-3.5 items-center rounded-xl cursor-default transition-all duration-200 ${isTop1 ? 'bg-linear-to-r from-amber-50/50 to-transparent border border-amber-100/50 shadow-[0_2px_10px_rgba(245,158,11,0.05)]' : ''}`}
               >
-                {/* Ranking */}
+                {/* Ranking *\/}
                 <div className="col-span-1 flex justify-center">
                   {isTop1 ? (
                     <div className="bg-amber-400 text-white rounded-full w-7 h-7 flex items-center justify-center shadow-sm shadow-amber-200">
@@ -87,7 +91,7 @@ const TopSalesTable = () => {
                   )}
                 </div>
 
-                {/* Profile */}
+                {/* Profile *\/}
                 <div className="col-span-6 md:col-span-7 flex items-center gap-3">
                   <motion.div whileHover={{ scale: 1.1, rotate: 5 }} className="relative shrink-0">
                     <img src={user.avatar} alt={user.name} className="w-9 h-9 rounded-full object-cover border-2 border-white shadow-sm" />
@@ -105,7 +109,7 @@ const TopSalesTable = () => {
                   </div>
                 </div>
 
-                {/* Score */}
+                {/* Score *\/}
                 <div className="col-span-5 md:col-span-4 flex flex-col items-end justify-center">
                   <div className={`text-[15px] font-bold ${isTop1 ? 'text-amber-600' : isTop2 ? 'text-slate-600' : isTop3 ? 'text-orange-600' : 'text-[#3b82f6]'}`}>
                     {user.score} <span className="text-[10px] font-medium text-gray-400">Pts</span>
@@ -123,6 +127,7 @@ const TopSalesTable = () => {
     </motion.div>
   );
 };
+*/
 
 const IntegratedTaskCard = () => {
   const [activeTab, setActiveTab] = useState<'todo' | 'proposed' | 'following'>('todo');
@@ -138,7 +143,7 @@ const IntegratedTaskCard = () => {
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className="bg-white rounded-md shadow-[0_1px_3px_rgba(0,0,0,0.05)] flex flex-col overflow-hidden w-full border border-gray-100 flex-grow"
+      className="bg-white rounded-md shadow-[0_1px_3px_rgba(0,0,0,0.05)] flex flex-col overflow-hidden w-full border border-gray-100 grow"
     >
       <div className="flex items-center justify-between px-2 pt-2 border-b border-gray-100 bg-white">
         {/* Tabs */}
@@ -164,7 +169,7 @@ const IntegratedTaskCard = () => {
         </div>
 
         {/* Filters */}
-        <div className="flex items-center gap-2 px-3 pb-2 hidden lg:flex">
+        <div className="hidden items-center gap-2 px-3 pb-2 lg:flex">
           <Select defaultValue="Cần thực hiện">
             <SelectTrigger className="h-[30px] border-gray-200 text-[13px] font-medium text-gray-500 bg-white hover:bg-gray-50 shadow-sm focus:ring-0">
               <SelectValue />
@@ -182,7 +187,7 @@ const IntegratedTaskCard = () => {
       </div>
 
       {/* Empty State */}
-      <div className="py-20 px-5 flex flex-col items-center justify-center bg-[#f8fafc] w-full flex-grow min-h-[300px]">
+      <div className="py-20 px-5 flex flex-col items-center justify-center bg-[#f8fafc] w-full grow min-h-[300px]">
         <div className="flex items-center justify-center gap-4">
           <div className="relative text-gray-300 flex items-center justify-center">
             <div className="absolute w-[40px] h-[3px] bg-gray-200 rounded-full top-[30%] -left-[10px]"></div>
@@ -200,6 +205,68 @@ const IntegratedTaskCard = () => {
 };
 
 export default function HomePage() {
+  const session = useAuthStore(state => state.session);
+  const todayAttendance = session?.todayAttendance;
+  
+  // Format current date
+  const currentDate = new Date();
+  const dateStr = todayAttendance?.attendanceDate 
+    ? format(parseISO(todayAttendance.attendanceDate), "EEEE, dd/MM/yyyy", { locale: vi })
+    : format(currentDate, "EEEE, dd/MM/yyyy", { locale: vi });
+  const displayDate = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
+  
+  // Format Check-in time
+  let checkInDisplay = "--";
+  let checkInAmPm = "";
+  if (todayAttendance?.checkInTime) {
+    try {
+      const parsed = parse(todayAttendance.checkInTime.substring(0, 5), 'HH:mm', new Date());
+      checkInDisplay = format(parsed, 'hh:mm');
+      checkInAmPm = format(parsed, 'a');
+    } catch {
+      checkInDisplay = todayAttendance.checkInTime.substring(0, 5);
+    }
+  }
+
+  // Format Check-out time
+  let checkOutDisplay = "--";
+  let checkOutAmPm = "";
+  if (todayAttendance?.checkOutTime) {
+    try {
+      const parsed = parse(todayAttendance.checkOutTime.substring(0, 5), 'HH:mm', new Date());
+      checkOutDisplay = format(parsed, 'hh:mm');
+      checkOutAmPm = format(parsed, 'a');
+    } catch {
+      checkOutDisplay = todayAttendance.checkOutTime.substring(0, 5);
+    }
+  }
+
+  const hasCheckIn = !!todayAttendance?.checkInTime;
+  const hasCheckOut = !!todayAttendance?.checkOutTime;
+
+  const getCheckInStatus = () => {
+    if (!hasCheckIn) return { text: "Chưa ghi nhận", color: "text-[#64748b]", bg: "bg-[#cbd5e1]", cardBg: "bg-[#f1f5f9]" };
+    if (todayAttendance?.checkInValid) return { text: "Đến đúng giờ", color: "text-[#22c55e]", bg: "bg-[#22c55e]", cardBg: "bg-[#eaf8f1]" };
+    return { text: `Đi muộn ${todayAttendance?.lateMinutes || 0}p`, color: "text-[#ef4444]", bg: "bg-[#ef4444]", cardBg: "bg-[#fef2f2]" };
+  };
+
+  const getCheckOutStatus = () => {
+    if (!hasCheckOut) {
+      if (hasCheckIn) return { text: "Chưa ghi nhận", color: "text-[#f59e0b]", bg: "bg-[#f59e0b]", cardBg: "bg-[#fff7ed]" };
+      return { text: "—", color: "text-[#64748b]", bg: "bg-[#cbd5e1]", cardBg: "bg-[#f1f5f9]" };
+    }
+    if (todayAttendance?.checkOutValid) return { text: "Về đúng giờ", color: "text-[#22c55e]", bg: "bg-[#22c55e]", cardBg: "bg-[#eaf8f1]" };
+    return { text: `Về sớm ${todayAttendance?.earlyLeaveMinutes || 0}p`, color: "text-[#ef4444]", bg: "bg-[#ef4444]", cardBg: "bg-[#fef2f2]" };
+  };
+
+  const inStatus = getCheckInStatus();
+  const outStatus = getCheckOutStatus();
+
+  const workCount = todayAttendance?.workUnit ?? 0;
+  const workTimeHours = Math.floor((todayAttendance?.workMinutes || 0) / 60);
+  const workTimeMins = (todayAttendance?.workMinutes || 0) % 60;
+  const workTimeStr = `${workTimeHours.toString().padStart(2, '0')}:${workTimeMins.toString().padStart(2, '0')}p`;
+
   return (
     <div className="p-4 md:p-6 w-full h-full min-h-screen bg-transparent">
       <div className="max-w-7xl mx-auto w-full">
@@ -209,7 +276,7 @@ export default function HomePage() {
           {/* Left Column (Task Lists) - Takes 7/12 on large */}
           <div className="md:col-span-7 xl:col-span-8 flex flex-col gap-5 h-full">
             <IntegratedTaskCard />
-            <TopSalesTable />
+            {/* <TopSalesTable /> */}
           </div>
 
           {/* Right Column - Takes 5/12 on large */}
@@ -224,7 +291,7 @@ export default function HomePage() {
             >
               {/* Header */}
               <div className="flex items-center justify-between p-5 border-b border-border">
-                <h2 className="text-xl font-medium text-foreground">Thứ 4, 08/04/2026</h2>
+                <h2 className="text-xl font-medium text-foreground">{displayDate}</h2>
                 <div className="flex items-center gap-4 text-muted-foreground">
                   <button className="hover:text-foreground transition-colors"><ChevronLeft size={20} strokeWidth={1.5} /></button>
                   <button className="hover:text-foreground transition-colors"><ChevronRight size={20} strokeWidth={1.5} /></button>
@@ -237,39 +304,39 @@ export default function HomePage() {
               <div className="p-3 sm:p-4 flex flex-col gap-3 w-full">
 
                 {/* Check in */}
-                <div className="bg-[#eaf8f1] rounded-xl p-4 flex items-center justify-between relative overflow-hidden">
+                <div className={`rounded-xl p-4 flex items-center justify-between relative overflow-hidden ${inStatus.cardBg}`}>
                   <div className="flex flex-col">
                     <span className="text-[#1f2937] font-medium text-[13px]">Giờ vào</span>
-                    <div className="text-[24px] font-bold text-[#22c55e] tracking-tight mt-1 flex items-baseline gap-1">
-                      07:47<span className="text-[12px] ml-0.5">AM</span>
+                    <div className={`text-[24px] font-bold tracking-tight mt-1 flex items-baseline gap-1 ${hasCheckIn ? inStatus.color : 'text-[#94a3b8]'}`}>
+                      {checkInDisplay}<span className="text-[12px] ml-0.5">{checkInAmPm}</span>
                     </div>
                   </div>
                   <div className="flex flex-col items-end gap-2">
-                    <div className="bg-[#22c55e] text-white rounded-full p-1 shrink-0">
+                    <div className={`${inStatus.bg} text-white rounded-full p-1 shrink-0`}>
                       <CheckCircle2 size={16} strokeWidth={2.5} />
                     </div>
-                    <div className="flex items-center gap-1 text-[#22c55e] text-[12px] font-medium">
+                    <div className={`flex items-center gap-1 text-[12px] font-medium ${inStatus.color}`}>
                       <Clock size={12} strokeWidth={2.5} />
-                      <span>Đến đúng giờ</span>
+                      <span>{inStatus.text}</span>
                     </div>
                   </div>
                 </div>
 
                 {/* Check out */}
-                <div className="bg-[#fff7ed] rounded-xl p-4 flex items-center justify-between relative overflow-hidden">
+                <div className={`rounded-xl p-4 flex items-center justify-between relative overflow-hidden ${outStatus.cardBg}`}>
                   <div className="flex flex-col">
                     <span className="text-[#1f2937] font-medium text-[13px]">Giờ ra</span>
-                    <div className="text-[24px] font-bold text-[#f59e0b] tracking-tight mt-1 flex items-baseline gap-1">
-                      --
+                    <div className={`text-[24px] font-bold tracking-tight mt-1 flex items-baseline gap-1 ${hasCheckOut ? outStatus.color : hasCheckIn ? 'text-[#f59e0b]' : 'text-[#94a3b8]'}`}>
+                      {checkOutDisplay}<span className="text-[12px] ml-0.5">{checkOutAmPm}</span>
                     </div>
                   </div>
                   <div className="flex flex-col items-end gap-2">
-                    <div className="bg-[#f59e0b] text-white rounded-full p-1 flex items-center justify-center shrink-0">
+                    <div className={`${outStatus.bg} text-white rounded-full p-1 flex items-center justify-center shrink-0`}>
                       <Clock size={16} strokeWidth={2.5} className="p-0.5" />
                     </div>
-                    <div className="flex items-center gap-1 text-[#f59e0b] text-[12px] font-medium">
+                    <div className={`flex items-center gap-1 text-[12px] font-medium ${outStatus.color}`}>
                       <Clock size={12} strokeWidth={2.5} />
-                      <span>Chưa đến giờ</span>
+                      <span>{outStatus.text}</span>
                     </div>
                   </div>
                 </div>
@@ -279,25 +346,17 @@ export default function HomePage() {
                   <div className="flex flex-col">
                     <span className="text-[#1f2937] font-medium text-[13px]">Công</span>
                     <div className="text-[28px] font-bold text-[#3b82f6] tracking-tight mt-1">
-                      0
+                      {workCount}
                     </div>
                   </div>
                   <div className="flex flex-col items-end justify-center">
                     <div className="text-[#3b82f6] text-[14px] font-semibold bg-[#3b82f6]/10 px-3 py-1.5 rounded-lg border border-[#3b82f6]/20">
-                      00:00p
+                      {workTimeStr}
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Footer */}
-              <div className="px-5 py-3 border-t border-border flex items-center justify-between group cursor-pointer hover:bg-muted/30 transition-colors">
-                <div className="flex items-center gap-2 text-muted-foreground text-sm italic">
-                  <Clock size={14} />
-                  <span>Gần nhất lúc: 07:47 08/04/2026</span>
-                </div>
-                <ChevronDown size={18} className="text-muted-foreground group-hover:text-foreground transition-colors" />
-              </div>
             </motion.div>
 
 
@@ -332,7 +391,7 @@ export default function HomePage() {
                   <div className="w-[3px] h-[40px] bg-[#dc2626] rounded-full mx-4 shrink-0"></div>
 
                   {/* Event Details */}
-                  <div className="flex flex-col flex-grow">
+                  <div className="flex flex-col grow">
                     <span className="font-medium text-[15px] text-foreground group-hover:text-[#F7941D] transition-colors line-clamp-1">Sinh nhật Bùi Thị Huyền</span>
                     <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-0.5">
                       <Calendar size={12} />
@@ -358,7 +417,7 @@ export default function HomePage() {
                   <div className="w-[3px] h-[40px] bg-[#dc2626] rounded-full mx-4 shrink-0"></div>
 
                   {/* Event Details */}
-                  <div className="flex flex-col flex-grow">
+                  <div className="flex flex-col grow">
                     <span className="font-medium text-[15px] text-foreground group-hover:text-[#F7941D] transition-colors line-clamp-1">Sinh nhật Võ Thị Trúc Mai</span>
                     <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-0.5">
                       <Calendar size={12} />

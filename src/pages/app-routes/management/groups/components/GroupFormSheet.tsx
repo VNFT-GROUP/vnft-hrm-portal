@@ -129,7 +129,7 @@ export default function GroupFormSheet({ isOpen, onOpenChange, formData, setForm
           </div>
           
           <div className="flex items-start gap-4 p-5 rounded-2xl bg-[#1E2062]/5 border border-[#1E2062]/10 relative overflow-hidden group shrink-0">
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 ease-in-out" />
+            <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out" />
             <Switch
               id="active"
               checked={formData.active}

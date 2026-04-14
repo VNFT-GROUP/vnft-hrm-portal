@@ -1,4 +1,5 @@
 import type { GroupPermissionResponse } from '../group/GroupPermissionResponse';
+import type { TodayAttendanceResponse } from '../attendance/TodayAttendanceResponse';
 
 export type Gender = 'MALE' | 'FEMALE' | 'OTHER';
 
@@ -13,4 +14,5 @@ export interface UserSessionResponse {
   groupName?: string;
   groupPermissions?: GroupPermissionResponse[];
   requiredProfileCompleted?: boolean;
+  todayAttendance?: TodayAttendanceResponse;
 }

@@ -23,6 +23,7 @@ const EvaluationPage = lazy(() => import("../pages/app-routes/evaluation"));
 const ProfitReportPage = lazy(() => import("../pages/app-routes/acc/profit-report"));
 const VotingPage = lazy(() => import("../pages/app-routes/voting"));
 const RequestsPage = lazy(() => import("../pages/app-routes/requests"));
+const CreateRequestPage = lazy(() => import("../pages/app-routes/requests/create/index"));
 const FinanceReportsPage = lazy(() => import("../pages/app-routes/finance/reports"));
 const ReportsPage = lazy(() => import("../pages/app-routes/reports"));
 const SettingsPage = lazy(() => import("../pages/app-routes/settings"));
@@ -85,7 +86,10 @@ export default function AppRoutes() {
           <Route path="attendance" element={<MyAttendancePage />} />
           <Route path="evaluation" element={<EvaluationPage />} />
           <Route path="voting" element={<VotingPage />} />
-          <Route path="requests" element={<RequestsPage />} />
+          <Route path="requests">
+             <Route index element={<RequestsPage />} />
+             <Route path="create" element={<CreateRequestPage />} />
+          </Route>
           <Route path="reports" element={<ReportsPage />} />
           <Route path="settings" element={<SettingsPage />} />
           <Route path="activity-logs" element={<ActivityLogsPage />} />

@@ -10,6 +10,5 @@ export interface TodayAttendanceResponse {
   workMinutes?: number;
   lateMinutes?: number;
   earlyLeaveMinutes?: number;
-  workUnit?: number;
   recorded: boolean;
 }

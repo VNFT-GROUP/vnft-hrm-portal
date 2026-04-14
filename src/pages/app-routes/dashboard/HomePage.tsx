@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ChevronLeft, ChevronRight, Calendar, Minus, CheckCircle2, Clock, CalendarDays, FileText } from "lucide-react";
+import { ChevronLeft, ChevronRight, Minus, CheckCircle2, Clock, CalendarDays, FileText } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -262,10 +262,9 @@ export default function HomePage() {
   const inStatus = getCheckInStatus();
   const outStatus = getCheckOutStatus();
 
-  const workCount = todayAttendance?.workUnit ?? 0;
   const workTimeHours = Math.floor((todayAttendance?.workMinutes || 0) / 60);
   const workTimeMins = (todayAttendance?.workMinutes || 0) % 60;
-  const workTimeStr = `${workTimeHours.toString().padStart(2, '0')}:${workTimeMins.toString().padStart(2, '0')}p`;
+  const workTimeStr = `${workTimeHours.toString().padStart(2, '0')}h ${workTimeMins.toString().padStart(2, '0')}p`;
 
   return (
     <div className="p-4 md:p-6 w-full h-full min-h-screen bg-transparent">
@@ -287,26 +286,37 @@ export default function HomePage() {
               initial={{ opacity: 0, scale: 0.98 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.4 }}
-              className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden"
+              className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden h-full flex flex-col"
             >
               {/* Header */}
-              <div className="flex items-center justify-between p-5 border-b border-border">
-                <h2 className="text-xl font-medium text-foreground">{displayDate}</h2>
+              <div className="flex items-center justify-between p-5 border-b border-border shrink-0">
+                <div className="flex flex-col gap-0.5">
+                  <div className="flex items-center gap-2">
+                    <h2 className="text-xl font-medium text-foreground">{displayDate}</h2>
+                  </div>
+                  <span className="text-[13px] text-muted-foreground font-medium">
+                    Mã ca làm việc: <span className="text-indigo-600 font-semibold">{todayAttendance?.attendanceCode || 'Chưa xếp ca'}</span>
+                  </span>
+                </div>
                 <div className="flex items-center gap-4 text-muted-foreground">
                   <button className="hover:text-foreground transition-colors"><ChevronLeft size={20} strokeWidth={1.5} /></button>
                   <button className="hover:text-foreground transition-colors"><ChevronRight size={20} strokeWidth={1.5} /></button>
                   <button className="hover:text-foreground transition-colors"><CalendarDays size={20} strokeWidth={1.5} /></button>
-                  <button className="hover:text-foreground transition-colors"><Minus size={20} strokeWidth={1.5} /></button>
                 </div>
               </div>
 
               {/* Content (3 blocks) */}
-              <div className="p-3 sm:p-4 flex flex-col gap-3 w-full">
+              <div className="p-3 sm:p-4 flex flex-col justify-center gap-4 w-full grow">
 
                 {/* Check in */}
                 <div className={`rounded-xl p-4 flex items-center justify-between relative overflow-hidden ${inStatus.cardBg}`}>
                   <div className="flex flex-col">
-                    <span className="text-[#1f2937] font-medium text-[13px]">Giờ vào</span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-[#1f2937] font-medium text-[13px]">Giờ vào</span>
+                      {todayAttendance?.scheduledCheckIn && (
+                        <span className="text-[11px] text-muted-foreground font-medium bg-black/5 px-1.5 rounded border border-black/5">Lịch: {todayAttendance.scheduledCheckIn.substring(0, 5)}</span>
+                      )}
+                    </div>
                     <div className={`text-[24px] font-bold tracking-tight mt-1 flex items-baseline gap-1 ${hasCheckIn ? inStatus.color : 'text-[#94a3b8]'}`}>
                       {checkInDisplay}<span className="text-[12px] ml-0.5">{checkInAmPm}</span>
                     </div>
@@ -325,7 +335,12 @@ export default function HomePage() {
                 {/* Check out */}
                 <div className={`rounded-xl p-4 flex items-center justify-between relative overflow-hidden ${outStatus.cardBg}`}>
                   <div className="flex flex-col">
-                    <span className="text-[#1f2937] font-medium text-[13px]">Giờ ra</span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-[#1f2937] font-medium text-[13px]">Giờ ra</span>
+                      {todayAttendance?.scheduledCheckOut && (
+                        <span className="text-[11px] text-muted-foreground font-medium bg-black/5 px-1.5 rounded border border-black/5">Lịch: {todayAttendance.scheduledCheckOut.substring(0, 5)}</span>
+                      )}
+                    </div>
                     <div className={`text-[24px] font-bold tracking-tight mt-1 flex items-baseline gap-1 ${hasCheckOut ? outStatus.color : hasCheckIn ? 'text-[#f59e0b]' : 'text-[#94a3b8]'}`}>
                       {checkOutDisplay}<span className="text-[12px] ml-0.5">{checkOutAmPm}</span>
                     </div>
@@ -341,17 +356,17 @@ export default function HomePage() {
                   </div>
                 </div>
 
-                {/* Work count */}
+                {/* Work time */}
                 <div className="bg-[#eff6ff] rounded-xl p-4 flex items-center justify-between relative overflow-hidden">
                   <div className="flex flex-col">
-                    <span className="text-[#1f2937] font-medium text-[13px]">Công</span>
+                    <span className="text-[#1f2937] font-medium text-[13px]">Thời gian làm việc</span>
                     <div className="text-[28px] font-bold text-[#3b82f6] tracking-tight mt-1">
-                      {workCount}
+                      {workTimeStr}
                     </div>
                   </div>
                   <div className="flex flex-col items-end justify-center">
-                    <div className="text-[#3b82f6] text-[14px] font-semibold bg-[#3b82f6]/10 px-3 py-1.5 rounded-lg border border-[#3b82f6]/20">
-                      {workTimeStr}
+                    <div className="bg-[#3b82f6]/10 text-[#3b82f6] rounded-full p-2.5 shrink-0 border border-[#3b82f6]/20">
+                      <Clock size={22} strokeWidth={2} />
                     </div>
                   </div>
                 </div>
@@ -362,77 +377,16 @@ export default function HomePage() {
 
 
             {/* Events/Calendar Card */}
+            {/*
             <motion.div
               initial={{ opacity: 0, scale: 0.98 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.4, delay: 0.1 }}
               className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden"
             >
-              {/* Header */}
-              <div className="flex items-center justify-between p-5 border-b border-border">
-                <h2 className="text-[17px] font-medium text-foreground">Lịch và sự kiện</h2>
-                <button className="text-muted-foreground hover:text-foreground transition-colors">
-                  <Minus size={20} strokeWidth={1.5} />
-                </button>
-              </div>
-
-              {/* Event List */}
-              <div className="flex flex-col">
-
-                {/* Event 1 */}
-                <div className="flex items-center p-5 border-b border-border bg-card hover:bg-muted/20 transition-colors cursor-pointer group">
-                  {/* Date Left */}
-                  <div className="flex flex-col w-[80px] shrink-0">
-                    <span className="font-medium text-[15px] text-foreground">Thứ 2</span>
-                    <span className="text-sm text-muted-foreground">Ngày 13/04</span>
-                  </div>
-
-                  {/* Divider */}
-                  <div className="w-[3px] h-[40px] bg-[#dc2626] rounded-full mx-4 shrink-0"></div>
-
-                  {/* Event Details */}
-                  <div className="flex flex-col grow">
-                    <span className="font-medium text-[15px] text-foreground group-hover:text-[#F7941D] transition-colors line-clamp-1">Sinh nhật Bùi Thị Huyền</span>
-                    <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-0.5">
-                      <Calendar size={12} />
-                      <span>Cả ngày</span>
-                    </div>
-                  </div>
-
-                  {/* Avatar */}
-                  <div className="w-[42px] h-[42px] rounded-full bg-[#a3e635] flex items-center justify-center text-white font-semibold text-lg shrink-0 ml-2 shadow-sm border border-white">
-                    H
-                  </div>
-                </div>
-
-                {/* Event 2 */}
-                <div className="flex items-center p-5 border-b border-border bg-card hover:bg-muted/20 transition-colors cursor-pointer group">
-                  {/* Date Left */}
-                  <div className="flex flex-col w-[80px] shrink-0">
-                    <span className="font-medium text-[15px] text-foreground">Thứ 3</span>
-                    <span className="text-sm text-muted-foreground">Ngày 14/04</span>
-                  </div>
-
-                  {/* Divider */}
-                  <div className="w-[3px] h-[40px] bg-[#dc2626] rounded-full mx-4 shrink-0"></div>
-
-                  {/* Event Details */}
-                  <div className="flex flex-col grow">
-                    <span className="font-medium text-[15px] text-foreground group-hover:text-[#F7941D] transition-colors line-clamp-1">Sinh nhật Võ Thị Trúc Mai</span>
-                    <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-0.5">
-                      <Calendar size={12} />
-                      <span>Cả ngày</span>
-                    </div>
-                  </div>
-
-                  {/* Avatar */}
-                  <div className="w-[42px] h-[42px] rounded-full overflow-hidden shrink-0 ml-2 shadow-sm border border-border bg-muted">
-                    <img src="https://i.pravatar.cc/150?img=47" alt="Mai" className="w-full h-full object-cover" />
-                  </div>
-                </div>
-
-              </div>
+              // ...
             </motion.div>
+            */}
 
           </div>
         </div>

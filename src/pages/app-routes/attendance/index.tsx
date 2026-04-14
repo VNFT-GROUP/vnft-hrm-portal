@@ -5,7 +5,7 @@ import { vi } from "date-fns/locale";
 import { attendanceService } from "@/services/attendance";
 import type { MonthlyAttendanceResponse } from "@/types/attendance/MonthlyAttendanceResponse";
 import type { AttendanceDailySummaryResponse } from "@/types/attendance/AttendanceDailySummaryResponse";
-import { Loader2, Calendar as CalendarIcon, ChevronLeft, ChevronRight, X } from "lucide-react";
+import { Loader2, Calendar as CalendarIcon, ChevronLeft, ChevronRight, X, CalendarCheck } from "lucide-react";
 import { motion } from "framer-motion";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
@@ -54,18 +54,26 @@ export default function MyAttendancePage() {
   };
 
   return (
-    <div className="w-full min-h-screen bg-[#f8fafc] p-4 md:p-6 lg:p-8">
-      <div className="max-w-6xl mx-auto space-y-6">
+    <div className="w-full p-4 md:p-8 max-w-7xl mx-auto flex flex-col gap-6 md:gap-8">
+      <div className="w-full space-y-6">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-2xl font-semibold tracking-tight text-slate-900 border-l-4 border-indigo-600 pl-3">
+        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+            className="flex flex-col gap-2"
+          >
+            <h1 className="text-2xl md:text-3xl font-bold text-[#1E2062] flex items-center gap-3">
+              <span className="p-2.5 bg-[#2E3192]/10 text-[#2E3192] rounded-xl flex items-center justify-center">
+                <CalendarCheck size={26} strokeWidth={2.5} />
+              </span>
               Bảng công của tôi
             </h1>
-            <p className="text-sm text-slate-500 mt-1.5 ml-4">
+            <p className="text-muted-foreground text-sm md:text-base ml-1">
               Theo dõi lịch sử điểm danh và thời gian làm việc hàng tháng.
             </p>
-          </div>
+          </motion.div>
 
           <div className="flex items-center gap-4 bg-white p-1.5 rounded-xl border border-slate-200 shadow-sm">
             <button

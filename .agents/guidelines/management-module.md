@@ -44,3 +44,13 @@ When rendering large arrays of checkbox selections (e.g., Permission assignments
 - Extract and group them via `useMemo` based on `category`.
 - Implement a 2-column or grid layout using `grid-cols-1 md:grid-cols-2`.
 - Wrap Checkbox fields in `Label` containers configured as clickable interactive cards (`hover:bg-card border border-border/60 hover:shadow-md hover:border-[#2E3192]/50`).
+
+## 5. Page Header Styling Convention
+All major root pages (e.g., Employees, Attendance, Requests, Time Settings) should follow a unified presentation structure using Framer Motion (`motion.div`):
+- **Layout Wrap**: `className="w-full p-4 md:p-8 max-w-7xl mx-auto flex flex-col gap-6 md:gap-8"`
+- **Motion div**: Initial state `-y: 20, opacity: 0`, animate to `0`, `transition duration 0.5`.
+- **Title Block**:
+  - `h1` sizing: `text-2xl md:text-3xl font-bold text-[#1E2062] flex items-center gap-3`
+  - **The Icon**: Wrapped in a rounded box with `span` classes: `p-2.5 bg-[#2E3192]/10 text-[#2E3192] rounded-xl flex items-center justify-center`.
+- **Subtitle**: `text-muted-foreground text-sm md:text-base ml-1`.
+Do not use old, simple `border-l-4 border-indigo-600 pl-3` lines for standard root pages anymore.

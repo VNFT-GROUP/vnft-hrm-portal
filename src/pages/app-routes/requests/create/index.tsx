@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -378,14 +378,16 @@ export default function CreateRequestPage() {
 
           </div>
 
-          <div className="p-5 px-6 md:px-8 border-t border-slate-100 bg-slate-50 flex justify-end gap-3 rounded-b-2xl">
-            <Button variant="outline" onClick={() => navigate("/app/requests")} className="h-11 px-6 font-medium text-slate-600 bg-white shadow-sm hover:bg-slate-50 border-slate-200">
-              Hủy
-            </Button>
-            <Button onClick={onSubmit} className="h-11 px-8 bg-[#2563EB] hover:bg-[#1d4ed8] text-white font-medium shadow-sm transition-colors">
-              Tạo đơn
-            </Button>
-          </div>
+          {type !== "" && (
+            <div className="p-5 px-6 md:px-8 border-t border-slate-100 bg-slate-50 flex justify-end gap-3 rounded-b-2xl">
+              <Button variant="outline" onClick={() => navigate("/app/requests")} className="h-11 px-6 font-medium text-slate-600 bg-white shadow-sm hover:bg-slate-50 border-slate-200">
+                Hủy
+              </Button>
+              <Button onClick={onSubmit} className="h-11 px-8 bg-[#2563EB] hover:bg-[#1d4ed8] text-white font-medium shadow-sm transition-colors">
+                Tạo đơn
+              </Button>
+            </div>
+          )}
         </div>
       </div>
     </div>

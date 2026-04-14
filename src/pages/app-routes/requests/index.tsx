@@ -1,4 +1,5 @@
-import { FileEdit, Plus } from "lucide-react";
+import { FileEdit, Plus, FileText } from "lucide-react";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 
@@ -6,17 +7,25 @@ export default function RequestsPage() {
   const navigate = useNavigate();
 
   return (
-    <div className="w-full p-4 md:p-6 lg:p-8">
+    <div className="w-full p-4 md:p-8 max-w-7xl mx-auto flex flex-col gap-6 md:gap-8">
       <div className="w-full space-y-6">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-2xl font-semibold tracking-tight text-slate-900 border-l-4 border-indigo-600 pl-3">
+        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+            className="flex flex-col gap-2"
+          >
+            <h1 className="text-2xl md:text-3xl font-bold text-[#1E2062] flex items-center gap-3">
+              <span className="p-2.5 bg-[#2E3192]/10 text-[#2E3192] rounded-xl flex items-center justify-center">
+                <FileText size={26} strokeWidth={2.5} />
+              </span>
               Quản lý Đơn từ
             </h1>
-            <p className="text-sm text-slate-500 mt-1.5 ml-4">
+            <p className="text-muted-foreground text-sm md:text-base ml-1">
               Tạo mới và theo dõi trạng thái các yêu cầu, đơn từ của bạn.
             </p>
-          </div>
+          </motion.div>
 
           <div className="flex items-center gap-4 bg-white p-1.5 rounded-xl border border-slate-200 shadow-sm">
             <Button 

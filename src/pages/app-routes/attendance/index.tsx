@@ -128,6 +128,7 @@ export default function MyAttendancePage() {
                         const record = data?.records?.find(r => r.attendanceDate === dateStr);
                         const hasData = record?.actualCheckIn || record?.actualCheckOut;
                         const isSunday = getDay(dateObj) === 0;
+                        const isSaturday = getDay(dateObj) === 6;
 
                         return (
                           <motion.div
@@ -139,17 +140,17 @@ export default function MyAttendancePage() {
                               if (hasData) setSelectedRecord({ ...record, dateObj });
                             }}
                             className={`min-h-[130px] p-2 md:p-3 flex flex-col gap-1.5 transition-colors group relative ${
-                              isSunday ? 'bg-rose-50/30' : 'bg-white'
+                              isSunday ? 'bg-rose-50/40' : isSaturday ? 'bg-slate-100/60' : 'bg-white'
                             } ${hasData ? 'cursor-pointer hover:shadow-inner hover:bg-slate-50/80 hover:z-10 ring-1 ring-transparent hover:ring-indigo-100' : ''}`}
                           >
                             <div className="flex justify-between items-start w-full">
                               {hasData && record?.workUnit !== undefined && record.workUnit > 0 ? (
                                 <span className="bg-amber-100/80 text-amber-700 font-bold text-[11px] px-1.5 py-0.5 rounded border border-amber-200">
-                                  {record.workUnit} Công
+                                  {Number(record.workUnit.toFixed(2))} Công
                                 </span>
                               ) : <span />}
                               <span className={`text-[13px] font-bold w-auto min-w-[28px] h-7 px-2 flex items-center justify-center rounded-md transition-colors ${
-                                isSunday ? 'text-rose-500' : 'text-slate-600 group-hover:bg-indigo-50 group-hover:text-indigo-600'
+                                isSunday ? 'text-rose-500' : isSaturday ? 'text-slate-500 hover:bg-slate-200/50' : 'text-slate-600 group-hover:bg-indigo-50 group-hover:text-indigo-600'
                               }`}>
                                 {format(dateObj, "d/M")}
                               </span>
@@ -254,7 +255,7 @@ export default function MyAttendancePage() {
                   <div className="grid grid-cols-2 gap-4 my-2">
                     <div className="flex flex-col items-center justify-center bg-indigo-50/50 rounded-lg p-3 border border-indigo-100/50">
                        <span className="text-[11px] font-semibold text-slate-500 uppercase">Hệ Số Công</span>
-                       <span className="text-lg font-bold text-indigo-700">{selectedRecord.workUnit || 0}</span>
+                       <span className="text-lg font-bold text-indigo-700">{selectedRecord.workUnit !== undefined ? Number(selectedRecord.workUnit.toFixed(2)) : 0}</span>
                     </div>
                     <div className="flex flex-col items-center justify-center bg-indigo-50/50 rounded-lg p-3 border border-indigo-100/50">
                        <span className="text-[11px] font-semibold text-slate-500 uppercase">Thời gian làm</span>

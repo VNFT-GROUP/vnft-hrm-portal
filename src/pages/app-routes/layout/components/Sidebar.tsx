@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { LayoutDashboard, UserCircle, Calendar, FolderOpen, Users, Building2, Briefcase, FileText, CheckSquare, Layers, FileEdit, ChevronLeft, Menu, ChevronDown, ChevronRight as ChevronRightIcon } from "lucide-react";
+import { LayoutDashboard, UserCircle, Calendar, FolderOpen, Users, Building2, Briefcase, FileText, CheckSquare, Layers, FileEdit, ChevronLeft, Menu, ChevronDown, ChevronRight as ChevronRightIcon, Clock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { ScrollArea } from "../../../../components/ui/scroll-area";
 import { useLayoutStore } from "../../../../store/useLayoutStore";
@@ -88,6 +88,7 @@ export default function Sidebar() {
           )
         },
         { label: t('sidebar.calendar'), path: "/app/calendar", icon: <Calendar size={20} /> },
+        { label: t('sidebar.myAttendance', { defaultValue: 'Bảng công của tôi' }), path: "/app/attendance", icon: <Clock size={20} /> },
         { label: t('sidebar.requests'), path: "/app/requests", icon: <FileEdit size={20} /> },
         ...(session?.groupName === 'ADMIN' ? [{ 
           label: t('sidebar.management'), 

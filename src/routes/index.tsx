@@ -16,7 +16,8 @@ const PositionsPage = lazy(() => import("../pages/app-routes/management/position
 const EmployeeCodesPage = lazy(() => import("../pages/app-routes/management/employee-codes"));
 const GroupsPage = lazy(() => import("../pages/app-routes/management/groups"));
 const RolesPage = lazy(() => import("../pages/app-routes/management/roles"));
-const AttendancePage = lazy(() => import("../pages/app-routes/management/attendance"));
+const ManagementAttendancePage = lazy(() => import("../pages/app-routes/management/attendance"));
+const MyAttendancePage = lazy(() => import("../pages/app-routes/attendance"));
 const EvaluationPage = lazy(() => import("../pages/app-routes/evaluation"));
 const ProfitReportPage = lazy(() => import("../pages/app-routes/acc/profit-report"));
 const VotingPage = lazy(() => import("../pages/app-routes/voting"));
@@ -80,6 +81,7 @@ export default function AppRoutes() {
           <Route path="profile" element={<ProfilePage />} />
           <Route path="profile/edit" element={<EditProfilePage />} />
           <Route path="calendar" element={<CalendarPage />} />
+          <Route path="attendance" element={<MyAttendancePage />} />
           <Route path="evaluation" element={<EvaluationPage />} />
           <Route path="voting" element={<VotingPage />} />
           <Route path="requests" element={<RequestsPage />} />
@@ -96,7 +98,7 @@ export default function AppRoutes() {
              <Route path="employee-codes" element={<EmployeeCodesPage />} />
              <Route path="groups" element={<GroupsPage />} />
              <Route path="roles" element={<RolesPage />} />
-             <Route path="attendance" element={<AttendancePage />} />
+             <Route path="attendance" element={<ManagementAttendancePage />} />
           </Route>
 
           {/* Cấp 2: ACC */}

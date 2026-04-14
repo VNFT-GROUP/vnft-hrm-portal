@@ -1,0 +1,28 @@
+export interface AttendanceDailySummaryResponse {
+  id: string;
+  userId: string;
+  userProfileId: string;
+  employeeCode: string;
+  attendanceCode: string;
+  employeeName: string;
+  attendanceDate: string;
+  scheduledCheckIn?: string;
+  scheduledCheckOut?: string;
+  actualCheckIn?: string;
+  actualCheckOut?: string;
+  checkInValid?: boolean;
+  checkOutValid?: boolean;
+  workMinutes?: number;
+  lateMinutes?: number;
+  earlyLeaveMinutes?: number;
+  overtimeMinutes?: number;
+  workUnit?: number;
+  absent?: boolean;
+  locked?: boolean;
+  note?: string;
+  active?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+  createdBy?: string;
+  updatedBy?: string;
+}

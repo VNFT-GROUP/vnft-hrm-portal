@@ -9,7 +9,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useAuthStore } from "@/store/useAuthStore";
-import { format, parse, parseISO } from "date-fns";
+import { format, parseISO } from "date-fns";
 import { vi } from "date-fns/locale";
 
 /*
@@ -216,30 +216,16 @@ export default function HomePage() {
   const displayDate = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
   
   // Format Check-in time
-  let checkInDisplay = "--";
-  let checkInAmPm = "";
-  if (todayAttendance?.checkInTime) {
-    try {
-      const parsed = parse(todayAttendance.checkInTime.substring(0, 5), 'HH:mm', new Date());
-      checkInDisplay = format(parsed, 'hh:mm');
-      checkInAmPm = format(parsed, 'a');
-    } catch {
-      checkInDisplay = todayAttendance.checkInTime.substring(0, 5);
-    }
-  }
+  const checkInDisplay = todayAttendance?.checkInTime 
+    ? todayAttendance.checkInTime.substring(0, 5) 
+    : "--";
+  const checkInAmPm = "";
 
   // Format Check-out time
-  let checkOutDisplay = "--";
-  let checkOutAmPm = "";
-  if (todayAttendance?.checkOutTime) {
-    try {
-      const parsed = parse(todayAttendance.checkOutTime.substring(0, 5), 'HH:mm', new Date());
-      checkOutDisplay = format(parsed, 'hh:mm');
-      checkOutAmPm = format(parsed, 'a');
-    } catch {
-      checkOutDisplay = todayAttendance.checkOutTime.substring(0, 5);
-    }
-  }
+  const checkOutDisplay = todayAttendance?.checkOutTime 
+    ? todayAttendance.checkOutTime.substring(0, 5) 
+    : "--";
+  const checkOutAmPm = "";
 
   const hasCheckIn = !!todayAttendance?.checkInTime;
   const hasCheckOut = !!todayAttendance?.checkOutTime;

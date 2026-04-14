@@ -17,6 +17,7 @@ const EmployeeCodesPage = lazy(() => import("../pages/app-routes/management/empl
 const GroupsPage = lazy(() => import("../pages/app-routes/management/groups"));
 const RolesPage = lazy(() => import("../pages/app-routes/management/roles"));
 const ManagementAttendancePage = lazy(() => import("../pages/app-routes/management/attendance"));
+const TimeSettingsPage = lazy(() => import("../pages/app-routes/management/time-settings"));
 const MyAttendancePage = lazy(() => import("../pages/app-routes/attendance"));
 const EvaluationPage = lazy(() => import("../pages/app-routes/evaluation"));
 const ProfitReportPage = lazy(() => import("../pages/app-routes/acc/profit-report"));
@@ -99,6 +100,7 @@ export default function AppRoutes() {
              <Route path="groups" element={<GroupsPage />} />
              <Route path="roles" element={<RolesPage />} />
              <Route path="attendance" element={<ManagementAttendancePage />} />
+             <Route path="time-settings" element={<TimeSettingsPage />} />
           </Route>
 
           {/* Cấp 2: ACC */}

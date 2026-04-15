@@ -14,5 +14,7 @@ export default {
   groups: "Nhóm quyền",
   systemManagement: "Quản lý Hệ Thống",
   timeSettings: "Giờ giấc",
-  attendanceHistory: "Lịch sử Chấm công"
+  attendanceHistory: "Lịch sử Chấm công",
+  settings: "Cài đặt hệ thống",
+  customize: "Cá nhân hoá"
 };

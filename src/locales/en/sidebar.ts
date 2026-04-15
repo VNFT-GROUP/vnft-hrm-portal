@@ -14,5 +14,7 @@ export default {
   groups: "Permission Groups",
   systemManagement: "System",
   timeSettings: "Time Settings",
-  attendanceHistory: "Attendance History"
+  attendanceHistory: "Attendance History",
+  settings: "System Settings",
+  customize: "Personalize"
 };

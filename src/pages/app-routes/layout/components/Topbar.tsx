@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { User, Book, Globe, Key, LogOut, Briefcase, BadgeCheck, Keyboard, Settings } from "lucide-react";
+import { User, Book, Globe, Key, LogOut, Briefcase, BadgeCheck, Settings } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useLayoutStore } from "../../../../store/useLayoutStore";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -169,13 +169,13 @@ export default function Topbar() {
             <div className="pd-divider"></div>
             
             <div className="pd-body">
-              <div className="pd-item" onClick={() => {
+              <button className="pd-item w-full text-left" onClick={() => {
                 setIsProfileOpen(false);
                 navigate('/app/profile');
               }}>
                 <User size={18} className="pd-icon" /> <span>{t('profile.title', { defaultValue: 'Hồ sơ cá nhân' })}</span>
-              </div>
-              <div className="pd-item" onClick={() => {
+              </button>
+              <button className="pd-item w-full text-left" onClick={() => {
                 setIsProfileOpen(false);
                 navigate('/app/settings');
               }}>
@@ -183,23 +183,14 @@ export default function Topbar() {
                 <div className="flex items-center text-[0.7rem] font-mono text-muted-foreground bg-muted px-1.5 py-0.5 rounded border border-border">
                   Alt + S
                 </div>
-              </div>
-              <div className="pd-item" onClick={() => {
+              </button>
+              <button className="pd-item w-full text-left" onClick={() => {
                 setIsProfileOpen(false);
                 navigate('/app/user-guide');
               }}>
                 <Book size={18} className="pd-icon" /> <span>{t('profile.guide', { defaultValue: 'Hướng dẫn sử dụng' })}</span>
-              </div>
-              <div className="pd-item" onClick={() => {
-                setIsProfileOpen(false);
-                navigate('/app/user-guide#shortcuts');
-              }}>
-                <Keyboard size={18} className="pd-icon" /> <span className="flex-1">{t('profile.shortcuts', { defaultValue: 'Phím tắt' })}</span>
-                <div className="flex items-center text-[0.7rem] font-mono text-muted-foreground bg-muted px-1.5 py-0.5 rounded border border-border">
-                  Alt + K
-                </div>
-              </div>
-              <div className="pd-item" onClick={(e) => {
+              </button>
+              <button className="pd-item w-full text-left" onClick={(e) => {
                 e.stopPropagation();
                 const nextLang = i18n.language === 'en' ? 'zh' : (i18n.language === 'zh' ? 'vi' : 'en');
                 i18n.changeLanguage(nextLang);
@@ -215,13 +206,13 @@ export default function Topbar() {
                   {i18n.language === 'zh' ? 'CN' : (i18n.language === 'en' ? 'EN' : 'VN')} 
                   <span className="arrow ml-1">{">"}</span>
                 </span>
-              </div>
+              </button>
             </div>
 
             <div className="pd-divider"></div>
             
             <div className="pd-body">
-              <div className="pd-item" onClick={() => {
+              <button className="pd-item w-full text-left" onClick={() => {
                 setIsProfileOpen(false);
                 setIsPasswordModalOpen(true);
               }}>
@@ -229,10 +220,10 @@ export default function Topbar() {
                 <div className="flex items-center text-[0.7rem] font-mono text-muted-foreground bg-muted px-1.5 py-0.5 rounded border border-border">
                   Alt + P
                 </div>
-              </div>
-              <div className="pd-item text-red-500" onClick={handleLogout}>
+              </button>
+              <button className="pd-item w-full text-left text-red-500" onClick={handleLogout}>
                 <LogOut size={18} className="pd-icon-red" /> <span>{t('profile.logout')}</span>
-              </div>
+              </button>
             </div>
           </div>
         )}

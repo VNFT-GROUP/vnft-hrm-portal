@@ -14,5 +14,7 @@ export default {
   groups: "权限组",
   systemManagement: "系统",
   timeSettings: "时间设置",
-  attendanceHistory: "考勤历史"
+  attendanceHistory: "考勤历史",
+  settings: "系统设置",
+  customize: "个性化"
 };

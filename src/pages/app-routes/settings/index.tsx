@@ -217,7 +217,7 @@ export default function SettingsPage() {
                       
                       <div className="flex items-center gap-1.5 shrink-0 bg-muted/50 px-2.5 py-1 rounded-md border border-border/40 text-foreground tabular-nums shadow-sm">
                         <Clock size={16} className="text-muted-foreground opacity-80" strokeWidth={2.5} />
-                        <span className="font-bold text-lg tracking-tight mt-[1px]">{tz.timeString}</span>
+                        <span className="font-bold text-lg tracking-tight mt-px">{tz.timeString}</span>
                       </div>
                     </div>
                     

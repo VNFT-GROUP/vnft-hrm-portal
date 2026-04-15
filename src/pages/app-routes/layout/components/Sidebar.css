@@ -404,3 +404,31 @@
   --sidebar-active-bg: linear-gradient(90deg, rgba(3, 105, 161, 0.9) 0%, rgba(8, 47, 73, 0) 100%);
 }
 
+
+/* SHINING CUSTOMIZE BUTTON */
+.btn-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+.btn-shimmer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  transform: skewX(-20deg);
+  transition: all 0.5s;
+  z-index: 2;
+}
+.btn-shimmer:hover::before {
+  animation: shimmer-slide 1.2s infinite;
+}
+@keyframes shimmer-slide {
+  0% { left: -100%; }
+  100% { left: 200%; }
+}
+.app-sidebar.collapsed .btn-shimmer::before {
+  width: 100%; /* adjust for small button */
+}

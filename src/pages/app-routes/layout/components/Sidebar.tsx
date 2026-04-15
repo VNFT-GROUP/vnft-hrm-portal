@@ -24,7 +24,6 @@ import { useNavigate } from "react-router-dom";
 import { ScrollArea } from "../../../../components/ui/scroll-area";
 import { useLayoutStore } from "../../../../store/useLayoutStore";
 import { useAuthStore } from "../../../../store/useAuthStore";
-import QuickCustomizeSheet from "./QuickCustomizeSheet";
 import "./Sidebar.css";
 
 export default function Sidebar() {
@@ -356,7 +355,7 @@ export default function Sidebar() {
                                 </span>
                                 {"badge" in sub && sub.badge && (
                                   <span className="text-[9px] uppercase font-bold tracking-[0.08em] bg-red-500/20 text-red-400 px-1.5 py-0.5 rounded border border-red-500/30 whitespace-nowrap ml-auto">
-                                    {sub.badge as string}
+                                    {sub.badge as React.ReactNode}
                                   </span>
                                 )}
                               </li>
@@ -391,12 +390,17 @@ export default function Sidebar() {
 
       {/* Footer Navigation */}
       <div className="sidebar-footer">
-        <QuickCustomizeSheet>
-          <button className={`flex items-center w-full gap-3 p-2.5 rounded-xl border border-white/10 hover:bg-white/10 transition-colors text-white/80 hover:text-white ${isCollapsed ? 'justify-center' : ''}`}>
-            <Palette size={20} className="shrink-0" />
-            {!isCollapsed && <span className="font-semibold text-sm tracking-wide">{t('sidebar.customize', { defaultValue: 'Cá nhân hoá' })}</span>}
-          </button>
-        </QuickCustomizeSheet>
+        <button 
+          onClick={() => navigate('/app/settings')} 
+          className={`btn-shimmer flex items-center justify-center w-full gap-2.5 p-2.5 rounded-xl border border-white/20 transition-all duration-300 shadow-[0_0_15px_rgba(255,255,255,0.05)] hover:shadow-[0_0_20px_rgba(247,148,29,0.2)] bg-gradient-to-r from-white/5 to-white/10 hover:from-white/10 hover:to-white/20 text-white/90 hover:text-white group`}
+        >
+          <Palette size={20} className="shrink-0 text-white group-hover:text-[#F7941D] group-hover:scale-110 transition-all duration-300" />
+          {!isCollapsed && (
+            <span className="font-bold text-[13px] tracking-wider uppercase text-transparent bg-clip-text bg-gradient-to-r from-white to-white group-hover:from-amber-200 group-hover:to-orange-400 transition-colors duration-500">
+              {t('sidebar.customize', { defaultValue: 'Cá nhân hoá' })}
+            </span>
+          )}
+        </button>
       </div>
 
     </aside>

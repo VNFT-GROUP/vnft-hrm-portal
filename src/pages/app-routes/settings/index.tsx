@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Monitor, Globe, Palette, Type, Clock, MousePointer2, ShieldCheck, Key, LayoutDashboard, UserCircle, Calendar, FileEdit, FolderOpen, Settings as SettingsIcon } from "lucide-react";
+import { Monitor, Globe, Palette, Type, Clock, MousePointer2, LayoutDashboard, UserCircle, FileEdit, FolderOpen, Settings as SettingsIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useLayoutStore } from "@/store/useLayoutStore";

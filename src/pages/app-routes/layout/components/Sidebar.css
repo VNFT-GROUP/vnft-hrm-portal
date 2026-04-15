@@ -18,7 +18,7 @@
 }
 
 .app-sidebar.collapsed {
-  width: 80px;
+  width: 96px; /* Increased to accommodate clear text labels */
 }
 
 .app-sidebar.collapsed .sidebar-bg-objects {
@@ -136,6 +136,11 @@
   padding: 1.5rem 1rem;
 }
 
+.app-sidebar.collapsed .sidebar-nav {
+  padding: 1.5rem 0.25rem;
+  font-size: 0.9rem;
+}
+
 .nav-section {
   font-size: 0.7rem;
   font-weight: 700;
@@ -160,10 +165,6 @@
 }
 
 .sidebar-nav li {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 16px;
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);

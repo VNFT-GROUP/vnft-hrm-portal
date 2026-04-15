@@ -1,29 +1,16 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
-  LayoutDashboard,
-  UserCircle,
-  Calendar,
-  FolderOpen,
-  Users,
-  Building2,
-  Briefcase,
-  FileText,
-  CheckSquare,
-  Layers,
-  FileEdit,
   ChevronLeft,
   Menu,
   ChevronDown,
   ChevronRight as ChevronRightIcon,
-  Clock,
-  Settings,
   Palette,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { ScrollArea } from "../../../../components/ui/scroll-area";
 import { useLayoutStore } from "../../../../store/useLayoutStore";
-import { useAuthStore } from "../../../../store/useAuthStore";
+import { useNavigationData } from "@/lib/navigation";
 import "./Sidebar.css";
 
 export default function Sidebar() {
@@ -57,19 +44,28 @@ export default function Sidebar() {
     subItems?: string[];
   } | null>(null);
 
+  // State for Popout menus when clicked in collapsed mode
+  const [activePopout, setActivePopout] = useState<{
+    label: string;
+    top: number;
+    subItems: any[];
+  } | null>(null);
+
   const handleToggleMenu = (
+    e: React.MouseEvent,
     label: string,
     hasSub: boolean,
     path?: string,
     currentlyExpanded?: boolean,
+    subItems?: any[],
   ) => {
     if (isCollapsed) {
-      // If collapsed and has sub, expanding the main sidebar first is recommended
-      toggleSidebar();
-      if (hasSub) {
-        setExpandedMenus((prev) => ({ ...prev, [label]: true }));
+      if (hasSub && subItems) {
+        const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+        setActivePopout(prev => prev?.label === label ? null : { label, top: rect.top, subItems });
       } else if (path) {
         navigate(path);
+        setActivePopout(null);
       }
     } else {
       if (hasSub) {
@@ -98,116 +94,8 @@ export default function Sidebar() {
     setActiveToast(null);
   };
 
-  const { session } = useAuthStore();
   const { t } = useTranslation();
-
-  const menuData = [
-    {
-      section: "",
-      items: [
-        {
-          id: "dashboard",
-          label: t("sidebar.dashboard"),
-          path: "/app",
-          icon: <LayoutDashboard size={20} />,
-        },
-        {
-          id: "profile",
-          label: t("sidebar.profile"),
-          path: "/app/profile",
-          icon: (
-            <div className="relative">
-              <UserCircle size={20} />
-              {session?.requiredProfileCompleted === false && (
-                <>
-                  <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-ping opacity-80"></span>
-                  <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-[#1E2062]"></span>
-                </>
-              )}
-            </div>
-          ),
-        },
-        {
-          id: "myAttendance",
-          label: t("sidebar.myAttendance", {
-            defaultValue: "Bảng công của tôi",
-          }),
-          path: "/app/attendance",
-          icon: <Clock size={20} />,
-        },
-        {
-          id: "requests",
-          label: t("sidebar.requests"),
-          path: "/app/requests",
-          icon: <FileEdit size={20} />,
-        },
-        ...(session?.groupName === "ADMIN"
-          ? [
-              {
-                id: "management",
-                label: t("sidebar.management"),
-                icon: <FolderOpen size={20} />,
-                subItems: [
-                  {
-                    label: t("sidebar.employees"),
-                    path: "/app/management/employees",
-                    icon: <Users size={16} />,
-                  },
-                  {
-                    label: t("sidebar.employeeCodes"),
-                    path: "/app/management/employee-codes",
-                    icon: <FileText size={16} />,
-                  },
-                  {
-                    label: t("sidebar.departments"),
-                    path: "/app/management/departments",
-                    icon: <Building2 size={16} />,
-                  },
-                  {
-                    label: t("sidebar.positions", { defaultValue: "Vị trí" }),
-                    path: "/app/management/positions",
-                    icon: <Briefcase size={16} />,
-                  },
-                  {
-                    label: t("sidebar.roles", { defaultValue: "Chức vụ" }),
-                    path: "/app/management/roles",
-                    icon: <Layers size={16} />,
-                  },
-                ],
-              },
-              {
-                id: "systemManagement",
-                label: t("sidebar.systemManagement", { defaultValue: "Quản lý Hệ Thống" }),
-                icon: <Settings size={20} />,
-                subItems: [
-                  {
-                    label: t("sidebar.groups", {
-                      defaultValue: "Nhóm quyền / Mã quyền",
-                    }),
-                    path: "/app/management/groups",
-                    icon: <CheckSquare size={16} />,
-                  },
-                  {
-                    label: t("sidebar.timeSettings", {
-                      defaultValue: "Giờ giấc",
-                    }),
-                    path: "/app/management/time-settings",
-                    icon: <Clock size={16} />,
-                  },
-                  {
-                    label: t("sidebar.attendanceHistory", {
-                      defaultValue: "Lịch sử Chấm công",
-                    }),
-                    path: "/app/management/attendance",
-                    icon: <Calendar size={16} />,
-                  },
-                ],
-              },
-            ]
-          : []),
-      ],
-    },
-  ];
+  const { sidebarData: menuData } = useNavigationData();
 
   return (
     <aside
@@ -279,13 +167,15 @@ export default function Sidebar() {
                   return (
                     <React.Fragment key={item.label}>
                       <li
-                        className={`${isItemActive || (!hasSub && isSubActive) ? "active" : ""} ${isExpanded ? "expanded" : ""}`}
-                        onClick={() =>
+                        className={`relative flex items-center p-3 rounded-lg cursor-pointer transition-all duration-300 font-medium text-slate-300 ${isItemActive || (!hasSub && isSubActive) ? "active" : ""} ${isExpanded ? "expanded" : ""} ${activePopout?.label === item.label ? "bg-white/10" : ""} ${isCollapsed ? "flex-col justify-center py-3 px-1 gap-1.5" : "flex-row gap-3"}`}
+                        onClick={(e) =>
                           handleToggleMenu(
+                            e,
                             item.label,
                             hasSub,
                             item.path,
                             isExpanded,
+                            item.subItems
                           )
                         }
                         onMouseEnter={(e) =>
@@ -297,15 +187,22 @@ export default function Sidebar() {
                         onKeyDown={(e) => {
                           if (e.key === "Enter" || e.key === " ")
                             handleToggleMenu(
+                              e as any,
                               item.label,
                               hasSub,
                               item.path,
                               isExpanded,
+                              item.subItems
                             );
                         }}
                       >
                         {item.icon}
-                        <span className="nav-label">{item.label}</span>
+                        {!isCollapsed && <span className="nav-label">{item.label}</span>}
+                        {isCollapsed && (
+                          <span className="text-[9px] uppercase font-bold text-white/80 tracking-[0.03em] text-center w-full leading-tight mt-0.5 whitespace-normal break-words">
+                            {item.shortName || item.label}
+                          </span>
+                        )}
                         {hasSub && (
                           <div className="sub-menu-indicator">
                             {isExpanded ? (
@@ -373,7 +270,7 @@ export default function Sidebar() {
       </ScrollArea>
 
       {/* Floating Javascript Custom Toast (Escapes overflow bounds structurally) */}
-      {activeToast && isCollapsed && (
+      {activeToast && isCollapsed && !activePopout && (
         <div className="custom-floating-toast" style={{ top: activeToast.top }}>
           <div className="toast-main">{activeToast.text}</div>
           {activeToast.subItems && activeToast.subItems.length > 0 && (
@@ -386,6 +283,47 @@ export default function Sidebar() {
             </div>
           )}
         </div>
+      )}
+
+      {/* Flyout Menu for Collapsed Mode */}
+      {isCollapsed && activePopout && (
+        <>
+          <div 
+            className="fixed inset-0 z-[9998]" 
+            onClick={() => setActivePopout(null)}
+          />
+          <div 
+            className="fixed z-[9999] bg-[#1e293b] border border-white/10 shadow-2xl rounded-xl p-2 left-[105px] w-56 animate-in slide-in-from-left-2 fade-in"
+            style={{ top: activePopout.top - 10 }}
+          >
+            <div className="text-xs font-bold uppercase tracking-wider text-white/50 mb-2 px-3 pt-2">
+              {activePopout.label}
+            </div>
+            <div className="flex flex-col gap-1">
+              {activePopout.subItems.map((sub) => {
+                const isChildActive = sub.path === window.location.pathname;
+                return (
+                  <button
+                    key={sub.label}
+                    onClick={() => {
+                      setActivePopout(null);
+                      navigate(sub.path);
+                    }}
+                    className={`flex items-center gap-3 w-full px-3 py-2.5 rounded-lg transition-all text-sm font-medium ${isChildActive ? 'bg-[#F7941D]/10 text-[#F7941D]' : 'text-slate-300 hover:bg-white/10 hover:text-white'}`}
+                  >
+                    <span className={`opacity-80 ${isChildActive ? 'text-[#F7941D]' : ''}`}>{sub.icon || <div className="w-1.5 h-1.5 rounded-full border border-current" />}</span>
+                    <span className="flex-1 text-left">{sub.label}</span>
+                    {"badge" in sub && !!sub.badge && (
+                      <span className="text-[10px] uppercase font-bold tracking-widest bg-red-500/20 text-red-400 px-1.5 py-0.5 rounded border border-red-500/30 whitespace-nowrap">
+                        {String(sub.badge)}
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </>
       )}
 
       {/* Footer Navigation */}

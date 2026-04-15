@@ -14,108 +14,19 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import type { UpdateUserProfileRequest } from '@/types/user/UpdateUserProfileRequest';
 import { useQueryClient } from "@tanstack/react-query";
+import {
+  ALL_COUNTRIES_SORTED as PROFILE_ALL_COUNTRIES_SORTED,
+  ETHNICITIES_VN as PROFILE_ETHNICITIES_VN,
+  GLOBAL_ETHNICITIES as PROFILE_GLOBAL_ETHNICITIES,
+  getCountryNameForLocale,
+  WORLD_RELIGIONS as PROFILE_WORLD_RELIGIONS,
+} from "@/utils/profile-options";
 
 type ProfileFormData = Partial<UpdateUserProfileRequest> & {
   fullName?: string;
   englishName?: string;
   employeeCode?: string;
 };
-import countries from "i18n-iso-countries";
-import viLocale from "i18n-iso-countries/langs/vi.json";
-import enLocale from "i18n-iso-countries/langs/en.json";
-import zhLocale from "i18n-iso-countries/langs/zh.json";
-
-countries.registerLocale(viLocale);
-countries.registerLocale(enLocale);
-countries.registerLocale(zhLocale);
-const COUNTRIES_VI = Object.values(countries.getNames("vi"));
-const ALL_COUNTRIES_SORTED = [
-  "Việt Nam", 
-  ...COUNTRIES_VI.filter(c => c !== "Việt Nam").sort((a, b) => a.localeCompare(b, 'vi'))
-];
-
-const WORLD_RELIGIONS = [
-  "Không",
-  "Phật giáo",
-  "Công giáo (Thiên chúa / Tin Lành)",
-  "Đạo Cao Đài",
-  "Phật giáo Hòa Hảo",
-  "Hồi giáo",
-  "Ấn Độ giáo (Hindu)",
-  "Tín ngưỡng dân gian",
-  "Thần đạo (Shinto)",
-  "Đạo giáo",
-  "Tôn giáo Yoruba",
-  "Voodoo",
-  "Đạo Sikh",
-  "Ahmadiyya",
-  "Do Thái giáo",
-  "Thông linh học",
-  "Đạo Mu (Mu-ism)",
-  "Giáo hội Thống nhất",
-  "Ayyavazhi",
-  "Đạo Baháʼí",
-  "Nho giáo",
-  "Sarna giáo",
-  "Kỳ Na giáo (Jainism)",
-  "Thiên đạo giáo (Cheondoism)",
-  "Hội thánh Đức Chúa Trời",
-  "Iglesia ni Cristo",
-  "Ravidassia",
-  "Thiên Lý giáo (Tenriism)",
-  "Druze",
-  "Đạo Tengri",
-  "Rastafari",
-  "Yarsanism",
-  "Wicca",
-  "Yazidi giáo",
-  "Assian giáo",
-  "Donyi-Polo",
-  "Giáo hội truyền thống Châu Mỹ",
-  "Sanamahi giáo",
-  "Bái hỏa giáo (Zoroastrianism)",
-  "Mandae giáo",
-  "Khoa học Hạnh phúc",
-  "Tu nghiệm đạo (Shugendō)",
-  "Samaritan giáo",
-  "Khác"
-];
-
-const ETHNICITIES_VN = [
-  "Kinh", "Tày", "Thái", "Hoa", "Khơ-me", "Mường", "Nùng", "HMông", "Dao", "Gia-rai",
-  "Ngái", "Ê-đê", "Ba na", "Xơ-Đăng", "Sán Chay", "Cơ-ho", "Chăm", "Sán Dìu", "Hrê", 
-  "Mnông", "Ra-glai", "Xtiêng", "Bru-Vân Kiều", "Thổ", "Giáy", "Cơ-tu", "Gié Triêng", 
-  "Mạ", "Khơ-mú", "Co", "Tà-ôi", "Chơ-ro", "Kháng", "Xinh-mun", "Hà Nhì", "Chu ru", 
-  "Lào", "La Chí", "La Ha", "Phù Lá", "La Hủ", "Lự", "Lô Lô", "Chứt", "Mảng", 
-  "Pà Thẻn", "Co Lao", "Cống", "Bố Y", "Si La", "Pu Péo", "Brâu", "Ơ Đu", "Rơ măm"
-];
-
-const GLOBAL_ETHNICITIES = [
-  "Asian or Asian British",
-  "Indian",
-  "Pakistani",
-  "Bangladeshi",
-  "Chinese",
-  "Any other Asian background",
-  "Black, Black British, Caribbean or African",
-  "Caribbean",
-  "African",
-  "Any other Black, Black British, or Caribbean background",
-  "Mixed or multiple ethnic groups",
-  "White and Black Caribbean",
-  "White and Black African",
-  "White and Asian",
-  "Any other Mixed or multiple ethnic background",
-  "White",
-  "English, Welsh, Scottish, Northern Irish or British",
-  "Irish",
-  "Gypsy or Irish Traveller",
-  "Roma",
-  "Any other White background",
-  "Arab",
-  "Any other ethnic group"
-];
-
 function SearchableSelect({ options, value, onChange, placeholder, getTranslation, disabled }: { options: string[], value: string, onChange: (val: string) => void, placeholder: string, getTranslation?: (val: string) => string, disabled?: boolean }) {
   const [open, setOpen] = useState(false);
   const { t } = useTranslation();
@@ -167,13 +78,7 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
   const [activeTab, setActiveTab] = useState("basic");
 
   const getCountryTranslation = (viName: string) => {
-    if (i18n.language === 'vi') return viName;
-    const viNames = countries.getNames("vi");
-    const code = Object.keys(viNames).find(k => viNames[k] === viName);
-    if (code) {
-      return countries.getName(code, i18n.language === 'zh' ? 'zh' : 'en') || viName;
-    }
-    return viName;
+    return getCountryNameForLocale(viName, i18n.language);
   };
 
   const selectClassName = "flex h-11 w-full rounded-xl border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring bg-card";
@@ -478,7 +383,7 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
                      <div className="space-y-2">
                        <Label>{t("editProfile.basicInfo.nationality", { defaultValue: "Quốc tịch" })}</Label>
                        <SearchableSelect disabled={!isEditingMode || loading} 
-                         options={ALL_COUNTRIES_SORTED} 
+                         options={PROFILE_ALL_COUNTRIES_SORTED} 
                          value={formData.nationality || "Việt Nam"} 
                          onChange={(v) => handleTextChange("nationality", v)} 
                          placeholder={t("editProfile.basicInfo.nationalityPlaceholder", { defaultValue: "Chọn Quốc tịch..." })} 
@@ -488,7 +393,7 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
                      <div className="space-y-2">
                        <Label>{t("editProfile.basicInfo.ethnicity", { defaultValue: "Dân tộc" })}</Label>
                        <SearchableSelect disabled={!isEditingMode || loading} 
-                         options={[...ETHNICITIES_VN, ...GLOBAL_ETHNICITIES, "Khác"]} 
+                         options={[...PROFILE_ETHNICITIES_VN, ...PROFILE_GLOBAL_ETHNICITIES, "Khác"]} 
                          value={formData.ethnicity || "Kinh"} 
                          onChange={(v) => handleTextChange("ethnicity", v)} 
                          placeholder={t("editProfile.basicInfo.ethnicityPlaceholder", { defaultValue: "Chọn Dân tộc..." })} 
@@ -498,7 +403,7 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
                      <div className="space-y-2">
                        <Label>{t("editProfile.basicInfo.religion", { defaultValue: "Tôn giáo" })}</Label>
                        <SearchableSelect disabled={!isEditingMode || loading} 
-                         options={WORLD_RELIGIONS} 
+                         options={PROFILE_WORLD_RELIGIONS} 
                          value={formData.religion || "Không"} 
                          onChange={(v) => handleTextChange("religion", v)} 
                          placeholder={t("editProfile.basicInfo.religionPlaceholder", { defaultValue: "Chọn Tôn giáo..." })} 

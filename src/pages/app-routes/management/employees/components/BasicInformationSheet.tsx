@@ -178,8 +178,7 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
 
     const payload = { ...formData };
     
-    delete payload.fullName;
-    delete payload.englishName;
+    delete payload.username;
     delete payload.employeeCode;
     
     if (payload.dateOfBirth && /^\d{4}-\d{2}-\d{2}$/.test(payload.dateOfBirth)) {

@@ -353,7 +353,7 @@ export default function Sidebar() {
                                 >
                                   {sub.label}
                                 </span>
-                                {"badge" in sub && sub.badge && (
+                                {"badge" in sub && !!sub.badge && (
                                   <span className="text-[9px] uppercase font-bold tracking-[0.08em] bg-red-500/20 text-red-400 px-1.5 py-0.5 rounded border border-red-500/30 whitespace-nowrap ml-auto">
                                     {String(sub.badge)}
                                   </span>

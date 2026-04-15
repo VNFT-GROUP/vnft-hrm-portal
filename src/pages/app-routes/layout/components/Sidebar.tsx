@@ -13,6 +13,14 @@ import { useLayoutStore } from "../../../../store/useLayoutStore";
 import { useNavigationData } from "@/lib/navigation";
 import "./Sidebar.css";
 
+type SubItemType = {
+  label: string;
+  path: string;
+  icon?: React.ReactNode;
+  badge?: string;
+  shortName?: string;
+};
+
 export default function Sidebar() {
   const navigate = useNavigate();
   const isCollapsed = useLayoutStore((state) => state.isSidebarCollapsed);
@@ -48,16 +56,16 @@ export default function Sidebar() {
   const [activePopout, setActivePopout] = useState<{
     label: string;
     top: number;
-    subItems: any[];
+    subItems: SubItemType[];
   } | null>(null);
 
   const handleToggleMenu = (
-    e: React.MouseEvent,
+    e: React.MouseEvent | React.KeyboardEvent,
     label: string,
     hasSub: boolean,
     path?: string,
     currentlyExpanded?: boolean,
-    subItems?: any[],
+    subItems?: SubItemType[],
   ) => {
     if (isCollapsed) {
       if (hasSub && subItems) {
@@ -187,7 +195,7 @@ export default function Sidebar() {
                         onKeyDown={(e) => {
                           if (e.key === "Enter" || e.key === " ")
                             handleToggleMenu(
-                              e as any,
+                              e,
                               item.label,
                               hasSub,
                               item.path,
@@ -199,7 +207,7 @@ export default function Sidebar() {
                         {item.icon}
                         {!isCollapsed && <span className="nav-label">{item.label}</span>}
                         {isCollapsed && (
-                          <span className="text-[9px] uppercase font-bold text-white/80 tracking-[0.03em] text-center w-full leading-tight mt-0.5 whitespace-normal break-words">
+                          <span className="text-[9px] uppercase font-bold text-white/80 tracking-[0.03em] text-center w-full leading-tight mt-0.5 whitespace-normal wrap-break-word">
                             {item.shortName || item.label}
                           </span>
                         )}
@@ -289,11 +297,11 @@ export default function Sidebar() {
       {isCollapsed && activePopout && (
         <>
           <div 
-            className="fixed inset-0 z-[9998]" 
+            className="fixed inset-0 z-9998" 
             onClick={() => setActivePopout(null)}
           />
           <div 
-            className="fixed z-[9999] bg-[#1e293b] border border-white/10 shadow-2xl rounded-xl p-2 left-[105px] w-56 animate-in slide-in-from-left-2 fade-in"
+            className="fixed z-9999 bg-[#1e293b] border border-white/10 shadow-2xl rounded-xl p-2 left-[105px] w-56 animate-in slide-in-from-left-2 fade-in"
             style={{ top: activePopout.top - 10 }}
           >
             <div className="text-xs font-bold uppercase tracking-wider text-white/50 mb-2 px-3 pt-2">

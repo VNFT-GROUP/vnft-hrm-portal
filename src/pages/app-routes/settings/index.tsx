@@ -1,11 +1,10 @@
 import { motion } from "framer-motion";
-import { Monitor, Globe, Palette, Type, Clock, MousePointer2, ShieldCheck, Key } from "lucide-react";
+import { Monitor, Globe, Palette, Type, Clock, MousePointer2, ShieldCheck, Key, LayoutDashboard, UserCircle, Calendar, FileEdit, FolderOpen, Settings as SettingsIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useLayoutStore } from "@/store/useLayoutStore";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import ChangePasswordModal from "../layout/components/ChangePasswordModal";
 
 export default function SettingsPage() {
   const showEmployeeLegend = useLayoutStore((state) => state.showEmployeeLegend);
@@ -22,10 +21,11 @@ export default function SettingsPage() {
   const setTimezone = useLayoutStore((state) => state.setTimezone);
   const cursorStyle = useLayoutStore((state) => state.cursorStyle);
   const setCursorStyle = useLayoutStore((state) => state.setCursorStyle);
+  const hiddenSidebarItems = useLayoutStore((state) => state.hiddenSidebarItems) || [];
+  const toggleSidebarItemVisibility = useLayoutStore((state) => state.toggleSidebarItemVisibility);
 
   const { t, i18n } = useTranslation();
   const [now, setNow] = useState(new Date());
-  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
 
   const fullTimezones = [
     "Asia/Ho_Chi_Minh",      // Vietnam & Cambodia
@@ -91,6 +91,15 @@ export default function SettingsPage() {
     { id: 'cursor-dark', name: t('settings.cursorSection.dark'), icon: <MousePointer2 fill="#1E2062" stroke="white" size={24} className="text-[#1E2062]" /> },
     { id: 'cursor-neon', name: t('settings.cursorSection.neon'), icon: <MousePointer2 fill="#0ea5e9" stroke="white" size={24} className="text-[#0ea5e9] drop-shadow-[0_0_5px_rgba(14,165,233,0.8)]" /> },
     { id: 'cursor-rose', name: t('settings.cursorSection.rose'), icon: <MousePointer2 fill="#f43f5e" stroke="white" size={24} className="text-[#f43f5e]" /> },
+  ];
+
+  const customizableMenus = [
+    { id: "dashboard", label: t("sidebar.dashboard"), icon: <LayoutDashboard size={14} className="text-muted-foreground mr-1.5 shrink-0" /> },
+    { id: "profile", label: t("sidebar.profile"), icon: <UserCircle size={14} className="text-muted-foreground mr-1.5 shrink-0" /> },
+    { id: "myAttendance", label: t("sidebar.myAttendance", { defaultValue: "Bảng công của tôi" }), icon: <Clock size={14} className="text-muted-foreground mr-1.5 shrink-0" /> },
+    { id: "requests", label: t("sidebar.requests"), icon: <FileEdit size={14} className="text-muted-foreground mr-1.5 shrink-0" /> },
+    { id: "management", label: t("sidebar.management"), icon: <FolderOpen size={14} className="text-muted-foreground mr-1.5 shrink-0" /> },
+    { id: "systemManagement", label: t("sidebar.systemManagement", { defaultValue: "Quản lý Hệ Thống" }), icon: <SettingsIcon size={14} className="text-muted-foreground mr-1.5 shrink-0" /> },
   ];
 
 
@@ -467,51 +476,37 @@ export default function SettingsPage() {
                 />
               </div>
             </div>
-          </div>
-        </motion.section>
-        
-        {/* Section 5: Security Settings */}
-        <motion.section 
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.45, ease: "easeOut" }}
-          className="bg-card text-card-foreground p-6 rounded-2xl border border-border shadow-sm"
-        >
-          <div className="flex items-center gap-3 mb-6 pb-4 border-b border-border">
-            <div className="p-2.5 bg-[#f59e0b]/10 text-[#f59e0b] rounded-xl flex items-center justify-center">
-              <ShieldCheck size={24} />
-            </div>
-            <h2 className="text-xl font-bold text-[#1E2062]">{t("settings.securitySection.title")}</h2>
-          </div>
 
-          <div className="flex flex-col gap-6">
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <hr className="my-2 border-border" />
+            
+            <div className="flex flex-col gap-3">
               <div className="flex flex-col gap-1.5">
-                <Label className="text-base font-semibold">
-                  {t("settings.securitySection.label")}
-                </Label>
-                <p className="text-sm text-muted-foreground max-w-xl">
-                  {t("settings.securitySection.desc")}
-                </p>
+                <Label className="text-base font-semibold">Tùy chỉnh Sidebar Menu</Label>
+                <p className="text-sm text-muted-foreground max-w-xl">Tắt các tính năng bạn không sử dụng thường xuyên để menu gọn gàng hơn.</p>
               </div>
               
-              <button 
-                onClick={() => setIsPasswordModalOpen(true)}
-                className="flex items-center gap-2 mt-2 md:mt-0 px-5 py-2.5 rounded-lg text-sm font-semibold text-white bg-[#F7941D] hover:bg-[#D4780F] shadow-sm hover:shadow transition-all"
-              >
-                <Key size={18} />
-                {t("settings.securitySection.changePasswordButton")}
-              </button>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-2">
+                {customizableMenus.map((menu) => (
+                  <div key={menu.id} className="flex items-center justify-between p-3 border border-border bg-card rounded-lg hover:border-muted-foreground/30 transition-colors">
+                    <Label htmlFor={`hide-${menu.id}`} className="flex items-center cursor-pointer font-medium flex-1 h-full select-none gap-2">
+                      {menu.icon}
+                      <span className={hiddenSidebarItems.includes(menu.id) ? "text-muted-foreground/70" : "text-foreground"}>{menu.label}</span>
+                    </Label>
+                    <Switch 
+                      id={`hide-${menu.id}`} 
+                      checked={!hiddenSidebarItems.includes(menu.id)} 
+                      onCheckedChange={() => toggleSidebarItemVisibility(menu.id)} 
+                      className="data-[state=checked]:bg-[#2E3192]"
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
+
           </div>
         </motion.section>
         
       </div>
-
-      <ChangePasswordModal 
-         isOpen={isPasswordModalOpen} 
-         onClose={() => setIsPasswordModalOpen(false)} 
-      />
     </div>
   );
 }

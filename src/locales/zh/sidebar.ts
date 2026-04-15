@@ -3,11 +3,16 @@ export default {
   dashboardOverview: "概览",
   profile: "个人资料",
   calendar: "日历 & 活动",
+  myAttendance: "我的考勤",
   requests: "请求",
-  management: "管理",
+  management: "人事管理",
   employees: "员工",
   employeeCodes: "员工代码",
   departments: "部门",
   positions: "职位",
-  groups: "组别"
+  roles: "职务",
+  groups: "权限组",
+  systemManagement: "系统",
+  timeSettings: "时间设置",
+  attendanceHistory: "考勤历史"
 };

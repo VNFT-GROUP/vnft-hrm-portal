@@ -9,7 +9,6 @@ const AppLayout = lazy(() => import("../pages/app-routes/layout/AppLayout"));
 const HomePage = lazy(() => import("../pages/app-routes/dashboard/HomePage"));
 const ProfilePage = lazy(() => import("../pages/app-routes/profile"));
 const EditProfilePage = lazy(() => import("../pages/app-routes/profile/edit"));
-const CalendarPage = lazy(() => import("../pages/app-routes/calendar"));
 const EmployeesPage = lazy(() => import("../pages/app-routes/management/employees"));
 const DepartmentsPage = lazy(() => import("../pages/app-routes/management/departments"));
 const PositionsPage = lazy(() => import("../pages/app-routes/management/positions"));
@@ -82,7 +81,6 @@ export default function AppRoutes() {
           {/* Core Menu */}
           <Route path="profile" element={<ProfilePage />} />
           <Route path="profile/edit" element={<EditProfilePage />} />
-          <Route path="calendar" element={<CalendarPage />} />
           <Route path="attendance" element={<MyAttendancePage />} />
           <Route path="evaluation" element={<EvaluationPage />} />
           <Route path="voting" element={<VotingPage />} />

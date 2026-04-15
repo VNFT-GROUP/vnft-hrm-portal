@@ -18,6 +18,8 @@ interface LayoutState {
   setTimezone: (tz: string) => void;
   cursorStyle: string;
   setCursorStyle: (cursor: string) => void;
+  hiddenSidebarItems: string[];
+  toggleSidebarItemVisibility: (itemId: string) => void;
 }
 
 export const useLayoutStore = create<LayoutState>()(
@@ -39,6 +41,12 @@ export const useLayoutStore = create<LayoutState>()(
       setTimezone: (tz) => set({ timezone: tz }),
       cursorStyle: 'cursor-default',
       setCursorStyle: (cursor) => set({ cursorStyle: cursor }),
+      hiddenSidebarItems: [],
+      toggleSidebarItemVisibility: (itemId) => set((state) => ({
+        hiddenSidebarItems: state.hiddenSidebarItems.includes(itemId)
+          ? state.hiddenSidebarItems.filter(id => id !== itemId)
+          : [...state.hiddenSidebarItems, itemId]
+      })),
     }),
     {
       name: 'vnft-layout-storage', // name of the item in localStorage

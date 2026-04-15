@@ -17,11 +17,14 @@ import {
   ChevronDown,
   ChevronRight as ChevronRightIcon,
   Clock,
+  Settings,
+  Palette,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { ScrollArea } from "../../../../components/ui/scroll-area";
 import { useLayoutStore } from "../../../../store/useLayoutStore";
 import { useAuthStore } from "../../../../store/useAuthStore";
+import QuickCustomizeSheet from "./QuickCustomizeSheet";
 import "./Sidebar.css";
 
 export default function Sidebar() {
@@ -29,6 +32,7 @@ export default function Sidebar() {
   const isCollapsed = useLayoutStore((state) => state.isSidebarCollapsed);
   const toggleSidebar = useLayoutStore((state) => state.toggleSidebar);
   const sidebarTheme = useLayoutStore((state) => state.sidebarTheme);
+  const hiddenSidebarItems = useLayoutStore((state) => state.hiddenSidebarItems) || [];
 
   // State for sub-menus
   const [expandedMenus, setExpandedMenus] = useState<Record<string, boolean>>(
@@ -103,6 +107,7 @@ export default function Sidebar() {
       section: "",
       items: [
         {
+          id: "dashboard",
           label: t("sidebar.dashboard"),
           path: "/app",
           icon: <LayoutDashboard size={20} />,
@@ -124,11 +129,7 @@ export default function Sidebar() {
           ),
         },
         {
-          label: t("sidebar.calendar"),
-          path: "/app/calendar",
-          icon: <Calendar size={20} />,
-        },
-        {
+          id: "myAttendance",
           label: t("sidebar.myAttendance", {
             defaultValue: "Bảng công của tôi",
           }),
@@ -136,6 +137,7 @@ export default function Sidebar() {
           icon: <Clock size={20} />,
         },
         {
+          id: "requests",
           label: t("sidebar.requests"),
           path: "/app/requests",
           icon: <FileEdit size={20} />,
@@ -143,6 +145,7 @@ export default function Sidebar() {
         ...(session?.groupName === "ADMIN"
           ? [
               {
+                id: "management",
                 label: t("sidebar.management"),
                 icon: <FolderOpen size={20} />,
                 subItems: [
@@ -171,21 +174,19 @@ export default function Sidebar() {
                     path: "/app/management/roles",
                     icon: <Layers size={16} />,
                   },
-                  {
-                    label: t("sidebar.attendance", {
-                      defaultValue: "Chấm công",
-                    }),
-                    path: "/app/management/attendance",
-                    icon: <Calendar size={16} />,
-                    badge: "System",
-                  },
+                ],
+              },
+              {
+                id: "systemManagement",
+                label: t("sidebar.systemManagement", { defaultValue: "Quản lý Hệ Thống" }),
+                icon: <Settings size={20} />,
+                subItems: [
                   {
                     label: t("sidebar.groups", {
                       defaultValue: "Nhóm quyền / Mã quyền",
                     }),
                     path: "/app/management/groups",
                     icon: <CheckSquare size={16} />,
-                    badge: "System",
                   },
                   {
                     label: t("sidebar.timeSettings", {
@@ -193,7 +194,13 @@ export default function Sidebar() {
                     }),
                     path: "/app/management/time-settings",
                     icon: <Clock size={16} />,
-                    badge: "System",
+                  },
+                  {
+                    label: t("sidebar.attendanceHistory", {
+                      defaultValue: "Lịch sử Chấm công",
+                    }),
+                    path: "/app/management/attendance",
+                    icon: <Calendar size={16} />,
                   },
                 ],
               },
@@ -256,7 +263,7 @@ export default function Sidebar() {
                 <div className="nav-section">{group.section}</div>
               )}
               <ul>
-                {group.items.map((item) => {
+                {group.items.filter(item => item.id ? !hiddenSidebarItems.includes(item.id) : true).map((item) => {
                   const hasSub = !!item.subItems;
                   // Auto expand if currently on a sub-item path OR manually expanded
                   const isItemActive = item.path === window.location.pathname;
@@ -381,6 +388,17 @@ export default function Sidebar() {
           )}
         </div>
       )}
+
+      {/* Footer Navigation */}
+      <div className="sidebar-footer">
+        <QuickCustomizeSheet>
+          <button className={`flex items-center w-full gap-3 p-2.5 rounded-xl border border-white/10 hover:bg-white/10 transition-colors text-white/80 hover:text-white ${isCollapsed ? 'justify-center' : ''}`}>
+            <Palette size={20} className="shrink-0" />
+            {!isCollapsed && <span className="font-semibold text-sm tracking-wide">{t('sidebar.customize', { defaultValue: 'Cá nhân hoá' })}</span>}
+          </button>
+        </QuickCustomizeSheet>
+      </div>
+
     </aside>
   );
 }

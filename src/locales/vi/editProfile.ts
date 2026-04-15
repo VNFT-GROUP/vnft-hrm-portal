@@ -23,11 +23,15 @@ export default {
     avatarTitle: "Ảnh chân dung",
     avatarHint: "Định dạng hỗ trợ: JPEG, PNG, WEBP. Kích thước tỷ lệ 1:1, dung lượng tối đa 5MB.",
     uploadAvatarBtn: "Chọn tệp tải lên",
+    username: "Tên đăng nhập",
+    usernamePlaceholder: "Tên đăng nhập hệ thống",
+    attendanceCode: "Mã chấm công",
+    attendanceCodePlaceholder: "Nhập mã chấm công",
     employeeCode: "Mã nhân viên (Bắt buộc)",
     employeeCodePlaceholder: "VD: VNSGN001",
     fullName: "Họ và Tên",
     fullNamePlaceholder: "Nhập họ và tên đầy đủ",
-    englishName: "Tên tiếng Anh (English Name)",
+    englishName: "Tên tiếng anh",
     englishNamePlaceholder: "Nhập tên Tiếng Anh",
     phoneNumber: "Số điện thoại",
     phoneNumberPlaceholder: "VD: 09xxxxxxxx",
@@ -46,7 +50,9 @@ export default {
     ethnicity: "Dân tộc",
     ethnicityPlaceholder: "Chọn Dân tộc...",
     religion: "Tôn giáo",
-    religionPlaceholder: "Chọn Tôn giáo..."
+    religionPlaceholder: "Chọn Tôn giáo...",
+    storageNotice:
+      "Dữ liệu Quốc tịch, Dân tộc và Tôn giáo sẽ được lưu vào cơ sở dữ liệu theo tiếng Việt, không phụ thuộc vào ngôn ngữ người dùng."
   },
   contact: {
     title: "Liên hệ và Báo tin",

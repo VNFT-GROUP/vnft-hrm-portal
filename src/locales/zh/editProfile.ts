@@ -23,6 +23,10 @@ export default {
     avatarTitle: "头像照片",
     avatarHint: "支持格式：JPEG、PNG、WEBP。比例 1:1，最大 5MB。",
     uploadAvatarBtn: "选择上传文件",
+    username: "用户名",
+    usernamePlaceholder: "系统登录名",
+    attendanceCode: "考勤编号",
+    attendanceCodePlaceholder: "输入考勤编号",
     employeeCode: "员工编号（必填）",
     employeeCodePlaceholder: "例：VNSGN090",
     fullName: "全名",
@@ -46,7 +50,8 @@ export default {
     ethnicity: "民族",
     ethnicityPlaceholder: "选择民族...",
     religion: "宗教信仰",
-    religionPlaceholder: "选择宗教信仰..."
+    religionPlaceholder: "选择宗教信仰...",
+    storageNotice: "国籍、民族和宗教信仰数据将以越南语形式存入数据库，不受用户语言影响。"
   },
   contact: {
     title: "联系方式与居住地",

@@ -18,11 +18,12 @@ import {
   GLOBAL_ETHNICITIES as PROFILE_GLOBAL_ETHNICITIES,
   getCountryNameForLocale,
   WORLD_RELIGIONS as PROFILE_WORLD_RELIGIONS,
-} from "@/utils/profile-options";
+} from "@/lib/profile-options";
 
 type ProfileFormData = Partial<UpdateCurrentUserProfileRequest> & {
   fullName?: string;
   englishName?: string;
+  attendanceCode?: string;
   employeeCode?: string;
 };
 function SearchableSelect({ options, value, onChange, placeholder, getTranslation }: { options: string[], value: string, onChange: (val: string) => void, placeholder: string, getTranslation?: (val: string) => string }) {
@@ -87,6 +88,7 @@ export default function EditProfilePage() {
   const [formData, setFormData] = useState<ProfileFormData>({
      fullName: session?.fullName || "",
      englishName: session?.englishName || "",
+     attendanceCode: "",
      employeeCode: session?.username || "", // Typically mapped to code
      phoneNumber: "",
      gender: session?.gender || "MALE",
@@ -121,6 +123,7 @@ export default function EditProfilePage() {
              ...prev,
              fullName: d.fullName || prev.fullName,
              englishName: d.englishName || prev.englishName,
+             attendanceCode: d.attendanceCode || "",
              employeeCode: d.employeeCode || prev.employeeCode,
              phoneNumber: d.phoneNumber || "",
              gender: d.gender || prev.gender,
@@ -176,6 +179,7 @@ export default function EditProfilePage() {
     // Remove read-only UI tracking fields from the request payload
     delete payload.fullName;
     delete payload.englishName;
+    delete payload.attendanceCode;
     delete payload.employeeCode;
     
     // Convert dates back to Instant-compatible format for Java backend
@@ -309,6 +313,15 @@ export default function EditProfilePage() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
+                    <Label>{t("editProfile.basicInfo.attendanceCode", { defaultValue: "Mã chấm công" })}</Label>
+                    <Input
+                      value={formData.attendanceCode || ""}
+                      placeholder={t("editProfile.basicInfo.attendanceCodePlaceholder", { defaultValue: "Nhập mã chấm công" })}
+                      className="h-11 rounded-xl bg-[#2E3192]/5 border-[#2E3192]/20 text-[#2E3192] font-semibold opacity-100 pointer-events-none"
+                      disabled
+                    />
+                  </div>
+                  <div className="space-y-2">
                     <Label>{t("editProfile.basicInfo.employeeCode", { defaultValue: "Mã nhân viên (Bắt buộc)" })}</Label>
                     <Input 
                       value={formData.employeeCode}
@@ -424,6 +437,14 @@ export default function EditProfilePage() {
             )}
 
             {/* CƯ TRÚ VÀ LIÊN HỆ */}
+            {activeTab === "basic" && (
+              <p className="mt-3 text-xs text-muted-foreground">
+                {t("editProfile.basicInfo.storageNotice", {
+                  defaultValue:
+                    "Dữ liệu Quốc tịch, Dân tộc và Tôn giáo sẽ được lưu vào cơ sở dữ liệu theo tiếng Việt, không phụ thuộc vào ngôn ngữ người dùng.",
+                })}
+              </p>
+            )}
             {activeTab === "contact" && (
               <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
                 <div className="border-b border-border pb-4 mb-6">

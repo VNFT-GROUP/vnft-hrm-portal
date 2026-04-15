@@ -20,9 +20,10 @@ import {
   GLOBAL_ETHNICITIES as PROFILE_GLOBAL_ETHNICITIES,
   getCountryNameForLocale,
   WORLD_RELIGIONS as PROFILE_WORLD_RELIGIONS,
-} from "@/utils/profile-options";
+} from "@/lib/profile-options";
 
 type ProfileFormData = Partial<UpdateUserProfileRequest> & {
+  username?: string;
   fullName?: string;
   englishName?: string;
   employeeCode?: string;
@@ -87,8 +88,10 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
   const [isFetching, setIsFetching] = useState(true);
 
   const [formData, setFormData] = useState<ProfileFormData>({
+     username: "",
      fullName: "",
      englishName: "",
+     attendanceCode: "",
      employeeCode: "",
      phoneNumber: "",
      gender: "MALE",
@@ -123,8 +126,10 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
            const d = res.data;
            setFormData((prev) => ({
              ...prev,
+             username: d.username || prev.username,
              fullName: d.fullName || prev.fullName,
              englishName: d.englishName || prev.englishName,
+             attendanceCode: d.attendanceCode || "",
              employeeCode: d.employeeCode || prev.employeeCode,
              phoneNumber: d.phoneNumber || "",
              gender: d.gender || prev.gender,
@@ -164,7 +169,7 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.employeeCode?.trim() || !formData.fullName?.trim() || !formData.dateOfBirth?.trim() || !formData.maritalStatus || !formData.phoneNumber?.trim() || !formData.currentAddress?.trim() || !formData.currentCity?.trim() || !formData.citizenIdNumber?.trim() || !formData.citizenIdIssueDate?.trim() || !formData.citizenIdIssuePlace?.trim()) {
+    if (!formData.employeeCode?.trim() || !formData.fullName?.trim() || !formData.englishName?.trim() || !formData.dateOfBirth?.trim() || !formData.maritalStatus || !formData.phoneNumber?.trim() || !formData.currentAddress?.trim() || !formData.currentCity?.trim() || !formData.citizenIdNumber?.trim() || !formData.citizenIdIssueDate?.trim() || !formData.citizenIdIssuePlace?.trim()) {
       toast.error(t("editProfile.validation.missingInfoTitle", { defaultValue: "Thiếu thông tin bắt buộc" }), {
         description: t("editProfile.validation.missingInfoDesc", { defaultValue: "Vui lòng điền đầy đủ thông tin cho các trường có đánh dấu (*)." })
       });
@@ -306,6 +311,25 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
+                    <Label>{t("editProfile.basicInfo.username", { defaultValue: "Tên đăng nhập" })}</Label>
+                    <Input
+                      disabled
+                      value={formData.username || ""}
+                      placeholder={t("editProfile.basicInfo.usernamePlaceholder", { defaultValue: "Tên đăng nhập hệ thống" })}
+                      className="h-11 rounded-xl bg-[#2E3192]/5 border-[#2E3192]/20 text-[#2E3192] font-semibold opacity-100 pointer-events-none"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>{t("editProfile.basicInfo.attendanceCode", { defaultValue: "Mã chấm công" })}</Label>
+                    <Input
+                      disabled={!isEditingMode || loading}
+                      value={formData.attendanceCode || ""}
+                      onChange={(e) => handleTextChange("attendanceCode", e.target.value)}
+                      placeholder={t("editProfile.basicInfo.attendanceCodePlaceholder", { defaultValue: "Nhập mã chấm công" })}
+                      className="h-11 rounded-xl"
+                    />
+                  </div>
+                  <div className="space-y-2">
                     <Label>{t("editProfile.basicInfo.employeeCode", { defaultValue: "Mã nhân viên (Bắt buộc)" })}</Label>
                     <Input disabled={true} 
                       value={formData.employeeCode}
@@ -313,7 +337,7 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>{t("editProfile.basicInfo.englishName", { defaultValue: "Tên tiếng Anh (English Name)" })}</Label>
+                    <Label>{t("editProfile.basicInfo.englishName", { defaultValue: "Tên tiếng Anh (English Name)" })} <span className="text-destructive">*</span></Label>
                     <Input disabled={!isEditingMode || loading} 
                       value={formData.englishName}
                       onChange={(e) => handleTextChange("englishName", e.target.value)}
@@ -415,6 +439,14 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
               </div>
             )}
 
+            {activeTab === "basic" && (
+              <p className="mt-3 text-xs text-muted-foreground">
+                {t("editProfile.basicInfo.storageNotice", {
+                  defaultValue:
+                    "Dữ liệu Quốc tịch, Dân tộc và Tôn giáo sẽ được lưu vào cơ sở dữ liệu theo tiếng Việt, không phụ thuộc vào ngôn ngữ người dùng.",
+                })}
+              </p>
+            )}
             {activeTab === "contact" && (
               <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
                 <div className="border-b border-border pb-4 mb-6">

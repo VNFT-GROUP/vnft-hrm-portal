@@ -23,6 +23,10 @@ export default {
     avatarTitle: "Portrait Photo",
     avatarHint: "Supported formats: JPEG, PNG, WEBP. 1:1 ratio, max 5MB.",
     uploadAvatarBtn: "Choose file to upload",
+    username: "Username",
+    usernamePlaceholder: "System username",
+    attendanceCode: "Attendance Code",
+    attendanceCodePlaceholder: "Enter attendance code",
     employeeCode: "Employee Code (Required)",
     employeeCodePlaceholder: "Ex: VNSGN090",
     fullName: "Full Name",
@@ -46,7 +50,8 @@ export default {
     ethnicity: "Ethnicity",
     ethnicityPlaceholder: "Select Ethnicity...",
     religion: "Religion",
-    religionPlaceholder: "Select Religion..."
+    religionPlaceholder: "Select Religion...",
+    storageNotice: "Nationality, ethnicity, and religion data will be stored in the database in Vietnamese, regardless of the user's language."
   },
   contact: {
     title: "Contact & Residence",

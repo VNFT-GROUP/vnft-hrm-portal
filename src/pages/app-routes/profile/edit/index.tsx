@@ -26,48 +26,7 @@ type ProfileFormData = Partial<UpdateCurrentUserProfileRequest> & {
   attendanceCode?: string;
   employeeCode?: string;
 };
-function SearchableSelect({ options, value, onChange, placeholder, getTranslation }: { options: string[], value: string, onChange: (val: string) => void, placeholder: string, getTranslation?: (val: string) => string }) {
-  const [open, setOpen] = useState(false);
-  const { t } = useTranslation();
-  
-  const displayValue = value ? (getTranslation ? getTranslation(value) : value) : t(placeholder);
-
-  return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger 
-        className="flex h-11 w-full items-center justify-between rounded-xl border border-input bg-card px-3 text-sm text-foreground shadow-sm hover:bg-muted/30 focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 overflow-hidden"
-      >
-        <span className="truncate">{displayValue}</span>
-        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-      </PopoverTrigger>
-      <PopoverContent className="p-0 rounded-xl w-[calc(100vw-2rem)] sm:w-[350px] md:w-[450px]" align="start">
-        <Command>
-          <CommandInput placeholder={t("editProfile.searchableSelect.searchPlaceholder", { defaultValue: "Tìm kiếm..." })} />
-          <CommandList className="max-h-[350px]">
-            <CommandEmpty>{t("editProfile.searchableSelect.noResults", { defaultValue: "Không tìm thấy kết quả." })}</CommandEmpty>
-            <CommandGroup>
-              {options.map((opt) => (
-                <CommandItem
-                  key={opt}
-                  value={opt}
-                  onSelect={() => {
-                    onChange(opt);
-                    setOpen(false);
-                  }}
-                >
-                  <Check
-                    className={`mr-2 h-4 w-4 ${value === opt ? "opacity-100" : "opacity-0"}`}
-                  />
-                  {getTranslation ? getTranslation(opt) : opt}
-                </CommandItem>
-              ))}
-            </CommandGroup>
-          </CommandList>
-        </Command>
-      </PopoverContent>
-    </Popover>
-  );
-}
+import { ProfileSearchableSelect } from "@/components/custom/ProfileSearchableSelect";
 
 export default function EditProfilePage() {
   const { t, i18n } = useTranslation();
@@ -403,7 +362,7 @@ export default function EditProfilePage() {
                   <div className="grid grid-cols-3 gap-4 md:col-span-2">
                      <div className="space-y-2">
                        <Label>{t("editProfile.basicInfo.nationality", { defaultValue: "Quốc tịch" })}</Label>
-                       <SearchableSelect 
+                       <ProfileSearchableSelect 
                          options={PROFILE_ALL_COUNTRIES_SORTED} 
                          value={formData.nationality || "Việt Nam"} 
                          onChange={(v) => handleTextChange("nationality", v)} 
@@ -413,22 +372,28 @@ export default function EditProfilePage() {
                      </div>
                      <div className="space-y-2">
                        <Label>{t("editProfile.basicInfo.ethnicity", { defaultValue: "Dân tộc" })}</Label>
-                       <SearchableSelect 
+                       <ProfileSearchableSelect 
                          options={[...PROFILE_ETHNICITIES_VN, ...PROFILE_GLOBAL_ETHNICITIES, "Khác"]} 
                          value={formData.ethnicity || "Kinh"} 
                          onChange={(v) => handleTextChange("ethnicity", v)} 
                          placeholder={t("editProfile.basicInfo.ethnicityPlaceholder", { defaultValue: "Chọn Dân tộc..." })} 
-                         getTranslation={(opt) => t(`dropdowns.ethnicity.${opt}`, { defaultValue: opt })}
+                         getTranslation={(opt) => {
+                           const translated = t(`dropdowns.ethnicity.${opt}`, { defaultValue: opt });
+                           return translated && translated !== opt ? `${opt} (${translated})` : opt;
+                         }}
                        />
                      </div>
                      <div className="space-y-2">
                        <Label>{t("editProfile.basicInfo.religion", { defaultValue: "Tôn giáo" })}</Label>
-                       <SearchableSelect 
+                       <ProfileSearchableSelect 
                          options={PROFILE_WORLD_RELIGIONS} 
                          value={formData.religion || "Không"} 
                          onChange={(v) => handleTextChange("religion", v)} 
                          placeholder={t("editProfile.basicInfo.religionPlaceholder", { defaultValue: "Chọn Tôn giáo..." })} 
-                         getTranslation={(opt) => t(`dropdowns.religion.${opt}`, { defaultValue: opt })}
+                         getTranslation={(opt) => {
+                           const translated = t(`dropdowns.religion.${opt}`, { defaultValue: opt });
+                           return translated && translated !== opt ? `${opt} (${translated})` : opt;
+                         }}
                        />
                      </div>
                   </div>

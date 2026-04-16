@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Save, User, Shield, BookOpen, Briefcase, MapPin, Plus, Trash2, Users, Camera, Check, ChevronsUpDown } from "lucide-react";
+import { ArrowLeft, Save, User, Shield, BookOpen, Briefcase, MapPin, Plus, Trash2, Users, Camera, Check, ChevronsUpDown, Info } from "lucide-react";
 import { useAuthStore } from "@/store/useAuthStore";
 import { toast } from "sonner";
 import { currentUserProfileService } from "@/services/user/currentUserProfileService";
@@ -438,12 +438,15 @@ export default function EditProfilePage() {
 
             {/* CƯ TRÚ VÀ LIÊN HỆ */}
             {activeTab === "basic" && (
-              <p className="mt-3 text-xs text-muted-foreground">
-                {t("editProfile.basicInfo.storageNotice", {
-                  defaultValue:
-                    "Dữ liệu Quốc tịch, Dân tộc và Tôn giáo sẽ được lưu vào cơ sở dữ liệu theo tiếng Việt, không phụ thuộc vào ngôn ngữ người dùng.",
-                })}
-              </p>
+              <div className="mt-6 flex items-start gap-2.5 bg-[#F7941D]/10 border border-[#F7941D]/20 p-3.5 rounded-xl text-sm text-foreground/80 shadow-sm">
+                <Info size={18} className="text-[#F7941D] shrink-0 mt-0.5" />
+                <p className="leading-relaxed">
+                  {t("editProfile.basicInfo.storageNotice", {
+                    defaultValue:
+                      "Dữ liệu Quốc tịch, Dân tộc và Tôn giáo sẽ được lưu vào cơ sở dữ liệu theo tiếng Việt, không phụ thuộc vào ngôn ngữ người dùng.",
+                  })}
+                </p>
+              </div>
             )}
             {activeTab === "contact" && (
               <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">

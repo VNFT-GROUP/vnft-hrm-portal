@@ -3,7 +3,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/u
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { CalendarIcon, ChevronLeft, Paperclip, UploadCloud, X, Fingerprint, Briefcase, Home, CalendarOff, LogOut, CheckCircle2 } from "lucide-react";
+import { CalendarIcon, ChevronLeft, Fingerprint, Briefcase, Home, CalendarOff, LogOut, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
@@ -72,29 +72,10 @@ export default function CreateRequestPage() {
 
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
-  const [files, setFiles] = useState<File[]>([]);
 
   const handleTypeChange = (val: string | null) => {
     setType((val as RequestType) || "");
     setReason(""); 
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      const selectedFiles = Array.from(e.target.files);
-      setFiles((prev) => {
-        const total = prev.length + selectedFiles.length;
-        if (total > 5) {
-          toast.error("Chỉ được tải lên tối đa 5 file đính kèm.");
-          return [...prev, ...selectedFiles].slice(0, 5);
-        }
-        return [...prev, ...selectedFiles];
-      });
-    }
-  };
-
-  const removeFile = (index: number) => {
-    setFiles((prev) => prev.filter((_, i) => i !== index));
   };
 
   const onSubmit = () => {
@@ -329,49 +310,6 @@ export default function CreateRequestPage() {
                   placeholder="Mô tả chi tiết (không bắt buộc)..."
                 />
               </div>
-            </div>
-
-            <div className="space-y-1.5">
-              <Label className="text-[13px] font-semibold text-slate-700">Tệp đính kèm (Tối đa 5 file)</Label>
-              <div className="mt-1">
-                <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-slate-300 border-dashed rounded-lg cursor-pointer bg-slate-50 hover:bg-slate-100 hover:border-slate-400 transition-colors">
-                  <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                    <UploadCloud className="w-8 h-8 text-slate-400 mb-2" />
-                    <p className="sm:text-sm text-[13px] text-slate-500"><span className="font-semibold text-indigo-600">Nhấn tập tin</span> hoặc kéo thả vào đây</p>
-                    <p className="text-xs text-slate-400 mt-1">Hỗ trợ PDF, DOCX, JPG, PNG (Tối đa 5MB/file)</p>
-                  </div>
-                  <Input 
-                    type="file" 
-                    className="hidden" 
-                    multiple 
-                    onChange={handleFileChange} 
-                    accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" 
-                  />
-                </label>
-              </div>
-
-              {files.length > 0 && (
-                <div className="mt-2.5 space-y-2">
-                  {files.map((file, idx) => (
-                    <div key={idx} className="flex items-center justify-between p-2.5 bg-white border border-slate-200 rounded-md shadow-sm">
-                      <div className="flex items-center gap-2 truncate mr-3">
-                        <Paperclip className="w-4 h-4 text-slate-400 shrink-0" />
-                        <span className="text-[13px] text-slate-600 truncate">{file.name}</span>
-                        <span className="text-xs text-slate-400 shrink-0">
-                          ({(file.size / 1024 / 1024).toFixed(2)} MB)
-                        </span>
-                      </div>
-                      <button 
-                        type="button" 
-                        onClick={() => removeFile(idx)} 
-                        className="p-1 text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded transition-colors shrink-0"
-                      >
-                        <X className="w-4 h-4" />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              )}
             </div>
           </>
           )}

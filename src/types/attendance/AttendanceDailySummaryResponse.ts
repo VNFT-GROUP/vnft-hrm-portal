@@ -10,6 +10,8 @@ export interface AttendanceDailySummaryResponse {
   scheduledCheckOut?: string;
   actualCheckIn?: string;
   actualCheckOut?: string;
+  checkInTime?: string;
+  checkOutTime?: string;
   checkInValid?: boolean;
   checkOutValid?: boolean;
   workMinutes?: number;
@@ -21,6 +23,7 @@ export interface AttendanceDailySummaryResponse {
   locked?: boolean;
   note?: string;
   active?: boolean;
+  recorded?: boolean;
   createdAt?: string;
   updatedAt?: string;
   createdBy?: string;

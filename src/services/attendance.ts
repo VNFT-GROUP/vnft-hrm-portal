@@ -3,6 +3,7 @@ import type { ApiResponse } from "@/types/base/ApiResponse";
 import type { PageResponse } from "@/types/base/PageResponse";
 import type { AttendanceRecordResponse } from "@/types/attendance/AttendanceRecordResponse";
 import type { MonthlyAttendanceResponse } from "@/types/attendance/MonthlyAttendanceResponse";
+import type { AttendanceDailySummaryResponse } from "@/types/attendance/AttendanceDailySummaryResponse";
 
 export const attendanceService = {
   getAttendanceRecords: async (
@@ -24,6 +25,15 @@ export const attendanceService = {
   ): Promise<ApiResponse<MonthlyAttendanceResponse>> => {
     const response = await apiClient.get("/attendance/me/monthly", {
       params: { year, month },
+    });
+    return response.data;
+  },
+
+  getCurrentUserAttendanceByDate: async (
+    date: string
+  ): Promise<ApiResponse<AttendanceDailySummaryResponse>> => {
+    const response = await apiClient.get("/attendance/me", {
+      params: { date },
     });
     return response.data;
   },

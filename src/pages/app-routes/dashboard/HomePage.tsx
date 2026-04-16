@@ -1,13 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ChevronLeft, ChevronRight, Minus, CheckCircle2, Clock, CalendarDays, FileText } from "lucide-react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { ChevronLeft, ChevronRight, CheckCircle2, Clock, CalendarDays, FileText } from "lucide-react";
 import { useAuthStore } from "@/store/useAuthStore";
 import { format, parseISO } from "date-fns";
 import { vi } from "date-fns/locale";
@@ -130,13 +123,13 @@ const TopSalesTable = () => {
 */
 
 const IntegratedTaskCard = () => {
-  const [activeTab, setActiveTab] = useState<'todo' | 'proposed' | 'following'>('todo');
+  const [activeTab, setActiveTab] = useState<'requests' | 'assets' | 'reminders'>('requests');
 
-  const emptyText = activeTab === 'todo'
-    ? 'Thật tuyệt. Bạn đã xử lý hết công việc!'
-    : activeTab === 'proposed'
-      ? 'Đề xuất của bạn đã được xử lý hết.'
-      : 'Công việc bạn theo dõi đã được xử lý hết.';
+  const emptyText = activeTab === 'requests'
+    ? 'Thật tuyệt. Bạn đã xử lý hết các đơn từ!'
+    : activeTab === 'assets'
+      ? 'Không có yêu cầu tài sản nào cần xử lý.'
+      : 'Không có nhắc nhở nào cho bạn.';
 
   return (
     <motion.div
@@ -149,39 +142,22 @@ const IntegratedTaskCard = () => {
         {/* Tabs */}
         <div className="flex items-center gap-1 sm:gap-6 px-3">
           <button
-            onClick={() => setActiveTab('todo')}
-            className={`pb-3 pt-2 text-[13px] sm:text-[14px] transition-colors whitespace-nowrap ${activeTab === 'todo' ? 'font-semibold text-primary border-b-2 border-primary' : 'font-medium text-gray-500 hover:text-gray-700'}`}
+            onClick={() => setActiveTab('requests')}
+            className={`pb-3 pt-2 text-[13px] sm:text-[14px] transition-colors whitespace-nowrap ${activeTab === 'requests' ? 'font-semibold text-primary border-b-2 border-primary' : 'font-medium text-gray-500 hover:text-gray-700'}`}
           >
-            Việc cần thực hiện
+            Đơn từ
           </button>
           <button
-            onClick={() => setActiveTab('proposed')}
-            className={`pb-3 pt-2 text-[13px] sm:text-[14px] transition-colors whitespace-nowrap ${activeTab === 'proposed' ? 'font-semibold text-primary border-b-2 border-primary' : 'font-medium text-gray-500 hover:text-gray-700'}`}
+            onClick={() => setActiveTab('assets')}
+            className={`pb-3 pt-2 text-[13px] sm:text-[14px] transition-colors whitespace-nowrap ${activeTab === 'assets' ? 'font-semibold text-primary border-b-2 border-primary' : 'font-medium text-gray-500 hover:text-gray-700'}`}
           >
-            Đề xuất của bạn
+            Tài sản
           </button>
           <button
-            onClick={() => setActiveTab('following')}
-            className={`pb-3 pt-2 text-[13px] sm:text-[14px] transition-colors whitespace-nowrap ${activeTab === 'following' ? 'font-semibold text-primary border-b-2 border-primary' : 'font-medium text-gray-500 hover:text-gray-700'}`}
+            onClick={() => setActiveTab('reminders')}
+            className={`pb-3 pt-2 text-[13px] sm:text-[14px] transition-colors whitespace-nowrap ${activeTab === 'reminders' ? 'font-semibold text-primary border-b-2 border-primary' : 'font-medium text-gray-500 hover:text-gray-700'}`}
           >
-            Việc bạn giao, theo dõi
-          </button>
-        </div>
-
-        {/* Filters */}
-        <div className="hidden items-center gap-2 px-3 pb-2 lg:flex">
-          <Select defaultValue="Cần thực hiện">
-            <SelectTrigger className="h-[30px] border-gray-200 text-[13px] font-medium text-gray-500 bg-white hover:bg-gray-50 shadow-sm focus:ring-0">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent align="end" alignItemWithTrigger={false} sideOffset={4} className="text-[13px] min-w-[140px]">
-              <SelectItem value="Cần thực hiện" className="text-[13px] cursor-pointer">Cần thực hiện</SelectItem>
-              <SelectItem value="Đang làm" className="text-[13px] cursor-pointer">Đang làm</SelectItem>
-              <SelectItem value="Hoàn thành" className="text-[13px] cursor-pointer">Hoàn thành</SelectItem>
-            </SelectContent>
-          </Select>
-          <button className="text-gray-400 hover:text-gray-600 transition-colors ml-2">
-            <Minus size={18} strokeWidth={1.5} />
+            Nhắc nhở
           </button>
         </div>
       </div>
@@ -216,19 +192,21 @@ export default function HomePage() {
   const displayDate = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
   
   // Format Check-in time
-  const checkInDisplay = todayAttendance?.checkInTime 
-    ? todayAttendance.checkInTime.substring(0, 5) 
+  const checkInVal = todayAttendance?.checkInTime || todayAttendance?.actualCheckIn;
+  const checkInDisplay = checkInVal 
+    ? checkInVal.substring(0, 5) 
     : "--";
   const checkInAmPm = "";
 
   // Format Check-out time
-  const checkOutDisplay = todayAttendance?.checkOutTime 
-    ? todayAttendance.checkOutTime.substring(0, 5) 
+  const checkOutVal = todayAttendance?.checkOutTime || todayAttendance?.actualCheckOut;
+  const checkOutDisplay = checkOutVal 
+    ? checkOutVal.substring(0, 5) 
     : "--";
   const checkOutAmPm = "";
 
-  const hasCheckIn = !!todayAttendance?.checkInTime;
-  const hasCheckOut = !!todayAttendance?.checkOutTime;
+  const hasCheckIn = !!checkInVal;
+  const hasCheckOut = !!checkOutVal;
 
   const getCheckInStatus = () => {
     if (!hasCheckIn) return { text: "Chưa ghi nhận", color: "text-[#64748b]", bg: "bg-[#cbd5e1]", cardBg: "bg-[#f1f5f9]" };

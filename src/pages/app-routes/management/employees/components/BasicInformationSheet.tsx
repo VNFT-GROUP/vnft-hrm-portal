@@ -289,7 +289,7 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>{t("editProfile.basicInfo.englishName", { defaultValue: "Tên tiếng Anh (English Name)" })} <span className="text-destructive">*</span></Label>
+                    <Label>{t("editProfile.basicInfo.englishName", { defaultValue: "Tên tiếng Anh (English Name)" })}</Label>
                     <Input disabled={!isEditingMode || loading} 
                       value={formData.englishName}
                       onChange={(e) => handleTextChange("englishName", e.target.value)}
@@ -298,7 +298,7 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>{t("editProfile.basicInfo.fullName", { defaultValue: "Họ và Tên" })} <span className="text-destructive">*</span></Label>
+                    <Label>{t("editProfile.basicInfo.fullName", { defaultValue: "Họ và Tên" })}</Label>
                     <Input disabled={!isEditingMode || loading} 
                       value={formData.fullName}
                       onChange={(e) => handleTextChange("fullName", e.target.value)}
@@ -307,7 +307,7 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>{t("editProfile.basicInfo.phoneNumber", { defaultValue: "Số điện thoại" })} <span className="text-destructive">*</span></Label>
+                    <Label>{t("editProfile.basicInfo.phoneNumber", { defaultValue: "Số điện thoại" })}</Label>
                     <Input disabled={!isEditingMode || loading} 
                       value={formData.phoneNumber || ''}
                       onChange={(e) => handleTextChange("phoneNumber", e.target.value)}
@@ -316,7 +316,7 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
                     />
                   </div>
                   <div className="space-y-2">
-                     <Label>{t("editProfile.basicInfo.dob", { defaultValue: "Ngày sinh (Date of Birth)" })} <span className="text-destructive">*</span></Label>
+                     <Label>{t("editProfile.basicInfo.dob", { defaultValue: "Ngày sinh (Date of Birth)" })}</Label>
                      <Input disabled={!isEditingMode || loading} 
                        type="date"
                        value={formData.dateOfBirth} 
@@ -337,7 +337,7 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
                     </select>
                   </div>
                   <div className="space-y-2">
-                    <Label>{t("editProfile.basicInfo.maritalStatus", { defaultValue: "Tình trạng hôn nhân" })} <span className="text-destructive">*</span></Label>
+                    <Label>{t("editProfile.basicInfo.maritalStatus", { defaultValue: "Tình trạng hôn nhân" })}</Label>
                     <select disabled={!isEditingMode || loading} 
                       className={selectClassName} 
                       value={formData.maritalStatus} 
@@ -434,11 +434,11 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
                      <h3 className="font-semibold text-sm flex items-center gap-2"><MapPin size={16}/> {t("editProfile.contact.currentAddressSection", { defaultValue: "Chỗ ở hiện tại" })}</h3>
                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-2">
-                          <Label>{t("editProfile.contact.currentProvince", { defaultValue: "Tỉnh/Thành phố hiện tại" })} <span className="text-destructive">*</span></Label>
+                          <Label>{t("editProfile.contact.currentProvince", { defaultValue: "Tỉnh/Thành phố hiện tại" })}</Label>
                           <Input disabled={!isEditingMode || loading} value={formData.currentCity || ''} onChange={(e) => handleTextChange("currentCity", e.target.value)} className="h-11 rounded-xl" />
                         </div>
                         <div className="space-y-2">
-                          <Label>{t("editProfile.contact.currentDetailedAddress", { defaultValue: "Địa chỉ hiện tại" })} <span className="text-destructive">*</span></Label>
+                          <Label>{t("editProfile.contact.currentDetailedAddress", { defaultValue: "Địa chỉ hiện tại" })}</Label>
                           <Input disabled={!isEditingMode || loading} value={formData.currentAddress} onChange={(e) => handleTextChange("currentAddress", e.target.value)} className="h-11 rounded-xl" />
                         </div>
                      </div>
@@ -455,15 +455,15 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
                 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div className="space-y-2 md:col-span-1">
-                    <Label>{t("editProfile.identity.idNumber", { defaultValue: "Số CCCD" })} <span className="text-destructive">*</span></Label>
+                    <Label>{t("editProfile.identity.idNumber", { defaultValue: "Số CCCD" })}</Label>
                     <Input disabled={!isEditingMode || loading} value={formData.citizenIdNumber} onChange={(e) => handleTextChange("citizenIdNumber", e.target.value)} className="h-11 rounded-xl" />
                   </div>
                   <div className="space-y-2">
-                    <Label>{t("editProfile.identity.issueDate", { defaultValue: "Ngày cấp" })} <span className="text-destructive">*</span></Label>
+                    <Label>{t("editProfile.identity.issueDate", { defaultValue: "Ngày cấp" })}</Label>
                     <Input disabled={!isEditingMode || loading} type="date" value={formData.citizenIdIssueDate} onChange={(e) => handleTextChange("citizenIdIssueDate", e.target.value)} className="h-11 rounded-xl" />
                   </div>
                   <div className="space-y-2">
-                    <Label>{t("editProfile.identity.issuePlace", { defaultValue: "Nơi cấp" })} <span className="text-destructive">*</span></Label>
+                    <Label>{t("editProfile.identity.issuePlace", { defaultValue: "Nơi cấp" })}</Label>
                     <Input disabled={!isEditingMode || loading} value={formData.citizenIdIssuePlace} onChange={(e) => handleTextChange("citizenIdIssuePlace", e.target.value)} className="h-11 rounded-xl" />
                   </div>
                 </div>

@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useMemo } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select";
 import { TimeSelect } from "@/components/ui/time-select";
 import { Label } from "@/components/ui/label";
@@ -125,6 +125,27 @@ export default function CreateRequestPage() {
   const [startTime, setStartTime] = useState("");
   const [checkInOutType, setCheckInOutType] = useState<"checkin" | "checkout" | "">("");
   const [endTime, setEndTime] = useState("");
+
+  const [startSession, setStartSession] = useState<"morning" | "afternoon" | "all">("all");
+  const [endSession, setEndSession] = useState<"morning" | "afternoon" | "all">("all");
+
+  const calculatedDays = useMemo(() => {
+    if (!startDate || !endDate) return 0;
+    
+    const start = new Date(startDate);
+    start.setHours(0,0,0,0);
+    const end = new Date(endDate);
+    end.setHours(0,0,0,0);
+    
+    const diffTime = end.getTime() - start.getTime();
+    if (diffTime < 0) return 0;
+    
+    let totalDays = (diffTime / (1000 * 3600 * 24)) + 1;
+    if (startSession === "afternoon") totalDays -= 0.5;
+    if (endSession === "morning") totalDays -= 0.5;
+    
+    return Math.max(0, totalDays);
+  }, [startDate, endDate, startSession, endSession]);
 
   const formRef = useRef<HTMLDivElement>(null);
 
@@ -419,6 +440,84 @@ export default function CreateRequestPage() {
 
 
                   </>
+                ) : type === "leave" ? (
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                      <div className="space-y-1.5 flex flex-col">
+                        <Label className="text-[13px] font-semibold text-slate-700">Ngày bắt đầu nghỉ <span className="text-rose-500">*</span></Label>
+                        <div className="flex gap-2">
+                          <Popover>
+                            <PopoverTrigger
+                              className={cn(
+                                "flex-1 flex items-center justify-start text-left font-normal h-10 bg-slate-50/50 border-slate-200 border rounded-md px-4 text-sm hover:bg-slate-100/50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/20",
+                                !startDate && "text-slate-400"
+                              )}
+                            >
+                              <CalendarIcon className="mr-2 h-4 w-4 text-slate-400" />
+                              {startDate ? format(startDate, "dd/MM/yyyy") : <span>Chọn ngày</span>}
+                            </PopoverTrigger>
+                            <PopoverContent className="w-auto p-0" align="start">
+                              <Calendar mode="single" selected={startDate} onSelect={setStartDate} initialFocus locale={vi} />
+                            </PopoverContent>
+                          </Popover>
+
+                          <Select value={startSession} onValueChange={(val: "morning" | "afternoon" | "all" | null) => val && setStartSession(val)}>
+                            <SelectTrigger className="w-[140px] text-[13px] h-10 bg-slate-50/50 border-slate-200 focus:ring-indigo-500/20">
+                              <span className="truncate">{startSession === "all" ? "Cả ngày" : startSession === "morning" ? "Ca sáng" : "Ca chiều"}</span>
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="all">Cả ngày</SelectItem>
+                              <SelectItem value="morning">Ca sáng (8h-12h)</SelectItem>
+                              <SelectItem value="afternoon">Ca chiều (13h30-17h30)</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+
+                      <div className="space-y-1.5 flex flex-col">
+                        <Label className="text-[13px] font-semibold text-slate-700">Ngày kết thúc nghỉ <span className="text-rose-500">*</span></Label>
+                        <div className="flex gap-2">
+                          <Popover>
+                            <PopoverTrigger
+                              className={cn(
+                                "flex-1 flex items-center justify-start text-left font-normal h-10 bg-slate-50/50 border-slate-200 border rounded-md px-4 text-sm hover:bg-slate-100/50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/20",
+                                !endDate && "text-slate-400"
+                              )}
+                            >
+                              <CalendarIcon className="mr-2 h-4 w-4 text-slate-400" />
+                              {endDate ? format(endDate, "dd/MM/yyyy") : <span>Chọn ngày</span>}
+                            </PopoverTrigger>
+                            <PopoverContent className="w-auto p-0" align="start">
+                              <Calendar mode="single" selected={endDate} onSelect={setEndDate} initialFocus locale={vi} />
+                            </PopoverContent>
+                          </Popover>
+
+                          <Select value={endSession} onValueChange={(val: "morning" | "afternoon" | "all" | null) => val && setEndSession(val)}>
+                            <SelectTrigger className="w-[140px] text-[13px] h-10 bg-slate-50/50 border-slate-200 focus:ring-indigo-500/20">
+                              <span className="truncate">{endSession === "all" ? "Cả ngày" : endSession === "morning" ? "Ca sáng" : "Ca chiều"}</span>
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="all">Cả ngày</SelectItem>
+                              <SelectItem value="morning">Ca sáng (8h-12h)</SelectItem>
+                              <SelectItem value="afternoon">Ca chiều (13h30-17h30)</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                    </div>
+
+                    {calculatedDays > 0 ? (
+                      <div className="p-3 bg-indigo-50/80 border border-indigo-100 rounded-md text-sm text-indigo-700 flex items-center justify-between">
+                        <span className="font-medium">Tổng số ngày nghỉ dự kiến</span>
+                        <span className="text-base font-bold">{calculatedDays} ngày</span>
+                      </div>
+                    ) : (startDate && endDate) ? (
+                      <div className="p-3 bg-rose-50 border border-rose-100 rounded-md text-sm text-rose-600 flex items-center justify-between">
+                        <span className="font-medium">Khoảng thời gian không hợp lệ</span>
+                        <span className="text-base font-bold">0 ngày</span>
+                      </div>
+                    ) : null}
+                  </div>
                 ) : (
                   <>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">

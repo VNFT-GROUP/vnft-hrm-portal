@@ -3,9 +3,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/u
 import { TimeSelect } from "@/components/ui/time-select";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { CalendarIcon, ChevronLeft, Umbrella, User, CheckCircle2, Truck, UserMinus, Check, Home } from "lucide-react";
+import { CalendarIcon, ChevronLeft, Umbrella, User, CheckCircle2, Truck, UserMinus, Check, Home, ChevronsUpDown } from "lucide-react";
 import { toast } from "sonner";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Command, CommandInput, CommandEmpty, CommandGroup, CommandItem, CommandList } from "@/components/ui/command";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { vi } from "date-fns/locale";
@@ -116,6 +117,9 @@ export default function CreateRequestPage() {
   const navigate = useNavigate();
   const [type, setType] = useState<RequestType | "">("");
   const [reason, setReason] = useState("");
+  const [openReason, setOpenReason] = useState(false);
+  const [reasonTriggerWidth, setReasonTriggerWidth] = useState(0);
+  const reasonTriggerRef = useRef<HTMLButtonElement>(null);
   const [description, setDescription] = useState("");
 
   const [date, setDate] = useState<Date>();
@@ -268,18 +272,52 @@ export default function CreateRequestPage() {
 
                 <div className="space-y-1.5">
                   <Label className="text-[13px] font-semibold text-slate-700">Lý do <span className="text-rose-500">*</span></Label>
-                  <Select value={reason} onValueChange={(val) => setReason(val || "")}>
-                    <SelectTrigger className="w-full text-[14px] bg-white h-10 border-slate-200 focus:ring-indigo-500/20">
-                      <span className={reason === "" ? "text-slate-500" : ""}>
-                        {reason === "" ? "-- Chọn --" : reason}
+                  <Popover open={openReason} onOpenChange={(val) => {
+                    if (val && reasonTriggerRef.current) {
+                      setReasonTriggerWidth(reasonTriggerRef.current.offsetWidth);
+                    }
+                    setOpenReason(val);
+                  }}>
+                    <PopoverTrigger
+                      ref={reasonTriggerRef}
+                      className={cn("w-full flex items-center justify-between min-h-[40px] h-auto font-normal bg-white border border-slate-200 rounded-md px-4 py-2 hover:bg-slate-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/20", !reason && "text-slate-500")}
+                    >
+                      <span className="text-[14px] text-left whitespace-normal wrap-break-word">
+                        {reason ? reason : "-- Chọn --"}
                       </span>
-                    </SelectTrigger>
-                    <SelectContent>
-                      {(type === "checkInOut" ? CHECKINOUT_REASONS : GLOBAL_REASONS).map((rs, idx) => (
-                        <SelectItem key={idx} value={rs}>{rs}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    </PopoverTrigger>
+                    <PopoverContent style={{ width: reasonTriggerWidth > 0 ? reasonTriggerWidth : 'auto' }} className="p-0" align="start">
+                      <Command>
+                        <CommandInput placeholder="Tìm kiếm lý do..." className="h-9" />
+                        <CommandList>
+                          <CommandEmpty>Không tìm kiếm được lý do phù hợp.</CommandEmpty>
+                          <CommandGroup>
+                            {(type === "checkInOut" ? CHECKINOUT_REASONS : GLOBAL_REASONS).map((rs, idx) => (
+                              <CommandItem
+                                key={idx}
+                                value={rs}
+                                onSelect={(currentValue) => {
+                                  // react-cmdk casts value to lowercase internally so we use `rs`
+                                  setReason(currentValue.toLowerCase() === reason.toLowerCase() ? "" : rs);
+                                  setOpenReason(false);
+                                }}
+                                className="text-[13px] py-2 px-3 whitespace-normal wrap-break-word cursor-pointer"
+                              >
+                                <Check
+                                  className={cn(
+                                    "mr-2 h-4 w-4 shrink-0",
+                                    reason === rs ? "opacity-100" : "opacity-0"
+                                  )}
+                                />
+                                {rs}
+                              </CommandItem>
+                            ))}
+                          </CommandGroup>
+                        </CommandList>
+                      </Command>
+                    </PopoverContent>
+                  </Popover>
                 </div>
               </div>
 
@@ -462,7 +500,7 @@ export default function CreateRequestPage() {
                           </Popover>
 
                           <Select value={startSession} onValueChange={(val: "morning" | "afternoon" | "all" | null) => val && setStartSession(val)}>
-                            <SelectTrigger className="w-[140px] text-[13px] h-10 bg-slate-50/50 border-slate-200 focus:ring-indigo-500/20">
+                            <SelectTrigger className="flex-1 w-full text-[13px] h-10 bg-slate-50/50 border-slate-200 focus:ring-indigo-500/20">
                               <span className="truncate">{startSession === "all" ? "Cả ngày" : startSession === "morning" ? "Ca sáng" : "Ca chiều"}</span>
                             </SelectTrigger>
                             <SelectContent>
@@ -493,7 +531,7 @@ export default function CreateRequestPage() {
                           </Popover>
 
                           <Select value={endSession} onValueChange={(val: "morning" | "afternoon" | "all" | null) => val && setEndSession(val)}>
-                            <SelectTrigger className="w-[140px] text-[13px] h-10 bg-slate-50/50 border-slate-200 focus:ring-indigo-500/20">
+                            <SelectTrigger className="flex-1 w-full text-[13px] h-10 bg-slate-50/50 border-slate-200 focus:ring-indigo-500/20">
                               <span className="truncate">{endSession === "all" ? "Cả ngày" : endSession === "morning" ? "Ca sáng" : "Ca chiều"}</span>
                             </SelectTrigger>
                             <SelectContent>

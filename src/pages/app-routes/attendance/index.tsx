@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { format, eachDayOfInterval, getDay, parseISO } from "date-fns";
 import { vi } from "date-fns/locale";
 
@@ -68,10 +68,10 @@ export default function MyAttendancePage() {
               <span className="p-2.5 bg-[#2E3192]/10 text-[#2E3192] rounded-xl flex items-center justify-center">
                 <CalendarCheck size={26} strokeWidth={2.5} />
               </span>
-              Báº£ng cÃ´ng cá»§a tÃ´i
+              Bảng công của tôi
             </h1>
             <p className="text-muted-foreground text-sm md:text-base ml-1">
-              Theo dÃµi lá»‹ch sá»­ Ä‘iá»ƒm danh vÃ  thá»i gian lÃ m viá»‡c hÃ ng thÃ¡ng.
+              Theo dõi lịch sử điểm danh và thời gian làm việc hàng tháng.
             </p>
           </motion.div>
 
@@ -84,7 +84,7 @@ export default function MyAttendancePage() {
             </button>
             <div className="flex items-center gap-2 font-medium text-slate-700 min-w-[120px] justify-center text-[15px]">
               <CalendarIcon size={18} className="text-indigo-600" />
-              ThÃ¡ng {month}/{year}
+              Tháng {month}/{year}
             </div>
             <button
               onClick={handleNextMonth}
@@ -100,7 +100,7 @@ export default function MyAttendancePage() {
           {loading ? (
             <div className="flex-1 flex flex-col items-center justify-center text-slate-500 p-12">
               <Loader2 className="w-8 h-8 animate-spin text-indigo-600 mb-4" />
-              <p>Äang táº£i dá»¯ liá»‡u cháº¥m cÃ´ng...</p>
+              <p>Đang tải dữ liệu chấm công...</p>
             </div>
           ) : (
             <div className="bg-slate-200 border-x border-b border-slate-200">
@@ -154,7 +154,7 @@ export default function MyAttendancePage() {
                             <div className="flex justify-between items-start w-full">
                               {hasData && record?.workUnit !== undefined && record.workUnit > 0 ? (
                                 <span className="bg-amber-100/80 text-amber-700 font-bold text-[11px] px-1.5 py-0.5 rounded border border-amber-200">
-                                  {Number(record.workUnit.toFixed(2))} CÃ´ng
+                                  {Number(record.workUnit.toFixed(2))} Công
                                 </span>
                               ) : <span />}
                               <span className={`text-[13px] font-bold w-auto min-w-[28px] h-7 px-2 flex items-center justify-center rounded-md transition-colors ${
@@ -169,7 +169,7 @@ export default function MyAttendancePage() {
                                 <>
                                   {record?.actualCheckIn && (
                                     <div className="flex items-center justify-between bg-emerald-50/80 rounded px-2 py-1 border border-emerald-100">
-                                      <span className="text-[11px] font-medium text-slate-500">VÃ o</span>
+                                      <span className="text-[11px] font-medium text-slate-500">Vào</span>
                                       <span className="text-[12px] font-bold text-emerald-700">{record.actualCheckIn.substring(0, 5)}</span>
                                     </div>
                                   )}
@@ -182,7 +182,7 @@ export default function MyAttendancePage() {
                                 </>
                               ) : record?.absent ? (
                                 <div className="flex items-center justify-center grow pb-4">
-                                  <span className="text-[10px] uppercase font-bold text-rose-400 bg-rose-50 px-2.5 py-0.5 rounded border border-rose-100">Váº¯ng máº·t</span>
+                                  <span className="text-[10px] uppercase font-bold text-rose-400 bg-rose-50 px-2.5 py-0.5 rounded border border-rose-100">Vắng mặt</span>
                                 </div>
                               ) : (
                                 <div className="flex items-center justify-center grow pb-4">
@@ -191,7 +191,7 @@ export default function MyAttendancePage() {
                               )}
                               {hasData && (
                                 <div className="mt-auto pt-1 opacity-0 group-hover:opacity-100 transition-all duration-200 transform translate-y-1 group-hover:translate-y-0 text-indigo-600 bg-indigo-50 hover:bg-indigo-100 text-[11px] font-bold py-1.5 rounded-md w-full flex flex-col items-center justify-center border border-indigo-100 shadow-sm cursor-pointer">
-                                  Xem chi tiáº¿t
+                                  Xem chi tiết
                                 </div>
                               )}
                             </div>
@@ -221,7 +221,7 @@ export default function MyAttendancePage() {
                 </button>
                 <DialogHeader className="space-y-1">
                   <DialogTitle className="text-xl font-bold flex flex-col text-white">
-                    Chi tiáº¿t Ä‘iá»ƒm danh
+                    Chi tiết điểm danh
                   </DialogTitle>
                   <DialogDescription className="text-indigo-100 font-medium opacity-90">
                     {format(selectedRecord.dateObj, "EEEE, dd/MM/yyyy", { locale: vi })}
@@ -234,78 +234,78 @@ export default function MyAttendancePage() {
                 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="flex flex-col gap-1 p-4 rounded-xl bg-slate-50 border border-slate-100 items-center justify-center">
-                    <span className="text-[12px] font-semibold text-slate-400 uppercase tracking-widest bg-slate-100 px-2 py-0.5 rounded-full mb-1">Giá» VÃ o</span>
+                    <span className="text-[12px] font-semibold text-slate-400 uppercase tracking-widest bg-slate-100 px-2 py-0.5 rounded-full mb-1">Giờ Vào</span>
                     {selectedRecord.actualCheckIn ? (
                       <span className="text-2xl font-bold text-emerald-600">{selectedRecord.actualCheckIn.substring(0, 5)}</span>
                     ) : (
                       <span className="text-2xl font-bold text-slate-300">--:--</span>
                     )}
                     {selectedRecord.lateMinutes ? (
-                      <span className="text-[11px] font-semibold text-rose-500 bg-rose-50 px-1.5 py-0.5 rounded mt-1">Muá»™n {selectedRecord.lateMinutes}p</span>
+                      <span className="text-[11px] font-semibold text-rose-500 bg-rose-50 px-1.5 py-0.5 rounded mt-1">Muộn {selectedRecord.lateMinutes}p</span>
                     ) : null}
                   </div>
                   
                   <div className="flex flex-col gap-1 p-4 rounded-xl bg-slate-50 border border-slate-100 items-center justify-center">
-                    <span className="text-[12px] font-semibold text-slate-400 uppercase tracking-widest bg-slate-100 px-2 py-0.5 rounded-full mb-1">Giá» Ra</span>
+                    <span className="text-[12px] font-semibold text-slate-400 uppercase tracking-widest bg-slate-100 px-2 py-0.5 rounded-full mb-1">Giờ Ra</span>
                     {selectedRecord.actualCheckOut ? (
                       <span className="text-2xl font-bold text-emerald-600">{selectedRecord.actualCheckOut.substring(0, 5)}</span>
                     ) : (
                       <span className="text-2xl font-bold text-slate-300">--:--</span>
                     )}
                     {selectedRecord.earlyLeaveMinutes ? (
-                      <span className="text-[11px] font-semibold text-rose-500 bg-rose-50 px-1.5 py-0.5 rounded mt-1">Vá» sá»›m {selectedRecord.earlyLeaveMinutes}p</span>
+                      <span className="text-[11px] font-semibold text-rose-500 bg-rose-50 px-1.5 py-0.5 rounded mt-1">Về sớm {selectedRecord.earlyLeaveMinutes}p</span>
                     ) : null}
                   </div>
                 </div>
 
                 <div className="flex flex-col gap-1 max-h-[50vh] overflow-y-auto pr-2 custom-scrollbar">
-                  <div className="text-[11px] uppercase tracking-widest text-slate-400 font-bold mb-1 border-b border-slate-100 pb-2">Chá»‰ sá»‘ cÃ´ng</div>
+                  <div className="text-[11px] uppercase tracking-widest text-slate-400 font-bold mb-1 border-b border-slate-100 pb-2">Chỉ số công</div>
                   <div className="grid grid-cols-2 gap-4 my-2">
                     <div className="flex flex-col items-center justify-center bg-indigo-50/50 rounded-lg p-3 border border-indigo-100/50">
-                       <span className="text-[11px] font-semibold text-slate-500 uppercase">Há»‡ Sá»‘ CÃ´ng</span>
+                       <span className="text-[11px] font-semibold text-slate-500 uppercase">Hệ Số Công</span>
                        <span className="text-lg font-bold text-indigo-700">{selectedRecord.workUnit !== undefined ? Number(selectedRecord.workUnit.toFixed(2)) : 0}</span>
                     </div>
                     <div className="flex flex-col items-center justify-center bg-indigo-50/50 rounded-lg p-3 border border-indigo-100/50">
-                       <span className="text-[11px] font-semibold text-slate-500 uppercase">Thá»i gian lÃ m</span>
+                       <span className="text-[11px] font-semibold text-slate-500 uppercase">Thời gian làm</span>
                        <span className="text-lg font-bold text-indigo-700">{selectedRecord.workMinutes ? `${Math.floor(selectedRecord.workMinutes / 60)}h${selectedRecord.workMinutes % 60}p` : '0p'}</span>
                     </div>
                   </div>
 
-                  <div className="text-[11px] uppercase tracking-widest text-slate-400 font-bold mb-1 mt-4">ThÃ´ng tin nhÃ¢n sá»±</div>
+                  <div className="text-[11px] uppercase tracking-widest text-slate-400 font-bold mb-1 mt-4">Thông tin nhân sự</div>
                   <div className="flex items-center justify-between text-sm py-2.5 border-b border-slate-100">
-                    <span className="text-slate-500 font-medium">Há» & TÃªn</span>
+                    <span className="text-slate-500 font-medium">Họ & Tên</span>
                     <span className="text-slate-900 font-medium">{selectedRecord.employeeName || '--'}</span>
                   </div>
                   <div className="flex items-center justify-between text-sm py-2.5 border-b border-slate-100">
-                    <span className="text-slate-500 font-medium">MÃ£ NhÃ¢n ViÃªn</span>
+                    <span className="text-slate-500 font-medium">Mã Nhân Viên</span>
                     <span className="text-slate-900 font-bold bg-slate-100 px-2.5 py-0.5 rounded border border-slate-200">{selectedRecord.employeeCode || '--'}</span>
                   </div>
                   <div className="flex items-center justify-between text-sm py-2.5 border-b border-slate-100">
-                    <span className="text-slate-500 font-medium">Lá»‹ch ca lÃ m</span>
+                    <span className="text-slate-500 font-medium">Lịch ca làm</span>
                     <span className="text-slate-700 font-medium bg-slate-50 px-2 py-0.5 rounded border border-slate-200 text-xs">{selectedRecord.scheduledCheckIn?.substring(0,5) || '--'} - {selectedRecord.scheduledCheckOut?.substring(0,5) || '--'}</span>
                   </div>
 
-                  <div className="text-[11px] uppercase tracking-widest text-slate-400 font-bold mb-1 mt-5">ThÃ´ng tin há»‡ thá»‘ng</div>
+                  <div className="text-[11px] uppercase tracking-widest text-slate-400 font-bold mb-1 mt-5">Thông tin hệ thống</div>
                   <div className="flex items-center justify-between text-sm py-2.5 border-b border-slate-100">
-                    <span className="text-slate-500 font-medium">Tráº¡ng thÃ¡i Record</span>
+                    <span className="text-slate-500 font-medium">Trạng thái Record</span>
                     <span className="text-slate-900 font-medium">
                       {selectedRecord.active !== false ? (
-                        <span className="text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full text-[11px] font-bold tracking-wide">HOáº T Äá»˜NG</span>
+                        <span className="text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full text-[11px] font-bold tracking-wide">HOẠT ĐỘNG</span>
                       ) : (
-                        <span className="text-rose-700 bg-rose-50 border border-rose-200 px-2.5 py-0.5 rounded-full text-[11px] font-bold tracking-wide">VÃ” HIá»†U HÃ“A</span>
+                        <span className="text-rose-700 bg-rose-50 border border-rose-200 px-2.5 py-0.5 rounded-full text-[11px] font-bold tracking-wide">VÔ HIỆU HÓA</span>
                       )}
                     </span>
                   </div>
                   <div className="flex items-center justify-between text-[13px] py-2.5 border-b border-slate-100">
-                    <span className="text-slate-500 font-medium">NgÃ y Ä‘á»“ng bá»™ Ä‘áº§u tiÃªn</span>
+                    <span className="text-slate-500 font-medium">Ngày đồng bộ đầu tiên</span>
                     <span className="text-slate-600 font-mono tracking-tight">{selectedRecord.createdAt ? format(parseISO(selectedRecord.createdAt), "dd/MM/yyyy HH:mm:ss") : '--'}</span>
                   </div>
                   <div className="flex items-center justify-between text-[13px] py-2.5 border-b border-slate-100">
-                    <span className="text-slate-500 font-medium">Cáº­p nháº­t láº§n cuá»‘i</span>
+                    <span className="text-slate-500 font-medium">Cập nhật lần cuối</span>
                     <span className="text-slate-600 font-mono tracking-tight">{selectedRecord.updatedAt ? format(parseISO(selectedRecord.updatedAt), "dd/MM/yyyy HH:mm:ss") : '--'}</span>
                   </div>
                   <div className="flex items-center justify-between text-[13px] py-2.5">
-                    <span className="text-slate-500 font-medium">ID LÆ°u trá»¯</span>
+                    <span className="text-slate-500 font-medium">ID Lưu trữ</span>
                     <span className="text-slate-400 font-mono text-[10px] break-all max-w-[150px] text-right">{selectedRecord.id || '--'}</span>
                   </div>
                 </div>

@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import { Plus, Search, Briefcase, Edit2, Trash2, MousePointerClick } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -83,7 +83,7 @@ export default function PositionsPage() {
   const handleSave = () => {
     if (!formData.name.trim()) return;
 
-    // Convert vá» UpsertPositionRequest
+    // Convert về UpsertPositionRequest
     const payload: UpsertPositionRequest = {
       name: formData.name,
       description: formData.description,
@@ -153,12 +153,12 @@ export default function PositionsPage() {
           <div className="w-full h-px bg-border/50 hidden md:block" />
           <div className="flex items-center gap-1.5 text-[#2E3192]">
             <MousePointerClick size={16} />
-            <span className="italic">Máº¹o: Click chuá»™t pháº£i vÃ o dÃ²ng dá»¯ liá»‡u Ä‘á»ƒ thao tÃ¡c nhanh.</span>
+            <span className="italic">Mẹo: Click chuột phải vào dòng dữ liệu để thao tác nhanh.</span>
           </div>
         </motion.div>
       )}
 
-      {/* 2 & 3. Toolbar Section (TÃ¬m Kiáº¿m + NÃºt táº¡o) */}
+      {/* 2 & 3. Toolbar Section (Tìm Kiếm + Nút tạo) */}
       <motion.div
         initial={{ opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}

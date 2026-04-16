@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Search, Calendar as CalendarIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
@@ -124,10 +124,10 @@ export default function AttendancePage() {
           <span className="p-2.5 bg-[#2E3192]/10 text-[#2E3192] rounded-xl shadow-sm border border-[#2E3192]/10">
             <CalendarIcon size={24} />
           </span>
-          {t("attendance.title", { defaultValue: "Quáº£n lÃ½ cháº¥m cÃ´ng (Log)" })}
+          {t("attendance.title", { defaultValue: "Quản lý chấm công (Log)" })}
         </h1>
         <p className="text-muted-foreground text-sm md:text-base ml-1">
-          {t("attendance.subtitle", { defaultValue: "Xem vÃ  kiá»ƒm tra dá»¯ liá»‡u cháº¥m cÃ´ng thÃ´ tá»« thiáº¿t bá»‹." })}
+          {t("attendance.subtitle", { defaultValue: "Xem và kiểm tra dữ liệu chấm công thô từ thiết bị." })}
         </p>
       </motion.div>
 
@@ -142,7 +142,7 @@ export default function AttendancePage() {
           <div className="relative flex-1">
              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
              <Input 
-               placeholder={t("attendance.searchPlaceholder", { defaultValue: "TÃ¬m kiáº¿m theo MSNV hoáº·c TÃªn..." })} 
+               placeholder={t("attendance.searchPlaceholder", { defaultValue: "Tìm kiếm theo MSNV hoặc Tên..." })} 
                className="pl-11 h-11 rounded-xl bg-muted border-border focus-visible:ring-[#2E3192] text-sm hover:bg-card text-card-foreground transition-colors w-full"
                value={searchTerm}
                onChange={(e) => setSearchTerm(e.target.value)}
@@ -156,7 +156,7 @@ export default function AttendancePage() {
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
             className="h-11 w-auto rounded-xl bg-muted border-border cursor-pointer focus-visible:ring-[#2E3192]"
-            title="Tá»« ngÃ y"
+            title="Từ ngày"
           />
           <span className="text-muted-foreground hidden md:inline">-</span>
           <Input 
@@ -164,7 +164,7 @@ export default function AttendancePage() {
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
             className="h-11 w-auto rounded-xl bg-muted border-border cursor-pointer focus-visible:ring-[#2E3192]"
-            title="Äáº¿n ngÃ y"
+            title="Đến ngày"
           />
         </div>
       </motion.div>
@@ -180,7 +180,7 @@ export default function AttendancePage() {
            {isLoading ? (
              <div className="h-full w-full flex items-center justify-center min-h-[300px]">
                 <div className="w-6 h-6 border-2 border-[#2E3192] border-t-transparent rounded-full animate-spin"></div>
-                <span className="ml-3 text-muted-foreground text-sm">Äang táº£i dá»¯ liá»‡u...</span>
+                <span className="ml-3 text-muted-foreground text-sm">Đang tải dữ liệu...</span>
              </div>
            ) : (
              <AttendanceTable records={records} onViewJson={handleOpenJson} />

@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { currentUserProfileService } from "@/services/user/currentUserProfileService";
 import type { UserProfileResponse } from "@/types/user/UserProfileResponse";

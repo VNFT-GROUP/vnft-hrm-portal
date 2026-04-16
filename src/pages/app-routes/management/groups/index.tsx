@@ -1,4 +1,4 @@
-﻿import { ShieldCheck, Edit2, Trash2, MousePointerClick, CheckSquare, Shield } from "lucide-react";
+import { ShieldCheck, Edit2, Trash2, MousePointerClick, CheckSquare, Shield } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
 import { useLayoutStore } from "@/store/useLayoutStore";
@@ -24,10 +24,10 @@ export default function GroupsPage() {
           <span className="p-2.5 bg-[#2E3192]/10 text-[#2E3192] rounded-xl">
             <ShieldCheck size={28} />
           </span>
-          {t('management.groupsTitle', { defaultValue: 'Cáº¥u HÃ¬nh Quáº£n Trá»‹ PhÃ¢n Quyá»n' })}
+          {t('management.groupsTitle', { defaultValue: 'Cấu Hình Quản Trị Phân Quyền' })}
         </h1>
         <p className="text-muted-foreground text-base md:text-lg ml-1">
-          {t('management.groupsDesc', { defaultValue: 'Quáº£n lÃ½ toÃ n bá»™ thÃ´ng sá»‘ vá» nhÃ³m quyá»n vÃ  danh sÃ¡ch mÃ£ quyá»n trong há»‡ thá»‘ng.' })}
+          {t('management.groupsDesc', { defaultValue: 'Quản lý toàn bộ thông số về nhóm quyền và danh sách mã quyền trong hệ thống.' })}
         </p>
       </motion.div>
 
@@ -41,24 +41,24 @@ export default function GroupsPage() {
         >
           <div className="flex flex-wrap items-center gap-x-6 gap-y-3 w-full">
             <span className="font-semibold text-[#1E2062] mr-2">
-              {t('management.actionLegend', { defaultValue: 'ChÃº thÃ­ch thao tÃ¡c:' })}
+              {t('management.actionLegend', { defaultValue: 'Chú thích thao tác:' })}
             </span>
             <div className="flex items-center gap-2">
               <Edit2 size={16} className="text-[#2E3192]" />
-              <span>{t('management.editLegend', { defaultValue: 'Chá»‰nh sá»­a thÃ´ng tin' })}</span>
+              <span>{t('management.editLegend', { defaultValue: 'Chỉnh sửa thông tin' })}</span>
             </div>
             <div className="flex items-center gap-2">
               <Trash2 size={16} className="text-rose-500" />
-              <span>{t('management.deleteLegend', { defaultValue: 'XÃ³a / Há»§y kÃ­ch hoáº¡t' })}</span>
+              <span>{t('management.deleteLegend', { defaultValue: 'Xóa / Hủy kích hoạt' })}</span>
             </div>
             <div className="ml-auto flex items-center text-xs text-muted-foreground bg-muted/40 px-2 py-1 rounded-md border border-border opacity-70 hover:opacity-100 transition-opacity">
-              {t('management.hideLegendHint', { defaultValue: 'Nháº¥n Alt + S Ä‘á»ƒ báº­t táº¯t má»¥c nÃ y' })}
+              {t('management.hideLegendHint', { defaultValue: 'Nhấn Alt + S để bật tắt mục này' })}
             </div>
           </div>
           <div className="w-full h-px bg-border/50 hidden md:block" />
           <div className="flex items-center gap-1.5 text-[#2E3192]">
             <MousePointerClick size={16} />
-            <span className="italic">{t('management.actionTooltip', { defaultValue: 'Máº¹o: Click chuá»™t pháº£i vÃ o dÃ²ng dá»¯ liá»‡u Ä‘á»ƒ thao tÃ¡c nhanh.' })}</span>
+            <span className="italic">{t('management.actionTooltip', { defaultValue: 'Mẹo: Click chuột phải vào dòng dữ liệu để thao tác nhanh.' })}</span>
           </div>
         </motion.div>
       )}
@@ -71,13 +71,13 @@ export default function GroupsPage() {
               value="groups"
               className="flex-1 flex items-center justify-center gap-2 px-6 py-2 text-sm font-semibold rounded-lg data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:text-[#2E3192] data-active:bg-background data-active:shadow-sm data-active:text-[#2E3192] text-muted-foreground transition-all h-full"
             >
-              <CheckSquare size={16} /> <span>{t('management.groupsTab', { defaultValue: 'NhÃ³m ngÆ°á»i dÃ¹ng' })}</span>
+              <CheckSquare size={16} /> <span>{t('management.groupsTab', { defaultValue: 'Nhóm người dùng' })}</span>
             </TabsTrigger>
             <TabsTrigger
               value="permissions"
               className="flex-1 flex items-center justify-center gap-2 px-6 py-2 text-sm font-semibold rounded-lg data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:text-[#2E3192] data-active:bg-background data-active:shadow-sm data-active:text-[#2E3192] text-muted-foreground transition-all h-full"
             >
-              <Shield size={16} /> <span>{t('management.permissionsTab', { defaultValue: 'MÃ£ quyá»n' })}</span>
+              <Shield size={16} /> <span>{t('management.permissionsTab', { defaultValue: 'Mã quyền' })}</span>
             </TabsTrigger>
           </TabsList>
         </div>

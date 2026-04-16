@@ -1,9 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, CheckCircle2, Clock, CalendarDays, FileText } from "lucide-react";
 import { useAuthStore } from "@/store/useAuthStore";
-import { format, parseISO } from "date-fns";
+import { format, parseISO, addDays } from "date-fns";
 import { vi } from "date-fns/locale";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { attendanceService } from "@/services/attendance";
+import type { AttendanceDailySummaryResponse } from "@/types/attendance/AttendanceDailySummaryResponse";
 
 /*
 const mockTopSales = [
@@ -182,13 +186,34 @@ const IntegratedTaskCard = () => {
 
 export default function HomePage() {
   const session = useAuthStore(state => state.session);
-  const todayAttendance = session?.todayAttendance;
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const [attendanceData, setAttendanceData] = useState<AttendanceDailySummaryResponse | undefined>(session?.todayAttendance);
+  useEffect(() => {
+    let active = true;
+    const fetchAttendance = async () => {
+      try {
+        const dateString = format(selectedDate, "yyyy-MM-dd");
+        const res = await attendanceService.getCurrentUserAttendanceByDate(dateString);
+        if (active) {
+          setAttendanceData(res.data);
+        }
+      } catch (err) {
+        console.error(err);
+        if (active) {
+          setAttendanceData(undefined);
+        }
+      }
+    };
+    fetchAttendance();
+    return () => { active = false; };
+  }, [selectedDate]);
+
+  const todayAttendance = attendanceData;
   
   // Format current date
-  const currentDate = new Date();
   const dateStr = todayAttendance?.attendanceDate 
     ? format(parseISO(todayAttendance.attendanceDate), "EEEE, dd/MM/yyyy", { locale: vi })
-    : format(currentDate, "EEEE, dd/MM/yyyy", { locale: vi });
+    : format(selectedDate, "EEEE, dd/MM/yyyy", { locale: vi });
   const displayDate = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
   
   // Format Check-in time
@@ -263,9 +288,28 @@ export default function HomePage() {
                   </span>
                 </div>
                 <div className="flex items-center gap-4 text-muted-foreground">
-                  <button className="hover:text-foreground transition-colors"><ChevronLeft size={20} strokeWidth={1.5} /></button>
-                  <button className="hover:text-foreground transition-colors"><ChevronRight size={20} strokeWidth={1.5} /></button>
-                  <button className="hover:text-foreground transition-colors"><CalendarDays size={20} strokeWidth={1.5} /></button>
+                  <button onClick={() => setSelectedDate(prev => addDays(prev, -1))} className="hover:text-foreground transition-colors p-1 flex items-center justify-center">
+                    <ChevronLeft size={20} strokeWidth={1.5} />
+                  </button>
+                  <button onClick={() => setSelectedDate(prev => addDays(prev, 1))} className="hover:text-foreground transition-colors p-1 flex items-center justify-center">
+                    <ChevronRight size={20} strokeWidth={1.5} />
+                  </button>
+                  <Popover>
+                    <PopoverTrigger className="hover:text-foreground transition-colors p-1 flex items-center justify-center">
+                      <CalendarDays size={20} strokeWidth={1.5} />
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="end">
+                      <Calendar
+                        mode="single"
+                        selected={selectedDate}
+                        onSelect={(date) => {
+                          if (date) setSelectedDate(date);
+                        }}
+                        initialFocus
+                        locale={vi}
+                      />
+                    </PopoverContent>
+                  </Popover>
                 </div>
               </div>
 

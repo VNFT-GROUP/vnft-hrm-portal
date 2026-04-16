@@ -25,10 +25,6 @@ type ProfileFormData = Partial<UpdateCurrentUserProfileRequest> & {
   employeeCode?: string;
 };
 import { ProfileSearchableSelect } from "@/components/custom/ProfileSearchableSelect";
-import { ProfileBankFields } from "@/components/custom/profile-forms/ProfileBankFields";
-import { ProfileEducationFields } from "@/components/custom/profile-forms/ProfileEducationFields";
-import { ProfileExperienceFields } from "@/components/custom/profile-forms/ProfileExperienceFields";
-import { ProfileDependentFields } from "@/components/custom/profile-forms/ProfileDependentFields";
 // from "@/components/custom/ProfileSearchableSelect";
 
 export default function EditProfilePage() {

@@ -28,10 +28,6 @@ type ProfileFormData = Partial<UpdateUserProfileRequest> & {
 };
 
 import { ProfileSearchableSelect } from "@/components/custom/ProfileSearchableSelect";
-import { ProfileBankFields } from "@/components/custom/profile-forms/ProfileBankFields";
-import { ProfileEducationFields } from "@/components/custom/profile-forms/ProfileEducationFields";
-import { ProfileExperienceFields } from "@/components/custom/profile-forms/ProfileExperienceFields";
-import { ProfileDependentFields } from "@/components/custom/profile-forms/ProfileDependentFields";
 // from "@/components/custom/ProfileSearchableSelect";
 
 export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: { isOpen: boolean, onOpenChange: (isOpen: boolean) => void, userId: string | null }) {

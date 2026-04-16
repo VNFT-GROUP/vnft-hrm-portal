@@ -128,8 +128,8 @@ export const useNavigationData = () => {
                     icon: <Clock size={16} />,
                   },
                   {
-                    label: t("sidebar.attendanceHistory", { defaultValue: "Lịch sử Chấm công" }),
-                    shortName: t("sidebar.attendanceHistoryShort", { defaultValue: "Lịch sử CC" }),
+                    label: t("sidebar.attendanceHistory", { defaultValue: "Bảng chấm công Raw" }),
+                    shortName: t("sidebar.attendanceHistoryShort", { defaultValue: "Bảng CC Raw" }),
                     path: "/app/management/attendance",
                     icon: <Calendar size={16} />,
                   },

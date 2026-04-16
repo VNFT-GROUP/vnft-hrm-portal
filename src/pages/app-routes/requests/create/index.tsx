@@ -187,6 +187,7 @@ export default function CreateRequestPage() {
   const reasonTriggerRef = useRef<HTMLButtonElement>(null);
   const [description, setDescription] = useState("");
 
+
   const [date, setDate] = useState<Date>();
   const [startDate, setStartDate] = useState<Date>();
   const [endDate, setEndDate] = useState<Date>();
@@ -409,10 +410,7 @@ export default function CreateRequestPage() {
                                     ? CHECKINOUT_REASONS
                                     : GLOBAL_REASONS;
                               return list.map((item, idx) => {
-                                const rs =
-                                  typeof item === "string" ? item : item.label;
-                                const desc =
-                                  typeof item === "string" ? "" : item.desc;
+                                const rs = typeof item === "string" ? item : item.label;
                                 const isPaid =
                                   typeof item === "string" ? false : ('isPaid' in item ? item.isPaid : false);
 
@@ -450,11 +448,6 @@ export default function CreateRequestPage() {
                                           </span>
                                         )}
                                       </div>
-                                      {desc && (
-                                        <span className="text-[11.5px] italic text-slate-400 font-normal">
-                                          {desc}
-                                        </span>
-                                      )}
                                     </div>
                                   </CommandItem>
                                 );
@@ -894,6 +887,7 @@ export default function CreateRequestPage() {
                   />
                 </div>
               </div>
+
             </div>
 
             <div className="p-5 px-6 md:px-8 bg-slate-50 flex justify-end gap-3 rounded-b-2xl">

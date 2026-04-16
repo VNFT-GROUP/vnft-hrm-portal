@@ -54,7 +54,7 @@ export default function MyAttendancePage() {
   };
 
   return (
-    <div className="w-full p-4 md:p-8 max-w-7xl mx-auto flex flex-col gap-6 md:gap-8">
+    <div className="w-full p-4 md:p-8 flex flex-col gap-6 md:gap-8">
       <div className="w-full space-y-6">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">

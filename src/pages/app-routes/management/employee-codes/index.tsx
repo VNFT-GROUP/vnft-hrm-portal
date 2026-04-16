@@ -99,7 +99,7 @@ export default function EmployeeCodesPage() {
 
 
   return (
-    <div className='p-4 md:p-8 w-full max-w-6xl mx-auto min-h-full flex flex-col gap-6 md:gap-8'>
+    <div className='p-4 md:p-8 w-full min-h-full flex flex-col gap-6 md:gap-8'>
       <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className='flex flex-col gap-2'>
         <h1 className='text-2xl md:text-4xl font-bold text-[#1E2062] flex items-center gap-3'>
           <span className='p-2.5 bg-[#2E3192]/10 text-[#2E3192] rounded-xl'><FileText size={28} /></span>

@@ -105,7 +105,7 @@ export default function SettingsPage() {
 
 
   return (
-    <div className="p-4 md:p-8 w-full max-w-5xl mx-auto min-h-full flex flex-col gap-8">
+    <div className="p-4 md:p-8 w-full min-h-full flex flex-col gap-8">
       {/* Header */}
       <motion.div 
         initial={{ opacity: 0, y: -20 }}

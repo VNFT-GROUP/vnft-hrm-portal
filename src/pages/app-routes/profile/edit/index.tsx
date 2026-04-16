@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Save, User, Shield, BookOpen, Briefcase, MapPin, Plus, Trash2, Users, Camera, Check, ChevronsUpDown } from "lucide-react";
+import { ArrowLeft, Save, User, Shield, BookOpen, Briefcase, MapPin, Plus, Trash2, Users, Camera, Info } from "lucide-react";
 import { useAuthStore } from "@/store/useAuthStore";
 import { toast } from "sonner";
 import { currentUserProfileService } from "@/services/user/currentUserProfileService";
@@ -9,8 +9,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import type { UpdateCurrentUserProfileRequest } from '@/types/user/UpdateCurrentUserProfileRequest';
 import {
   ALL_COUNTRIES_SORTED as PROFILE_ALL_COUNTRIES_SORTED,
@@ -26,48 +24,12 @@ type ProfileFormData = Partial<UpdateCurrentUserProfileRequest> & {
   attendanceCode?: string;
   employeeCode?: string;
 };
-function SearchableSelect({ options, value, onChange, placeholder, getTranslation }: { options: string[], value: string, onChange: (val: string) => void, placeholder: string, getTranslation?: (val: string) => string }) {
-  const [open, setOpen] = useState(false);
-  const { t } = useTranslation();
-  
-  const displayValue = value ? (getTranslation ? getTranslation(value) : value) : t(placeholder);
-
-  return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger 
-        className="flex h-11 w-full items-center justify-between rounded-xl border border-input bg-card px-3 text-sm text-foreground shadow-sm hover:bg-muted/30 focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 overflow-hidden"
-      >
-        <span className="truncate">{displayValue}</span>
-        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-      </PopoverTrigger>
-      <PopoverContent className="p-0 rounded-xl w-[calc(100vw-2rem)] sm:w-[350px] md:w-[450px]" align="start">
-        <Command>
-          <CommandInput placeholder={t("editProfile.searchableSelect.searchPlaceholder", { defaultValue: "Tìm kiếm..." })} />
-          <CommandList className="max-h-[350px]">
-            <CommandEmpty>{t("editProfile.searchableSelect.noResults", { defaultValue: "Không tìm thấy kết quả." })}</CommandEmpty>
-            <CommandGroup>
-              {options.map((opt) => (
-                <CommandItem
-                  key={opt}
-                  value={opt}
-                  onSelect={() => {
-                    onChange(opt);
-                    setOpen(false);
-                  }}
-                >
-                  <Check
-                    className={`mr-2 h-4 w-4 ${value === opt ? "opacity-100" : "opacity-0"}`}
-                  />
-                  {getTranslation ? getTranslation(opt) : opt}
-                </CommandItem>
-              ))}
-            </CommandGroup>
-          </CommandList>
-        </Command>
-      </PopoverContent>
-    </Popover>
-  );
-}
+import { ProfileSearchableSelect } from "@/components/custom/ProfileSearchableSelect";
+import { ProfileBankFields } from "@/components/custom/profile-forms/ProfileBankFields";
+import { ProfileEducationFields } from "@/components/custom/profile-forms/ProfileEducationFields";
+import { ProfileExperienceFields } from "@/components/custom/profile-forms/ProfileExperienceFields";
+import { ProfileDependentFields } from "@/components/custom/profile-forms/ProfileDependentFields";
+// from "@/components/custom/ProfileSearchableSelect";
 
 export default function EditProfilePage() {
   const { t, i18n } = useTranslation();
@@ -166,7 +128,7 @@ export default function EditProfilePage() {
     e.preventDefault();
     
     // Mandatory field validation
-    if (!formData.employeeCode?.trim() || !formData.fullName?.trim() || !formData.dateOfBirth?.trim() || !formData.maritalStatus || !formData.phoneNumber?.trim() || !formData.currentAddress?.trim() || !formData.currentCity?.trim() || !formData.citizenIdNumber?.trim() || !formData.citizenIdIssueDate?.trim() || !formData.citizenIdIssuePlace?.trim()) {
+    if (!formData.dateOfBirth?.trim() || !formData.maritalStatus || !formData.phoneNumber?.trim() || !formData.currentAddress?.trim() || !formData.currentCity?.trim() || !formData.citizenIdNumber?.trim() || !formData.citizenIdIssueDate?.trim() || !formData.citizenIdIssuePlace?.trim()) {
       toast.error(t("editProfile.validation.missingInfoTitle", { defaultValue: "Thiếu thông tin bắt buộc" }), {
         description: t("editProfile.validation.missingInfoDesc", { defaultValue: "Vui lòng điền đầy đủ thông tin cho các trường có đánh dấu (*)." })
       });
@@ -224,7 +186,7 @@ export default function EditProfilePage() {
   ];
 
   return (
-    <div className="p-4 md:p-6 w-full max-w-[1250px] mx-auto min-h-[calc(100vh-100px)] animate-in fade-in slide-in-from-bottom-4 duration-500 pb-20">
+    <div className="p-4 md:p-6 w-full min-h-[calc(100vh-100px)] animate-in fade-in slide-in-from-bottom-4 duration-500 pb-20">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div className="flex items-center gap-4">
@@ -403,7 +365,7 @@ export default function EditProfilePage() {
                   <div className="grid grid-cols-3 gap-4 md:col-span-2">
                      <div className="space-y-2">
                        <Label>{t("editProfile.basicInfo.nationality", { defaultValue: "Quốc tịch" })}</Label>
-                       <SearchableSelect 
+                       <ProfileSearchableSelect 
                          options={PROFILE_ALL_COUNTRIES_SORTED} 
                          value={formData.nationality || "Việt Nam"} 
                          onChange={(v) => handleTextChange("nationality", v)} 
@@ -413,22 +375,28 @@ export default function EditProfilePage() {
                      </div>
                      <div className="space-y-2">
                        <Label>{t("editProfile.basicInfo.ethnicity", { defaultValue: "Dân tộc" })}</Label>
-                       <SearchableSelect 
+                       <ProfileSearchableSelect 
                          options={[...PROFILE_ETHNICITIES_VN, ...PROFILE_GLOBAL_ETHNICITIES, "Khác"]} 
                          value={formData.ethnicity || "Kinh"} 
                          onChange={(v) => handleTextChange("ethnicity", v)} 
                          placeholder={t("editProfile.basicInfo.ethnicityPlaceholder", { defaultValue: "Chọn Dân tộc..." })} 
-                         getTranslation={(opt) => t(`dropdowns.ethnicity.${opt}`, { defaultValue: opt })}
+                         getTranslation={(opt) => {
+                           const translated = t(`dropdowns.ethnicity.${opt}`, { defaultValue: opt });
+                           return translated && translated !== opt ? `${opt} (${translated})` : opt;
+                         }}
                        />
                      </div>
                      <div className="space-y-2">
                        <Label>{t("editProfile.basicInfo.religion", { defaultValue: "Tôn giáo" })}</Label>
-                       <SearchableSelect 
+                       <ProfileSearchableSelect 
                          options={PROFILE_WORLD_RELIGIONS} 
                          value={formData.religion || "Không"} 
                          onChange={(v) => handleTextChange("religion", v)} 
                          placeholder={t("editProfile.basicInfo.religionPlaceholder", { defaultValue: "Chọn Tôn giáo..." })} 
-                         getTranslation={(opt) => t(`dropdowns.religion.${opt}`, { defaultValue: opt })}
+                         getTranslation={(opt) => {
+                           const translated = t(`dropdowns.religion.${opt}`, { defaultValue: opt });
+                           return translated && translated !== opt ? `${opt} (${translated})` : opt;
+                         }}
                        />
                      </div>
                   </div>
@@ -438,12 +406,15 @@ export default function EditProfilePage() {
 
             {/* CƯ TRÚ VÀ LIÊN HỆ */}
             {activeTab === "basic" && (
-              <p className="mt-3 text-xs text-muted-foreground">
-                {t("editProfile.basicInfo.storageNotice", {
-                  defaultValue:
-                    "Dữ liệu Quốc tịch, Dân tộc và Tôn giáo sẽ được lưu vào cơ sở dữ liệu theo tiếng Việt, không phụ thuộc vào ngôn ngữ người dùng.",
-                })}
-              </p>
+              <div className="mt-6 flex items-start gap-2.5 bg-[#F7941D]/10 border border-[#F7941D]/20 p-3.5 rounded-xl text-sm text-foreground/80 shadow-sm">
+                <Info size={18} className="text-[#F7941D] shrink-0 mt-0.5" />
+                <p className="leading-relaxed">
+                  {t("editProfile.basicInfo.storageNotice", {
+                    defaultValue:
+                      "Dữ liệu Quốc tịch, Dân tộc và Tôn giáo sẽ được lưu vào cơ sở dữ liệu theo tiếng Việt, không phụ thuộc vào ngôn ngữ người dùng.",
+                  })}
+                </p>
+              </div>
             )}
             {activeTab === "contact" && (
               <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">

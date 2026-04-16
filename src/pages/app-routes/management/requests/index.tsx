@@ -44,7 +44,7 @@ export default function ManagementRequestsPage() {
   };
 
   return (
-    <div className="p-4 md:p-8 w-full max-w-7xl mx-auto min-h-full flex flex-col gap-6 md:gap-8 relative isolate">
+    <div className="p-4 md:p-8 w-full min-h-full flex flex-col gap-6 md:gap-8 relative isolate">
       {/* Header Section */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}

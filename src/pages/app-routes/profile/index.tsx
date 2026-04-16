@@ -48,7 +48,7 @@ export default function ProfilePage() {
 
   return (
     <ProfileContext.Provider value={{ profile, loading }}>
-      <div className="p-4 md:p-6 w-full max-w-[1400px] mx-auto min-h-full animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <div className="p-4 md:p-6 w-full min-h-full animate-in fade-in slide-in-from-bottom-4 duration-500">
         {/* Overview Header */}
         <ProfileHeader />
 

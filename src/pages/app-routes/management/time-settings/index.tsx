@@ -49,7 +49,7 @@ export default function TimeSettingsPage() {
   });
 
   return (
-    <div className="w-full p-4 md:p-8 max-w-7xl mx-auto flex flex-col gap-6 md:gap-8">
+    <div className="w-full p-4 md:p-8 flex flex-col gap-6 md:gap-8">
       <div className="w-full space-y-6">
         <motion.div
             initial={{ opacity: 0, y: -20 }}

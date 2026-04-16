@@ -7,15 +7,15 @@ import type { Gender } from './UserSessionResponse';
 export type MaritalStatus = 'SINGLE' | 'MARRIED';
 
 export interface UpdateUserProfileRequest {
-  fullName: string;
-  englishName: string;
+  fullName?: string;
+  englishName?: string;
   attendanceCode?: string;
   checkInTime?: string;
   checkOutTime?: string;
-  phoneNumber: string;
+  phoneNumber?: string;
   gender?: Gender;
-  dateOfBirth: string;
-  maritalStatus: MaritalStatus;
+  dateOfBirth?: string;
+  maritalStatus?: MaritalStatus;
   placeOfBirth?: string;
   placeOfOrigin?: string;
   nationality?: string;
@@ -23,11 +23,11 @@ export interface UpdateUserProfileRequest {
   ethnicity?: string;
   permanentAddress?: string;
   permanentCity?: string;
-  currentAddress: string;
-  currentCity: string;
-  citizenIdNumber: string;
-  citizenIdIssueDate: string;
-  citizenIdIssuePlace: string;
+  currentAddress?: string;
+  currentCity?: string;
+  citizenIdNumber?: string;
+  citizenIdIssueDate?: string;
+  citizenIdIssuePlace?: string;
   citizenIdFrontImageUrl?: string;
   citizenIdBackImageUrl?: string;
   bankInformations?: BankInformationRequest[];

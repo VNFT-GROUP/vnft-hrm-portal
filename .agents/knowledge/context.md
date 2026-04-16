@@ -135,6 +135,9 @@ src/
 15. **Centralized Display Settings**: All UI preferences (App Font, Sidebar Themes, Custom Cursors, Toggleable Legends, and Sidebar Menu Visibility Filters) are fully decoupled from redundant popups and rest entirely inside `src/pages/app-routes/settings`. This acts as the global hub for UI manipulation synced permanently to `localStorage` via Zustand middleware (`useLayoutStore`).
 16. **Sidebar Navigation & Routing Simplification**: Non-essential features (e.g. `Calendar`) and redundant UI components (e.g. `QuickCustomizeSheet.tsx`, or shortcut references in the Topbar) have been actively pruned from the Core Routing array (`routes/index.tsx`) and standard modules to ensure a cleaner administrative workspace experience.
 
+17. **Global Layout Standardization**: All core application pages (Dashboard, Profile, Settings, Management Modules, etc.) enforce a dynamic full-width fluid layout. Rigid page-level constraints (`max-w-*`) on `.tsx` route entries and container `mx-auto` structures have been fully eradicated to maximize data rendering real estate on large viewports.
+18. **Backend Form Localization**: Distinct profile form dropdown selections dependent on Vietnamese standard keys (Nationality, Religion, Ethnicity) are explicitly tracked with UI Info alerts dictating that they will bypass UI language toggles, persisting identically to backend datasets in native Vietnamese to prevent data parsing fragmentation.
+
 ## Global Standard Shortcuts
 To ensure highly productive navigation, the HR Portal utilizes the following standard global shortcuts:
 1. **`Ctrl + B`** (or Cmd + B): Quick toggle Left Sidebar Menu

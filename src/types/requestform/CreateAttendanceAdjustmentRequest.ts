@@ -1,4 +1,4 @@
-export type AttendanceAdjustmentTimeType = "CHECK_IN" | "CHECK_OUT";
+import type { AttendanceAdjustmentTimeType } from "./RequestFormEnums";
 
 export interface CreateAttendanceAdjustmentRequest {
   timeType: AttendanceAdjustmentTimeType;

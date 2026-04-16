@@ -1,7 +1,4 @@
-import type { AttendanceAdjustmentTimeType } from "./CreateAttendanceAdjustmentRequest";
-
-export type RequestFormType = "ATTENDANCE_ADJUSTMENT" | "ABSENT" | "LEAVE" | "RESIGNATION" | "BUSINESS_TRIP" | "WFH" | string;
-export type RequestFormStatus = "DRAFT" | "PENDING" | "APPROVED" | "REJECTED" | "CANCELED" | string;
+import type { AttendanceAdjustmentTimeType, RequestFormStatus, RequestFormType } from "./RequestFormEnums";
 
 export interface AttendanceAdjustmentResponse {
   id: string;

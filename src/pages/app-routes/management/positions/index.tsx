@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { Plus, Search, Briefcase, Edit2, Trash2, MousePointerClick } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -83,7 +83,7 @@ export default function PositionsPage() {
   const handleSave = () => {
     if (!formData.name.trim()) return;
 
-    // Convert về UpsertPositionRequest
+    // Convert vá» UpsertPositionRequest
     const payload: UpsertPositionRequest = {
       name: formData.name,
       description: formData.description,
@@ -103,7 +103,7 @@ export default function PositionsPage() {
   };
 
   return (
-    <div className="p-4 md:p-8 w-full max-w-6xl mx-auto min-h-full flex flex-col gap-6 md:gap-8">
+    <div className="p-4 md:p-8 w-full min-h-full flex flex-col gap-6 md:gap-8">
       {/* 1. Header Section */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
@@ -153,12 +153,12 @@ export default function PositionsPage() {
           <div className="w-full h-px bg-border/50 hidden md:block" />
           <div className="flex items-center gap-1.5 text-[#2E3192]">
             <MousePointerClick size={16} />
-            <span className="italic">Mẹo: Click chuột phải vào dòng dữ liệu để thao tác nhanh.</span>
+            <span className="italic">Máº¹o: Click chuá»™t pháº£i vÃ o dÃ²ng dá»¯ liá»‡u Ä‘á»ƒ thao tÃ¡c nhanh.</span>
           </div>
         </motion.div>
       )}
 
-      {/* 2 & 3. Toolbar Section (Tìm Kiếm + Nút tạo) */}
+      {/* 2 & 3. Toolbar Section (TÃ¬m Kiáº¿m + NÃºt táº¡o) */}
       <motion.div
         initial={{ opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}

@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import {
   Search,
   Users,
@@ -59,7 +59,7 @@ export default function EmployeesPage() {
     department: "",
     position: "",
     func: "",
-    status: "Đang làm",
+    status: "Äang lÃ m",
     checkInTime: "08:00",
     checkOutTime: "17:30",
     sysRole: "",
@@ -97,13 +97,13 @@ export default function EmployeesPage() {
       empCodePrefix: user.employeeCode || "",
       empCodeId: "",
       attendanceCode: user.attendanceCode || "",
-      fullName: user.fullName || "Chưa cập nhật",
+      fullName: user.fullName || "ChÆ°a cáº­p nháº­t",
       englishName: user.englishName || "",
       email: user.username || "",
       department: mapIdToName(user.departmentId, departments),
       position: mapIdToName(user.positionId, positions),
       func: mapIdToName(user.groupId, groups),
-      status: user.active ? "Đang làm" : "Đã nghỉ việc",
+      status: user.active ? "Äang lÃ m" : "ÄÃ£ nghá»‰ viá»‡c",
       checkInTime: user.checkInTime || "08:00",
       checkOutTime: user.checkOutTime || "17:30",
       sysRole: "",
@@ -120,24 +120,24 @@ export default function EmployeesPage() {
   const createUserMutation = useMutation({
     mutationFn: (data: CreateUserRequest) => userService.createUser(data),
     onSuccess: () => {
-      toast.success("Thành công: Tạo nhân viên hệ thống!");
+      toast.success("ThÃ nh cÃ´ng: Táº¡o nhÃ¢n viÃªn há»‡ thá»‘ng!");
       setIsUserFormOpen(false);
       setIsOpen(false);
       queryClient.invalidateQueries({ queryKey: ["users"] });
     },
     onError: () => {
-      toast.error("Đã có lỗi xảy ra khi tạo tài khoản hệ thống.");
+      toast.error("ÄÃ£ cÃ³ lá»—i xáº£y ra khi táº¡o tÃ i khoáº£n há»‡ thá»‘ng.");
     },
   });
 
   const deleteUserMutation = useMutation({
     mutationFn: (id: string) => userService.deleteUser(id),
     onSuccess: () => {
-      toast.success("Hủy kích hoạt tài khoản thành công!");
+      toast.success("Há»§y kÃ­ch hoáº¡t tÃ i khoáº£n thÃ nh cÃ´ng!");
       queryClient.invalidateQueries({ queryKey: ["users"] });
     },
     onError: () => {
-      toast.error("Đã có lỗi xảy ra khi hủy kích hoạt.");
+      toast.error("ÄÃ£ cÃ³ lá»—i xáº£y ra khi há»§y kÃ­ch hoáº¡t.");
     },
   });
 
@@ -163,7 +163,7 @@ export default function EmployeesPage() {
         department: "",
         position: "",
         func: "",
-        status: "Đang làm",
+        status: "Äang lÃ m",
         checkInTime: "08:00",
         checkOutTime: "17:30",
         sysRole: "",
@@ -176,7 +176,7 @@ export default function EmployeesPage() {
 
   const handleSave = () => {
     if (editingEmployee) {
-      toast.info("Chức năng cập nhật nhân viên chưa có endpoint!");
+      toast.info("Chá»©c nÄƒng cáº­p nháº­t nhÃ¢n viÃªn chÆ°a cÃ³ endpoint!");
       setIsOpen(false);
       return;
     }
@@ -204,7 +204,7 @@ export default function EmployeesPage() {
   };
 
   return (
-    <div className="p-4 md:p-8 w-full max-w-7xl mx-auto min-h-full flex flex-col gap-6 md:gap-8">
+    <div className="p-4 md:p-8 w-full min-h-full flex flex-col gap-6 md:gap-8">
       {/* 1. Header Section */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
@@ -216,10 +216,10 @@ export default function EmployeesPage() {
           <span className="p-2.5 bg-[#2E3192]/10 text-[#2E3192] rounded-xl">
             <Users size={28} />
           </span>
-          {t('management.employeesTitle', { defaultValue: 'Hồ sơ nhân viên' })}
+          {t('management.employeesTitle', { defaultValue: 'Há»“ sÆ¡ nhÃ¢n viÃªn' })}
         </h1>
         <p className="text-muted-foreground text-base md:text-lg ml-1">
-          {t('management.employeesDesc', { defaultValue: 'Quản lý toàn bộ thông tin nhân sự và cấp phát tài khoản trong hệ thống.' })}
+          {t('management.employeesDesc', { defaultValue: 'Quáº£n lÃ½ toÃ n bá»™ thÃ´ng tin nhÃ¢n sá»± vÃ  cáº¥p phÃ¡t tÃ i khoáº£n trong há»‡ thá»‘ng.' })}
         </p>
       </motion.div>
 
@@ -233,40 +233,40 @@ export default function EmployeesPage() {
         >
             <div className="flex flex-wrap items-center gap-x-6 gap-y-3 w-full">
               <span className="font-semibold text-[#1E2062] mr-2">
-                {t('management.actionLegend', { defaultValue: 'Chú thích thao tác:' })}
+                {t('management.actionLegend', { defaultValue: 'ChÃº thÃ­ch thao tÃ¡c:' })}
               </span>
               <div className="flex items-center gap-2">
                 <CircleDollarSign size={16} className="text-emerald-500" />
-                <span>{t('management.titleEditSalary', { defaultValue: 'Xem/tùy chỉnh lương' })}</span>
+                <span>{t('management.titleEditSalary', { defaultValue: 'Xem/tÃ¹y chá»‰nh lÆ°Æ¡ng' })}</span>
               </div>
               <div className="flex items-center gap-2">
                 <UserCog size={16} className="text-amber-500" />
-                <span>{t('management.titleEditBasicInfo', { defaultValue: 'Xem/tùy chỉnh thông tin cơ bản' })}</span>
+                <span>{t('management.titleEditBasicInfo', { defaultValue: 'Xem/tÃ¹y chá»‰nh thÃ´ng tin cÆ¡ báº£n' })}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Briefcase size={16} className="text-indigo-500" />
-                <span>{t('management.titleEditWorkInfo', { defaultValue: 'Xem/tùy chỉnh công việc' })}</span>
+                <span>{t('management.titleEditWorkInfo', { defaultValue: 'Xem/tÃ¹y chá»‰nh cÃ´ng viá»‡c' })}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Shield size={16} className="text-violet-500" />
-                <span>{t('management.titleEditGroupInfo', { defaultValue: 'Xem/tùy chỉnh nhóm quyền' })}</span>
+                <span>{t('management.titleEditGroupInfo', { defaultValue: 'Xem/tÃ¹y chá»‰nh nhÃ³m quyá»n' })}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Key size={16} className="text-teal-500" />
-                <span>{t('management.titleEditPassword', { defaultValue: 'Đổi mật khẩu' })}</span>
+                <span>{t('management.titleEditPassword', { defaultValue: 'Äá»•i máº­t kháº©u' })}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Trash2 size={16} className="text-rose-500" />
-                <span>{t('management.titleDeactivate', { defaultValue: 'Hủy kích hoạt tài khoản' })}</span>
+                <span>{t('management.titleDeactivate', { defaultValue: 'Há»§y kÃ­ch hoáº¡t tÃ i khoáº£n' })}</span>
               </div>
               <div className="ml-auto flex items-center text-xs text-muted-foreground bg-muted/40 px-2 py-1 rounded-md border border-border opacity-70 hover:opacity-100 transition-opacity">
-                {t('management.hideLegendHint', { defaultValue: 'Nhấn Alt + S để bật tắt mục này' })}
+                {t('management.hideLegendHint', { defaultValue: 'Nháº¥n Alt + S Ä‘á»ƒ báº­t táº¯t má»¥c nÃ y' })}
               </div>
             </div>
           <div className="w-full h-px bg-border/50 hidden md:block" />
           <div className="flex items-center gap-1.5 text-[#2E3192]">
             <MousePointerClick size={16} />
-            <span className="italic">{t('management.actionTooltip', { defaultValue: 'Mẹo: Click chuột phải vào dòng dữ liệu để thao tác nhanh.' })}</span>
+            <span className="italic">{t('management.actionTooltip', { defaultValue: 'Máº¹o: Click chuá»™t pháº£i vÃ o dÃ²ng dá»¯ liá»‡u Ä‘á»ƒ thao tÃ¡c nhanh.' })}</span>
           </div>
         </motion.div>
       )}
@@ -284,7 +284,7 @@ export default function EmployeesPage() {
             size={20}
           />
           <Input
-            placeholder={t('management.searchEmployeePlaceholder', { defaultValue: 'Tìm kiếm theo Tên hoặc Mã NV...' })}
+            placeholder={t('management.searchEmployeePlaceholder', { defaultValue: 'TÃ¬m kiáº¿m theo TÃªn hoáº·c MÃ£ NV...' })}
             className="pl-12 h-12 rounded-xl bg-muted border-border focus-visible:ring-[#2E3192] text-base hover:bg-card text-card-foreground transition-colors"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -295,7 +295,7 @@ export default function EmployeesPage() {
             onClick={() => handleOpenForm()}
             className="w-full md:w-auto h-12 px-6 rounded-xl bg-[#2E3192] hover:bg-[#1E2062] text-white shadow-md shadow-[#2E3192]/20 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 text-base font-semibold"
           >
-            <UserPlus size={20} className="mr-2" /> {t('management.addEmployee', { defaultValue: 'Thêm nhân viên' })}
+            <UserPlus size={20} className="mr-2" /> {t('management.addEmployee', { defaultValue: 'ThÃªm nhÃ¢n viÃªn' })}
           </Button>
         </div>
       </motion.div>
@@ -310,7 +310,7 @@ export default function EmployeesPage() {
         {isLoading ? (
           <div className="flex flex-col items-center justify-center p-20 text-muted-foreground h-64">
             <Loader2 className="w-8 h-8 animate-spin mb-4 text-[#2E3192]" />
-            <p className="animate-pulse">Đang tải dữ liệu nhân viên...</p>
+            <p className="animate-pulse">Äang táº£i dá»¯ liá»‡u nhÃ¢n viÃªn...</p>
           </div>
         ) : (
           <EmployeeTable

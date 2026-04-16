@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, Minus, CheckCircle2, Clock, CalendarDays, FileText } from "lucide-react";
 import {
@@ -14,16 +14,16 @@ import { vi } from "date-fns/locale";
 
 /*
 const mockTopSales = [
-  { id: 1, name: "Nguyễn Văn Tuấn", score: "9,850", trend: "+12%", avatar: "https://i.pravatar.cc/150?img=11" },
-  { id: 2, name: "Trần Thị Lan Anh", score: "8,720", trend: "+8%", avatar: "https://i.pravatar.cc/150?img=5" },
-  { id: 3, name: "Lê Hoàng Hải", score: "8,200", trend: "+5%", avatar: "https://i.pravatar.cc/150?img=8" },
-  { id: 4, name: "Phạm Minh Tâm", score: "7,900", trend: "-2%", avatar: "https://i.pravatar.cc/150?img=12" },
-  { id: 5, name: "Bùi Thị Yến", score: "7,450", trend: "+15%", avatar: "https://i.pravatar.cc/150?img=9" },
-  { id: 6, name: "Hoàng Đức Nam", score: "7,100", trend: "+4%", avatar: "https://i.pravatar.cc/150?img=15" },
-  { id: 7, name: "Vũ Khánh My", score: "6,800", trend: "-1%", avatar: "https://i.pravatar.cc/150?img=20" },
-  { id: 8, name: "Đặng Quốc Bảo", score: "6,500", trend: "+7%", avatar: "https://i.pravatar.cc/150?img=32" },
-  { id: 9, name: "Ngô Nhật Linh", score: "6,200", trend: "+3%", avatar: "https://i.pravatar.cc/150?img=25" },
-  { id: 10, name: "Lý Gia Hân", score: "5,900", trend: "-5%", avatar: "https://i.pravatar.cc/150?img=33" },
+  { id: 1, name: "Nguyá»…n VÄƒn Tuáº¥n", score: "9,850", trend: "+12%", avatar: "https://i.pravatar.cc/150?img=11" },
+  { id: 2, name: "Tráº§n Thá»‹ Lan Anh", score: "8,720", trend: "+8%", avatar: "https://i.pravatar.cc/150?img=5" },
+  { id: 3, name: "LÃª HoÃ ng Háº£i", score: "8,200", trend: "+5%", avatar: "https://i.pravatar.cc/150?img=8" },
+  { id: 4, name: "Pháº¡m Minh TÃ¢m", score: "7,900", trend: "-2%", avatar: "https://i.pravatar.cc/150?img=12" },
+  { id: 5, name: "BÃ¹i Thá»‹ Yáº¿n", score: "7,450", trend: "+15%", avatar: "https://i.pravatar.cc/150?img=9" },
+  { id: 6, name: "HoÃ ng Äá»©c Nam", score: "7,100", trend: "+4%", avatar: "https://i.pravatar.cc/150?img=15" },
+  { id: 7, name: "VÅ© KhÃ¡nh My", score: "6,800", trend: "-1%", avatar: "https://i.pravatar.cc/150?img=20" },
+  { id: 8, name: "Äáº·ng Quá»‘c Báº£o", score: "6,500", trend: "+7%", avatar: "https://i.pravatar.cc/150?img=32" },
+  { id: 9, name: "NgÃ´ Nháº­t Linh", score: "6,200", trend: "+3%", avatar: "https://i.pravatar.cc/150?img=25" },
+  { id: 10, name: "LÃ½ Gia HÃ¢n", score: "5,900", trend: "-5%", avatar: "https://i.pravatar.cc/150?img=33" },
 ];
 
 const TopSalesTable = () => {
@@ -42,7 +42,7 @@ const TopSalesTable = () => {
           <h2 className="text-[16px] font-bold text-[#1f2937] tracking-tight">Top 10 Vouchers / Sales</h2>
         </div>
         <button className="flex items-center gap-2 border border-gray-200 px-3 py-1.5 rounded text-[13px] font-medium text-gray-500 bg-white hover:bg-gray-50 transition-colors shadow-sm">
-          <span>Tháng này</span>
+          <span>ThÃ¡ng nÃ y</span>
           <ChevronDown size={14} className="text-gray-400" />
         </button>
       </div>
@@ -51,8 +51,8 @@ const TopSalesTable = () => {
         {/* Header *\/}
         <div className="grid grid-cols-12 gap-4 px-4 py-3 text-[12px] font-semibold text-gray-400 uppercase tracking-wider border-b border-gray-50 mb-1">
           <div className="col-span-1 text-center">#</div>
-          <div className="col-span-6 md:col-span-7">Nhân sự</div>
-          <div className="col-span-5 md:col-span-4 text-right">Thành tích</div>
+          <div className="col-span-6 md:col-span-7">NhÃ¢n sá»±</div>
+          <div className="col-span-5 md:col-span-4 text-right">ThÃ nh tÃ­ch</div>
         </div>
 
         {/* Rows *\/}
@@ -133,10 +133,10 @@ const IntegratedTaskCard = () => {
   const [activeTab, setActiveTab] = useState<'todo' | 'proposed' | 'following'>('todo');
 
   const emptyText = activeTab === 'todo'
-    ? 'Thật tuyệt. Bạn đã xử lý hết công việc!'
+    ? 'Tháº­t tuyá»‡t. Báº¡n Ä‘Ã£ xá»­ lÃ½ háº¿t cÃ´ng viá»‡c!'
     : activeTab === 'proposed'
-      ? 'Đề xuất của bạn đã được xử lý hết.'
-      : 'Công việc bạn theo dõi đã được xử lý hết.';
+      ? 'Äá» xuáº¥t cá»§a báº¡n Ä‘Ã£ Ä‘Æ°á»£c xá»­ lÃ½ háº¿t.'
+      : 'CÃ´ng viá»‡c báº¡n theo dÃµi Ä‘Ã£ Ä‘Æ°á»£c xá»­ lÃ½ háº¿t.';
 
   return (
     <motion.div
@@ -152,32 +152,32 @@ const IntegratedTaskCard = () => {
             onClick={() => setActiveTab('todo')}
             className={`pb-3 pt-2 text-[13px] sm:text-[14px] transition-colors whitespace-nowrap ${activeTab === 'todo' ? 'font-semibold text-primary border-b-2 border-primary' : 'font-medium text-gray-500 hover:text-gray-700'}`}
           >
-            Việc cần thực hiện
+            Viá»‡c cáº§n thá»±c hiá»‡n
           </button>
           <button
             onClick={() => setActiveTab('proposed')}
             className={`pb-3 pt-2 text-[13px] sm:text-[14px] transition-colors whitespace-nowrap ${activeTab === 'proposed' ? 'font-semibold text-primary border-b-2 border-primary' : 'font-medium text-gray-500 hover:text-gray-700'}`}
           >
-            Đề xuất của bạn
+            Äá» xuáº¥t cá»§a báº¡n
           </button>
           <button
             onClick={() => setActiveTab('following')}
             className={`pb-3 pt-2 text-[13px] sm:text-[14px] transition-colors whitespace-nowrap ${activeTab === 'following' ? 'font-semibold text-primary border-b-2 border-primary' : 'font-medium text-gray-500 hover:text-gray-700'}`}
           >
-            Việc bạn giao, theo dõi
+            Viá»‡c báº¡n giao, theo dÃµi
           </button>
         </div>
 
         {/* Filters */}
         <div className="hidden items-center gap-2 px-3 pb-2 lg:flex">
-          <Select defaultValue="Cần thực hiện">
+          <Select defaultValue="Cáº§n thá»±c hiá»‡n">
             <SelectTrigger className="h-[30px] border-gray-200 text-[13px] font-medium text-gray-500 bg-white hover:bg-gray-50 shadow-sm focus:ring-0">
               <SelectValue />
             </SelectTrigger>
             <SelectContent align="end" alignItemWithTrigger={false} sideOffset={4} className="text-[13px] min-w-[140px]">
-              <SelectItem value="Cần thực hiện" className="text-[13px] cursor-pointer">Cần thực hiện</SelectItem>
-              <SelectItem value="Đang làm" className="text-[13px] cursor-pointer">Đang làm</SelectItem>
-              <SelectItem value="Hoàn thành" className="text-[13px] cursor-pointer">Hoàn thành</SelectItem>
+              <SelectItem value="Cáº§n thá»±c hiá»‡n" className="text-[13px] cursor-pointer">Cáº§n thá»±c hiá»‡n</SelectItem>
+              <SelectItem value="Äang lÃ m" className="text-[13px] cursor-pointer">Äang lÃ m</SelectItem>
+              <SelectItem value="HoÃ n thÃ nh" className="text-[13px] cursor-pointer">HoÃ n thÃ nh</SelectItem>
             </SelectContent>
           </Select>
           <button className="text-gray-400 hover:text-gray-600 transition-colors ml-2">
@@ -231,18 +231,18 @@ export default function HomePage() {
   const hasCheckOut = !!todayAttendance?.checkOutTime;
 
   const getCheckInStatus = () => {
-    if (!hasCheckIn) return { text: "Chưa ghi nhận", color: "text-[#64748b]", bg: "bg-[#cbd5e1]", cardBg: "bg-[#f1f5f9]" };
-    if (todayAttendance?.checkInValid) return { text: "Đến đúng giờ", color: "text-[#22c55e]", bg: "bg-[#22c55e]", cardBg: "bg-[#eaf8f1]" };
-    return { text: `Đi muộn ${todayAttendance?.lateMinutes || 0}p`, color: "text-[#ef4444]", bg: "bg-[#ef4444]", cardBg: "bg-[#fef2f2]" };
+    if (!hasCheckIn) return { text: "ChÆ°a ghi nháº­n", color: "text-[#64748b]", bg: "bg-[#cbd5e1]", cardBg: "bg-[#f1f5f9]" };
+    if (todayAttendance?.checkInValid) return { text: "Äáº¿n Ä‘Ãºng giá»", color: "text-[#22c55e]", bg: "bg-[#22c55e]", cardBg: "bg-[#eaf8f1]" };
+    return { text: `Äi muá»™n ${todayAttendance?.lateMinutes || 0}p`, color: "text-[#ef4444]", bg: "bg-[#ef4444]", cardBg: "bg-[#fef2f2]" };
   };
 
   const getCheckOutStatus = () => {
     if (!hasCheckOut) {
-      if (hasCheckIn) return { text: "Chưa ghi nhận", color: "text-[#f59e0b]", bg: "bg-[#f59e0b]", cardBg: "bg-[#fff7ed]" };
-      return { text: "—", color: "text-[#64748b]", bg: "bg-[#cbd5e1]", cardBg: "bg-[#f1f5f9]" };
+      if (hasCheckIn) return { text: "ChÆ°a ghi nháº­n", color: "text-[#f59e0b]", bg: "bg-[#f59e0b]", cardBg: "bg-[#fff7ed]" };
+      return { text: "â€”", color: "text-[#64748b]", bg: "bg-[#cbd5e1]", cardBg: "bg-[#f1f5f9]" };
     }
-    if (todayAttendance?.checkOutValid) return { text: "Về đúng giờ", color: "text-[#22c55e]", bg: "bg-[#22c55e]", cardBg: "bg-[#eaf8f1]" };
-    return { text: `Về sớm ${todayAttendance?.earlyLeaveMinutes || 0}p`, color: "text-[#ef4444]", bg: "bg-[#ef4444]", cardBg: "bg-[#fef2f2]" };
+    if (todayAttendance?.checkOutValid) return { text: "Vá» Ä‘Ãºng giá»", color: "text-[#22c55e]", bg: "bg-[#22c55e]", cardBg: "bg-[#eaf8f1]" };
+    return { text: `Vá» sá»›m ${todayAttendance?.earlyLeaveMinutes || 0}p`, color: "text-[#ef4444]", bg: "bg-[#ef4444]", cardBg: "bg-[#fef2f2]" };
   };
 
   const inStatus = getCheckInStatus();
@@ -254,7 +254,7 @@ export default function HomePage() {
 
   return (
     <div className="p-4 md:p-6 w-full h-full min-h-screen bg-transparent">
-      <div className="max-w-7xl mx-auto w-full">
+      <div className="w-full">
         {/* Main Grid container */}
         <div className="grid grid-cols-1 md:grid-cols-12 lg:grid-cols-12 gap-6 items-start">
 
@@ -281,7 +281,7 @@ export default function HomePage() {
                     <h2 className="text-xl font-medium text-foreground">{displayDate}</h2>
                   </div>
                   <span className="text-[13px] text-muted-foreground font-medium">
-                    Mã ca làm việc: <span className="text-indigo-600 font-semibold">{todayAttendance?.attendanceCode || 'Chưa xếp ca'}</span>
+                    MÃ£ ca lÃ m viá»‡c: <span className="text-indigo-600 font-semibold">{todayAttendance?.attendanceCode || 'ChÆ°a xáº¿p ca'}</span>
                   </span>
                 </div>
                 <div className="flex items-center gap-4 text-muted-foreground">
@@ -298,9 +298,9 @@ export default function HomePage() {
                 <div className={`rounded-xl p-4 flex items-center justify-between relative overflow-hidden ${inStatus.cardBg}`}>
                   <div className="flex flex-col">
                     <div className="flex items-center gap-2">
-                      <span className="text-[#1f2937] font-medium text-[13px]">Giờ vào</span>
+                      <span className="text-[#1f2937] font-medium text-[13px]">Giá» vÃ o</span>
                       {todayAttendance?.scheduledCheckIn && (
-                        <span className="text-[11px] text-muted-foreground font-medium bg-black/5 px-1.5 rounded border border-black/5">Lịch: {todayAttendance.scheduledCheckIn.substring(0, 5)}</span>
+                        <span className="text-[11px] text-muted-foreground font-medium bg-black/5 px-1.5 rounded border border-black/5">Lá»‹ch: {todayAttendance.scheduledCheckIn.substring(0, 5)}</span>
                       )}
                     </div>
                     <div className={`text-[24px] font-bold tracking-tight mt-1 flex items-baseline gap-1 ${hasCheckIn ? inStatus.color : 'text-[#94a3b8]'}`}>
@@ -322,9 +322,9 @@ export default function HomePage() {
                 <div className={`rounded-xl p-4 flex items-center justify-between relative overflow-hidden ${outStatus.cardBg}`}>
                   <div className="flex flex-col">
                     <div className="flex items-center gap-2">
-                      <span className="text-[#1f2937] font-medium text-[13px]">Giờ ra</span>
+                      <span className="text-[#1f2937] font-medium text-[13px]">Giá» ra</span>
                       {todayAttendance?.scheduledCheckOut && (
-                        <span className="text-[11px] text-muted-foreground font-medium bg-black/5 px-1.5 rounded border border-black/5">Lịch: {todayAttendance.scheduledCheckOut.substring(0, 5)}</span>
+                        <span className="text-[11px] text-muted-foreground font-medium bg-black/5 px-1.5 rounded border border-black/5">Lá»‹ch: {todayAttendance.scheduledCheckOut.substring(0, 5)}</span>
                       )}
                     </div>
                     <div className={`text-[24px] font-bold tracking-tight mt-1 flex items-baseline gap-1 ${hasCheckOut ? outStatus.color : hasCheckIn ? 'text-[#f59e0b]' : 'text-[#94a3b8]'}`}>
@@ -345,7 +345,7 @@ export default function HomePage() {
                 {/* Work time */}
                 <div className="bg-[#eff6ff] rounded-xl p-4 flex items-center justify-between relative overflow-hidden">
                   <div className="flex flex-col">
-                    <span className="text-[#1f2937] font-medium text-[13px]">Thời gian làm việc</span>
+                    <span className="text-[#1f2937] font-medium text-[13px]">Thá»i gian lÃ m viá»‡c</span>
                     <div className="text-[28px] font-bold text-[#3b82f6] tracking-tight mt-1">
                       {workTimeStr}
                     </div>

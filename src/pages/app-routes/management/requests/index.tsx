@@ -1,15 +1,15 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { Check, X, FileEdit, Clock, Calendar, Search, Filter } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 import { Card } from "@/components/ui/card";
 
 const MOCK_REQUESTS = [
-  { id: "REQ-001", user: "Phạm Văn A", type: "Nghỉ phép năm", date: "2026-04-16", reason: "Giải quyết việc gia đình", status: "PENDING" },
-  { id: "REQ-002", user: "Nguyễn Thị B", type: "Làm thêm giờ", date: "2026-04-15", reason: "Chạy deadline release dự án", status: "PENDING" },
-  { id: "REQ-003", user: "Lê C", type: "Làm từ xa (WFH)", date: "2026-04-17", reason: "Lý do sức khoẻ", status: "PENDING" },
-  { id: "REQ-004", user: "Trần D", type: "Đi công tác", date: "2026-04-20", reason: "Gặp đối tác tại Hà Nội", status: "APPROVED" },
-  { id: "REQ-005", user: "Phạm Văn A", type: "Nghỉ ốm", date: "2026-04-10", reason: "Cảm cúm", status: "REJECTED" },
+  { id: "REQ-001", user: "Pháº¡m VÄƒn A", type: "Nghá»‰ phÃ©p nÄƒm", date: "2026-04-16", reason: "Giáº£i quyáº¿t viá»‡c gia Ä‘Ã¬nh", status: "PENDING" },
+  { id: "REQ-002", user: "Nguyá»…n Thá»‹ B", type: "LÃ m thÃªm giá»", date: "2026-04-15", reason: "Cháº¡y deadline release dá»± Ã¡n", status: "PENDING" },
+  { id: "REQ-003", user: "LÃª C", type: "LÃ m tá»« xa (WFH)", date: "2026-04-17", reason: "LÃ½ do sá»©c khoáº»", status: "PENDING" },
+  { id: "REQ-004", user: "Tráº§n D", type: "Äi cÃ´ng tÃ¡c", date: "2026-04-20", reason: "Gáº·p Ä‘á»‘i tÃ¡c táº¡i HÃ  Ná»™i", status: "APPROVED" },
+  { id: "REQ-005", user: "Pháº¡m VÄƒn A", type: "Nghá»‰ á»‘m", date: "2026-04-10", reason: "Cáº£m cÃºm", status: "REJECTED" },
 ];
 
 export default function ManagementRequestsPage() {
@@ -24,27 +24,27 @@ export default function ManagementRequestsPage() {
     }));
     
     if (action === "APPROVE") {
-      toast.success(`Đã DUYỆT đơn ${id} thành công!`);
+      toast.success(`ÄÃ£ DUYá»†T Ä‘Æ¡n ${id} thÃ nh cÃ´ng!`);
     } else {
-      toast.error(`Đã TỪ CHỐI đơn ${id}.`);
+      toast.error(`ÄÃ£ Tá»ª CHá»I Ä‘Æ¡n ${id}.`);
     }
   };
 
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "PENDING":
-        return <span className="px-2 py-1 bg-amber-500/10 text-amber-600 border border-amber-500/20 rounded text-xs font-semibold uppercase">Chờ duyệt</span>;
+        return <span className="px-2 py-1 bg-amber-500/10 text-amber-600 border border-amber-500/20 rounded text-xs font-semibold uppercase">Chá» duyá»‡t</span>;
       case "APPROVED":
-        return <span className="px-2 py-1 bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 rounded text-xs font-semibold uppercase">Đã duyệt</span>;
+        return <span className="px-2 py-1 bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 rounded text-xs font-semibold uppercase">ÄÃ£ duyá»‡t</span>;
       case "REJECTED":
-        return <span className="px-2 py-1 bg-red-500/10 text-red-600 border border-red-500/20 rounded text-xs font-semibold uppercase">Từ chối</span>;
+        return <span className="px-2 py-1 bg-red-500/10 text-red-600 border border-red-500/20 rounded text-xs font-semibold uppercase">Tá»« chá»‘i</span>;
       default:
         return null;
     }
   };
 
   return (
-    <div className="p-4 md:p-8 w-full max-w-7xl mx-auto min-h-full flex flex-col gap-6 md:gap-8 relative isolate">
+    <div className="p-4 md:p-8 w-full min-h-full flex flex-col gap-6 md:gap-8 relative isolate">
       {/* Header Section */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
@@ -56,10 +56,10 @@ export default function ManagementRequestsPage() {
           <span className="p-2.5 bg-[#2E3192]/10 text-[#2E3192] rounded-xl">
             <FileEdit size={28} />
           </span>
-          Quản lý Đơn từ
+          Quáº£n lÃ½ ÄÆ¡n tá»«
         </h1>
         <p className="text-muted-foreground text-base md:text-lg ml-1">
-          Duyệt và xử lý các yêu cầu nghỉ phép, tăng ca của toàn bộ nhân viên.
+          Duyá»‡t vÃ  xá»­ lÃ½ cÃ¡c yÃªu cáº§u nghá»‰ phÃ©p, tÄƒng ca cá»§a toÃ n bá»™ nhÃ¢n viÃªn.
         </p>
       </motion.div>
 
@@ -67,21 +67,21 @@ export default function ManagementRequestsPage() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card className="p-4 flex items-center justify-between border-border shadow-sm">
           <div>
-            <p className="text-sm font-medium text-muted-foreground">Chờ duyệt</p>
+            <p className="text-sm font-medium text-muted-foreground">Chá» duyá»‡t</p>
             <p className="text-2xl font-bold text-amber-500">3</p>
           </div>
           <div className="p-3 bg-amber-500/10 rounded-full"><Clock size={20} className="text-amber-500" /></div>
         </Card>
         <Card className="p-4 flex items-center justify-between border-border shadow-sm">
           <div>
-            <p className="text-sm font-medium text-muted-foreground">Đã duyệt (Tháng)</p>
+            <p className="text-sm font-medium text-muted-foreground">ÄÃ£ duyá»‡t (ThÃ¡ng)</p>
             <p className="text-2xl font-bold text-emerald-500">24</p>
           </div>
           <div className="p-3 bg-emerald-500/10 rounded-full"><Check size={20} className="text-emerald-500" /></div>
         </Card>
         <Card className="p-4 flex items-center justify-between border-border shadow-sm">
           <div>
-            <p className="text-sm font-medium text-muted-foreground">Từ chối (Tháng)</p>
+            <p className="text-sm font-medium text-muted-foreground">Tá»« chá»‘i (ThÃ¡ng)</p>
             <p className="text-2xl font-bold text-red-500">5</p>
           </div>
           <div className="p-3 bg-red-500/10 rounded-full"><X size={20} className="text-red-500" /></div>
@@ -95,12 +95,12 @@ export default function ManagementRequestsPage() {
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <input 
               type="text" 
-              placeholder="Tìm kiếm mã đơn, nhân viên..." 
+              placeholder="TÃ¬m kiáº¿m mÃ£ Ä‘Æ¡n, nhÃ¢n viÃªn..." 
               className="pl-9 pr-4 py-2 w-full text-sm rounded-md border border-input bg-background focus:ring-2 focus:ring-[#2E3192] outline-none transition-all"
             />
           </div>
           <button className="flex items-center gap-2 px-3 py-2 border border-input rounded-md hover:bg-muted text-sm font-medium transition-colors ml-auto">
-            <Filter size={16} /> Lọc
+            <Filter size={16} /> Lá»c
           </button>
         </div>
 
@@ -109,13 +109,13 @@ export default function ManagementRequestsPage() {
           <table className="w-full text-sm text-left">
             <thead className="text-xs text-muted-foreground uppercase bg-muted/40 border-b border-border">
               <tr>
-                <th className="px-4 py-3 font-semibold">Mã đơn</th>
-                <th className="px-4 py-3 font-semibold">Nhân viên</th>
-                <th className="px-4 py-3 font-semibold">Loại đơn</th>
-                <th className="px-4 py-3 font-semibold flex items-center gap-1.5"><Calendar size={14}/> Ngày Áp Dụng</th>
-                <th className="px-4 py-3 font-semibold">Lý do</th>
-                <th className="px-4 py-3 font-semibold">Trạng thái</th>
-                <th className="px-4 py-3 font-semibold text-right">Thao tác</th>
+                <th className="px-4 py-3 font-semibold">MÃ£ Ä‘Æ¡n</th>
+                <th className="px-4 py-3 font-semibold">NhÃ¢n viÃªn</th>
+                <th className="px-4 py-3 font-semibold">Loáº¡i Ä‘Æ¡n</th>
+                <th className="px-4 py-3 font-semibold flex items-center gap-1.5"><Calendar size={14}/> NgÃ y Ãp Dá»¥ng</th>
+                <th className="px-4 py-3 font-semibold">LÃ½ do</th>
+                <th className="px-4 py-3 font-semibold">Tráº¡ng thÃ¡i</th>
+                <th className="px-4 py-3 font-semibold text-right">Thao tÃ¡c</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
@@ -133,27 +133,27 @@ export default function ManagementRequestsPage() {
                         <button 
                           onClick={() => handleAction(req.id, "APPROVE")}
                           className="bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500 hover:text-white p-1.5 rounded-md transition-all group"
-                          title="Duyệt"
+                          title="Duyá»‡t"
                         >
                           <Check size={16} className="group-hover:scale-110 transition-transform" />
                         </button>
                         <button 
                           onClick={() => handleAction(req.id, "REJECT")}
                           className="bg-red-500/10 text-red-600 hover:bg-red-500 hover:text-white p-1.5 rounded-md transition-all group"
-                          title="Từ chối"
+                          title="Tá»« chá»‘i"
                         >
                           <X size={16} className="group-hover:scale-110 transition-transform" />
                         </button>
                       </div>
                     ) : (
-                      <span className="text-muted-foreground text-xs italic">Đã xử lý</span>
+                      <span className="text-muted-foreground text-xs italic">ÄÃ£ xá»­ lÃ½</span>
                     )}
                   </td>
                 </tr>
               ))}
               {requests.length === 0 && (
                 <tr>
-                  <td colSpan={7} className="text-center py-8 text-muted-foreground">Không có dữ liệu</td>
+                  <td colSpan={7} className="text-center py-8 text-muted-foreground">KhÃ´ng cÃ³ dá»¯ liá»‡u</td>
                 </tr>
               )}
             </tbody>

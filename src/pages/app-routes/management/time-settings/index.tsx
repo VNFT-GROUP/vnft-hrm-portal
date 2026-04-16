@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
@@ -28,16 +28,16 @@ export default function TimeSettingsPage() {
     const h = Math.floor(diffMins / 60);
     const m = diffMins % 60;
     
-    if (h > 0 && m > 0) return `${h} giờ ${m} phút`;
-    if (h > 0) return `${h} giờ`;
-    return `${m} phút`;
+    if (h > 0 && m > 0) return `${h} giá» ${m} phÃºt`;
+    if (h > 0) return `${h} giá»`;
+    return `${m} phÃºt`;
   };
 
   const handleSave = () => {
     setIsSaving(true);
     setTimeout(() => {
       setIsSaving(false);
-      toast.success("Đã lưu thiết lập giờ giấc thành công!");
+      toast.success("ÄÃ£ lÆ°u thiáº¿t láº­p giá» giáº¥c thÃ nh cÃ´ng!");
     }, 600);
   };
 
@@ -49,7 +49,7 @@ export default function TimeSettingsPage() {
   });
 
   return (
-    <div className="w-full p-4 md:p-8 max-w-7xl mx-auto flex flex-col gap-6 md:gap-8">
+    <div className="w-full p-4 md:p-8 flex flex-col gap-6 md:gap-8">
       <div className="w-full space-y-6">
         <motion.div
             initial={{ opacity: 0, y: -20 }}
@@ -61,10 +61,10 @@ export default function TimeSettingsPage() {
               <span className="p-2.5 bg-[#2E3192]/10 text-[#2E3192] rounded-xl flex items-center justify-center">
                 <Clock size={26} strokeWidth={2.5} />
               </span>
-              Cài đặt Giờ giấc
+              CÃ i Ä‘áº·t Giá» giáº¥c
             </h1>
             <p className="text-muted-foreground text-sm md:text-base ml-1">
-              Cấu hình thời gian làm việc, mức độ sai lệch cho phép và các khung giờ nghỉ.
+              Cáº¥u hÃ¬nh thá»i gian lÃ m viá»‡c, má»©c Ä‘á»™ sai lá»‡ch cho phÃ©p vÃ  cÃ¡c khung giá» nghá»‰.
             </p>
           </motion.div>
 
@@ -73,26 +73,26 @@ export default function TimeSettingsPage() {
             <CardHeader className="pb-4">
               <CardTitle className="text-lg flex items-center gap-2">
                 <Clock className="w-5 h-5 text-indigo-500" />
-                Sai số thời gian
+                Sai sá»‘ thá»i gian
               </CardTitle>
               <CardDescription>
-                Cấu hình khoảng thời gian trễ và về sớm được hệ thống chấp nhận (không ghi nhận vi phạm).
+                Cáº¥u hÃ¬nh khoáº£ng thá»i gian trá»… vÃ  vá» sá»›m Ä‘Æ°á»£c há»‡ thá»‘ng cháº¥p nháº­n (khÃ´ng ghi nháº­n vi pháº¡m).
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="space-y-2">
-                <Label className="text-sm font-semibold text-slate-700">Độ trễ cho phép</Label>
+                <Label className="text-sm font-semibold text-slate-700">Äá»™ trá»… cho phÃ©p</Label>
                 <Select value={lateness} onValueChange={(val) => setLateness(val || "0")}>
                   <SelectTrigger className="bg-slate-50/50 h-10 transition-shadow focus:ring-indigo-500/20">
-                    <SelectValue placeholder="Chọn số phút" />
+                    <SelectValue placeholder="Chá»n sá»‘ phÃºt" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="0">Không cho phép (0 phút)</SelectItem>
-                    <SelectItem value="5">5 phút</SelectItem>
-                    <SelectItem value="10">10 phút</SelectItem>
-                    <SelectItem value="15">15 phút</SelectItem>
-                    <SelectItem value="20">20 phút</SelectItem>
-                    <SelectItem value="30">30 phút</SelectItem>
+                    <SelectItem value="0">KhÃ´ng cho phÃ©p (0 phÃºt)</SelectItem>
+                    <SelectItem value="5">5 phÃºt</SelectItem>
+                    <SelectItem value="10">10 phÃºt</SelectItem>
+                    <SelectItem value="15">15 phÃºt</SelectItem>
+                    <SelectItem value="20">20 phÃºt</SelectItem>
+                    <SelectItem value="30">30 phÃºt</SelectItem>
                   </SelectContent>
                 </Select>
                 <div className="flex flex-col gap-1 mt-3 bg-indigo-50/60 p-3 rounded-lg border border-indigo-100/60 shadow-sm relative overflow-hidden group">
@@ -100,28 +100,28 @@ export default function TimeSettingsPage() {
                   <div className="flex gap-2">
                     <Info className="w-4 h-4 text-indigo-500 mt-0.5 shrink-0" />
                     <span className="text-[13px] text-slate-700 leading-relaxed font-medium">
-                      Ví dụ minh họa (Ca sáng: 08:00)
+                      VÃ­ dá»¥ minh há»a (Ca sÃ¡ng: 08:00)
                     </span>
                   </div>
                   <span className="text-[13px] text-slate-600 leading-relaxed pl-6">
-                    Điểm danh lúc <strong className="text-indigo-700 bg-indigo-100/50 px-1 py-0.5 rounded">08:{lateness.padStart(2, '0')}</strong> vẫn sẽ được hệ thống tính là <strong>đúng giờ</strong>.
+                    Äiá»ƒm danh lÃºc <strong className="text-indigo-700 bg-indigo-100/50 px-1 py-0.5 rounded">08:{lateness.padStart(2, '0')}</strong> váº«n sáº½ Ä‘Æ°á»£c há»‡ thá»‘ng tÃ­nh lÃ  <strong>Ä‘Ãºng giá»</strong>.
                   </span>
                 </div>
               </div>
 
               <div className="space-y-2 pt-2 border-t border-slate-100">
-                <Label className="text-sm font-semibold text-slate-700">Độ sớm cho phép</Label>
+                <Label className="text-sm font-semibold text-slate-700">Äá»™ sá»›m cho phÃ©p</Label>
                 <Select value={earlyLeave} onValueChange={(val) => setEarlyLeave(val || "0")}>
                   <SelectTrigger className="bg-slate-50/50 h-10 transition-shadow focus:ring-indigo-500/20">
-                    <SelectValue placeholder="Chọn số phút" />
+                    <SelectValue placeholder="Chá»n sá»‘ phÃºt" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="0">Không cho phép (0 phút)</SelectItem>
-                    <SelectItem value="5">5 phút</SelectItem>
-                    <SelectItem value="10">10 phút</SelectItem>
-                    <SelectItem value="15">15 phút</SelectItem>
-                    <SelectItem value="20">20 phút</SelectItem>
-                    <SelectItem value="30">30 phút</SelectItem>
+                    <SelectItem value="0">KhÃ´ng cho phÃ©p (0 phÃºt)</SelectItem>
+                    <SelectItem value="5">5 phÃºt</SelectItem>
+                    <SelectItem value="10">10 phÃºt</SelectItem>
+                    <SelectItem value="15">15 phÃºt</SelectItem>
+                    <SelectItem value="20">20 phÃºt</SelectItem>
+                    <SelectItem value="30">30 phÃºt</SelectItem>
                   </SelectContent>
                 </Select>
                 <div className="flex flex-col gap-1 mt-3 bg-rose-50/60 p-3 rounded-lg border border-rose-100/60 shadow-sm relative overflow-hidden group">
@@ -129,11 +129,11 @@ export default function TimeSettingsPage() {
                   <div className="flex gap-2">
                     <Info className="w-4 h-4 text-rose-500 mt-0.5 shrink-0" />
                     <span className="text-[13px] text-slate-700 leading-relaxed font-medium">
-                      Ví dụ minh họa (Ca chiều: 17:30)
+                      VÃ­ dá»¥ minh há»a (Ca chiá»u: 17:30)
                     </span>
                   </div>
                   <span className="text-[13px] text-slate-600 leading-relaxed pl-6">
-                    Điểm danh về lúc <strong className="text-rose-700 bg-rose-100/50 px-1 py-0.5 rounded">{
+                    Äiá»ƒm danh vá» lÃºc <strong className="text-rose-700 bg-rose-100/50 px-1 py-0.5 rounded">{
                       (() => {
                         const leave = parseInt(earlyLeave);
                         const endMin = 30;
@@ -146,7 +146,7 @@ export default function TimeSettingsPage() {
                         }
                         return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
                       })()
-                    }</strong> vẫn sẽ được tính là <strong>đủ công</strong>.
+                    }</strong> váº«n sáº½ Ä‘Æ°á»£c tÃ­nh lÃ  <strong>Ä‘á»§ cÃ´ng</strong>.
                   </span>
                 </div>
               </div>
@@ -157,19 +157,19 @@ export default function TimeSettingsPage() {
             <CardHeader className="pb-4">
               <CardTitle className="text-lg flex items-center gap-2">
                 <Clock className="w-5 h-5 text-indigo-500" />
-                Thời gian nghỉ trưa
+                Thá»i gian nghá»‰ trÆ°a
               </CardTitle>
               <CardDescription>
-                Thiết lập khung giờ nghỉ trưa tiêu chuẩn và cố định. Khoảng thời gian này sẽ tự động bị loại trừ khỏi tổng giờ làm.
+                Thiáº¿t láº­p khung giá» nghá»‰ trÆ°a tiÃªu chuáº©n vÃ  cá»‘ Ä‘á»‹nh. Khoáº£ng thá»i gian nÃ y sáº½ tá»± Ä‘á»™ng bá»‹ loáº¡i trá»« khá»i tá»•ng giá» lÃ m.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="grid grid-cols-2 gap-5">
                 <div className="space-y-2">
-                  <Label className="text-sm font-semibold text-slate-700">Bắt đầu từ</Label>
+                  <Label className="text-sm font-semibold text-slate-700">Báº¯t Ä‘áº§u tá»«</Label>
                   <Select value={lunchFrom} onValueChange={(val) => setLunchFrom(val || "12:00")}>
                     <SelectTrigger className={`bg-slate-50/50 h-10 ${isLunchTimeInvalid ? 'border-rose-300 ring-rose-200' : ''}`}>
-                      <SelectValue placeholder="Chọn giờ" />
+                      <SelectValue placeholder="Chá»n giá»" />
                     </SelectTrigger>
                     <SelectContent>
                       {timeOptions.map((t) => (
@@ -180,10 +180,10 @@ export default function TimeSettingsPage() {
                 </div>
                 
                 <div className="space-y-2">
-                  <Label className="text-sm font-semibold text-slate-700">Đến lúc</Label>
+                  <Label className="text-sm font-semibold text-slate-700">Äáº¿n lÃºc</Label>
                   <Select value={lunchTo} onValueChange={(val) => setLunchTo(val || "13:30")}>
                     <SelectTrigger className={`bg-slate-50/50 h-10 ${isLunchTimeInvalid ? 'border-rose-300 ring-rose-200' : ''}`}>
-                      <SelectValue placeholder="Chọn giờ" />
+                      <SelectValue placeholder="Chá»n giá»" />
                     </SelectTrigger>
                     <SelectContent>
                       {timeOptions.map((t) => (
@@ -197,12 +197,12 @@ export default function TimeSettingsPage() {
               {isLunchTimeInvalid && (
                 <div className="flex items-start gap-2 bg-rose-50/60 p-3 rounded-lg border border-rose-100">
                   <Info className="w-4 h-4 text-rose-500 mt-0.5 shrink-0" />
-                  <span className="text-[13px] text-rose-700 font-medium">Lỗi: Thời gian "Đến lúc" phải muộn hơn "Bắt đầu từ". Vui lòng chọn lại.</span>
+                  <span className="text-[13px] text-rose-700 font-medium">Lá»—i: Thá»i gian "Äáº¿n lÃºc" pháº£i muá»™n hÆ¡n "Báº¯t Ä‘áº§u tá»«". Vui lÃ²ng chá»n láº¡i.</span>
                 </div>
               )}
 
               <div className={`rounded-xl p-5 border flex flex-col justify-center items-center gap-2 shadow-sm transition-colors ${isLunchTimeInvalid ? 'bg-slate-50 border-slate-200' : 'bg-linear-to-r from-emerald-50 to-teal-50 border-emerald-100'}`}>
-                 <span className="text-sm font-medium text-slate-500 uppercase tracking-widest">Tổng Thời Gian Nghỉ</span>
+                 <span className="text-sm font-medium text-slate-500 uppercase tracking-widest">Tá»•ng Thá»i Gian Nghá»‰</span>
                  <span className={`text-3xl font-extrabold tracking-tight ${isLunchTimeInvalid ? 'text-slate-300' : 'text-emerald-600'}`}>
                    {calculateDuration(lunchFrom, lunchTo)}
                  </span>
@@ -213,7 +213,7 @@ export default function TimeSettingsPage() {
 
         {/* Global Save Button */}
         <div className="flex items-center justify-between mt-6">
-          <p className="text-sm text-slate-500 font-medium">Các thay đổi sẽ được áp dụng cho toàn bộ nhân sự.</p>
+          <p className="text-sm text-slate-500 font-medium">CÃ¡c thay Ä‘á»•i sáº½ Ä‘Æ°á»£c Ã¡p dá»¥ng cho toÃ n bá»™ nhÃ¢n sá»±.</p>
           <Button 
             onClick={handleSave} 
             disabled={isSaving || isLunchTimeInvalid}
@@ -222,12 +222,12 @@ export default function TimeSettingsPage() {
             {isSaving ? (
               <div className="flex items-center gap-2">
                 <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                Đang lưu...
+                Äang lÆ°u...
               </div>
             ) : (
               <div className="flex items-center gap-2 text-[15px]">
                 <Check className="w-5 h-5" />
-                Lưu Cài Đặt
+                LÆ°u CÃ i Äáº·t
               </div>
             )}
           </Button>

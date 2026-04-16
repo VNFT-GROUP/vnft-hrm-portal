@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { Plus, Search, Layers, Edit2, Trash2, Loader2, MousePointerClick } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
@@ -54,12 +54,12 @@ export default function RolesPage() {
     mutationFn: (data: UpsertRoleRequest) =>
       roleService.createRole(data),
     onSuccess: () => {
-      toast.success(t('management.createRoleSuccess', { defaultValue: 'Thêm chức vụ thành công!' }));
+      toast.success(t('management.createRoleSuccess', { defaultValue: 'ThÃªm chá»©c vá»¥ thÃ nh cÃ´ng!' }));
       queryClient.invalidateQueries({ queryKey: ["roles"] });
       setIsOpen(false);
     },
     onError: () => {
-      toast.error(t('management.createRoleError', { defaultValue: 'Thêm chức vụ thất bại!' }));
+      toast.error(t('management.createRoleError', { defaultValue: 'ThÃªm chá»©c vá»¥ tháº¥t báº¡i!' }));
     }
   });
 
@@ -67,23 +67,23 @@ export default function RolesPage() {
     mutationFn: ({ id, data }: { id: string; data: UpsertRoleRequest }) =>
       roleService.updateRole(id, data),
     onSuccess: () => {
-      toast.success(t('management.updateRoleSuccess', { defaultValue: 'Cập nhật chức vụ thành công!' }));
+      toast.success(t('management.updateRoleSuccess', { defaultValue: 'Cáº­p nháº­t chá»©c vá»¥ thÃ nh cÃ´ng!' }));
       queryClient.invalidateQueries({ queryKey: ["roles"] });
       setIsOpen(false);
     },
     onError: () => {
-      toast.error(t('management.updateRoleError', { defaultValue: 'Cập nhật chức vụ thất bại!' }));
+      toast.error(t('management.updateRoleError', { defaultValue: 'Cáº­p nháº­t chá»©c vá»¥ tháº¥t báº¡i!' }));
     }
   });
 
   const deleteMutation = useMutation({
     mutationFn: (id: string) => roleService.deleteRole(id),
     onSuccess: () => {
-      toast.success(t('management.deleteRoleSuccess', { defaultValue: 'Xóa/Tạm ngưng chức vụ thành công!' }));
+      toast.success(t('management.deleteRoleSuccess', { defaultValue: 'XÃ³a/Táº¡m ngÆ°ng chá»©c vá»¥ thÃ nh cÃ´ng!' }));
       queryClient.invalidateQueries({ queryKey: ["roles"] });
     },
     onError: () => {
-      toast.error(t('management.deleteRoleError', { defaultValue: 'Xóa chức vụ thất bại!' }));
+      toast.error(t('management.deleteRoleError', { defaultValue: 'XÃ³a chá»©c vá»¥ tháº¥t báº¡i!' }));
     }
   });
 
@@ -108,7 +108,7 @@ export default function RolesPage() {
   };
 
   return (
-    <div className="p-4 md:p-8 w-full max-w-6xl mx-auto min-h-full flex flex-col gap-6 md:gap-8">
+    <div className="p-4 md:p-8 w-full min-h-full flex flex-col gap-6 md:gap-8">
       {/* 1. Header Section */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
@@ -120,10 +120,10 @@ export default function RolesPage() {
           <span className="p-2.5 bg-[#2E3192]/10 text-[#2E3192] rounded-xl">
             <Layers size={28} />
           </span>
-          {t('management.rolesTitle', { defaultValue: 'Danh Sách Chức Vụ' })}
+          {t('management.rolesTitle', { defaultValue: 'Danh SÃ¡ch Chá»©c Vá»¥' })}
         </h1>
         <p className="text-muted-foreground text-base md:text-lg ml-1">
-          {t('management.rolesDesc', { defaultValue: 'Quản lý danh sách master data các chức vụ trong hệ thống.' })}
+          {t('management.rolesDesc', { defaultValue: 'Quáº£n lÃ½ danh sÃ¡ch master data cÃ¡c chá»©c vá»¥ trong há»‡ thá»‘ng.' })}
         </p>
       </motion.div>
 
@@ -137,21 +137,21 @@ export default function RolesPage() {
         >
           <div className="flex flex-wrap items-center gap-x-6 gap-y-3 w-full">
             <span className="font-semibold text-[#1E2062] mr-2">
-              {t('management.actionLegend', { defaultValue: 'Chú thích thao tác:' })}
+              {t('management.actionLegend', { defaultValue: 'ChÃº thÃ­ch thao tÃ¡c:' })}
             </span>
             <div className="flex items-center gap-2">
               <Edit2 size={16} className="text-[#2E3192]" />
-              <span>{t('management.editLegend', { defaultValue: 'Chỉnh sửa thông tin' })}</span>
+              <span>{t('management.editLegend', { defaultValue: 'Chá»‰nh sá»­a thÃ´ng tin' })}</span>
             </div>
             <div className="flex items-center gap-2">
               <Trash2 size={16} className="text-rose-500" />
-              <span>{t('management.deleteLegend', { defaultValue: 'Xóa / Hủy kích hoạt' })}</span>
+              <span>{t('management.deleteLegend', { defaultValue: 'XÃ³a / Há»§y kÃ­ch hoáº¡t' })}</span>
             </div>
           </div>
           <div className="w-full h-px bg-border/50 hidden md:block" />
           <div className="flex items-center gap-1.5 text-[#2E3192]">
             <MousePointerClick size={16} />
-            <span className="italic">{t('management.actionTooltip', { defaultValue: 'Mẹo: Click chuột phải vào dòng dữ liệu để thao tác nhanh.' })}</span>
+            <span className="italic">{t('management.actionTooltip', { defaultValue: 'Máº¹o: Click chuá»™t pháº£i vÃ o dÃ²ng dá»¯ liá»‡u Ä‘á»ƒ thao tÃ¡c nhanh.' })}</span>
           </div>
         </motion.div>
       )}
@@ -169,7 +169,7 @@ export default function RolesPage() {
             size={20}
           />
           <Input
-            placeholder={t('management.searchRolePlaceholder', { defaultValue: 'Tìm kiếm chức vụ theo tên...' })}
+            placeholder={t('management.searchRolePlaceholder', { defaultValue: 'TÃ¬m kiáº¿m chá»©c vá»¥ theo tÃªn...' })}
             className="pl-12 h-12 rounded-xl bg-muted border-border focus-visible:ring-[#2E3192] text-base hover:bg-card transition-colors"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -179,7 +179,7 @@ export default function RolesPage() {
           onClick={() => handleOpenForm()}
           className="w-full md:w-auto h-12 px-6 rounded-xl bg-[#2E3192] hover:bg-[#1E2062] text-white shadow-md shadow-[#2E3192]/20 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 text-base font-semibold"
         >
-          <Plus size={20} className="mr-2" /> {t('management.addRole', { defaultValue: 'Thêm Chức Vụ' })}
+          <Plus size={20} className="mr-2" /> {t('management.addRole', { defaultValue: 'ThÃªm Chá»©c Vá»¥' })}
         </Button>
       </motion.div>
 
@@ -193,7 +193,7 @@ export default function RolesPage() {
         {isLoading ? (
           <div className="flex flex-col items-center justify-center p-20 text-muted-foreground h-64">
             <Loader2 className="w-8 h-8 animate-spin mb-4 text-[#2E3192]" />
-            <p className="animate-pulse">Đang tải danh sách chức vụ...</p>
+            <p className="animate-pulse">Äang táº£i danh sÃ¡ch chá»©c vá»¥...</p>
           </div>
         ) : (
           <RoleTable

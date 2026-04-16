@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { ChevronLeft, ChevronRight, CheckCircle2, Clock, CalendarDays, FileText } from "lucide-react";
+import { ChevronLeft, ChevronRight, CheckCircle2, Clock, CalendarDays, FileText, Umbrella, Home } from "lucide-react";
 import { useAuthStore } from "@/store/useAuthStore";
 import { format, parseISO, addDays } from "date-fns";
 import { vi } from "date-fns/locale";
@@ -257,7 +257,56 @@ export default function HomePage() {
 
   return (
     <div className="p-4 md:p-6 w-full h-full min-h-screen bg-transparent">
-      <div className="w-full">
+      <div className="w-full space-y-6">
+        
+        {/* Quota Stats Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 xl:gap-6">
+          <div className="bg-white border text-card-foreground shadow-sm rounded-xl p-5 flex flex-col gap-1.5 transition-all duration-200 hover:shadow-md border-slate-200">
+            <div className="flex items-center gap-3 mb-2">
+              <span className="p-2.5 flex items-center justify-center rounded-lg bg-indigo-50/80 text-indigo-600 border border-indigo-100">
+                <Umbrella className="w-5 h-5" strokeWidth={2} />
+              </span>
+              <h3 className="text-sm font-semibold text-slate-700 leading-tight">Ngày nghỉ phép</h3>
+            </div>
+            <div className="flex items-baseline gap-1.5 mt-2">
+              <span className="text-[28px] font-extrabold tracking-tight text-[#2E3192]">12</span>
+              <span className="text-[22px] font-bold text-slate-300">/</span>
+              <span className="text-[22px] font-bold text-slate-400">12</span>
+              <span className="text-sm text-slate-500 font-medium ml-1">ngày / năm</span>
+            </div>
+          </div>
+
+          <div className="bg-white border text-card-foreground shadow-sm rounded-xl p-5 flex flex-col gap-1.5 transition-all duration-200 hover:shadow-md border-slate-200">
+            <div className="flex items-center gap-3 mb-2">
+              <span className="p-2.5 flex items-center justify-center rounded-lg bg-purple-50/80 text-purple-600 border border-purple-100">
+                <Home className="w-5 h-5" strokeWidth={2} />
+              </span>
+              <h3 className="text-sm font-semibold text-slate-700 leading-tight">Ngày WFH</h3>
+            </div>
+            <div className="flex items-baseline gap-1.5 mt-2">
+              <span className="text-[28px] font-extrabold tracking-tight text-purple-700">6</span>
+              <span className="text-[22px] font-bold text-slate-300">/</span>
+              <span className="text-[22px] font-bold text-slate-400">6</span>
+              <span className="text-sm text-slate-500 font-medium ml-1">ngày / năm</span>
+            </div>
+          </div>
+
+          <div className="bg-white border text-card-foreground shadow-sm rounded-xl p-5 flex flex-col gap-1.5 transition-all duration-200 hover:shadow-md border-slate-200">
+            <div className="flex items-center gap-3 mb-2">
+              <span className="p-2.5 flex items-center justify-center rounded-lg bg-rose-50/80 text-rose-600 border border-rose-100">
+                <CheckCircle2 className="w-5 h-5" strokeWidth={2} />
+              </span>
+              <h3 className="text-sm font-semibold text-slate-700 leading-tight">Quên Check-in/out</h3>
+            </div>
+            <div className="flex items-baseline gap-1.5 mt-2">
+              <span className="text-[28px] font-extrabold tracking-tight text-rose-700">2</span>
+              <span className="text-[22px] font-bold text-slate-300">/</span>
+              <span className="text-[22px] font-bold text-slate-400">2</span>
+              <span className="text-sm text-slate-500 font-medium ml-1">lần / tuần</span>
+            </div>
+          </div>
+        </div>
+
         {/* Main Grid container */}
         <div className="grid grid-cols-1 md:grid-cols-12 lg:grid-cols-12 gap-6 items-start">
 

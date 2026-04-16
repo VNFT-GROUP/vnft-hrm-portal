@@ -1,4 +1,4 @@
-import { FileEdit, Plus, FileText } from "lucide-react";
+import { FileEdit, Plus, FileText, Umbrella, Home, CheckCircle2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
@@ -34,6 +34,54 @@ export default function RequestsPage() {
             >
               <Plus className="w-4 h-4" /> Tạo đơn mới
             </Button>
+          </div>
+        </div>
+
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="bg-white border text-card-foreground shadow-sm rounded-xl p-5 flex flex-col gap-1.5 transition-all duration-200 hover:shadow-md border-slate-200">
+            <div className="flex items-center gap-3 mb-2">
+              <span className="p-2.5 flex items-center justify-center rounded-lg bg-indigo-50/80 text-indigo-600 border border-indigo-100">
+                <Umbrella className="w-5 h-5" strokeWidth={2} />
+              </span>
+              <h3 className="text-sm font-semibold text-slate-700 leading-tight">Ngày nghỉ phép</h3>
+            </div>
+            <div className="flex items-baseline gap-1.5 mt-2">
+              <span className="text-[28px] font-extrabold tracking-tight text-[#2E3192]">12</span>
+              <span className="text-[22px] font-bold text-slate-300">/</span>
+              <span className="text-[22px] font-bold text-slate-400">12</span>
+              <span className="text-sm text-slate-500 font-medium ml-1">ngày / năm</span>
+            </div>
+          </div>
+
+          <div className="bg-white border text-card-foreground shadow-sm rounded-xl p-5 flex flex-col gap-1.5 transition-all duration-200 hover:shadow-md border-slate-200">
+            <div className="flex items-center gap-3 mb-2">
+              <span className="p-2.5 flex items-center justify-center rounded-lg bg-purple-50/80 text-purple-600 border border-purple-100">
+                <Home className="w-5 h-5" strokeWidth={2} />
+              </span>
+              <h3 className="text-sm font-semibold text-slate-700 leading-tight">Ngày WFH</h3>
+            </div>
+            <div className="flex items-baseline gap-1.5 mt-2">
+              <span className="text-[28px] font-extrabold tracking-tight text-purple-700">6</span>
+              <span className="text-[22px] font-bold text-slate-300">/</span>
+              <span className="text-[22px] font-bold text-slate-400">6</span>
+              <span className="text-sm text-slate-500 font-medium ml-1">ngày / năm</span>
+            </div>
+          </div>
+
+          <div className="bg-white border text-card-foreground shadow-sm rounded-xl p-5 flex flex-col gap-1.5 transition-all duration-200 hover:shadow-md border-slate-200">
+            <div className="flex items-center gap-3 mb-2">
+              <span className="p-2.5 flex items-center justify-center rounded-lg bg-rose-50/80 text-rose-600 border border-rose-100">
+                <CheckCircle2 className="w-5 h-5" strokeWidth={2} />
+              </span>
+              <h3 className="text-sm font-semibold text-slate-700 leading-tight">Quên Check-in/out</h3>
+            </div>
+            <div className="flex items-baseline gap-1.5 mt-2">
+              <span className="text-[28px] font-extrabold tracking-tight text-rose-700">2</span>
+              <span className="text-[22px] font-bold text-slate-300">/</span>
+              <span className="text-[22px] font-bold text-slate-400">2</span>
+              <span className="text-sm text-slate-500 font-medium ml-1">lần / tuần</span>
+            </div>
           </div>
         </div>
 

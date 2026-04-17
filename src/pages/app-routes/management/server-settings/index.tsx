@@ -110,16 +110,22 @@ export default function ServerSettingsPage() {
                     </div>
 
                     <div className="flex justify-between items-center bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
-                       <Label className="text-[14px] font-semibold text-slate-700">{t("serverSettings.halfWorkThreshold")}</Label>
-                       <span className="font-bold text-emerald-700 bg-emerald-50 border border-emerald-100 px-3.5 py-1.5 rounded-lg text-sm">
-                         {settings.attendance.halfWorkUnitThresholdRatio} {t("serverSettings.unitRatio")}
+                       <div className="flex flex-col gap-1 max-w-[70%]">
+                         <Label className="text-[14px] font-semibold text-slate-700">{t("serverSettings.halfWorkThreshold")}</Label>
+                         <span className="text-[12px] text-slate-500 leading-snug">{t("serverSettings.halfWorkNote", { hours: settings.attendance.halfWorkUnitHours })}</span>
+                       </div>
+                       <span className="font-bold text-emerald-700 bg-emerald-50 border border-emerald-100 px-3.5 py-1.5 rounded-lg text-sm shrink-0">
+                         {settings.attendance.halfWorkUnitHours} {t("serverSettings.unitHours")}
                        </span>
                     </div>
 
                     <div className="flex justify-between items-center bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
-                       <Label className="text-[14px] font-semibold text-slate-700">{t("serverSettings.fullWorkThreshold")}</Label>
-                       <span className="font-bold text-emerald-700 bg-emerald-50 border border-emerald-100 px-3.5 py-1.5 rounded-lg text-sm">
-                         {settings.attendance.fullWorkUnitThresholdRatio} {t("serverSettings.unitRatio")}
+                       <div className="flex flex-col gap-1 max-w-[70%]">
+                         <Label className="text-[14px] font-semibold text-slate-700">{t("serverSettings.fullWorkThreshold")}</Label>
+                         <span className="text-[12px] text-slate-500 leading-snug">{t("serverSettings.fullWorkNote", { hours: settings.attendance.fullWorkUnitHours })}</span>
+                       </div>
+                       <span className="font-bold text-emerald-700 bg-emerald-50 border border-emerald-100 px-3.5 py-1.5 rounded-lg text-sm shrink-0">
+                         {settings.attendance.fullWorkUnitHours} {t("serverSettings.unitHours")}
                        </span>
                     </div>
                   </CardContent>

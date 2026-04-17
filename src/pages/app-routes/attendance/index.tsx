@@ -117,7 +117,7 @@ export default function MyAttendancePage() {
               <div className="grid grid-cols-7 gap-px">
                 {(() => {
                   const startInterval = new Date(year, month - 2, 25);
-                  const endInterval = new Date(year, month - 1, 25);
+                  const endInterval = new Date(year, month - 1, 24);
                   const days = eachDayOfInterval({ start: startInterval, end: endInterval });
                   // Calculate padding for Monday-first calendar (Mon = 0, Sun = 6)
                   let startDayOfWeek = getDay(startInterval) - 1;
@@ -168,15 +168,23 @@ export default function MyAttendancePage() {
                               {hasData ? (
                                 <>
                                   {record?.actualCheckIn && (
-                                    <div className="flex items-center justify-between bg-emerald-50/80 rounded px-2 py-1 border border-emerald-100">
-                                      <span className="text-[11px] font-medium text-slate-500">Vào</span>
-                                      <span className="text-[12px] font-bold text-emerald-700">{record.actualCheckIn.substring(0, 5)}</span>
+                                    <div className={`flex items-center justify-between rounded px-2 py-1 border ${
+                                      record.checkInValid === false ? 'bg-rose-50/80 border-rose-200' : 'bg-emerald-50/80 border-emerald-100'
+                                    }`}>
+                                      <span className={`text-[11px] font-medium ${record.checkInValid === false ? 'text-rose-500' : 'text-slate-500'}`}>Vào</span>
+                                      <span className={`text-[12px] font-bold ${record.checkInValid === false ? 'text-rose-600' : 'text-emerald-700'}`}>
+                                        {record.actualCheckIn.substring(0, 5)}
+                                      </span>
                                     </div>
                                   )}
                                   {record?.actualCheckOut && (
-                                    <div className="flex items-center justify-between bg-emerald-50/80 rounded px-2 py-1 border border-emerald-100">
-                                      <span className="text-[11px] font-medium text-slate-500">Ra</span>
-                                      <span className="text-[12px] font-bold text-emerald-700">{record.actualCheckOut.substring(0, 5)}</span>
+                                    <div className={`flex items-center justify-between rounded px-2 py-1 border ${
+                                      record.checkOutValid === false ? 'bg-rose-50/80 border-rose-200' : 'bg-emerald-50/80 border-emerald-100'
+                                    }`}>
+                                      <span className={`text-[11px] font-medium ${record.checkOutValid === false ? 'text-rose-500' : 'text-slate-500'}`}>Ra</span>
+                                      <span className={`text-[12px] font-bold ${record.checkOutValid === false ? 'text-rose-600' : 'text-emerald-700'}`}>
+                                        {record.actualCheckOut.substring(0, 5)}
+                                      </span>
                                     </div>
                                   )}
                                 </>
@@ -208,7 +216,7 @@ export default function MyAttendancePage() {
       </div>
 
       <Dialog open={!!selectedRecord} onOpenChange={(open) => !open && setSelectedRecord(null)}>
-        <DialogContent className="sm:max-w-md border-0 shadow-2xl p-0 overflow-hidden bg-transparent">
+        <DialogContent showCloseButton={false} className="sm:max-w-md border-0 shadow-2xl p-0 overflow-hidden bg-transparent">
           {selectedRecord && (
             <div className="bg-white flex flex-col relative w-full">
               {/* Header section with gradient */}
@@ -236,25 +244,41 @@ export default function MyAttendancePage() {
                   <div className="flex flex-col gap-1 p-4 rounded-xl bg-slate-50 border border-slate-100 items-center justify-center">
                     <span className="text-[12px] font-semibold text-slate-400 uppercase tracking-widest bg-slate-100 px-2 py-0.5 rounded-full mb-1">Giờ Vào</span>
                     {selectedRecord.actualCheckIn ? (
-                      <span className="text-2xl font-bold text-emerald-600">{selectedRecord.actualCheckIn.substring(0, 5)}</span>
+                      <span className={`text-2xl font-bold ${selectedRecord.checkInValid === false ? 'text-rose-500' : 'text-emerald-600'}`}>
+                        {selectedRecord.actualCheckIn.substring(0, 5)}
+                      </span>
                     ) : (
                       <span className="text-2xl font-bold text-slate-300">--:--</span>
                     )}
-                    {selectedRecord.lateMinutes ? (
-                      <span className="text-[11px] font-semibold text-rose-500 bg-rose-50 px-1.5 py-0.5 rounded mt-1">Muộn {selectedRecord.lateMinutes}p</span>
-                    ) : null}
+                    {selectedRecord.actualCheckIn && (
+                      selectedRecord.checkInValid === true ? (
+                        <span className="text-[11px] font-semibold text-emerald-600 bg-emerald-50 border border-emerald-100 px-2 py-0.5 rounded mt-1">Đúng giờ</span>
+                      ) : (
+                        <span className="text-[11px] font-semibold text-rose-600 bg-rose-50 border border-rose-100 px-2 py-0.5 rounded mt-1">
+                          Đi muộn {selectedRecord.lateMinutes ? `${selectedRecord.lateMinutes}p` : ''}
+                        </span>
+                      )
+                    )}
                   </div>
                   
                   <div className="flex flex-col gap-1 p-4 rounded-xl bg-slate-50 border border-slate-100 items-center justify-center">
                     <span className="text-[12px] font-semibold text-slate-400 uppercase tracking-widest bg-slate-100 px-2 py-0.5 rounded-full mb-1">Giờ Ra</span>
                     {selectedRecord.actualCheckOut ? (
-                      <span className="text-2xl font-bold text-emerald-600">{selectedRecord.actualCheckOut.substring(0, 5)}</span>
+                      <span className={`text-2xl font-bold ${selectedRecord.checkOutValid === false ? 'text-rose-600' : 'text-emerald-600'}`}>
+                        {selectedRecord.actualCheckOut.substring(0, 5)}
+                      </span>
                     ) : (
                       <span className="text-2xl font-bold text-slate-300">--:--</span>
                     )}
-                    {selectedRecord.earlyLeaveMinutes ? (
-                      <span className="text-[11px] font-semibold text-rose-500 bg-rose-50 px-1.5 py-0.5 rounded mt-1">Về sớm {selectedRecord.earlyLeaveMinutes}p</span>
-                    ) : null}
+                    {selectedRecord.actualCheckOut && (
+                      selectedRecord.checkOutValid === true ? (
+                         <span className="text-[11px] font-semibold text-emerald-600 bg-emerald-50 border border-emerald-100 px-2 py-0.5 rounded mt-1">Đúng giờ</span>
+                      ) : (
+                         <span className="text-[11px] font-semibold text-rose-600 bg-rose-50 border border-rose-100 px-2 py-0.5 rounded mt-1">
+                           Về sớm {selectedRecord.earlyLeaveMinutes ? `${selectedRecord.earlyLeaveMinutes}p` : ''}
+                         </span>
+                      )
+                    )}
                   </div>
                 </div>
 

@@ -107,19 +107,21 @@ export default function LoginPage() {
   const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    let authData = null;
     try {
       const response = await authService.login({ username: email, password });
-      
-      if (response.data && response.data.accessToken && response.data.user) {
-        loginAction(response.data.user, response.data.accessToken);
-        toast.success("Đăng nhập thành công!");
-        navigate("/app");
-      }
+      authData = response.data;
     } catch (error: unknown) {
       // Phía apiClient (Interceptor) đã lo việc bắn ra Toast Error thông báo rồi, ta chỉ console log
       console.error("Lỗi xảy ra lúc login:", error);
     } finally {
       setLoading(false);
+    }
+
+    if (authData && authData.accessToken && authData.user) {
+      loginAction(authData.user, authData.accessToken);
+      toast.success("Đăng nhập thành công!");
+      navigate("/app");
     }
   };
 

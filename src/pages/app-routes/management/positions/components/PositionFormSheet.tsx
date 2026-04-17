@@ -39,14 +39,19 @@ export default function PositionFormSheet({ isOpen, onOpenChange, formData, setF
         <form onSubmit={(e) => { 
           e.preventDefault(); 
           if (formData.name.trim()) {
+            const successDesc = isEditing ? "Thay đổi vị trí đã được lưu thành công." : "Vị trí mới đã được thêm vào hệ thống.";
+            let success = false;
             try {
               onSave();
-              toast.success("Thành công!", {
-                description: isEditing ? "Thay đổi vị trí đã được lưu thành công." : "Vị trí mới đã được thêm vào hệ thống."
-              });
+              success = true;
             } catch {
               toast.error("Có lỗi xảy ra", {
                 description: "Không thể lưu dữ liệu, vui lòng thử lại sau."
+              });
+            }
+            if (success) {
+              toast.success("Thành công!", {
+                description: successDesc
               });
             }
           } 

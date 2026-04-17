@@ -11,7 +11,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { isAxiosError } from 'axios';
 import { currentUserProfileService } from '@/services/user/currentUserProfileService';
@@ -33,9 +33,11 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
+  const queryClient = useQueryClient();
   const changePasswordMutation = useMutation({
     mutationFn: currentUserProfileService.changePassword,
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["users"] });
       toast.success(t('profile.passwordForm.success') || "Thành công", {
         description: "Mật khẩu của bạn đã được cập nhật.",
       });

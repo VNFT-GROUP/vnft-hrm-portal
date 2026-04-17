@@ -78,44 +78,49 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
     const fetchProfile = async () => {
       if (!isOpen || !userId) return;
       setIsEditingMode(false);
+      let profileData = null;
       try {
         setIsFetching(true);
-        const res = await userService.getProfile(userId!);
+        const res = await userService.getProfile(userId);
         if (res.data) {
-           const d = res.data;
-           setFormData((prev) => ({
-             ...prev,
-             username: d.username || prev.username,
-             fullName: d.fullName || prev.fullName,
-             englishName: d.englishName || prev.englishName,
-             attendanceCode: d.attendanceCode || "",
-             employeeCode: d.employeeCode || prev.employeeCode,
-             phoneNumber: d.phoneNumber || "",
-             gender: d.gender || prev.gender,
-             dateOfBirth: d.dateOfBirth?.substring(0, 10) || "",
-             maritalStatus: d.maritalStatus || "SINGLE",
-             placeOfBirth: d.placeOfBirth || "",
-             placeOfOrigin: d.placeOfOrigin || "",
-             nationality: d.nationality || "Việt Nam",
-             religion: d.religion || "Không",
-             ethnicity: d.ethnicity || "Kinh",
-             permanentAddress: d.permanentAddress || "",
-             permanentCity: d.permanentCity || "",
-             currentAddress: d.currentAddress || "",
-             currentCity: d.currentCity || "",
-             citizenIdNumber: d.citizenIdNumber || "",
-             citizenIdIssueDate: d.citizenIdIssueDate?.substring(0, 10) || "",
-             citizenIdIssuePlace: d.citizenIdIssuePlace || "",
-             bankInformations: d.bankInformations?.length ? d.bankInformations : prev.bankInformations,
-             dependents: d.dependents?.length ? d.dependents : prev.dependents,
-             educationRecords: d.educationRecords?.length ? d.educationRecords : prev.educationRecords,
-             workExperiences: d.workExperiences?.length ? d.workExperiences : prev.workExperiences,
-           }));
+          profileData = res.data;
         }
       } catch (err) {
         console.error("Failed to load profile:", err);
       } finally {
         setIsFetching(false);
+      }
+
+      if (profileData) {
+        const d = profileData;
+        setFormData((prev) => ({
+          ...prev,
+          username: d.username || prev.username,
+          fullName: d.fullName || prev.fullName,
+          englishName: d.englishName || prev.englishName,
+          attendanceCode: d.attendanceCode || "",
+          employeeCode: d.employeeCode || prev.employeeCode,
+          phoneNumber: d.phoneNumber || "",
+          gender: d.gender || prev.gender,
+          dateOfBirth: d.dateOfBirth?.substring(0, 10) || "",
+          maritalStatus: d.maritalStatus || "SINGLE",
+          placeOfBirth: d.placeOfBirth || "",
+          placeOfOrigin: d.placeOfOrigin || "",
+          nationality: d.nationality || "Việt Nam",
+          religion: d.religion || "Không",
+          ethnicity: d.ethnicity || "Kinh",
+          permanentAddress: d.permanentAddress || "",
+          permanentCity: d.permanentCity || "",
+          currentAddress: d.currentAddress || "",
+          currentCity: d.currentCity || "",
+          citizenIdNumber: d.citizenIdNumber || "",
+          citizenIdIssueDate: d.citizenIdIssueDate?.substring(0, 10) || "",
+          citizenIdIssuePlace: d.citizenIdIssuePlace || "",
+          bankInformations: d.bankInformations?.length ? d.bankInformations : prev.bankInformations,
+          dependents: d.dependents?.length ? d.dependents : prev.dependents,
+          educationRecords: d.educationRecords?.length ? d.educationRecords : prev.educationRecords,
+          workExperiences: d.workExperiences?.length ? d.workExperiences : prev.workExperiences,
+        }));
       }
     };
     fetchProfile();
@@ -149,21 +154,30 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
 
     console.log("Submitting payload:", payload);
     setLoading(true);
+    let success = false;
+    let errorMessage = "Lỗi không xác định khi lưu thông tin";
+    
     try {
       await userService.updateProfile(userId!, payload as UpdateUserProfileRequest);
+      success = true;
+    } catch (error) {
+      console.error(error);
+      const err = error as Error & { response?: { data?: { message?: string } } };
+      errorMessage = err?.response?.data?.message || err?.message || errorMessage;
+    } finally {
+      setLoading(false);
+    }
+
+    if (success) {
       toast.success(t("profile.updateSuccess", { defaultValue: "Cập nhật hồ sơ thành công" }), {
         description: t("editProfile.validation.updateSuccessDesc", { defaultValue: "Toàn bộ thông tin cá nhân và lý lịch đã được lưu trữ an toàn." })
       });
       queryClient.invalidateQueries({ queryKey: ["users"] });
       onOpenChange(false);
-    } catch (error) {
-      console.error(error);
-      const err = error as Error & { response?: { data?: { message?: string } } };
+    } else {
       toast.error(t("editProfile.validation.updateFailed", { defaultValue: "Cập nhật thất bại" }), {
-        description: err?.response?.data?.message || err?.message || "Lỗi không xác định khi lưu thông tin"
+        description: errorMessage
       });
-    } finally {
-      setLoading(false);
     }
   };
 

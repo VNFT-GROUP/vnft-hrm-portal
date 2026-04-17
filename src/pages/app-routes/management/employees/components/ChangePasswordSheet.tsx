@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { userService } from "@/services/user/userService";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
@@ -20,9 +20,11 @@ export default function ChangePasswordSheet({ isOpen, onOpenChange, userId }: Ch
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
+  const queryClient = useQueryClient();
   const updatePasswordMutation = useMutation({
     mutationFn: (pwd: string) => userService.updatePassword(userId!, { password: pwd }),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["users"] });
       toast.success(t('management.pwdUpdateSuccess'));
       handleClose();
     },

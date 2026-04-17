@@ -60,16 +60,21 @@ export default function DepartmentFormSheet({
           onSubmit={(e) => {
             e.preventDefault();
             if (formData.name.trim()) {
+              const successDesc = isEditing
+                ? "Thông tin phòng ban đã được cập nhật."
+                : "Phòng ban mới đã được tạo thành công.";
+              let success = false;
               try {
                 onSave();
-                toast.success("Thành công!", {
-                  description: isEditing
-                    ? "Thông tin phòng ban đã được cập nhật."
-                    : "Phòng ban mới đã được tạo thành công.",
-                });
+                success = true;
               } catch {
                 toast.error("Có lỗi xảy ra", {
                   description: "Không thể lưu thay đổi vào hệ thống.",
+                });
+              }
+              if (success) {
+                toast.success("Thành công!", {
+                  description: successDesc,
                 });
               }
             }

@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger } from "@/components/ui/context-menu";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence  } from 'framer-motion';
 import type { GroupPermissionResponse } from "@/types/group/GroupPermissionResponse";
 
 interface Props {
@@ -38,7 +38,7 @@ export default function GroupPermissionTable({ items, onEdit, onDelete }: Props)
             <TableBody>
               <AnimatePresence>
                 {items.map((item) => (
-                  <motion.tr 
+                  <m.tr 
                     layout
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
@@ -86,7 +86,7 @@ export default function GroupPermissionTable({ items, onEdit, onDelete }: Props)
                         </Button>
                       </div>
                     </TableCell>
-                  </motion.tr>
+                  </m.tr>
                 ))}
               </AnimatePresence>
               {items.length === 0 && (

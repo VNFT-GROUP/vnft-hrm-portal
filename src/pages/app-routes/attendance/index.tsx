@@ -5,7 +5,7 @@ import { vi } from "date-fns/locale";
 import { attendanceService } from "@/services/attendance";
 import type { AttendanceDailySummaryResponse } from "@/types/attendance/AttendanceDailySummaryResponse";
 import { Loader2, Calendar as CalendarIcon, ChevronLeft, ChevronRight, X, CalendarCheck, Briefcase, Target, Clock, UserX } from "lucide-react";
-import { motion } from "framer-motion";
+import { m  } from 'framer-motion';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
@@ -46,7 +46,7 @@ export default function MyAttendancePage() {
       <div className="w-full space-y-6">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: "easeOut" }}
@@ -61,7 +61,7 @@ export default function MyAttendancePage() {
             <p className="text-muted-foreground text-sm md:text-base ml-1">
               {t("myAttendance.subtitle")}
             </p>
-          </motion.div>
+          </m.div>
 
           <div className="flex items-center gap-4 bg-white p-1.5 rounded-xl border border-slate-200 shadow-sm">
             <button
@@ -84,7 +84,7 @@ export default function MyAttendancePage() {
         </div>
 
         {!loading && data && (
-          <motion.div 
+          <m.div 
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             className="grid grid-cols-2 sm:grid-cols-4 gap-3 lg:gap-4"
@@ -128,7 +128,7 @@ export default function MyAttendancePage() {
               </div>
               <span className="text-2xl sm:text-3xl font-black text-[#1E2062]">{data.summary?.absentDays ?? 0}</span>
             </div>
-          </motion.div>
+          </m.div>
         )}
 
         {/* Content */}
@@ -183,7 +183,7 @@ export default function MyAttendancePage() {
                         const isSaturday = getDay(dateObj) === 6;
 
                         return (
-                          <motion.div
+                          <m.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{ duration: 0.2, delay: index * 0.015 }}
@@ -242,7 +242,7 @@ export default function MyAttendancePage() {
                                 </div>
                               )}
                             </div>
-                          </motion.div>
+                          </m.div>
                         );
                       })}
                     </>

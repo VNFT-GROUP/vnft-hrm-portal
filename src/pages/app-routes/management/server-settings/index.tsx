@@ -1,7 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Clock, ShieldAlert, Settings, Code, FileJson, Loader2 } from "lucide-react";
-import { motion } from "framer-motion";
+import { m  } from 'framer-motion';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useQuery } from "@tanstack/react-query";
 import { settingsService } from "@/services/settings";
@@ -37,7 +37,7 @@ export default function ServerSettingsPage() {
   return (
     <div className="w-full p-4 md:p-8 flex flex-col gap-6 md:gap-8">
       <div className="w-full space-y-6">
-        <motion.div
+        <m.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: "easeOut" }}
@@ -66,7 +66,7 @@ export default function ServerSettingsPage() {
                  </span>
                </div>
             </div>
-          </motion.div>
+          </m.div>
 
         <Tabs defaultValue="visual" className="w-full">
            <TabsList className="mb-6 bg-slate-100/50 p-1 border border-slate-200">

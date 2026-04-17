@@ -1,5 +1,5 @@
 import { Mail, Phone, MapPin, Briefcase } from "lucide-react";
-import { motion } from "framer-motion";
+import { m  } from 'framer-motion';
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
@@ -18,12 +18,12 @@ export default function ProfileHeader() {
     <div className="bg-card text-card-foreground rounded-2xl p-6 shadow-sm border border-border mb-6 relative overflow-hidden group/header hover:shadow-md transition-all animate-in fade-in slide-in-from-top-4 duration-500">
       
       {/* Floating Ambient Blobs */}
-      <motion.div 
+      <m.div 
         animate={{ y: [0, -20, 0], x: [0, 10, 0], rotate: [0, 10, 0] }}
         transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
         className="absolute -top-10 -right-10 w-40 h-40 bg-[#2E3192] rounded-full mix-blend-multiply filter blur-3xl opacity-5 pointer-events-none"
       />
-      <motion.div 
+      <m.div 
         animate={{ y: [0, 20, 0], x: [0, -10, 0], rotate: [0, -10, 0] }}
         transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 1 }}
         className="absolute top-10 right-32 w-32 h-32 bg-[#F7941D] rounded-full mix-blend-multiply filter blur-3xl opacity-5 pointer-events-none"
@@ -31,7 +31,7 @@ export default function ProfileHeader() {
 
       <div className="relative flex flex-col md:flex-row items-start md:items-center gap-6">
         {/* Avatar Placeholder */}
-        <motion.div 
+        <m.div 
           drag 
           dragConstraints={{ top: 0, left: 0, bottom: 0, right: 0 }}
           dragElastic={0.4}
@@ -45,7 +45,7 @@ export default function ProfileHeader() {
                <img src={`https://api.dicebear.com/7.x/notionists/svg?seed=${profile.englishName || profile.fullName}`} alt={profile.fullName} className="w-full h-full object-cover" />
             )}
           </div>
-        </motion.div>
+        </m.div>
         
         {/* Basic Info */}
         <div className="flex-1 pb-2 flex flex-col md:flex-row md:items-start justify-between gap-4">
@@ -89,7 +89,7 @@ export default function ProfileHeader() {
           </div>
           
           <div className="flex flex-col items-end gap-2">
-            <motion.button 
+            <m.button 
               onClick={() => navigate('/app/profile/edit')}
               whileHover={{ scale: 1.03 }} 
               whileTap={{ scale: 0.97 }}
@@ -108,7 +108,7 @@ export default function ProfileHeader() {
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"/><path d="M16 4a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L16 4Z"/></svg>
                 {t("profile.editBtn", { defaultValue: "Cập nhật hồ sơ" })}
               </span>
-            </motion.button>
+            </m.button>
             {session?.requiredProfileCompleted === false && (
               <span className="text-xs font-bold text-red-500 flex items-center gap-1.5 bg-red-500/10 px-2.5 py-1 rounded-full animate-bounce">
                 <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>

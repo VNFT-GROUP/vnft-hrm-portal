@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence  } from 'framer-motion';
 import {
   ContextMenu,
   ContextMenuTrigger,
@@ -46,7 +46,7 @@ export default function GroupTable({ groups, onEdit, onDelete }: GroupTableProps
         <TableBody>
           <AnimatePresence>
             {groups.map((group) => (
-              <motion.tr 
+              <m.tr 
                 key={group.id}
                 layout 
                 initial={{ opacity: 0 }}
@@ -88,7 +88,7 @@ export default function GroupTable({ groups, onEdit, onDelete }: GroupTableProps
                     </Button>
                   </div>
                 </TableCell>
-              </motion.tr>
+              </m.tr>
             ))}
           </AnimatePresence>
           {groups.length === 0 && (

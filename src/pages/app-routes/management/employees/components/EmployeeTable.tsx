@@ -2,7 +2,7 @@ import { Trash2, Users, Shield, CircleDollarSign, UserCog, Briefcase, Key } from
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence  } from 'framer-motion';
 import {
   ContextMenu,
   ContextMenuTrigger,
@@ -68,7 +68,7 @@ export default function EmployeeTable({ employees, onDelete, onEditBasicInfo, on
         <TableBody>
           <AnimatePresence>
             {employees.map((emp) => (
-              <motion.tr 
+              <m.tr 
                 key={emp.id}
                 layout 
                 initial={{ opacity: 0 }}
@@ -134,7 +134,7 @@ export default function EmployeeTable({ employees, onDelete, onEditBasicInfo, on
                     </div>
                   </div>
                 </TableCell>
-              </motion.tr>
+              </m.tr>
             ))}
           </AnimatePresence>
           {employees.length === 0 && (

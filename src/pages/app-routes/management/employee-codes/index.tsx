@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useLayoutStore } from "@/store/useLayoutStore";
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { motion } from 'framer-motion';
+import { m  } from 'framer-motion';
 import EmployeeCodeTable from './components/EmployeeCodeTable';
 import EmployeeCodeFormSheet from './components/EmployeeCodeFormSheet';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -100,7 +100,7 @@ export default function EmployeeCodesPage() {
 
   return (
     <div className='p-4 md:p-8 w-full min-h-full flex flex-col gap-6 md:gap-8'>
-      <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className='flex flex-col gap-2'>
+      <m.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className='flex flex-col gap-2'>
         <h1 className='text-2xl md:text-4xl font-bold text-[#1E2062] flex items-center gap-3'>
           <span className='p-2.5 bg-[#2E3192]/10 text-[#2E3192] rounded-xl'><FileText size={28} /></span>
           {t('management.employeeCodesTitle', { defaultValue: 'Quản lý Mã nhân viên' })}
@@ -108,10 +108,10 @@ export default function EmployeeCodesPage() {
         <p className='text-muted-foreground text-base md:text-lg ml-1'>
           {t('management.employeeCodesDesc', { defaultValue: 'Thiết lập cấu hình tiền tố mã nhân viên (Prefix)' })}
         </p>
-      </motion.div>
+      </m.div>
 
       {showRoleLegend && (
-        <motion.div 
+        <m.div 
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1, ease: 'easeOut' }}
@@ -138,10 +138,10 @@ export default function EmployeeCodesPage() {
             <MousePointerClick size={16} />
             <span className="italic">{t('management.actionTooltip', { defaultValue: 'Mẹo: Click chuột phải vào dòng dữ liệu để thao tác nhanh.' })}</span>
           </div>
-        </motion.div>
+        </m.div>
       )}
 
-      <motion.div className='bg-card p-5 rounded-2xl shadow-sm border border-border flex flex-col md:flex-row justify-between items-center gap-4'>
+      <m.div className='bg-card p-5 rounded-2xl shadow-sm border border-border flex flex-col md:flex-row justify-between items-center gap-4'>
         <div className='relative w-full md:w-96'>
           <Search className='absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground' size={20} />
           <Input placeholder={t('management.searchPrefixPlaceholder', { defaultValue: 'Tìm kiếm prefix...' })} className='pl-12 h-12 rounded-xl bg-muted border-border focus-visible:ring-[#2E3192] hover:bg-card transition-colors' value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
@@ -149,11 +149,11 @@ export default function EmployeeCodesPage() {
         <Button onClick={() => handleOpenForm()} className='w-full md:w-auto h-12 px-6 rounded-xl bg-[#2E3192] hover:bg-[#1E2062] text-white shadow-[#2E3192]/20 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300'>
           <Plus size={20} className='mr-2' /> {t('management.addNew', { defaultValue: 'Tạo mới' })}
         </Button>
-      </motion.div>
+      </m.div>
 
-      <motion.div className='bg-card rounded-2xl shadow-sm border border-border overflow-hidden flex-1 group hover:shadow-md transition-shadow duration-300'>
+      <m.div className='bg-card rounded-2xl shadow-sm border border-border overflow-hidden flex-1 group hover:shadow-md transition-shadow duration-300'>
         <EmployeeCodeTable data={filtered} onToggleActive={handleToggleActive} onEdit={handleOpenForm} />
-      </motion.div>
+      </m.div>
 
       <EmployeeCodeFormSheet isOpen={isOpen} onOpenChange={setIsOpen} formData={formData} setFormData={setFormData} isEditing={!!editingItem} onSave={handleSave} />
     </div>

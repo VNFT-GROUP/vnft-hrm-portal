@@ -3,7 +3,7 @@ import { Plus, Search, Loader2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { motion } from "framer-motion";
+import { m  } from 'framer-motion';
 import GroupTable from "./GroupTable";
 import GroupFormSheet from "./GroupFormSheet";
 import type { GroupResponse } from '@/types/group/GroupResponse';
@@ -114,7 +114,7 @@ export default function GroupsTabContent() {
 
   return (
     <div className="flex flex-col gap-6 h-full">
-      <motion.div
+      <m.div
         initial={{ opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
@@ -135,9 +135,9 @@ export default function GroupsTabContent() {
         >
           <Plus size={20} className="mr-2" /> {t('management.addGroup', { defaultValue: 'Thêm nhóm người dùng' })}
         </Button>
-      </motion.div>
+      </m.div>
 
-      <motion.div
+      <m.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
@@ -151,7 +151,7 @@ export default function GroupsTabContent() {
         ) : (
           <GroupTable groups={groups} onEdit={handleOpenForm} onDelete={(id) => deleteMutation.mutate(id)} />
         )}
-      </motion.div>
+      </m.div>
 
       <GroupFormSheet
         isOpen={isOpen}

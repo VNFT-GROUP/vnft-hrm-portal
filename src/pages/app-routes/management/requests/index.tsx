@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Check, X, FileEdit, Clock, Calendar, Search, Filter } from "lucide-react";
-import { motion } from "framer-motion";
+import { m  } from 'framer-motion';
 import { toast } from "sonner";
 import { Card } from "@/components/ui/card";
 
@@ -46,7 +46,7 @@ export default function ManagementRequestsPage() {
   return (
     <div className="p-4 md:p-8 w-full min-h-full flex flex-col gap-6 md:gap-8 relative isolate">
       {/* Header Section */}
-      <motion.div
+      <m.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
@@ -61,7 +61,7 @@ export default function ManagementRequestsPage() {
         <p className="text-muted-foreground text-base md:text-lg ml-1">
           Duyệt và xử lý các yêu cầu nghỉ phép, tăng ca của toàn bộ nhân viên.
         </p>
-      </motion.div>
+      </m.div>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

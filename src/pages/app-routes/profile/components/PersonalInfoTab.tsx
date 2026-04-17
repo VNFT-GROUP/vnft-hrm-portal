@@ -1,5 +1,5 @@
 import { User, FileText, Home, Map } from "lucide-react";
-import { motion, type Variants } from "framer-motion";
+import { m, type Variants  } from 'framer-motion';
 import { useTranslation } from "react-i18next";
 import { useContext } from "react";
 import { ProfileContext } from "../contexts/ProfileContext";
@@ -40,14 +40,14 @@ export default function PersonalInfoTab() {
   if (!profile) return null;
 
   return (
-    <motion.div 
+    <m.div 
       variants={containerVariants}
       initial="hidden"
       animate="show"
       className="grid grid-cols-1 lg:grid-cols-2 gap-6"
     >
       {/* Thông tin cơ bản */}
-      <motion.div variants={itemVariants} className="bg-card text-card-foreground p-6 rounded-2xl shadow-sm border border-border hover:border-primary/50 hover:shadow-md transition-all duration-300 group hover:-translate-y-1">
+      <m.div variants={itemVariants} className="bg-card text-card-foreground p-6 rounded-2xl shadow-sm border border-border hover:border-primary/50 hover:shadow-md transition-all duration-300 group hover:-translate-y-1">
         <SectionHeader icon={<User size={18} />} title={t("profile.fields.basicInfo", { defaultValue: "Thông tin cơ bản" })} />
         <div className="grid grid-cols-2 gap-y-6 gap-x-4">
           <div><Label>{t("profile.fields.fullName", { defaultValue: "Họ và tên" })}</Label><Value>{profile.fullName}</Value></div>
@@ -62,35 +62,35 @@ export default function PersonalInfoTab() {
           <div><Label>{t("profile.fields.religion", { defaultValue: "Tôn giáo" })}</Label><Value>{profile.religion}</Value></div>
           <div><Label>{t("profile.fields.ethnicity", { defaultValue: "Dân tộc" })}</Label><Value>{profile.ethnicity}</Value></div>
         </div>
-      </motion.div>
+      </m.div>
 
       {/* Giấy tờ tùy thân */}
-      <motion.div variants={itemVariants} className="bg-card text-card-foreground p-6 rounded-2xl shadow-sm border border-border hover:border-primary/50 hover:shadow-md transition-all duration-300 group hover:-translate-y-1">
+      <m.div variants={itemVariants} className="bg-card text-card-foreground p-6 rounded-2xl shadow-sm border border-border hover:border-primary/50 hover:shadow-md transition-all duration-300 group hover:-translate-y-1">
         <SectionHeader icon={<FileText size={18} />} title={t("profile.fields.idDocs", { defaultValue: "Giấy tờ tùy thân" })} />
         <div className="grid grid-cols-2 gap-y-6 gap-x-4">
           <div className="col-span-2"><Label>{t("profile.fields.idNumber", { defaultValue: "Số CCCD" })}</Label><Value>{profile.citizenIdNumber}</Value></div>
           <div><Label>{t("profile.fields.issueDate", { defaultValue: "Ngày cấp" })}</Label><Value>{profile.citizenIdIssueDate}</Value></div>
           <div className="col-span-2"><Label>{t("profile.fields.issuePlace", { defaultValue: "Nơi cấp" })}</Label><Value>{profile.citizenIdIssuePlace}</Value></div>
         </div>
-      </motion.div>
+      </m.div>
 
       {/* Địa chỉ thường trú */}
-      <motion.div variants={itemVariants} className="bg-card text-card-foreground p-6 rounded-2xl shadow-sm border border-border hover:border-primary/50 hover:shadow-md transition-all duration-300 group hover:-translate-y-1">
+      <m.div variants={itemVariants} className="bg-card text-card-foreground p-6 rounded-2xl shadow-sm border border-border hover:border-primary/50 hover:shadow-md transition-all duration-300 group hover:-translate-y-1">
         <SectionHeader icon={<Home size={18} />} title={t("profile.fields.permanentAddress", { defaultValue: "Địa chỉ thường trú" })} />
         <div className="grid grid-cols-2 gap-y-6 gap-x-4">
           <div className="col-span-2"><Label>{t("profile.fields.street", { defaultValue: "Số nhà/Đường" })}</Label><Value>{profile.permanentAddress}</Value></div>
           <div className="col-span-2"><Label>{t("profile.fields.province", { defaultValue: "Tỉnh/Thành phố" })}</Label><Value>{profile.permanentCity}</Value></div>
         </div>
-      </motion.div>
+      </m.div>
 
       {/* Chỗ ở hiện nay */}
-      <motion.div variants={itemVariants} className="bg-card text-card-foreground p-6 rounded-2xl shadow-sm border border-border hover:border-primary/50 hover:shadow-md transition-all duration-300 group hover:-translate-y-1">
+      <m.div variants={itemVariants} className="bg-card text-card-foreground p-6 rounded-2xl shadow-sm border border-border hover:border-primary/50 hover:shadow-md transition-all duration-300 group hover:-translate-y-1">
         <SectionHeader icon={<Map size={18} />} title={t("profile.fields.currentAddress", { defaultValue: "Chỗ ở hiện tại" })} />
         <div className="grid grid-cols-2 gap-y-6 gap-x-4">
           <div className="col-span-2"><Label>{t("profile.fields.street", { defaultValue: "Số nhà/Đường" })}</Label><Value>{profile.currentAddress}</Value></div>
           <div className="col-span-2"><Label>{t("profile.fields.province", { defaultValue: "Tỉnh/Thành phố" })}</Label><Value>{profile.currentCity}</Value></div>
         </div>
-      </motion.div>
-    </motion.div>
+      </m.div>
+    </m.div>
   );
 }

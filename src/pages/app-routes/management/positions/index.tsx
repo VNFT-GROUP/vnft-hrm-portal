@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Plus, Search, Briefcase, Edit2, Trash2, MousePointerClick } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { motion } from "framer-motion";
+import { m  } from 'framer-motion';
 import { useLayoutStore } from "@/store/useLayoutStore";
 
 import PositionTable from "./components/PositionTable";
@@ -105,7 +105,7 @@ export default function PositionsPage() {
   return (
     <div className="p-4 md:p-8 w-full min-h-full flex flex-col gap-6 md:gap-8">
       {/* 1. Header Section */}
-      <motion.div
+      <m.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
@@ -120,11 +120,11 @@ export default function PositionsPage() {
         <p className="text-muted-foreground text-base md:text-lg ml-1">
           {t("position.subtitle")}
         </p>
-      </motion.div>
+      </m.div>
 
       {/* 1.5 Legend Section */}
       {showPositionLegend && (
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
@@ -155,11 +155,11 @@ export default function PositionsPage() {
             <MousePointerClick size={16} />
             <span className="italic">Mẹo: Click chuột phải vào dòng dữ liệu để thao tác nhanh.</span>
           </div>
-        </motion.div>
+        </m.div>
       )}
 
       {/* 2 & 3. Toolbar Section (Tìm Kiếm + Nút tạo) */}
-      <motion.div
+      <m.div
         initial={{ opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
@@ -183,10 +183,10 @@ export default function PositionsPage() {
         >
           <Plus size={20} className="mr-2" /> {t("position.addBtn")}
         </Button>
-      </motion.div>
+      </m.div>
 
       {/* 4. Main Table Card Section */}
-      <motion.div
+      <m.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
@@ -197,7 +197,7 @@ export default function PositionsPage() {
           onEdit={handleOpenForm}
           onDelete={handleDelete}
         />
-      </motion.div>
+      </m.div>
 
       {/* Side Form (Sheet) */}
       <PositionFormSheet

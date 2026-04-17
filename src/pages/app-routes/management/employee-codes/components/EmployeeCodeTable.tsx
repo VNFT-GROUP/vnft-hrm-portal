@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Switch } from '@/components/ui/switch';
 import { format } from "date-fns";
-import { motion, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence  } from 'framer-motion';
 import {
   ContextMenu,
   ContextMenuTrigger,
@@ -37,7 +37,7 @@ export default function EmployeeCodeTable({ data, onToggleActive, onEdit }: { da
             <TableBody>
               <AnimatePresence>
                 {data.map((item) => (
-                  <motion.tr 
+                  <m.tr 
                     key={item.id}
                     layout 
                     initial={{ opacity: 0 }}
@@ -76,7 +76,7 @@ export default function EmployeeCodeTable({ data, onToggleActive, onEdit }: { da
                         </Button>
                       </div>
                     </TableCell>
-                  </motion.tr>
+                  </m.tr>
                 ))}
               </AnimatePresence>
               {data.length === 0 && (

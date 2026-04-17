@@ -87,9 +87,9 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
         }
       } catch (err) {
         console.error("Failed to load profile:", err);
-      } finally {
         setIsFetching(false);
       }
+      setIsFetching(false);
 
       if (profileData) {
         const d = profileData;
@@ -164,9 +164,9 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
       console.error(error);
       const err = error as Error & { response?: { data?: { message?: string } } };
       errorMessage = err?.response?.data?.message || err?.message || errorMessage;
-    } finally {
       setLoading(false);
     }
+    setLoading(false);
 
     if (success) {
       toast.success(t("profile.updateSuccess", { defaultValue: "Cập nhật hồ sơ thành công" }), {

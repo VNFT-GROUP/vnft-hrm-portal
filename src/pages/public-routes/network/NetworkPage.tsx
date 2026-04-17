@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { ChevronRight, List } from "lucide-react";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
-import { motion } from "framer-motion";
+import { m  } from 'framer-motion';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { useTranslation } from "react-i18next";
 
@@ -58,7 +58,7 @@ export default function NetworkPage() {
   const [activeLocation, setActiveLocation] = useState<[number, number] | null>(null);
 
   return (
-    <motion.div 
+    <m.div 
       className="network-page-root"
       initial={{ x: "100%", opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
@@ -127,6 +127,6 @@ export default function NetworkPage() {
           </div>
         </SheetContent>
       </Sheet>
-    </motion.div>
+    </m.div>
   );
 }

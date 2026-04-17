@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { m  } from 'framer-motion';
 import { Monitor, Globe, Palette, Type, Clock, MousePointer2, LayoutDashboard, UserCircle, FileEdit, FolderOpen, Settings as SettingsIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -107,7 +107,7 @@ export default function SettingsPage() {
   return (
     <div className="p-4 md:p-8 w-full min-h-full flex flex-col gap-8">
       {/* Header */}
-      <motion.div 
+      <m.div 
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
@@ -118,13 +118,13 @@ export default function SettingsPage() {
         <p className="text-muted-foreground mt-2 text-base md:text-lg">
           {t("settings.subtitle")}
         </p>
-      </motion.div>
+      </m.div>
 
       {/* Settings Sections */}
       <div className="flex flex-col gap-6">
 
         {/* Section 1: Language Settings */}
-        <motion.section 
+        <m.section 
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
@@ -169,10 +169,10 @@ export default function SettingsPage() {
               </div>
             </div>
           </div>
-        </motion.section>
+        </m.section>
 
         {/* Section 1.5: Timezone Settings */}
-        <motion.section 
+        <m.section 
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.15, ease: "easeOut" }}
@@ -237,10 +237,10 @@ export default function SettingsPage() {
               </div>
             </div>
           </div>
-        </motion.section>
+        </m.section>
 
         {/* Section 2: Sidebar Theme Settings */}
-        <motion.section 
+        <m.section 
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2, ease: "easeOut" }}
@@ -290,10 +290,10 @@ export default function SettingsPage() {
               </div>
             </div>
           </div>
-        </motion.section>
+        </m.section>
 
         {/* Section 3: Font Settings */}
-        <motion.section 
+        <m.section 
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.3, ease: "easeOut" }}
@@ -345,10 +345,10 @@ export default function SettingsPage() {
               </div>
             </div>
           </div>
-        </motion.section>
+        </m.section>
 
         {/* Section 3.5: Cursor Settings */}
-        <motion.section 
+        <m.section 
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.35, ease: "easeOut" }}
@@ -400,10 +400,10 @@ export default function SettingsPage() {
               </div>
             </div>
           </div>
-        </motion.section>
+        </m.section>
 
         {/* Section 4: Display Settings (Moved to bottom) */}
-        <motion.section 
+        <m.section 
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.4, ease: "easeOut" }}
@@ -504,7 +504,7 @@ export default function SettingsPage() {
             </div>
 
           </div>
-        </motion.section>
+        </m.section>
         
       </div>
     </div>

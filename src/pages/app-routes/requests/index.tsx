@@ -1,5 +1,5 @@
 import { FileEdit, Plus, FileText, Umbrella, Home, CheckCircle2 } from "lucide-react";
-import { motion } from "framer-motion";
+import { m  } from 'framer-motion';
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 
@@ -10,7 +10,7 @@ export default function RequestsPage() {
     <div className="w-full p-4 md:p-8 flex flex-col gap-6 md:gap-8">
       <div className="w-full space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: "easeOut" }}
@@ -25,7 +25,7 @@ export default function RequestsPage() {
             <p className="text-muted-foreground text-sm md:text-base ml-1">
               Tạo mới và theo dõi trạng thái các yêu cầu, đơn từ của bạn.
             </p>
-          </motion.div>
+          </m.div>
 
           <div className="flex items-center gap-4 bg-white p-1.5 rounded-xl border border-slate-200 shadow-sm">
             <Button 

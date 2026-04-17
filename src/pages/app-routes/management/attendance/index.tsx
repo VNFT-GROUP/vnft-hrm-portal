@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Search, Calendar as CalendarIcon, Info } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { motion } from "framer-motion";
+import { m  } from 'framer-motion';
 import { useQuery } from "@tanstack/react-query";
 import { attendanceService } from "@/services/attendance";
 import { useTranslation } from "react-i18next";
@@ -162,7 +162,7 @@ export default function AttendancePage() {
   return (
     <div className="p-4 md:p-8 w-full min-h-full flex flex-col gap-6 md:gap-8">
       {/* 1. Header Section */}
-      <motion.div
+      <m.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
@@ -189,10 +189,10 @@ export default function AttendancePage() {
              </span>
            </div>
         </div>
-      </motion.div>
+      </m.div>
 
       {/* 2. Toolbar Section */}
-      <motion.div
+      <m.div
         initial={{ opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
@@ -230,10 +230,10 @@ export default function AttendancePage() {
             title={t("attendance.endDate")}
           />
         </div>
-      </motion.div>
+      </m.div>
 
       {/* 3. Main Data Section */}
-      <motion.div
+      <m.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
@@ -286,7 +286,7 @@ export default function AttendancePage() {
             </Pagination>
           </div>
         )}
-      </motion.div>
+      </m.div>
 
       {/* JSON View Overlay */}
       <AttendanceJsonDialog

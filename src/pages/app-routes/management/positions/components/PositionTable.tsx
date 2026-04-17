@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence  } from 'framer-motion';
 import { useTranslation } from "react-i18next";
 import {
   ContextMenu,
@@ -47,7 +47,7 @@ export default function PositionTable({ positions, onEdit, onDelete }: PositionT
         <TableBody>
           <AnimatePresence>
             {positions.map((position) => (
-              <motion.tr 
+              <m.tr 
                 key={position.id}
                 layout 
                 initial={{ opacity: 0 }}
@@ -98,7 +98,7 @@ export default function PositionTable({ positions, onEdit, onDelete }: PositionT
                     </Button>
                   </div>
                 </TableCell>
-              </motion.tr>
+              </m.tr>
             ))}
           </AnimatePresence>
           {positions.length === 0 && (

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { m  } from 'framer-motion';
 import { ChevronLeft, ChevronRight, CheckCircle2, Clock, CalendarDays, FileText, Umbrella, Home } from "lucide-react";
 import { useAuthStore } from "@/store/useAuthStore";
 import { format, parseISO, addDays } from "date-fns";
@@ -25,7 +25,7 @@ const mockTopSales = [
 
 const TopSalesTable = () => {
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: 0.1 }}
@@ -61,7 +61,7 @@ const TopSalesTable = () => {
             const isTop3Any = index < 3;
 
             return (
-              <motion.div
+              <m.div
                 key={user.id}
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -90,14 +90,14 @@ const TopSalesTable = () => {
 
                 {/* Profile *\/}
                 <div className="col-span-6 md:col-span-7 flex items-center gap-3">
-                  <motion.div whileHover={{ scale: 1.1, rotate: 5 }} className="relative shrink-0">
+                  <m.div whileHover={{ scale: 1.1, rotate: 5 }} className="relative shrink-0">
                     <img src={user.avatar} alt={user.name} className="w-9 h-9 rounded-full object-cover border-2 border-white shadow-sm" />
                     {isTop1 && (
                       <div className="absolute -top-1.5 -right-1.5 bg-amber-400 rounded-full w-4 h-4 flex items-center justify-center border-2 border-white">
                         <Trophy size={8} fill="white" className="text-white" />
                       </div>
                     )}
-                  </motion.div>
+                  </m.div>
                   <div className="flex flex-col">
                     <span className={`text-[14px] ${isTop3Any ? 'font-bold text-gray-800' : 'font-medium text-gray-600'}`}>
                       {user.name}
@@ -116,12 +116,12 @@ const TopSalesTable = () => {
                     {user.trend}
                   </div>
                 </div>
-              </motion.div>
+              </m.div>
             );
           })}
         </div>
       </div>
-    </motion.div>
+    </m.div>
   );
 };
 */
@@ -136,7 +136,7 @@ const IntegratedTaskCard = () => {
       : 'Không có nhắc nhở nào cho bạn.';
 
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
@@ -180,7 +180,7 @@ const IntegratedTaskCard = () => {
           <p className="text-[14px] text-gray-500 font-medium">{emptyText}</p>
         </div>
       </div>
-    </motion.div>
+    </m.div>
   );
 };
 
@@ -320,7 +320,7 @@ export default function HomePage() {
           <div className="md:col-span-5 xl:col-span-4 flex flex-col gap-6">
 
             {/* Attendance Card */}
-            <motion.div
+            <m.div
               initial={{ opacity: 0, scale: 0.98 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.4 }}
@@ -429,20 +429,20 @@ export default function HomePage() {
                 </div>
               </div>
 
-            </motion.div>
+            </m.div>
 
 
 
             {/* Events/Calendar Card */}
             {/*
-            <motion.div
+            <m.div
               initial={{ opacity: 0, scale: 0.98 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.4, delay: 0.1 }}
               className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden"
             >
               // ...
-            </motion.div>
+            </m.div>
             */}
 
           </div>

@@ -3,7 +3,7 @@ import { Plus, Search, Layers, Edit2, Trash2, Loader2, MousePointerClick } from 
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { motion } from "framer-motion";
+import { m  } from 'framer-motion';
 import { useLayoutStore } from "@/store/useLayoutStore";
 
 import RoleTable from "./components/RoleTable";
@@ -110,7 +110,7 @@ export default function RolesPage() {
   return (
     <div className="p-4 md:p-8 w-full min-h-full flex flex-col gap-6 md:gap-8">
       {/* 1. Header Section */}
-      <motion.div
+      <m.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
@@ -125,11 +125,11 @@ export default function RolesPage() {
         <p className="text-muted-foreground text-base md:text-lg ml-1">
           {t('management.rolesDesc', { defaultValue: 'Quản lý danh sách master data các chức vụ trong hệ thống.' })}
         </p>
-      </motion.div>
+      </m.div>
 
       {/* 1.5 Legend Section */}
       {showRoleLegend && (
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
@@ -153,11 +153,11 @@ export default function RolesPage() {
             <MousePointerClick size={16} />
             <span className="italic">{t('management.actionTooltip', { defaultValue: 'Mẹo: Click chuột phải vào dòng dữ liệu để thao tác nhanh.' })}</span>
           </div>
-        </motion.div>
+        </m.div>
       )}
 
       {/* 2 & 3. Toolbar Section */}
-      <motion.div
+      <m.div
         initial={{ opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
@@ -181,10 +181,10 @@ export default function RolesPage() {
         >
           <Plus size={20} className="mr-2" /> {t('management.addRole', { defaultValue: 'Thêm Chức Vụ' })}
         </Button>
-      </motion.div>
+      </m.div>
 
       {/* 4. Main Table Card Section */}
-      <motion.div
+      <m.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
@@ -202,7 +202,7 @@ export default function RolesPage() {
             onDelete={handleDelete}
           />
         )}
-      </motion.div>
+      </m.div>
 
       {/* Side Form (Sheet) */}
       <RoleFormSheet

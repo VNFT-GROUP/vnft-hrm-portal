@@ -4,8 +4,12 @@ import './index.css'
 import './lib/i18n'
 import App from './App.tsx'
 
+import { LazyMotion, domAnimation } from 'framer-motion';
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    <LazyMotion features={domAnimation}>
+      <App />
+    </LazyMotion>
   </StrictMode>,
 )

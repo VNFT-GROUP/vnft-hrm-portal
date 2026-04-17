@@ -3,7 +3,7 @@ import { Plus, Search, Loader2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { motion } from "framer-motion";
+import { m  } from 'framer-motion';
 import GroupPermissionTable from "./GroupPermissionTable";
 import GroupPermissionFormSheet from "./GroupPermissionFormSheet";
 import type { GroupPermissionResponse } from '@/types/group/GroupPermissionResponse';
@@ -108,7 +108,7 @@ export default function GroupPermissionsTabContent() {
 
   return (
     <div className="flex flex-col gap-6 h-full">
-      <motion.div
+      <m.div
         initial={{ opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
@@ -129,9 +129,9 @@ export default function GroupPermissionsTabContent() {
         >
           <Plus size={20} className="mr-2" /> {t('management.addPerm', { defaultValue: 'Thêm Mã Quyền' })}
         </Button>
-      </motion.div>
+      </m.div>
 
-      <motion.div
+      <m.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
@@ -145,7 +145,7 @@ export default function GroupPermissionsTabContent() {
         ) : (
           <GroupPermissionTable items={items} onEdit={handleOpenForm} onDelete={(id) => deleteMutation.mutate(id)} />
         )}
-      </motion.div>
+      </m.div>
 
       <GroupPermissionFormSheet
         isOpen={isOpen}

@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence  } from 'framer-motion';
 import {
   ContextMenu,
   ContextMenuTrigger,
@@ -46,7 +46,7 @@ export default function RoleTable({ roles, onEdit, onDelete }: RoleTableProps) {
         <TableBody>
           <AnimatePresence>
             {roles.map((role) => (
-              <motion.tr 
+              <m.tr 
                 key={role.id}
                 layout 
                 initial={{ opacity: 0 }}
@@ -88,7 +88,7 @@ export default function RoleTable({ roles, onEdit, onDelete }: RoleTableProps) {
                     </Button>
                   </div>
                 </TableCell>
-              </motion.tr>
+              </m.tr>
             ))}
           </AnimatePresence>
           {roles.length === 0 && (

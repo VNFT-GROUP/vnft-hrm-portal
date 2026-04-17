@@ -1,6 +1,6 @@
 import { ShieldCheck, Edit2, Trash2, MousePointerClick, CheckSquare, Shield } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { motion } from "framer-motion";
+import { m  } from 'framer-motion';
 import { useLayoutStore } from "@/store/useLayoutStore";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -14,7 +14,7 @@ export default function GroupsPage() {
   return (
     <div className="p-4 md:p-8 w-full min-h-full flex flex-col gap-6 md:gap-8">
       {/* 1. Header Section */}
-      <motion.div
+      <m.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
@@ -29,11 +29,11 @@ export default function GroupsPage() {
         <p className="text-muted-foreground text-base md:text-lg ml-1">
           {t('management.groupsDesc', { defaultValue: 'Quản lý toàn bộ thông số về nhóm quyền và danh sách mã quyền trong hệ thống.' })}
         </p>
-      </motion.div>
+      </m.div>
 
       {/* 1.5 Legend Section */}
       {showRoleLegend && (
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
@@ -60,7 +60,7 @@ export default function GroupsPage() {
             <MousePointerClick size={16} />
             <span className="italic">{t('management.actionTooltip', { defaultValue: 'Mẹo: Click chuột phải vào dòng dữ liệu để thao tác nhanh.' })}</span>
           </div>
-        </motion.div>
+        </m.div>
       )}
 
       {/* TABS CONTAINER */}

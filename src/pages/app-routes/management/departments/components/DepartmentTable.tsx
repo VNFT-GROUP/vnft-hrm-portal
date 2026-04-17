@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence  } from 'framer-motion';
 import { useTranslation } from "react-i18next";
 import {
   ContextMenu,
@@ -50,7 +50,7 @@ export default function DepartmentTable({ departments, onEdit, onDelete }: Depar
           <AnimatePresence>
             {departments.map((dept) => {
               return (
-                <motion.tr 
+                <m.tr 
                   key={dept.id}
                   layout 
                   initial={{ opacity: 0 }}
@@ -92,7 +92,7 @@ export default function DepartmentTable({ departments, onEdit, onDelete }: Depar
                       </Button>
                     </div>
                   </TableCell>
-                </motion.tr>
+                </m.tr>
               );
             })}
           </AnimatePresence>

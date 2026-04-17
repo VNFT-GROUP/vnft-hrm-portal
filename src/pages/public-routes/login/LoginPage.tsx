@@ -114,9 +114,9 @@ export default function LoginPage() {
     } catch (error: unknown) {
       // Phía apiClient (Interceptor) đã lo việc bắn ra Toast Error thông báo rồi, ta chỉ console log
       console.error("Lỗi xảy ra lúc login:", error);
-    } finally {
       setLoading(false);
     }
+    setLoading(false);
 
     if (authData && authData.accessToken && authData.user) {
       loginAction(authData.user, authData.accessToken);

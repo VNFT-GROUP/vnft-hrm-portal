@@ -1,0 +1,171 @@
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Clock, ShieldAlert, Settings, Code, FileJson } from "lucide-react";
+import { motion } from "framer-motion";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ServerSettingsResponse } from "@/types/server-settings/ServerSettingsResponse";
+
+const mockSettings: ServerSettingsResponse = {
+  timeZone: "Asia/Ho_Chi_Minh",
+  attendance: {
+    lateGraceMinutes: 15,
+    earlyCheckInIgnoreMinutes: 15,
+    fullWorkMinutes: 480,
+    lunchBreakStart: "12:00:00",
+    lunchBreakEnd: "13:30:00"
+  }
+};
+
+export default function ServerSettingsPage() {
+  const settings = mockSettings;
+
+  return (
+    <div className="w-full p-4 md:p-8 flex flex-col gap-6 md:gap-8">
+      <div className="w-full space-y-6">
+        <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+            className="flex flex-col gap-5"
+          >
+            <div className="flex flex-col gap-2">
+              <h1 className="text-2xl md:text-3xl font-bold text-[#1E2062] flex items-center gap-3">
+                <span className="p-2.5 bg-[#2E3192]/10 text-[#2E3192] rounded-xl flex items-center justify-center">
+                  <Settings size={26} strokeWidth={2.5} />
+                </span>
+                Cài đặt Hệ thống
+              </h1>
+              <p className="text-muted-foreground text-sm md:text-base ml-1">
+                Xem cấu hình hệ thống hiện hành. Các cài đặt này ảnh hưởng đến toàn bộ quá trình tính công và vận hành nền tảng.
+              </p>
+            </div>
+
+            <div className="flex items-start gap-4 bg-amber-50 p-4 md:p-5 rounded-2xl border border-amber-200/60 shadow-sm">
+               <div className="bg-amber-100 p-2 rounded-full shrink-0">
+                 <ShieldAlert className="w-6 h-6 text-amber-600" />
+               </div>
+               <div className="flex flex-col gap-1">
+                 <span className="text-[15px] font-bold text-amber-900">Quyền truy cập hạn chế</span>
+                 <span className="text-[13.5px] text-amber-700/90 leading-relaxed">
+                   <strong>Lưu ý:</strong> Chỉ bộ phận IT mới có quyền thao tác chỉnh sửa các thông số này. 
+                   Việc thay đổi cấu hình gốc sẽ tác động trực tiếp lên toàn bộ dữ liệu máy chủ và quy trình xử lý chấm công. 
+                   Nếu có sai sót, vui lòng liên hệ quản trị viên hệ thống để được hỗ trợ.
+                 </span>
+               </div>
+            </div>
+          </motion.div>
+
+        <Tabs defaultValue="visual" className="w-full">
+           <TabsList className="mb-6 bg-slate-100/50 p-1 border border-slate-200">
+             <TabsTrigger value="visual" className="flex items-center gap-2 px-6 h-9 transition-all">
+               <Settings className="w-4 h-4" />
+               Trực quan
+             </TabsTrigger>
+             <TabsTrigger value="json" className="flex items-center gap-2 px-6 h-9 transition-all">
+               <FileJson className="w-4 h-4" />
+               Dạng văn bản (JSON)
+             </TabsTrigger>
+           </TabsList>
+  
+           <TabsContent value="visual" className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-500">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <Card className="shadow-sm border-slate-200/80 overflow-hidden">
+                  <CardHeader className="pb-4 bg-white border-b border-slate-100">
+                    <CardTitle className="text-[17px] flex items-center gap-2 text-slate-800">
+                      <div className="p-1.5 bg-indigo-50 rounded-md">
+                        <Clock className="w-4 h-4 text-indigo-600" />
+                      </div>
+                      Sai số thời gian
+                    </CardTitle>
+                    <CardDescription className="text-slate-500">
+                      Mức độ sai lệch về giờ được hệ thống chấp nhận (không ghi nhận vi phạm).
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4 pt-5 bg-slate-50/50">
+                    <div className="flex justify-between items-center bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
+                      <Label className="text-[14px] font-semibold text-slate-700">Độ trễ cho phép</Label>
+                      <span className="font-bold text-indigo-700 bg-indigo-50 border border-indigo-100 px-3.5 py-1.5 rounded-lg text-sm">
+                        {settings.attendance.lateGraceMinutes} phút
+                      </span>
+                    </div>
+
+                    <div className="flex justify-between items-center bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
+                      <Label className="text-[14px] font-semibold text-slate-700">Về sớm cho phép</Label>
+                      <span className="font-bold text-rose-700 bg-rose-50 border border-rose-100 px-3.5 py-1.5 rounded-lg text-sm">
+                        {settings.attendance.earlyCheckInIgnoreMinutes} phút
+                      </span>
+                    </div>
+
+                    <div className="flex justify-between items-center bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
+                       <Label className="text-[14px] font-semibold text-slate-700">Khối lượng làm việc chuẩn</Label>
+                       <span className="font-bold text-emerald-700 bg-emerald-50 border border-emerald-100 px-3.5 py-1.5 rounded-lg text-sm">
+                         {settings.attendance.fullWorkMinutes / 60} giờ/ngày
+                       </span>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="shadow-sm border-slate-200/80 overflow-hidden h-fit">
+                  <CardHeader className="pb-4 bg-white border-b border-slate-100">
+                    <CardTitle className="text-[17px] flex items-center gap-2 text-slate-800">
+                      <div className="p-1.5 bg-sky-50 rounded-md">
+                        <Clock className="w-4 h-4 text-sky-600" />
+                      </div>
+                      Thời gian & Múi giờ
+                    </CardTitle>
+                    <CardDescription className="text-slate-500">
+                      Cấu hình theo vùng địa lý và giờ nghỉ trưa tiêu chuẩn.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4 pt-5 bg-slate-50/50">
+                    <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs flex justify-between items-center">
+                        <Label className="text-[14px] font-semibold text-slate-700">Múi giờ máy chủ</Label>
+                        <p className="font-bold text-slate-800 font-mono bg-slate-100 px-3.5 py-1.5 rounded-lg text-sm tracking-tight">{settings.timeZone}</p>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs flex flex-col gap-1.5">
+                        <Label className="text-[12px] font-semibold text-slate-500 uppercase tracking-widest">Bắt đầu nghỉ trưa</Label>
+                        <p className="font-extrabold text-[15px] text-slate-800">{settings.attendance.lunchBreakStart}</p>
+                      </div>
+                      
+                      <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs flex flex-col gap-1.5">
+                        <Label className="text-[12px] font-semibold text-slate-500 uppercase tracking-widest">Kết thúc nghỉ trưa</Label>
+                        <p className="font-extrabold text-[15px] text-slate-800">{settings.attendance.lunchBreakEnd}</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+           </TabsContent>
+
+           <TabsContent value="json" className="animate-in fade-in slide-in-from-bottom-2 duration-500">
+             <Card className="shadow-2xl border-none bg-slate-900 border-slate-800 overflow-hidden">
+                <CardHeader className="pb-4 bg-slate-900/50 border-b border-slate-800/80">
+                  <CardTitle className="text-[16px] flex items-center gap-2 text-slate-100">
+                    <Code className="w-4 h-4 text-indigo-400" />
+                    System Payload (Raw)
+                  </CardTitle>
+                  <CardDescription className="text-slate-400">
+                    Cấu trúc dữ liệu cài đặt chi tiết được serialize trả về từ Database Server.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="p-0">
+                  <div className="bg-[#0D1117] p-6 overflow-x-auto">
+                    <pre className="text-[13.5px] font-mono leading-loose tracking-wide">
+                      <code dangerouslySetInnerHTML={{ 
+                        __html: JSON.stringify(settings, null, 2)
+                          .replace(/"(.*?)":/g, '<span style="color: #82AAFF">"$1"</span>:')
+                          .replace(/: "(.*?)"/g, ': <span style="color: #C3E88D">"$1"</span>')
+                          .replace(/: (\d+)/g, ': <span style="color: #F78C6C">$1</span>')
+                      }} />
+                    </pre>
+                  </div>
+                </CardContent>
+             </Card>
+           </TabsContent>
+        </Tabs>
+      </div>
+    </div>
+  );
+}

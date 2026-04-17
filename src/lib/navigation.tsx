@@ -122,10 +122,10 @@ export const useNavigationData = () => {
                     icon: <CheckSquare size={16} />,
                   },
                   {
-                    label: t("sidebar.timeSettings", { defaultValue: "Giờ giấc" }),
-                    shortName: t("sidebar.timeSettingsShort", { defaultValue: "Giờ giấc" }),
-                    path: "/app/management/time-settings",
-                    icon: <Clock size={16} />,
+                    label: t("sidebar.serverSettings", { defaultValue: "Cài đặt hệ thống" }),
+                    shortName: t("sidebar.serverSettingsShort", { defaultValue: "Cài đặt HT" }),
+                    path: "/app/management/server-settings",
+                    icon: <Settings size={16} />,
                   },
                   {
                     label: t("sidebar.attendanceHistory", { defaultValue: "Bảng chấm công Raw" }),

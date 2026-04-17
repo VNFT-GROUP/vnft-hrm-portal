@@ -13,8 +13,8 @@ export default {
   roles: "Chức vụ",
   groups: "Nhóm quyền",
   systemManagement: "Quản lý Hệ Thống",
-  timeSettings: "Giờ giấc",
+  serverSettings: "Cài đặt hệ thống",
   attendanceHistory: "Lịch sử Chấm công",
-  settings: "Cài đặt hệ thống",
+  settings: "Cấu hình",
   customize: "Cá nhân hoá"
 };

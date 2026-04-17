@@ -172,12 +172,10 @@ export default function AttendancePage() {
           <span className="p-2.5 bg-[#2E3192]/10 text-[#2E3192] rounded-xl shadow-sm border border-[#2E3192]/10">
             <CalendarIcon size={24} />
           </span>
-          {t("attendance.title", { defaultValue: "Hikvision - Bản ghi" })}
+          {t("attendance.title")}
         </h1>
         <p className="text-muted-foreground text-sm md:text-base ml-1">
-          {t("attendance.subtitle", {
-            defaultValue: "Xem và kiểm tra dữ liệu chấm công thô từ thiết bị.",
-          })}
+          {t("attendance.subtitle")}
         </p>
       </motion.div>
 
@@ -195,9 +193,7 @@ export default function AttendancePage() {
               size={18}
             />
             <Input
-              placeholder={t("attendance.searchPlaceholder", {
-                defaultValue: "Tìm kiếm theo MSNV hoặc Tên...",
-              })}
+              placeholder={t("attendance.searchPlaceholder")}
               className="pl-11 h-11 rounded-xl bg-muted border-border focus-visible:ring-[#2E3192] text-sm hover:bg-card text-card-foreground transition-colors w-full"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -211,7 +207,7 @@ export default function AttendancePage() {
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
             className="h-11 w-auto rounded-xl bg-muted border-border cursor-pointer focus-visible:ring-[#2E3192]"
-            title="Từ ngày"
+            title={t("attendance.startDate")}
           />
           <span className="text-muted-foreground hidden md:inline">-</span>
           <Input
@@ -219,7 +215,7 @@ export default function AttendancePage() {
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
             className="h-11 w-auto rounded-xl bg-muted border-border cursor-pointer focus-visible:ring-[#2E3192]"
-            title="Đến ngày"
+            title={t("attendance.endDate")}
           />
         </div>
       </motion.div>
@@ -236,7 +232,7 @@ export default function AttendancePage() {
             <div className="h-full w-full flex items-center justify-center min-h-[300px]">
               <div className="w-6 h-6 border-2 border-[#2E3192] border-t-transparent rounded-full animate-spin"></div>
               <span className="ml-3 text-muted-foreground text-sm">
-                Đang tải dữ liệu...
+                {t("attendance.loadingData")}
               </span>
             </div>
           ) : (

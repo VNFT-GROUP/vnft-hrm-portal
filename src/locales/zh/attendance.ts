@@ -1,0 +1,20 @@
+export default {
+  title: "海康威视 - 记录",
+  subtitle: "查看并检查设备的原始考勤数据。",
+  searchPlaceholder: "按员工ID或姓名搜索...",
+  startDate: "开始日期",
+  endDate: "结束日期",
+  loadingData: "正在加载数据...",
+  noData: "无考勤数据",
+  noDataDesc: "请更改过滤器或等待数据同步。",
+  date: "日期",
+  employeeCode: "员工编号",
+  employeeName: "员工姓名",
+  attendanceCode: "考勤码",
+  checkIn: "签到时间",
+  checkOut: "签退时间",
+  jsonDetails: "设备数据详情 (Raw Payload)",
+  viewJson: "查看 JSON",
+  copyJsonSuccess: "JSON 已复制",
+  invalidJson: "无效的 JSON 格式"
+};

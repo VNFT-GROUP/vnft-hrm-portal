@@ -10,6 +10,7 @@ import position from './position';
 import settings from './settings';
 import management from './management';
 import serverSettings from './serverSettings';
+import attendance from './attendance';
 
 export default {
   profile,
@@ -23,5 +24,6 @@ export default {
   editProfile,
   dropdowns,
   management,
-  serverSettings
+  serverSettings,
+  attendance
 };

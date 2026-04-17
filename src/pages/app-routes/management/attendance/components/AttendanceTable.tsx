@@ -1,6 +1,6 @@
 
 import { format } from "date-fns";
-import { Copy, FileJson } from "lucide-react";
+import { Copy, FileJson, X } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -16,6 +16,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogClose,
 } from "@/components/ui/dialog";
 import type { AttendanceRecordResponse } from "@/types/attendance/AttendanceRecordResponse";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -29,17 +30,15 @@ interface AttendanceTableProps {
 export default function AttendanceTable({ records, onViewJson }: AttendanceTableProps) {
   const { t } = useTranslation();
 
-
-
   if (!records || records.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center p-12 text-center text-muted-foreground w-full bg-white rounded-xl border border-border">
         <FileJson size={48} className="mb-4 text-muted-foreground/30" strokeWidth={1} />
         <h3 className="text-xl font-medium text-[#1E2062] mb-1">
-          {t("attendance.noData", { defaultValue: "Không có dữ liệu chấm công" })}
+          {t("attendance.noData")}
         </h3>
         <p className="text-sm">
-          {t("attendance.noDataDesc", { defaultValue: "Vui lòng thay đổi bộ lọc hoặc thêm mới." })}
+          {t("attendance.noDataDesc")}
         </p>
       </div>
     );
@@ -51,22 +50,22 @@ export default function AttendanceTable({ records, onViewJson }: AttendanceTable
         <TableHeader className="bg-slate-50 sticky top-0 z-10">
           <TableRow className="hover:bg-transparent">
             <TableHead className="w-[120px] font-semibold text-[#1E2062] border border-slate-200">
-              {t("attendance.date", { defaultValue: "Ngày" })}
+              {t("attendance.date")}
             </TableHead>
             <TableHead className="font-semibold text-[#1E2062] text-center w-[100px] border border-slate-200">
-               Mã NV
+               {t("attendance.employeeCode")}
             </TableHead>
             <TableHead className="font-semibold text-[#1E2062] border border-slate-200">
-              {t("attendance.employeeName", { defaultValue: "Tên nhân viên" })}
+              {t("attendance.employeeName")}
             </TableHead>
             <TableHead className="font-semibold text-[#1E2062] text-center w-[100px] border border-slate-200">
-              Mã CC
+              {t("attendance.attendanceCode")}
             </TableHead>
             <TableHead className="font-semibold text-[#1E2062] text-center border border-slate-200">
-              Giờ vào
+              {t("attendance.checkIn")}
             </TableHead>
             <TableHead className="font-semibold text-[#1E2062] text-center border border-slate-200">
-              Giờ ra
+              {t("attendance.checkOut")}
             </TableHead>
             <TableHead className="w-[80px] text-right font-semibold text-[#1E2062] border border-slate-200">
               JSON
@@ -106,7 +105,7 @@ export default function AttendanceTable({ records, onViewJson }: AttendanceTable
                    size="icon" 
                    onClick={() => onViewJson(record)}
                    className="text-slate-400 hover:text-[#2E3192] hover:bg-muted focus-visible:ring-1"
-                   title="Xem JSON"
+                   title={t("attendance.viewJson")}
                 >
                   <FileJson size={18} />
                 </Button>
@@ -135,7 +134,7 @@ export function AttendanceJsonDialog({
     try {
       displayData = JSON.parse(record.rawPayload);
     } catch {
-      displayData = { rawPayload: record.rawPayload, note: "Invalid JSON format" };
+      displayData = { rawPayload: record.rawPayload, note: t("attendance.invalidJson") };
     }
   }
 
@@ -143,13 +142,16 @@ export function AttendanceJsonDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[85vh] p-0 overflow-hidden flex flex-col gap-0 border-slate-200">
-        <DialogHeader className="p-5 border-b border-slate-100 bg-slate-50/50">
-          <DialogTitle className="flex justify-between items-center text-[#1E2062] text-xl">
+      <DialogContent showCloseButton={false} className="max-w-2xl max-h-[85vh] p-0 overflow-hidden flex flex-col gap-0 border-slate-200">
+        <DialogHeader className="p-4 border-b border-slate-100 bg-slate-50/50">
+          <DialogTitle className="flex justify-between items-center text-[#1E2062] text-lg">
              <div className="flex items-center gap-2">
                 <FileJson size={22} className="text-[#2E3192]" />
-                {t("attendance.jsonDetails", { defaultValue: "Chi tiết dữ liệu thiết bị (Raw Payload)" })}
+                {t("attendance.jsonDetails")}
              </div>
+             <DialogClose className="flex items-center justify-center p-1.5 rounded-md text-slate-400 hover:text-slate-700 hover:bg-slate-200/60 transition-colors">
+               <X strokeWidth={2.5} size={18} />
+             </DialogClose>
           </DialogTitle>
         </DialogHeader>
         
@@ -158,10 +160,10 @@ export function AttendanceJsonDialog({
               <Button
                  variant="outline"
                  size="icon"
-                 className="absolute top-4 right-6 z-10 h-8 w-8 bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700 hover:text-white"
+                 className="absolute top-4 right-6 z-10 h-8 w-8 bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700 hover:text-white transition-all shadow-md"
                  onClick={() => {
                     navigator.clipboard.writeText(jsonString);
-                    toast.success("Đã sao chép JSON");
+                    toast.success(t("attendance.copyJsonSuccess"));
                  }}
               >
                  <Copy size={14} />

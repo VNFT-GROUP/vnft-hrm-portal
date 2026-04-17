@@ -178,13 +178,13 @@ export default function AttendancePage() {
           {t("attendance.subtitle")}
         </p>
 
-        <div className="flex items-start gap-3 bg-sky-50/80 p-4 md:p-5 rounded-2xl border border-sky-200/60 shadow-sm mt-3">
-           <div className="bg-sky-100/80 p-2 rounded-full shrink-0">
-             <Info className="w-5 h-5 text-sky-600" />
+        <div className="flex items-start gap-4 bg-amber-50 p-4 md:p-5 rounded-2xl border border-amber-200/60 shadow-sm mt-2">
+           <div className="bg-amber-100 p-2 rounded-full shrink-0">
+             <Info className="w-6 h-6 text-amber-600" />
            </div>
            <div className="flex flex-col gap-1">
-             <span className="text-[14.5px] font-bold text-sky-900">{t("attendance.infoTitle")}</span>
-             <span className="text-[13.5px] text-sky-700/90 leading-relaxed">
+             <span className="text-[15px] font-bold text-amber-900">{t("attendance.infoTitle")}</span>
+             <span className="text-[13.5px] text-amber-700/90 leading-relaxed">
                <strong>{t("attendance.infoNotice")}</strong> {t("attendance.infoDesc")}
              </span>
            </div>

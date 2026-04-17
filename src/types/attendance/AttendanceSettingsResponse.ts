@@ -1,6 +1,6 @@
 export interface AttendanceSettingsResponse {
   lateGraceMinutes: number;
-  earlyCheckInIgnoreMinutes: number;
+  earlyLeaveGraceMinutes: number;
   halfWorkUnitHours: number;
   fullWorkUnitHours: number;
   lunchBreakStart: string;

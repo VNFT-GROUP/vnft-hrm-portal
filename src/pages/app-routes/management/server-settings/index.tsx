@@ -105,7 +105,7 @@ export default function ServerSettingsPage() {
                     <div className="flex justify-between items-center bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
                       <Label className="text-[14px] font-semibold text-slate-700">{t("serverSettings.earlyLeave")}</Label>
                       <span className="font-bold text-rose-700 bg-rose-50 border border-rose-100 px-3.5 py-1.5 rounded-lg text-sm">
-                        {settings.attendance.earlyCheckInIgnoreMinutes} {t("serverSettings.unitMinutes")}
+                        {settings.attendance.earlyLeaveGraceMinutes} {t("serverSettings.unitMinutes")}
                       </span>
                     </div>
 

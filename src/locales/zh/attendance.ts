@@ -16,5 +16,8 @@ export default {
   jsonDetails: "设备数据详情 (Raw Payload)",
   viewJson: "查看 JSON",
   copyJsonSuccess: "JSON 已复制",
-  invalidJson: "无效的 JSON 格式"
+  invalidJson: "无效的 JSON 格式",
+  infoTitle: "数据注意事项",
+  infoNotice: "注意：",
+  infoDesc: "这是直接从考勤跟踪设备拉取的原始记录数据（未经任何请假单或修正单处理同步）。此数据仅出于核对排错目的，不作为最终薪酬结算的依据。"
 };

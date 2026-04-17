@@ -16,5 +16,8 @@ export default {
   jsonDetails: "Device Data Details (Raw Payload)",
   viewJson: "View JSON",
   copyJsonSuccess: "JSON Copied",
-  invalidJson: "Invalid JSON format"
+  invalidJson: "Invalid JSON format",
+  infoTitle: "Data Notice",
+  infoNotice: "Note:",
+  infoDesc: "This is raw data retrieved directly from the timekeeping tracking devices (unprocessed by any leave or adjustment requests). This dataset is for system referencing and checking purposes only and is not the final data evaluated for payroll calculation."
 };

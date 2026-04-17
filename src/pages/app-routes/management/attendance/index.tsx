@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Search, Calendar as CalendarIcon } from "lucide-react";
+import { Search, Calendar as CalendarIcon, Info } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
@@ -177,6 +177,18 @@ export default function AttendancePage() {
         <p className="text-muted-foreground text-sm md:text-base ml-1">
           {t("attendance.subtitle")}
         </p>
+
+        <div className="flex items-start gap-3 bg-sky-50/80 p-4 md:p-5 rounded-2xl border border-sky-200/60 shadow-sm mt-3">
+           <div className="bg-sky-100/80 p-2 rounded-full shrink-0">
+             <Info className="w-5 h-5 text-sky-600" />
+           </div>
+           <div className="flex flex-col gap-1">
+             <span className="text-[14.5px] font-bold text-sky-900">{t("attendance.infoTitle")}</span>
+             <span className="text-[13.5px] text-sky-700/90 leading-relaxed">
+               <strong>{t("attendance.infoNotice")}</strong> {t("attendance.infoDesc")}
+             </span>
+           </div>
+        </div>
       </motion.div>
 
       {/* 2. Toolbar Section */}

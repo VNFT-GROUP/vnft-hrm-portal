@@ -10,6 +10,10 @@ export interface UserSessionResponse {
   fullName?: string;
   englishName?: string;
   gender?: Gender;
+  currentLeaveDays?: number;
+  maxLeaveDays?: number;
+  currentWfhDays?: number;
+  maxWfhDays?: number;
   groupId?: string;
   groupName?: string;
   groupPermissions?: GroupPermissionResponse[];

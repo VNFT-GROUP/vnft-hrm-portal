@@ -1,10 +1,12 @@
-import { FileEdit, Plus, FileText, Umbrella, Home, CheckCircle2 } from "lucide-react";
+import { FileEdit, Plus, FileText, Umbrella, Home } from "lucide-react";
 import { m  } from 'framer-motion';
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { useAuthStore } from "@/store/useAuthStore";
 
 export default function RequestsPage() {
   const navigate = useNavigate();
+  const session = useAuthStore(state => state.session);
 
   return (
     <div className="w-full p-4 md:p-8 flex flex-col gap-6 md:gap-8">
@@ -39,7 +41,7 @@ export default function RequestsPage() {
 
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          <div className="bg-white border text-card-foreground shadow-sm rounded-xl p-5 flex flex-col gap-1.5 transition-all duration-200 hover:shadow-md border-slate-200">
+          <div className="bg-card border-border text-card-foreground shadow-sm rounded-2xl p-5 flex flex-col gap-1.5 transition-all duration-200 hover:shadow-md border">
             <div className="flex items-center gap-3 mb-2">
               <span className="p-2.5 flex items-center justify-center rounded-lg bg-indigo-50/80 text-indigo-600 border border-indigo-100">
                 <Umbrella className="w-5 h-5" strokeWidth={2} />
@@ -47,14 +49,14 @@ export default function RequestsPage() {
               <h3 className="text-sm font-semibold text-slate-700 leading-tight">Ngày nghỉ phép</h3>
             </div>
             <div className="flex items-baseline gap-1.5 mt-2">
-              <span className="text-[28px] font-extrabold tracking-tight text-[#2E3192]">12</span>
+              <span className="text-[28px] font-extrabold tracking-tight text-[#2E3192]">{session?.currentLeaveDays ?? 0}</span>
               <span className="text-[22px] font-bold text-slate-300">/</span>
-              <span className="text-[22px] font-bold text-slate-400">12</span>
+              <span className="text-[22px] font-bold text-slate-400">{session?.maxLeaveDays ?? 0}</span>
               <span className="text-sm text-slate-500 font-medium ml-1">ngày / năm</span>
             </div>
           </div>
 
-          <div className="bg-white border text-card-foreground shadow-sm rounded-xl p-5 flex flex-col gap-1.5 transition-all duration-200 hover:shadow-md border-slate-200">
+          <div className="bg-card border-border text-card-foreground shadow-sm rounded-2xl p-5 flex flex-col gap-1.5 transition-all duration-200 hover:shadow-md border">
             <div className="flex items-center gap-3 mb-2">
               <span className="p-2.5 flex items-center justify-center rounded-lg bg-purple-50/80 text-purple-600 border border-purple-100">
                 <Home className="w-5 h-5" strokeWidth={2} />
@@ -62,32 +64,19 @@ export default function RequestsPage() {
               <h3 className="text-sm font-semibold text-slate-700 leading-tight">Ngày WFH</h3>
             </div>
             <div className="flex items-baseline gap-1.5 mt-2">
-              <span className="text-[28px] font-extrabold tracking-tight text-purple-700">6</span>
+              <span className="text-[28px] font-extrabold tracking-tight text-purple-700">{session?.currentWfhDays ?? 0}</span>
               <span className="text-[22px] font-bold text-slate-300">/</span>
-              <span className="text-[22px] font-bold text-slate-400">6</span>
+              <span className="text-[22px] font-bold text-slate-400">{session?.maxWfhDays ?? 0}</span>
               <span className="text-sm text-slate-500 font-medium ml-1">ngày / năm</span>
             </div>
           </div>
 
-          <div className="bg-white border text-card-foreground shadow-sm rounded-xl p-5 flex flex-col gap-1.5 transition-all duration-200 hover:shadow-md border-slate-200">
-            <div className="flex items-center gap-3 mb-2">
-              <span className="p-2.5 flex items-center justify-center rounded-lg bg-rose-50/80 text-rose-600 border border-rose-100">
-                <CheckCircle2 className="w-5 h-5" strokeWidth={2} />
-              </span>
-              <h3 className="text-sm font-semibold text-slate-700 leading-tight">Quên Check-in/out</h3>
-            </div>
-            <div className="flex items-baseline gap-1.5 mt-2">
-              <span className="text-[28px] font-extrabold tracking-tight text-rose-700">2</span>
-              <span className="text-[22px] font-bold text-slate-300">/</span>
-              <span className="text-[22px] font-bold text-slate-400">2</span>
-              <span className="text-sm text-slate-500 font-medium ml-1">lần / tuần</span>
-            </div>
-          </div>
+
         </div>
 
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm min-h-[400px] flex flex-col items-center justify-center text-slate-400 p-12">
-          <FileEdit className="w-12 h-12 mb-4 text-slate-300" />
-          <h3 className="text-lg font-medium text-slate-600 mb-1">Chưa có đơn từ nào</h3>
+        <div className="bg-card rounded-2xl border border-border shadow-sm min-h-[400px] flex flex-col items-center justify-center text-muted-foreground p-12">
+          <FileEdit className="w-12 h-12 mb-4 text-muted-foreground/50" />
+          <h3 className="text-lg font-medium text-foreground mb-1">Chưa có đơn từ nào</h3>
           <p className="text-sm">Bạn chưa tạo đơn từ nào hoặc lưới dữ liệu đang được cập nhật.</p>
         </div>
       </div>

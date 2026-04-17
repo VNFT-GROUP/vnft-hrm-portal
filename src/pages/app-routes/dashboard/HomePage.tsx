@@ -140,26 +140,26 @@ const IntegratedTaskCard = () => {
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className="bg-white rounded-md shadow-[0_1px_3px_rgba(0,0,0,0.05)] flex flex-col overflow-hidden w-full border border-gray-100 grow"
+      className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden w-full grow flex flex-col"
     >
-      <div className="flex items-center justify-between px-2 pt-2 border-b border-gray-100 bg-white">
+      <div className="flex items-center justify-between px-2 pt-2 border-b border-border bg-transparent">
         {/* Tabs */}
         <div className="flex items-center gap-1 sm:gap-6 px-3">
           <button
             onClick={() => setActiveTab('requests')}
-            className={`pb-3 pt-2 text-[13px] sm:text-[14px] transition-colors whitespace-nowrap ${activeTab === 'requests' ? 'font-semibold text-primary border-b-2 border-primary' : 'font-medium text-gray-500 hover:text-gray-700'}`}
+            className={`pb-3 pt-2 text-[13px] sm:text-[14px] transition-colors whitespace-nowrap ${activeTab === 'requests' ? 'font-semibold text-primary border-b-2 border-primary' : 'font-medium text-muted-foreground hover:text-foreground'}`}
           >
             Đơn từ
           </button>
           <button
             onClick={() => setActiveTab('assets')}
-            className={`pb-3 pt-2 text-[13px] sm:text-[14px] transition-colors whitespace-nowrap ${activeTab === 'assets' ? 'font-semibold text-primary border-b-2 border-primary' : 'font-medium text-gray-500 hover:text-gray-700'}`}
+            className={`pb-3 pt-2 text-[13px] sm:text-[14px] transition-colors whitespace-nowrap ${activeTab === 'assets' ? 'font-semibold text-primary border-b-2 border-primary' : 'font-medium text-muted-foreground hover:text-foreground'}`}
           >
             Tài sản
           </button>
           <button
             onClick={() => setActiveTab('reminders')}
-            className={`pb-3 pt-2 text-[13px] sm:text-[14px] transition-colors whitespace-nowrap ${activeTab === 'reminders' ? 'font-semibold text-primary border-b-2 border-primary' : 'font-medium text-gray-500 hover:text-gray-700'}`}
+            className={`pb-3 pt-2 text-[13px] sm:text-[14px] transition-colors whitespace-nowrap ${activeTab === 'reminders' ? 'font-semibold text-primary border-b-2 border-primary' : 'font-medium text-muted-foreground hover:text-foreground'}`}
           >
             Nhắc nhở
           </button>
@@ -167,17 +167,17 @@ const IntegratedTaskCard = () => {
       </div>
 
       {/* Empty State */}
-      <div className="py-20 px-5 flex flex-col items-center justify-center bg-[#f8fafc] w-full grow min-h-[300px]">
+      <div className="py-20 px-5 flex flex-col items-center justify-center bg-transparent w-full grow min-h-[300px]">
         <div className="flex items-center justify-center gap-4">
-          <div className="relative text-gray-300 flex items-center justify-center">
-            <div className="absolute w-[40px] h-[3px] bg-gray-200 rounded-full top-[30%] -left-[10px]"></div>
-            <div className="absolute w-[20px] h-[3px] bg-gray-200 rounded-full bottom-[30%] -left-[5px]"></div>
-            <FileText size={38} strokeWidth={1.2} className="relative z-10" />
-            <div className="absolute right-[-2px] bottom-[2px] bg-[#f8fafc] rounded-full p-0.5 z-20">
-              <CheckCircle2 size={12} strokeWidth={2} className="text-gray-400" />
+          <div className="relative text-muted-foreground flex items-center justify-center">
+            <div className="absolute w-[40px] h-[3px] bg-border rounded-full top-[30%] -left-[10px]"></div>
+            <div className="absolute w-[20px] h-[3px] bg-border rounded-full bottom-[30%] -left-[5px]"></div>
+            <FileText size={38} strokeWidth={1.2} className="relative z-10 text-muted-foreground/60" />
+            <div className="absolute right-[-2px] bottom-[2px] bg-card rounded-full p-0.5 z-20">
+              <CheckCircle2 size={12} strokeWidth={2} className="text-muted-foreground/60" />
             </div>
           </div>
-          <p className="text-[14px] text-gray-500 font-medium">{emptyText}</p>
+          <p className="text-[14px] text-muted-foreground font-medium">{emptyText}</p>
         </div>
       </div>
     </m.div>
@@ -257,63 +257,48 @@ export default function HomePage() {
 
   return (
     <div className="p-4 md:p-6 w-full h-full min-h-screen bg-transparent">
-      <div className="w-full space-y-6">
-        
-        {/* Quota Stats Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 xl:gap-6">
-          <div className="bg-white border text-card-foreground shadow-sm rounded-xl p-5 flex flex-col gap-1.5 transition-all duration-200 hover:shadow-md border-slate-200">
-            <div className="flex items-center gap-3 mb-2">
-              <span className="p-2.5 flex items-center justify-center rounded-lg bg-indigo-50/80 text-indigo-600 border border-indigo-100">
-                <Umbrella className="w-5 h-5" strokeWidth={2} />
-              </span>
-              <h3 className="text-sm font-semibold text-slate-700 leading-tight">Ngày nghỉ phép</h3>
-            </div>
-            <div className="flex items-baseline gap-1.5 mt-2">
-              <span className="text-[28px] font-extrabold tracking-tight text-[#2E3192]">12</span>
-              <span className="text-[22px] font-bold text-slate-300">/</span>
-              <span className="text-[22px] font-bold text-slate-400">12</span>
-              <span className="text-sm text-slate-500 font-medium ml-1">ngày / năm</span>
-            </div>
-          </div>
-
-          <div className="bg-white border text-card-foreground shadow-sm rounded-xl p-5 flex flex-col gap-1.5 transition-all duration-200 hover:shadow-md border-slate-200">
-            <div className="flex items-center gap-3 mb-2">
-              <span className="p-2.5 flex items-center justify-center rounded-lg bg-purple-50/80 text-purple-600 border border-purple-100">
-                <Home className="w-5 h-5" strokeWidth={2} />
-              </span>
-              <h3 className="text-sm font-semibold text-slate-700 leading-tight">Ngày WFH</h3>
-            </div>
-            <div className="flex items-baseline gap-1.5 mt-2">
-              <span className="text-[28px] font-extrabold tracking-tight text-purple-700">6</span>
-              <span className="text-[22px] font-bold text-slate-300">/</span>
-              <span className="text-[22px] font-bold text-slate-400">6</span>
-              <span className="text-sm text-slate-500 font-medium ml-1">ngày / năm</span>
-            </div>
-          </div>
-
-          <div className="bg-white border text-card-foreground shadow-sm rounded-xl p-5 flex flex-col gap-1.5 transition-all duration-200 hover:shadow-md border-slate-200">
-            <div className="flex items-center gap-3 mb-2">
-              <span className="p-2.5 flex items-center justify-center rounded-lg bg-rose-50/80 text-rose-600 border border-rose-100">
-                <CheckCircle2 className="w-5 h-5" strokeWidth={2} />
-              </span>
-              <h3 className="text-sm font-semibold text-slate-700 leading-tight">Quên Check-in/out</h3>
-            </div>
-            <div className="flex items-baseline gap-1.5 mt-2">
-              <span className="text-[28px] font-extrabold tracking-tight text-rose-700">2</span>
-              <span className="text-[22px] font-bold text-slate-300">/</span>
-              <span className="text-[22px] font-bold text-slate-400">2</span>
-              <span className="text-sm text-slate-500 font-medium ml-1">lần / tuần</span>
-            </div>
-          </div>
-        </div>
-
+      <div className="w-full">
         {/* Main Grid container */}
         <div className="grid grid-cols-1 md:grid-cols-12 lg:grid-cols-12 gap-6 items-start">
 
-          {/* Left Column (Task Lists) - Takes 7/12 on large */}
-          <div className="md:col-span-7 xl:col-span-8 flex flex-col gap-5 h-full">
+          {/* Left Column - Takes 7/12 on large */}
+          <div className="md:col-span-7 xl:col-span-8 flex flex-col gap-6 h-full">
+            
+            {/* Quota Stats Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 xl:gap-6">
+              <div className="bg-card border-border text-card-foreground shadow-sm rounded-2xl p-5 flex flex-col gap-1.5 transition-all duration-200 hover:shadow-md border">
+                <div className="flex items-center gap-3 mb-2">
+                  <span className="p-2.5 flex items-center justify-center rounded-lg bg-indigo-50/80 text-indigo-600 border border-indigo-100">
+                    <Umbrella className="w-5 h-5" strokeWidth={2} />
+                  </span>
+                  <h3 className="text-sm font-semibold text-slate-700 leading-tight">Ngày nghỉ phép</h3>
+                </div>
+                <div className="flex items-baseline gap-1.5 mt-2">
+                  <span className="text-[28px] font-extrabold tracking-tight text-[#2E3192]">{session?.currentLeaveDays ?? 0}</span>
+                  <span className="text-[22px] font-bold text-slate-300">/</span>
+                  <span className="text-[22px] font-bold text-slate-400">{session?.maxLeaveDays ?? 0}</span>
+                  <span className="text-sm text-slate-500 font-medium ml-1">ngày / năm</span>
+                </div>
+              </div>
+
+              <div className="bg-card border-border text-card-foreground shadow-sm rounded-2xl p-5 flex flex-col gap-1.5 transition-all duration-200 hover:shadow-md border">
+                <div className="flex items-center gap-3 mb-2">
+                  <span className="p-2.5 flex items-center justify-center rounded-lg bg-purple-50/80 text-purple-600 border border-purple-100">
+                    <Home className="w-5 h-5" strokeWidth={2} />
+                  </span>
+                  <h3 className="text-sm font-semibold text-slate-700 leading-tight">Ngày WFH</h3>
+                </div>
+                <div className="flex items-baseline gap-1.5 mt-2">
+                  <span className="text-[28px] font-extrabold tracking-tight text-purple-700">{session?.currentWfhDays ?? 0}</span>
+                  <span className="text-[22px] font-bold text-slate-300">/</span>
+                  <span className="text-[22px] font-bold text-slate-400">{session?.maxWfhDays ?? 0}</span>
+                  <span className="text-sm text-slate-500 font-medium ml-1">ngày / năm</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Task Lists */}
             <IntegratedTaskCard />
-            {/* <TopSalesTable /> */}
           </div>
 
           {/* Right Column - Takes 5/12 on large */}
@@ -328,13 +313,19 @@ export default function HomePage() {
             >
               {/* Header */}
               <div className="flex items-center justify-between p-5 border-b border-border shrink-0">
-                <div className="flex flex-col gap-0.5">
+                <div className="flex flex-col gap-1">
                   <div className="flex items-center gap-2">
                     <h2 className="text-xl font-medium text-foreground">{displayDate}</h2>
                   </div>
-                  <span className="text-[13px] text-muted-foreground font-medium">
-                    Mã ca làm việc: <span className="text-indigo-600 font-semibold">{todayAttendance?.attendanceCode || 'Chưa xếp ca'}</span>
-                  </span>
+                  <div className="text-[13px] text-muted-foreground font-medium flex items-center gap-1.5">
+                    <span className="text-indigo-600 font-semibold px-2 py-0.5 bg-indigo-50 rounded-md border border-indigo-100">Ca {todayAttendance?.attendanceCode || '-'}</span>
+                    {todayAttendance?.scheduledCheckIn && todayAttendance?.scheduledCheckOut && (
+                      <span className="text-gray-500 font-normal flex items-center gap-1">
+                        <Clock size={12} />
+                        {todayAttendance.scheduledCheckIn.substring(0, 5)} - {todayAttendance.scheduledCheckOut.substring(0, 5)}
+                      </span>
+                    )}
+                  </div>
                 </div>
                 <div className="flex items-center gap-4 text-muted-foreground">
                   <button onClick={() => setSelectedDate(prev => addDays(prev, -1))} className="hover:text-foreground transition-colors p-1 flex items-center justify-center">
@@ -370,9 +361,6 @@ export default function HomePage() {
                   <div className="flex flex-col">
                     <div className="flex items-center gap-2">
                       <span className="text-[#1f2937] font-medium text-[13px]">Giờ vào</span>
-                      {todayAttendance?.scheduledCheckIn && (
-                        <span className="text-[11px] text-muted-foreground font-medium bg-black/5 px-1.5 rounded border border-black/5">Lịch: {todayAttendance.scheduledCheckIn.substring(0, 5)}</span>
-                      )}
                     </div>
                     <div className={`text-[24px] font-bold tracking-tight mt-1 flex items-baseline gap-1 ${hasCheckIn ? inStatus.color : 'text-[#94a3b8]'}`}>
                       {checkInDisplay}<span className="text-[12px] ml-0.5">{checkInAmPm}</span>
@@ -394,9 +382,6 @@ export default function HomePage() {
                   <div className="flex flex-col">
                     <div className="flex items-center gap-2">
                       <span className="text-[#1f2937] font-medium text-[13px]">Giờ ra</span>
-                      {todayAttendance?.scheduledCheckOut && (
-                        <span className="text-[11px] text-muted-foreground font-medium bg-black/5 px-1.5 rounded border border-black/5">Lịch: {todayAttendance.scheduledCheckOut.substring(0, 5)}</span>
-                      )}
                     </div>
                     <div className={`text-[24px] font-bold tracking-tight mt-1 flex items-baseline gap-1 ${hasCheckOut ? outStatus.color : hasCheckIn ? 'text-[#f59e0b]' : 'text-[#94a3b8]'}`}>
                       {checkOutDisplay}<span className="text-[12px] ml-0.5">{checkOutAmPm}</span>
@@ -413,17 +398,25 @@ export default function HomePage() {
                   </div>
                 </div>
 
-                {/* Work time */}
-                <div className="bg-[#eff6ff] rounded-xl p-4 flex items-center justify-between relative overflow-hidden">
-                  <div className="flex flex-col">
-                    <span className="text-[#1f2937] font-medium text-[13px]">Thời gian làm việc</span>
-                    <div className="text-[28px] font-bold text-[#3b82f6] tracking-tight mt-1">
+                {/* Work time & Unit */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="bg-[#eff6ff] rounded-xl p-4 flex flex-col justify-center relative overflow-hidden">
+                    <div className="flex items-center gap-2 mb-1 text-[#3b82f6]">
+                      <Clock size={16} strokeWidth={2} />
+                      <span className="text-[#1f2937] font-medium text-[13px]">Thời gian làm</span>
+                    </div>
+                    <div className="text-[24px] font-bold text-[#3b82f6] tracking-tight">
                       {workTimeStr}
                     </div>
                   </div>
-                  <div className="flex flex-col items-end justify-center">
-                    <div className="bg-[#3b82f6]/10 text-[#3b82f6] rounded-full p-2.5 shrink-0 border border-[#3b82f6]/20">
-                      <Clock size={22} strokeWidth={2} />
+                  
+                  <div className="bg-emerald-50 rounded-xl p-4 flex flex-col justify-center relative overflow-hidden">
+                    <div className="flex items-center gap-2 mb-1 text-emerald-600">
+                      <CheckCircle2 size={16} strokeWidth={2} />
+                      <span className="text-[#1f2937] font-medium text-[13px]">Ngày công</span>
+                    </div>
+                    <div className="text-[24px] font-bold text-emerald-600 tracking-tight flex items-baseline gap-1">
+                      {todayAttendance?.workUnit || 0} <span className="text-[14px] font-medium text-emerald-600/70">công</span>
                     </div>
                   </div>
                 </div>

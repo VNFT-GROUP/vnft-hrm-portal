@@ -96,15 +96,21 @@ export default function ServerSettingsPage() {
                   </CardHeader>
                   <CardContent className="space-y-4 pt-5 bg-slate-50/50">
                     <div className="flex justify-between items-center bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
-                      <Label className="text-[14px] font-semibold text-slate-700">{t("serverSettings.lateGrace")}</Label>
-                      <span className="font-bold text-indigo-700 bg-indigo-50 border border-indigo-100 px-3.5 py-1.5 rounded-lg text-sm">
+                      <div className="flex flex-col gap-1 max-w-[70%]">
+                        <Label className="text-[14px] font-semibold text-slate-700">{t("serverSettings.lateGrace")}</Label>
+                        <span className="text-[12px] text-slate-500 leading-snug">{t("serverSettings.lateGraceNote")}</span>
+                      </div>
+                      <span className="font-bold text-indigo-700 bg-indigo-50 border border-indigo-100 px-3.5 py-1.5 rounded-lg text-sm shrink-0">
                         {settings.attendance.lateGraceMinutes} {t("serverSettings.unitMinutes")}
                       </span>
                     </div>
 
                     <div className="flex justify-between items-center bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
-                      <Label className="text-[14px] font-semibold text-slate-700">{t("serverSettings.earlyLeave")}</Label>
-                      <span className="font-bold text-rose-700 bg-rose-50 border border-rose-100 px-3.5 py-1.5 rounded-lg text-sm">
+                      <div className="flex flex-col gap-1 max-w-[70%]">
+                        <Label className="text-[14px] font-semibold text-slate-700">{t("serverSettings.earlyLeave")}</Label>
+                        <span className="text-[12px] text-slate-500 leading-snug">{t("serverSettings.earlyLeaveNote")}</span>
+                      </div>
+                      <span className="font-bold text-rose-700 bg-rose-50 border border-rose-100 px-3.5 py-1.5 rounded-lg text-sm shrink-0">
                         {settings.attendance.earlyLeaveGraceMinutes} {t("serverSettings.unitMinutes")}
                       </span>
                     </div>

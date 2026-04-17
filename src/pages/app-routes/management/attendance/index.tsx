@@ -172,7 +172,7 @@ export default function AttendancePage() {
           <span className="p-2.5 bg-[#2E3192]/10 text-[#2E3192] rounded-xl shadow-sm border border-[#2E3192]/10">
             <CalendarIcon size={24} />
           </span>
-          {t("attendance.title", { defaultValue: "Quản lý chấm công (Log)" })}
+          {t("attendance.title", { defaultValue: "Hikvision - Bản ghi" })}
         </h1>
         <p className="text-muted-foreground text-sm md:text-base ml-1">
           {t("attendance.subtitle", {

@@ -14,7 +14,7 @@ export default {
   groups: "Nhóm quyền",
   systemManagement: "Quản lý Hệ Thống",
   serverSettings: "Cài đặt hệ thống",
-  attendanceHistory: "Lịch sử Chấm công",
+  attendanceHistory: "Hikvision - Bản ghi",
   settings: "Cấu hình",
   customize: "Cá nhân hoá"
 };

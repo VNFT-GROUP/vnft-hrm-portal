@@ -128,8 +128,8 @@ export const useNavigationData = () => {
                     icon: <Settings size={16} />,
                   },
                   {
-                    label: t("sidebar.attendanceHistory", { defaultValue: "Bảng chấm công Raw" }),
-                    shortName: t("sidebar.attendanceHistoryShort", { defaultValue: "Bảng CC Raw" }),
+                    label: t("sidebar.attendanceHistory", { defaultValue: "Hikvision - Bản ghi" }),
+                    shortName: t("sidebar.attendanceHistoryShort", { defaultValue: "Hikvision Data" }),
                     path: "/app/management/attendance",
                     icon: <Calendar size={16} />,
                   },

@@ -1,41 +1,27 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { format, eachDayOfInterval, getDay } from "date-fns";
 import { vi } from "date-fns/locale";
 
 import { attendanceService } from "@/services/attendance";
-import type { MonthlyAttendanceResponse } from "@/types/attendance/MonthlyAttendanceResponse";
 import type { AttendanceDailySummaryResponse } from "@/types/attendance/AttendanceDailySummaryResponse";
-import { Loader2, Calendar as CalendarIcon, ChevronLeft, ChevronRight, X, CalendarCheck } from "lucide-react";
+import { Loader2, Calendar as CalendarIcon, ChevronLeft, ChevronRight, X, CalendarCheck, Briefcase, Target, Clock, UserX } from "lucide-react";
 import { motion } from "framer-motion";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useTranslation } from "react-i18next";
+import { useQuery } from "@tanstack/react-query";
 
 export default function MyAttendancePage() {
   const { t } = useTranslation();
-  const currentDate = new Date();
-  const [year, setYear] = useState<number>(currentDate.getFullYear());
-  const [month, setMonth] = useState<number>(currentDate.getMonth() + 1);
-  const [data, setData] = useState<MonthlyAttendanceResponse | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [year, setYear] = useState<number>(() => new Date().getFullYear());
+  const [month, setMonth] = useState<number>(() => new Date().getMonth() + 1);
   const [selectedRecord, setSelectedRecord] = useState<(AttendanceDailySummaryResponse & { dateObj: Date }) | null>(null);
 
-  const fetchData = async (y: number, m: number) => {
-    setLoading(true);
-    try {
-      const res = await attendanceService.getCurrentUserMonthlyAttendance(y, m);
-      if (res.data) {
-        setData(res.data);
-      }
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { data: responseData, isLoading: loading } = useQuery({
+    queryKey: ["my-attendance", year, month],
+    queryFn: () => attendanceService.getCurrentUserMonthlyAttendance(year, month)
+  });
 
-  useEffect(() => {
-    fetchData(year, month);
-  }, [year, month]);
+  const data = responseData?.data;
 
   const handlePrevMonth = () => {
     if (month === 1) {
@@ -96,6 +82,54 @@ export default function MyAttendancePage() {
             </button>
           </div>
         </div>
+
+        {!loading && data && (
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="grid grid-cols-2 sm:grid-cols-4 gap-3 lg:gap-4"
+          >
+            <div className="bg-white border border-slate-200 rounded-xl p-3.5 sm:p-4 flex flex-col justify-center gap-1.5 shadow-sm">
+              <div className="flex items-center gap-2">
+                <div className="p-1.5 bg-indigo-50 text-indigo-600 rounded-md">
+                  <Briefcase size={16} strokeWidth={2.5} />
+                </div>
+                <span className="text-[12px] font-bold text-slate-500 uppercase tracking-wider">{t("myAttendance.summary.workingDays")}</span>
+              </div>
+              <span className="text-2xl sm:text-3xl font-black text-[#1E2062]">{data.summary?.workingDays ?? 0}</span>
+            </div>
+
+            <div className="bg-white border border-slate-200 rounded-xl p-3.5 sm:p-4 flex flex-col justify-center gap-1.5 shadow-sm">
+              <div className="flex items-center gap-2">
+                <div className="p-1.5 bg-indigo-50 text-indigo-600 rounded-md">
+                  <Target size={16} strokeWidth={2.5} />
+                </div>
+                <span className="text-[12px] font-bold text-slate-500 uppercase tracking-wider">{t("myAttendance.summary.workUnits")}</span>
+              </div>
+              <span className="text-2xl sm:text-3xl font-black text-[#1E2062]">{data.summary?.workUnits ?? 0}</span>
+            </div>
+
+            <div className="bg-white border border-slate-200 rounded-xl p-3.5 sm:p-4 flex flex-col justify-center gap-1.5 shadow-sm">
+              <div className="flex items-center gap-2">
+                <div className="p-1.5 bg-indigo-50 text-indigo-600 rounded-md">
+                  <Clock size={16} strokeWidth={2.5} />
+                </div>
+                <span className="text-[12px] font-bold text-slate-500 uppercase tracking-wider">{t("myAttendance.summary.lateDays")}</span>
+              </div>
+              <span className="text-2xl sm:text-3xl font-black text-[#1E2062]">{data.summary?.lateDays ?? 0}</span>
+            </div>
+
+            <div className="bg-white border border-slate-200 rounded-xl p-3.5 sm:p-4 flex flex-col justify-center gap-1.5 shadow-sm">
+              <div className="flex items-center gap-2">
+                <div className="p-1.5 bg-indigo-50 text-indigo-600 rounded-md">
+                  <UserX size={16} strokeWidth={2.5} />
+                </div>
+                <span className="text-[12px] font-bold text-slate-500 uppercase tracking-wider">{t("myAttendance.summary.absentDays")}</span>
+              </div>
+              <span className="text-2xl sm:text-3xl font-black text-[#1E2062]">{data.summary?.absentDays ?? 0}</span>
+            </div>
+          </motion.div>
+        )}
 
         {/* Content */}
         <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden min-h-[400px] flex flex-col">
@@ -205,11 +239,6 @@ export default function MyAttendancePage() {
                               ) : (
                                 <div className="flex items-center justify-center grow pb-4">
                                   <span className="text-[11px] font-medium text-slate-300 italic">--</span>
-                                </div>
-                              )}
-                              {hasData && (
-                                <div className="mt-auto pt-1 opacity-0 group-hover:opacity-100 transition-all duration-200 transform translate-y-1 group-hover:translate-y-0 text-indigo-600 bg-indigo-50 hover:bg-indigo-100 text-[11px] font-bold py-1.5 rounded-md w-full flex flex-col items-center justify-center border border-indigo-100 shadow-sm cursor-pointer">
-                                  {t("myAttendance.viewDetails")}
                                 </div>
                               )}
                             </div>

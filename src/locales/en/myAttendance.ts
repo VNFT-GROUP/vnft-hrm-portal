@@ -36,5 +36,11 @@ export default {
   statusDisabled: "DISABLED",
   firstSynced: "First synced",
   lastUpdated: "Last updated",
-  storageId: "Storage ID"
+  storageId: "Storage ID",
+  summary: {
+    workingDays: "Working Days",
+    workUnits: "Work Units",
+    lateDays: "Late Days",
+    absentDays: "Absent Days"
+  }
 };

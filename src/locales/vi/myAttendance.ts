@@ -36,5 +36,11 @@ export default {
   statusDisabled: "VÔ HIỆU HÓA",
   firstSynced: "Ngày đồng bộ đầu tiên",
   lastUpdated: "Cập nhật lần cuối",
-  storageId: "ID Lưu trữ"
+  storageId: "ID Lưu trữ",
+  summary: {
+    workingDays: "Ngày đi làm",
+    workUnits: "Công ghi nhận",
+    lateDays: "Số ngày đi muộn",
+    absentDays: "Số ngày vắng"
+  }
 };

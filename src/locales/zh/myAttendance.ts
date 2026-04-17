@@ -36,5 +36,11 @@ export default {
   statusDisabled: "停用",
   firstSynced: "首次同步",
   lastUpdated: "最后更新",
-  storageId: "存储 ID"
+  storageId: "存储 ID",
+  summary: {
+    workingDays: "工作日数",
+    workUnits: "总计工时",
+    lateDays: "迟到天数",
+    absentDays: "缺勤天数"
+  }
 };

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { format, eachDayOfInterval, getDay, parseISO } from "date-fns";
+import { format, eachDayOfInterval, getDay } from "date-fns";
 import { vi } from "date-fns/locale";
 
 import { attendanceService } from "@/services/attendance";
@@ -314,33 +314,9 @@ export default function MyAttendancePage() {
                     <span className="text-slate-500 font-medium">{t("myAttendance.empCode")}</span>
                     <span className="text-slate-900 font-bold bg-slate-100 px-2.5 py-0.5 rounded border border-slate-200">{selectedRecord.employeeCode || '--'}</span>
                   </div>
-                  <div className="flex items-center justify-between text-sm py-2.5 border-b border-slate-100">
+                  <div className="flex items-center justify-between text-sm py-2.5">
                     <span className="text-slate-500 font-medium">{t("myAttendance.shiftSchedule")}</span>
                     <span className="text-slate-700 font-medium bg-slate-50 px-2 py-0.5 rounded border border-slate-200 text-xs">{selectedRecord.scheduledCheckIn?.substring(0,5) || '--'} - {selectedRecord.scheduledCheckOut?.substring(0,5) || '--'}</span>
-                  </div>
-
-                  <div className="text-[11px] uppercase tracking-widest text-slate-400 font-bold mb-1 mt-5">{t("myAttendance.systemSection")}</div>
-                  <div className="flex items-center justify-between text-sm py-2.5 border-b border-slate-100">
-                    <span className="text-slate-500 font-medium">{t("myAttendance.recordStatus")}</span>
-                    <span className="text-slate-900 font-medium">
-                      {selectedRecord.active !== false ? (
-                        <span className="text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full text-[11px] font-bold tracking-wide">{t("myAttendance.statusActive")}</span>
-                      ) : (
-                        <span className="text-rose-700 bg-rose-50 border border-rose-200 px-2.5 py-0.5 rounded-full text-[11px] font-bold tracking-wide">{t("myAttendance.statusDisabled")}</span>
-                      )}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between text-[13px] py-2.5 border-b border-slate-100">
-                    <span className="text-slate-500 font-medium">{t("myAttendance.firstSynced")}</span>
-                    <span className="text-slate-600 font-mono tracking-tight">{selectedRecord.createdAt ? format(parseISO(selectedRecord.createdAt), "dd/MM/yyyy HH:mm:ss") : '--'}</span>
-                  </div>
-                  <div className="flex items-center justify-between text-[13px] py-2.5 border-b border-slate-100">
-                    <span className="text-slate-500 font-medium">{t("myAttendance.lastUpdated")}</span>
-                    <span className="text-slate-600 font-mono tracking-tight">{selectedRecord.updatedAt ? format(parseISO(selectedRecord.updatedAt), "dd/MM/yyyy HH:mm:ss") : '--'}</span>
-                  </div>
-                  <div className="flex items-center justify-between text-[13px] py-2.5">
-                    <span className="text-slate-500 font-medium">{t("myAttendance.storageId")}</span>
-                    <span className="text-slate-400 font-mono text-[10px] break-all max-w-[150px] text-right">{selectedRecord.id || '--'}</span>
                   </div>
                 </div>
 

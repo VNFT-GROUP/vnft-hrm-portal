@@ -8,8 +8,10 @@ import type { AttendanceDailySummaryResponse } from "@/types/attendance/Attendan
 import { Loader2, Calendar as CalendarIcon, ChevronLeft, ChevronRight, X, CalendarCheck } from "lucide-react";
 import { motion } from "framer-motion";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { useTranslation } from "react-i18next";
 
 export default function MyAttendancePage() {
+  const { t } = useTranslation();
   const currentDate = new Date();
   const [year, setYear] = useState<number>(currentDate.getFullYear());
   const [month, setMonth] = useState<number>(currentDate.getMonth() + 1);
@@ -68,10 +70,10 @@ export default function MyAttendancePage() {
               <span className="p-2.5 bg-[#2E3192]/10 text-[#2E3192] rounded-xl flex items-center justify-center">
                 <CalendarCheck size={26} strokeWidth={2.5} />
               </span>
-              Bảng công của tôi
+              {t("myAttendance.title")}
             </h1>
             <p className="text-muted-foreground text-sm md:text-base ml-1">
-              Theo dõi lịch sử điểm danh và thời gian làm việc hàng tháng.
+              {t("myAttendance.subtitle")}
             </p>
           </motion.div>
 
@@ -84,7 +86,7 @@ export default function MyAttendancePage() {
             </button>
             <div className="flex items-center gap-2 font-medium text-slate-700 min-w-[120px] justify-center text-[15px]">
               <CalendarIcon size={18} className="text-indigo-600" />
-              Tháng {month}/{year}
+              {t("myAttendance.monthPrefix")} {month}/{year}
             </div>
             <button
               onClick={handleNextMonth}
@@ -100,13 +102,21 @@ export default function MyAttendancePage() {
           {loading ? (
             <div className="flex-1 flex flex-col items-center justify-center text-slate-500 p-12">
               <Loader2 className="w-8 h-8 animate-spin text-indigo-600 mb-4" />
-              <p>Đang tải dữ liệu chấm công...</p>
+              <p>{t("myAttendance.loading")}</p>
             </div>
           ) : (
             <div className="bg-slate-200 border-x border-b border-slate-200">
               {/* Header Days */}
               <div className="grid grid-cols-7 gap-px border-b border-slate-200">
-                {['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'].map(d => (
+                {[
+                  t("myAttendance.days.mon"), 
+                  t("myAttendance.days.tue"), 
+                  t("myAttendance.days.wed"), 
+                  t("myAttendance.days.thu"), 
+                  t("myAttendance.days.fri"), 
+                  t("myAttendance.days.sat"), 
+                  t("myAttendance.days.sun")
+                ].map(d => (
                   <div key={d} className="bg-slate-50/80 py-3 text-center text-[13px] font-semibold text-slate-600 uppercase tracking-widest">
                     {d}
                   </div>
@@ -154,7 +164,7 @@ export default function MyAttendancePage() {
                             <div className="flex justify-between items-start w-full">
                               {hasData && record?.workUnit !== undefined && record.workUnit > 0 ? (
                                 <span className="bg-amber-100/80 text-amber-700 font-bold text-[11px] px-1.5 py-0.5 rounded border border-amber-200">
-                                  {Number(record.workUnit.toFixed(2))} Công
+                                  {Number(record.workUnit.toFixed(2))} {t("myAttendance.workUnitSign")}
                                 </span>
                               ) : <span />}
                               <span className={`text-[13px] font-bold w-auto min-w-[28px] h-7 px-2 flex items-center justify-center rounded-md transition-colors ${
@@ -171,7 +181,7 @@ export default function MyAttendancePage() {
                                     <div className={`flex items-center justify-between rounded px-2 py-1 border ${
                                       record.checkInValid === false ? 'bg-rose-50/80 border-rose-200' : 'bg-emerald-50/80 border-emerald-100'
                                     }`}>
-                                      <span className={`text-[11px] font-medium ${record.checkInValid === false ? 'text-rose-500' : 'text-slate-500'}`}>Vào</span>
+                                      <span className={`text-[11px] font-medium ${record.checkInValid === false ? 'text-rose-500' : 'text-slate-500'}`}>{t("myAttendance.checkIn")}</span>
                                       <span className={`text-[12px] font-bold ${record.checkInValid === false ? 'text-rose-600' : 'text-emerald-700'}`}>
                                         {record.actualCheckIn.substring(0, 5)}
                                       </span>
@@ -181,7 +191,7 @@ export default function MyAttendancePage() {
                                     <div className={`flex items-center justify-between rounded px-2 py-1 border ${
                                       record.checkOutValid === false ? 'bg-rose-50/80 border-rose-200' : 'bg-emerald-50/80 border-emerald-100'
                                     }`}>
-                                      <span className={`text-[11px] font-medium ${record.checkOutValid === false ? 'text-rose-500' : 'text-slate-500'}`}>Ra</span>
+                                      <span className={`text-[11px] font-medium ${record.checkOutValid === false ? 'text-rose-500' : 'text-slate-500'}`}>{t("myAttendance.checkOut")}</span>
                                       <span className={`text-[12px] font-bold ${record.checkOutValid === false ? 'text-rose-600' : 'text-emerald-700'}`}>
                                         {record.actualCheckOut.substring(0, 5)}
                                       </span>
@@ -190,7 +200,7 @@ export default function MyAttendancePage() {
                                 </>
                               ) : record?.absent ? (
                                 <div className="flex items-center justify-center grow pb-4">
-                                  <span className="text-[10px] uppercase font-bold text-rose-400 bg-rose-50 px-2.5 py-0.5 rounded border border-rose-100">Vắng mặt</span>
+                                  <span className="text-[10px] uppercase font-bold text-rose-400 bg-rose-50 px-2.5 py-0.5 rounded border border-rose-100">{t("myAttendance.absent")}</span>
                                 </div>
                               ) : (
                                 <div className="flex items-center justify-center grow pb-4">
@@ -199,7 +209,7 @@ export default function MyAttendancePage() {
                               )}
                               {hasData && (
                                 <div className="mt-auto pt-1 opacity-0 group-hover:opacity-100 transition-all duration-200 transform translate-y-1 group-hover:translate-y-0 text-indigo-600 bg-indigo-50 hover:bg-indigo-100 text-[11px] font-bold py-1.5 rounded-md w-full flex flex-col items-center justify-center border border-indigo-100 shadow-sm cursor-pointer">
-                                  Xem chi tiết
+                                  {t("myAttendance.viewDetails")}
                                 </div>
                               )}
                             </div>
@@ -229,7 +239,7 @@ export default function MyAttendancePage() {
                 </button>
                 <DialogHeader className="space-y-1">
                   <DialogTitle className="text-xl font-bold flex flex-col text-white">
-                    Chi tiết điểm danh
+                    {t("myAttendance.modalTitle")}
                   </DialogTitle>
                   <DialogDescription className="text-indigo-100 font-medium opacity-90">
                     {format(selectedRecord.dateObj, "EEEE, dd/MM/yyyy", { locale: vi })}
@@ -242,7 +252,7 @@ export default function MyAttendancePage() {
                 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="flex flex-col gap-1 p-4 rounded-xl bg-slate-50 border border-slate-100 items-center justify-center">
-                    <span className="text-[12px] font-semibold text-slate-400 uppercase tracking-widest bg-slate-100 px-2 py-0.5 rounded-full mb-1">Giờ Vào</span>
+                    <span className="text-[12px] font-semibold text-slate-400 uppercase tracking-widest bg-slate-100 px-2 py-0.5 rounded-full mb-1">{t("myAttendance.checkIn")}</span>
                     {selectedRecord.actualCheckIn ? (
                       <span className={`text-2xl font-bold ${selectedRecord.checkInValid === false ? 'text-rose-500' : 'text-emerald-600'}`}>
                         {selectedRecord.actualCheckIn.substring(0, 5)}
@@ -252,17 +262,17 @@ export default function MyAttendancePage() {
                     )}
                     {selectedRecord.actualCheckIn && (
                       selectedRecord.checkInValid === true ? (
-                        <span className="text-[11px] font-semibold text-emerald-600 bg-emerald-50 border border-emerald-100 px-2 py-0.5 rounded mt-1">Đúng giờ</span>
+                        <span className="text-[11px] font-semibold text-emerald-600 bg-emerald-50 border border-emerald-100 px-2 py-0.5 rounded mt-1">{t("myAttendance.onTime", { defaultValue: "Đúng giờ" })}</span>
                       ) : (
                         <span className="text-[11px] font-semibold text-rose-600 bg-rose-50 border border-rose-100 px-2 py-0.5 rounded mt-1">
-                          Đi muộn {selectedRecord.lateMinutes ? `${selectedRecord.lateMinutes}p` : ''}
+                          {t("myAttendance.late")} {selectedRecord.lateMinutes ? `${selectedRecord.lateMinutes}${t("myAttendance.unitMinute")}` : ''}
                         </span>
                       )
                     )}
                   </div>
                   
                   <div className="flex flex-col gap-1 p-4 rounded-xl bg-slate-50 border border-slate-100 items-center justify-center">
-                    <span className="text-[12px] font-semibold text-slate-400 uppercase tracking-widest bg-slate-100 px-2 py-0.5 rounded-full mb-1">Giờ Ra</span>
+                    <span className="text-[12px] font-semibold text-slate-400 uppercase tracking-widest bg-slate-100 px-2 py-0.5 rounded-full mb-1">{t("myAttendance.checkOut")}</span>
                     {selectedRecord.actualCheckOut ? (
                       <span className={`text-2xl font-bold ${selectedRecord.checkOutValid === false ? 'text-rose-600' : 'text-emerald-600'}`}>
                         {selectedRecord.actualCheckOut.substring(0, 5)}
@@ -272,10 +282,10 @@ export default function MyAttendancePage() {
                     )}
                     {selectedRecord.actualCheckOut && (
                       selectedRecord.checkOutValid === true ? (
-                         <span className="text-[11px] font-semibold text-emerald-600 bg-emerald-50 border border-emerald-100 px-2 py-0.5 rounded mt-1">Đúng giờ</span>
+                         <span className="text-[11px] font-semibold text-emerald-600 bg-emerald-50 border border-emerald-100 px-2 py-0.5 rounded mt-1">{t("myAttendance.onTime", { defaultValue: "Đúng giờ" })}</span>
                       ) : (
                          <span className="text-[11px] font-semibold text-rose-600 bg-rose-50 border border-rose-100 px-2 py-0.5 rounded mt-1">
-                           Về sớm {selectedRecord.earlyLeaveMinutes ? `${selectedRecord.earlyLeaveMinutes}p` : ''}
+                           {t("myAttendance.earlyLeave")} {selectedRecord.earlyLeaveMinutes ? `${selectedRecord.earlyLeaveMinutes}${t("myAttendance.unitMinute")}` : ''}
                          </span>
                       )
                     )}
@@ -283,53 +293,53 @@ export default function MyAttendancePage() {
                 </div>
 
                 <div className="flex flex-col gap-1 max-h-[50vh] overflow-y-auto pr-2 custom-scrollbar">
-                  <div className="text-[11px] uppercase tracking-widest text-slate-400 font-bold mb-1 border-b border-slate-100 pb-2">Chỉ số công</div>
+                  <div className="text-[11px] uppercase tracking-widest text-slate-400 font-bold mb-1 border-b border-slate-100 pb-2">{t("myAttendance.metricsSection")}</div>
                   <div className="grid grid-cols-2 gap-4 my-2">
                     <div className="flex flex-col items-center justify-center bg-indigo-50/50 rounded-lg p-3 border border-indigo-100/50">
-                       <span className="text-[11px] font-semibold text-slate-500 uppercase">Hệ Số Công</span>
+                       <span className="text-[11px] font-semibold text-slate-500 uppercase">{t("myAttendance.workCoefficient")}</span>
                        <span className="text-lg font-bold text-indigo-700">{selectedRecord.workUnit !== undefined ? Number(selectedRecord.workUnit.toFixed(2)) : 0}</span>
                     </div>
                     <div className="flex flex-col items-center justify-center bg-indigo-50/50 rounded-lg p-3 border border-indigo-100/50">
-                       <span className="text-[11px] font-semibold text-slate-500 uppercase">Thời gian làm</span>
-                       <span className="text-lg font-bold text-indigo-700">{selectedRecord.workMinutes ? `${Math.floor(selectedRecord.workMinutes / 60)}h${selectedRecord.workMinutes % 60}p` : '0p'}</span>
+                       <span className="text-[11px] font-semibold text-slate-500 uppercase">{t("myAttendance.workTime")}</span>
+                       <span className="text-lg font-bold text-indigo-700">{selectedRecord.workMinutes ? `${Math.floor(selectedRecord.workMinutes / 60)}${t("myAttendance.unitHour")}${selectedRecord.workMinutes % 60}${t("myAttendance.unitMinute")}` : `0${t("myAttendance.unitMinute")}`}</span>
                     </div>
                   </div>
 
-                  <div className="text-[11px] uppercase tracking-widest text-slate-400 font-bold mb-1 mt-4">Thông tin nhân sự</div>
+                  <div className="text-[11px] uppercase tracking-widest text-slate-400 font-bold mb-1 mt-4">{t("myAttendance.personnelSection")}</div>
                   <div className="flex items-center justify-between text-sm py-2.5 border-b border-slate-100">
-                    <span className="text-slate-500 font-medium">Họ & Tên</span>
+                    <span className="text-slate-500 font-medium">{t("myAttendance.fullName")}</span>
                     <span className="text-slate-900 font-medium">{selectedRecord.employeeName || '--'}</span>
                   </div>
                   <div className="flex items-center justify-between text-sm py-2.5 border-b border-slate-100">
-                    <span className="text-slate-500 font-medium">Mã Nhân Viên</span>
+                    <span className="text-slate-500 font-medium">{t("myAttendance.empCode")}</span>
                     <span className="text-slate-900 font-bold bg-slate-100 px-2.5 py-0.5 rounded border border-slate-200">{selectedRecord.employeeCode || '--'}</span>
                   </div>
                   <div className="flex items-center justify-between text-sm py-2.5 border-b border-slate-100">
-                    <span className="text-slate-500 font-medium">Lịch ca làm</span>
+                    <span className="text-slate-500 font-medium">{t("myAttendance.shiftSchedule")}</span>
                     <span className="text-slate-700 font-medium bg-slate-50 px-2 py-0.5 rounded border border-slate-200 text-xs">{selectedRecord.scheduledCheckIn?.substring(0,5) || '--'} - {selectedRecord.scheduledCheckOut?.substring(0,5) || '--'}</span>
                   </div>
 
-                  <div className="text-[11px] uppercase tracking-widest text-slate-400 font-bold mb-1 mt-5">Thông tin hệ thống</div>
+                  <div className="text-[11px] uppercase tracking-widest text-slate-400 font-bold mb-1 mt-5">{t("myAttendance.systemSection")}</div>
                   <div className="flex items-center justify-between text-sm py-2.5 border-b border-slate-100">
-                    <span className="text-slate-500 font-medium">Trạng thái Record</span>
+                    <span className="text-slate-500 font-medium">{t("myAttendance.recordStatus")}</span>
                     <span className="text-slate-900 font-medium">
                       {selectedRecord.active !== false ? (
-                        <span className="text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full text-[11px] font-bold tracking-wide">HOẠT ĐỘNG</span>
+                        <span className="text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full text-[11px] font-bold tracking-wide">{t("myAttendance.statusActive")}</span>
                       ) : (
-                        <span className="text-rose-700 bg-rose-50 border border-rose-200 px-2.5 py-0.5 rounded-full text-[11px] font-bold tracking-wide">VÔ HIỆU HÓA</span>
+                        <span className="text-rose-700 bg-rose-50 border border-rose-200 px-2.5 py-0.5 rounded-full text-[11px] font-bold tracking-wide">{t("myAttendance.statusDisabled")}</span>
                       )}
                     </span>
                   </div>
                   <div className="flex items-center justify-between text-[13px] py-2.5 border-b border-slate-100">
-                    <span className="text-slate-500 font-medium">Ngày đồng bộ đầu tiên</span>
+                    <span className="text-slate-500 font-medium">{t("myAttendance.firstSynced")}</span>
                     <span className="text-slate-600 font-mono tracking-tight">{selectedRecord.createdAt ? format(parseISO(selectedRecord.createdAt), "dd/MM/yyyy HH:mm:ss") : '--'}</span>
                   </div>
                   <div className="flex items-center justify-between text-[13px] py-2.5 border-b border-slate-100">
-                    <span className="text-slate-500 font-medium">Cập nhật lần cuối</span>
+                    <span className="text-slate-500 font-medium">{t("myAttendance.lastUpdated")}</span>
                     <span className="text-slate-600 font-mono tracking-tight">{selectedRecord.updatedAt ? format(parseISO(selectedRecord.updatedAt), "dd/MM/yyyy HH:mm:ss") : '--'}</span>
                   </div>
                   <div className="flex items-center justify-between text-[13px] py-2.5">
-                    <span className="text-slate-500 font-medium">ID Lưu trữ</span>
+                    <span className="text-slate-500 font-medium">{t("myAttendance.storageId")}</span>
                     <span className="text-slate-400 font-mono text-[10px] break-all max-w-[150px] text-right">{selectedRecord.id || '--'}</span>
                   </div>
                 </div>

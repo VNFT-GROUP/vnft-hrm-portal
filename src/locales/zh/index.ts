@@ -11,6 +11,7 @@ import settings from './settings';
 import management from './management';
 import serverSettings from './serverSettings';
 import attendance from './attendance';
+import myAttendance from './myAttendance';
 
 export default {
   profile,
@@ -25,5 +26,6 @@ export default {
   dropdowns,
   management,
   serverSettings,
-  attendance
+  attendance,
+  myAttendance
 };

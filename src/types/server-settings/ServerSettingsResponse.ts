@@ -1,4 +1,4 @@
-import { AttendanceSettingsResponse } from "../attendance/AttendanceSettingsResponse";
+import type { AttendanceSettingsResponse } from "../attendance/AttendanceSettingsResponse";
 
 export interface ServerSettingsResponse {
   timeZone: string;

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { m  } from 'framer-motion';
-import { ChevronLeft, ChevronRight, CheckCircle2, Clock, CalendarDays, FileText, Umbrella, Home } from "lucide-react";
+import { ChevronLeft, ChevronRight, CheckCircle2, Clock, CalendarDays, FileText, Umbrella, Home, Activity } from "lucide-react";
 import { useAuthStore } from "@/store/useAuthStore";
 import { format, parseISO, addDays } from "date-fns";
 import { vi } from "date-fns/locale";
@@ -8,6 +8,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Calendar } from "@/components/ui/calendar";
 import { attendanceService } from "@/services/attendance";
 import type { AttendanceDailySummaryResponse } from "@/types/attendance/AttendanceDailySummaryResponse";
+import { useTranslation } from "react-i18next";
 
 /*
 const mockTopSales = [
@@ -127,13 +128,14 @@ const TopSalesTable = () => {
 */
 
 const IntegratedTaskCard = () => {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<'requests' | 'assets' | 'reminders'>('requests');
 
   const emptyText = activeTab === 'requests'
-    ? 'Thật tuyệt. Bạn đã xử lý hết các đơn từ!'
+    ? t("dashboard.emptyStates.requests")
     : activeTab === 'assets'
-      ? 'Không có yêu cầu tài sản nào cần xử lý.'
-      : 'Không có nhắc nhở nào cho bạn.';
+      ? t("dashboard.emptyStates.assets")
+      : t("dashboard.emptyStates.reminders");
 
   return (
     <m.div
@@ -149,19 +151,19 @@ const IntegratedTaskCard = () => {
             onClick={() => setActiveTab('requests')}
             className={`pb-3 pt-2 text-[13px] sm:text-[14px] transition-colors whitespace-nowrap ${activeTab === 'requests' ? 'font-semibold text-primary border-b-2 border-primary' : 'font-medium text-muted-foreground hover:text-foreground'}`}
           >
-            Đơn từ
+            {t("dashboard.tasks.requests")}
           </button>
           <button
             onClick={() => setActiveTab('assets')}
             className={`pb-3 pt-2 text-[13px] sm:text-[14px] transition-colors whitespace-nowrap ${activeTab === 'assets' ? 'font-semibold text-primary border-b-2 border-primary' : 'font-medium text-muted-foreground hover:text-foreground'}`}
           >
-            Tài sản
+            {t("dashboard.tasks.assets")}
           </button>
           <button
             onClick={() => setActiveTab('reminders')}
             className={`pb-3 pt-2 text-[13px] sm:text-[14px] transition-colors whitespace-nowrap ${activeTab === 'reminders' ? 'font-semibold text-primary border-b-2 border-primary' : 'font-medium text-muted-foreground hover:text-foreground'}`}
           >
-            Nhắc nhở
+            {t("dashboard.tasks.reminders")}
           </button>
         </div>
       </div>
@@ -185,6 +187,7 @@ const IntegratedTaskCard = () => {
 };
 
 export default function HomePage() {
+  const { t } = useTranslation();
   const session = useAuthStore(state => state.session);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [attendanceData, setAttendanceData] = useState<AttendanceDailySummaryResponse | undefined>(session?.todayAttendance);
@@ -234,18 +237,18 @@ export default function HomePage() {
   const hasCheckOut = !!checkOutVal;
 
   const getCheckInStatus = () => {
-    if (!hasCheckIn) return { text: "Chưa ghi nhận", color: "text-[#64748b]", bg: "bg-[#cbd5e1]", cardBg: "bg-[#f1f5f9]" };
-    if (todayAttendance?.checkInValid) return { text: "Đến đúng giờ", color: "text-[#22c55e]", bg: "bg-[#22c55e]", cardBg: "bg-[#eaf8f1]" };
-    return { text: `Đi muộn ${todayAttendance?.lateMinutes || 0}p`, color: "text-[#ef4444]", bg: "bg-[#ef4444]", cardBg: "bg-[#fef2f2]" };
+    if (!hasCheckIn) return { text: t("dashboard.attendanceCard.unrecorded"), color: "text-[#64748b]", bg: "bg-[#cbd5e1]", cardBg: "bg-[#f1f5f9]" };
+    if (todayAttendance?.checkInValid) return { text: t("dashboard.attendanceCard.onTime"), color: "text-[#22c55e]", bg: "bg-[#22c55e]", cardBg: "bg-[#eaf8f1]" };
+    return { text: t("dashboard.attendanceCard.late", { mins: todayAttendance?.lateMinutes || 0 }), color: "text-[#ef4444]", bg: "bg-[#ef4444]", cardBg: "bg-[#fef2f2]" };
   };
 
   const getCheckOutStatus = () => {
     if (!hasCheckOut) {
-      if (hasCheckIn) return { text: "Chưa ghi nhận", color: "text-[#f59e0b]", bg: "bg-[#f59e0b]", cardBg: "bg-[#fff7ed]" };
-      return { text: "—", color: "text-[#64748b]", bg: "bg-[#cbd5e1]", cardBg: "bg-[#f1f5f9]" };
+      if (hasCheckIn) return { text: t("dashboard.attendanceCard.unrecorded"), color: "text-[#f59e0b]", bg: "bg-[#f59e0b]", cardBg: "bg-[#fff7ed]" };
+      return { text: t("dashboard.attendanceCard.empty"), color: "text-[#64748b]", bg: "bg-[#cbd5e1]", cardBg: "bg-[#f1f5f9]" };
     }
-    if (todayAttendance?.checkOutValid) return { text: "Về đúng giờ", color: "text-[#22c55e]", bg: "bg-[#22c55e]", cardBg: "bg-[#eaf8f1]" };
-    return { text: `Về sớm ${todayAttendance?.earlyLeaveMinutes || 0}p`, color: "text-[#ef4444]", bg: "bg-[#ef4444]", cardBg: "bg-[#fef2f2]" };
+    if (todayAttendance?.checkOutValid) return { text: t("dashboard.attendanceCard.onTime"), color: "text-[#22c55e]", bg: "bg-[#22c55e]", cardBg: "bg-[#eaf8f1]" };
+    return { text: t("dashboard.attendanceCard.early", { mins: todayAttendance?.earlyLeaveMinutes || 0 }), color: "text-[#ef4444]", bg: "bg-[#ef4444]", cardBg: "bg-[#fef2f2]" };
   };
 
   const inStatus = getCheckInStatus();
@@ -264,38 +267,85 @@ export default function HomePage() {
           {/* Left Column - Takes 7/12 on large */}
           <div className="md:col-span-7 xl:col-span-8 flex flex-col gap-6 h-full">
             
-            {/* Quota Stats Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 xl:gap-6">
-              <div className="bg-card border-border text-card-foreground shadow-sm rounded-2xl p-5 flex flex-col gap-1.5 transition-all duration-200 hover:shadow-md border">
-                <div className="flex items-center gap-3 mb-2">
-                  <span className="p-2.5 flex items-center justify-center rounded-lg bg-indigo-50/80 text-indigo-600 border border-indigo-100">
-                    <Umbrella className="w-5 h-5" strokeWidth={2} />
-                  </span>
-                  <h3 className="text-sm font-semibold text-slate-700 leading-tight">Ngày nghỉ phép</h3>
+            {/* Unified Stats Card */}
+            <m.div
+              initial={{ opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.4 }}
+              className="bg-card w-full rounded-2xl border border-border shadow-sm flex flex-col overflow-hidden transition-all duration-200 hover:shadow-md"
+            >
+              <div className="px-5 py-4 bg-[#2E3192] flex items-center gap-2 shadow-sm relative overflow-hidden">
+                <div className="absolute right-0 top-0 opacity-10">
+                  <Activity className="w-32 h-32 -mt-10 -mr-10 text-white" />
                 </div>
-                <div className="flex items-baseline gap-1.5 mt-2">
-                  <span className="text-[28px] font-extrabold tracking-tight text-[#2E3192]">{session?.currentLeaveDays ?? 0}</span>
-                  <span className="text-[22px] font-bold text-slate-300">/</span>
-                  <span className="text-[22px] font-bold text-slate-400">{session?.maxLeaveDays ?? 0}</span>
-                  <span className="text-sm text-slate-500 font-medium ml-1">ngày / năm</span>
-                </div>
+                <Activity className="w-5 h-5 text-white relative z-10" />
+                <h3 className="text-[15px] font-semibold text-white relative z-10 tracking-wide">{t("dashboard.personalOverview")}</h3>
               </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-border">
+                {/* Left Panel: Quotas */}
+                <div className="p-5 flex flex-col bg-white/40 dark:bg-card">
+                  <h4 className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider mb-3">
+                    {t("dashboard.annualLimits")}
+                  </h4>
+                  
+                  <div className="flex flex-col">
+                    <div className="flex items-center justify-between py-3 border-b border-border/50">
+                      <div className="flex items-center gap-3">
+                        <Umbrella className="w-4 h-4 text-indigo-500" />
+                        <span className="text-[13px] font-medium text-slate-700">{t("dashboard.leaveDays")}</span>
+                      </div>
+                      <div className="flex items-baseline gap-1">
+                        <span className="text-[15px] font-semibold text-foreground">{session?.currentLeaveDays ?? 0}</span>
+                        <span className="text-[12px] text-muted-foreground">/ {session?.maxLeaveDays ?? 0} {t("dashboard.days")}</span>
+                      </div>
+                    </div>
 
-              <div className="bg-card border-border text-card-foreground shadow-sm rounded-2xl p-5 flex flex-col gap-1.5 transition-all duration-200 hover:shadow-md border">
-                <div className="flex items-center gap-3 mb-2">
-                  <span className="p-2.5 flex items-center justify-center rounded-lg bg-purple-50/80 text-purple-600 border border-purple-100">
-                    <Home className="w-5 h-5" strokeWidth={2} />
-                  </span>
-                  <h3 className="text-sm font-semibold text-slate-700 leading-tight">Ngày WFH</h3>
+                    <div className="flex items-center justify-between py-3">
+                      <div className="flex items-center gap-3">
+                        <Home className="w-4 h-4 text-purple-500" />
+                        <span className="text-[13px] font-medium text-slate-700">{t("dashboard.wfhDays")}</span>
+                      </div>
+                      <div className="flex items-baseline gap-1">
+                        <span className="text-[15px] font-semibold text-foreground">{session?.currentWfhDays ?? 0}</span>
+                        <span className="text-[12px] text-muted-foreground">/ {session?.maxWfhDays ?? 0} {t("dashboard.days")}</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className="flex items-baseline gap-1.5 mt-2">
-                  <span className="text-[28px] font-extrabold tracking-tight text-purple-700">{session?.currentWfhDays ?? 0}</span>
-                  <span className="text-[22px] font-bold text-slate-300">/</span>
-                  <span className="text-[22px] font-bold text-slate-400">{session?.maxWfhDays ?? 0}</span>
-                  <span className="text-sm text-slate-500 font-medium ml-1">ngày / năm</span>
+
+                {/* Right Panel: Monthly Attendance Stats */}
+                <div className="p-5 flex flex-col bg-white/40 dark:bg-card">
+                  <h4 className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider mb-3 flex items-center justify-between">
+                    <span>
+                      {t("dashboard.monthStats", {
+                        month: session?.currentMonthAttendance?.summaryMonth || new Date().getMonth() + 1,
+                        year: session?.currentMonthAttendance?.summaryYear || new Date().getFullYear()
+                      })}
+                    </span>
+                  </h4>
+                  
+                  <div className="flex flex-col">
+                    <div className="flex items-center justify-between py-2 border-b border-border/50">
+                      <span className="text-[13px] font-medium text-slate-600">{t("dashboard.workUnits")}</span>
+                      <span className="text-[15px] font-semibold text-emerald-600">{session?.currentMonthAttendance?.workUnits ?? 0}</span>
+                    </div>
+                    <div className="flex items-center justify-between py-2 border-b border-border/50">
+                      <span className="text-[13px] font-medium text-slate-600">{t("dashboard.absentDays")}</span>
+                      <span className="text-[15px] font-semibold text-sky-600">{session?.currentMonthAttendance?.absentDays ?? 0}</span>
+                    </div>
+                    <div className="flex items-center justify-between py-2 border-b border-border/50">
+                      <span className="text-[13px] font-medium text-slate-600 cursor-help" title={t("dashboard.lateEarlyTooltip")}>{t("dashboard.lateEarlyDays")}</span>
+                      <span className="text-[15px] font-semibold text-amber-600">{session?.currentMonthAttendance?.lateDays ?? 0}</span>
+                    </div>
+                    <div className="flex items-center justify-between py-2">
+                      <span className="text-[13px] font-medium text-slate-600">{t("dashboard.workingDays")}</span>
+                      <span className="text-[15px] font-semibold text-slate-700">{session?.currentMonthAttendance?.workingDays ?? 0}</span>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
+            </m.div>
 
             {/* Task Lists */}
             <IntegratedTaskCard />
@@ -318,7 +368,9 @@ export default function HomePage() {
                     <h2 className="text-xl font-medium text-foreground">{displayDate}</h2>
                   </div>
                   <div className="text-[13px] text-muted-foreground font-medium flex items-center gap-1.5">
-                    <span className="text-indigo-600 font-semibold px-2 py-0.5 bg-indigo-50 rounded-md border border-indigo-100">Ca {todayAttendance?.attendanceCode || '-'}</span>
+                    <span className="text-indigo-600 font-semibold px-2 py-0.5 bg-indigo-50 rounded-md border border-indigo-100">
+                      {t("dashboard.attendanceCard.shiftCode", { code: todayAttendance?.attendanceCode || '-' })}
+                    </span>
                     {todayAttendance?.scheduledCheckIn && todayAttendance?.scheduledCheckOut && (
                       <span className="text-gray-500 font-normal flex items-center gap-1">
                         <Clock size={12} />
@@ -360,7 +412,7 @@ export default function HomePage() {
                 <div className={`rounded-xl p-4 flex items-center justify-between relative overflow-hidden ${inStatus.cardBg}`}>
                   <div className="flex flex-col">
                     <div className="flex items-center gap-2">
-                      <span className="text-[#1f2937] font-medium text-[13px]">Giờ vào</span>
+                      <span className="text-[#1f2937] font-medium text-[13px]">{t("dashboard.attendanceCard.checkInTime")}</span>
                     </div>
                     <div className={`text-[24px] font-bold tracking-tight mt-1 flex items-baseline gap-1 ${hasCheckIn ? inStatus.color : 'text-[#94a3b8]'}`}>
                       {checkInDisplay}<span className="text-[12px] ml-0.5">{checkInAmPm}</span>
@@ -381,7 +433,7 @@ export default function HomePage() {
                 <div className={`rounded-xl p-4 flex items-center justify-between relative overflow-hidden ${outStatus.cardBg}`}>
                   <div className="flex flex-col">
                     <div className="flex items-center gap-2">
-                      <span className="text-[#1f2937] font-medium text-[13px]">Giờ ra</span>
+                      <span className="text-[#1f2937] font-medium text-[13px]">{t("dashboard.attendanceCard.checkOutTime")}</span>
                     </div>
                     <div className={`text-[24px] font-bold tracking-tight mt-1 flex items-baseline gap-1 ${hasCheckOut ? outStatus.color : hasCheckIn ? 'text-[#f59e0b]' : 'text-[#94a3b8]'}`}>
                       {checkOutDisplay}<span className="text-[12px] ml-0.5">{checkOutAmPm}</span>
@@ -403,7 +455,7 @@ export default function HomePage() {
                   <div className="bg-[#eff6ff] rounded-xl p-4 flex flex-col justify-center relative overflow-hidden">
                     <div className="flex items-center gap-2 mb-1 text-[#3b82f6]">
                       <Clock size={16} strokeWidth={2} />
-                      <span className="text-[#1f2937] font-medium text-[13px]">Thời gian làm</span>
+                      <span className="text-[#1f2937] font-medium text-[13px]">{t("dashboard.attendanceCard.workingTime")}</span>
                     </div>
                     <div className="text-[24px] font-bold text-[#3b82f6] tracking-tight">
                       {workTimeStr}
@@ -413,10 +465,10 @@ export default function HomePage() {
                   <div className="bg-emerald-50 rounded-xl p-4 flex flex-col justify-center relative overflow-hidden">
                     <div className="flex items-center gap-2 mb-1 text-emerald-600">
                       <CheckCircle2 size={16} strokeWidth={2} />
-                      <span className="text-[#1f2937] font-medium text-[13px]">Ngày công</span>
+                      <span className="text-[#1f2937] font-medium text-[13px]">{t("dashboard.attendanceCard.workUnit")}</span>
                     </div>
                     <div className="text-[24px] font-bold text-emerald-600 tracking-tight flex items-baseline gap-1">
-                      {todayAttendance?.workUnit || 0} <span className="text-[14px] font-medium text-emerald-600/70">công</span>
+                      {todayAttendance?.workUnit || 0} <span className="text-[14px] font-medium text-emerald-600/70">{t("dashboard.attendanceCard.workUnitSuffix")}</span>
                     </div>
                   </div>
                 </div>

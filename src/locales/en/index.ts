@@ -12,6 +12,7 @@ import management from './management';
 import serverSettings from './serverSettings';
 import attendance from './attendance';
 import myAttendance from './myAttendance';
+import dashboard from './dashboard';
 
 export default {
   profile,
@@ -27,5 +28,6 @@ export default {
   management,
   serverSettings,
   attendance,
-  myAttendance
+  myAttendance,
+  dashboard
 };

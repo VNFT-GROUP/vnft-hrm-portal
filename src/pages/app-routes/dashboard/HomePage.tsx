@@ -368,9 +368,6 @@ export default function HomePage() {
                     <h2 className="text-xl font-medium text-foreground">{displayDate}</h2>
                   </div>
                   <div className="text-[13px] text-muted-foreground font-medium flex items-center gap-1.5">
-                    <span className="text-indigo-600 font-semibold px-2 py-0.5 bg-indigo-50 rounded-md border border-indigo-100">
-                      {t("dashboard.attendanceCard.shiftCode", { code: todayAttendance?.attendanceCode || '-' })}
-                    </span>
                     {todayAttendance?.scheduledCheckIn && todayAttendance?.scheduledCheckOut && (
                       <span className="text-gray-500 font-normal flex items-center gap-1">
                         <Clock size={12} />

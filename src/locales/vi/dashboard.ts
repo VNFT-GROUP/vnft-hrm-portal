@@ -21,7 +21,6 @@ export default {
     reminders: "Không có nhắc nhở nào cho bạn."
   },
   attendanceCard: {
-    shiftCode: "Ca {{code}}",
     unrecorded: "Chưa ghi nhận",
     onTime: "Đúng giờ",
     late: "Đi muộn {{mins}}p",

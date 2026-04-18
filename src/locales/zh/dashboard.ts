@@ -21,7 +21,6 @@ export default {
     reminders: "没有给您的提醒。"
   },
   attendanceCard: {
-    shiftCode: "班次 {{code}}",
     unrecorded: "未记录",
     onTime: "准时",
     late: "迟到 {{mins}}分钟",

@@ -21,7 +21,6 @@ export default {
     reminders: "No reminders for you."
   },
   attendanceCard: {
-    shiftCode: "Shift {{code}}",
     unrecorded: "No record",
     onTime: "On time",
     late: "Late {{mins}}m",

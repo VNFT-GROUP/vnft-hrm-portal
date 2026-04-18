@@ -180,6 +180,34 @@ export default function CreateRequestPage() {
   };
 
   const onSubmit = () => {
+    if (!description || description.trim() === "" || description === "<p><br></p>") {
+      toast.error("Vui lòng nhập mô tả đơn.");
+      return;
+    }
+
+    let isValid = true;
+    switch (type) {
+      case "checkInOut":
+        if (!checkInOutType || !date || !startTime) isValid = false;
+        break;
+      case "absent":
+        if (!date || !startTime || !endTime) isValid = false;
+        break;
+      case "resign":
+        if (!date || !endDate) isValid = false; // endDate is Ngày làm cuối
+        break;
+      case "leave":
+      case "wfh":
+      case "business":
+        if (!startDate || !endDate) isValid = false;
+        break;
+    }
+
+    if (!isValid) {
+      toast.error("Vui lòng nhập đầy đủ thông tin bắt buộc.");
+      return;
+    }
+
     toast.success("Đã tạo đơn thành công!");
     navigate("/app/requests");
   };
@@ -441,18 +469,18 @@ export default function CreateRequestPage() {
 
                     <div className="space-y-1.5">
                       <Label className="text-[13px] font-semibold text-slate-700">
-                        Ngày thôi việc <span className="text-rose-500">*</span>
+                        Ngày làm việc cuối <span className="text-rose-500">*</span>
                       </Label>
                       <Popover>
                         <PopoverTrigger
                           className={cn(
                             "w-full flex items-center justify-start text-left font-normal h-10 bg-slate-50/50 border-slate-200 border rounded-md px-4 text-sm hover:bg-slate-100/50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/20",
-                            !startDate && "text-slate-400",
+                            !endDate && "text-slate-400",
                           )}
                         >
                           <CalendarIcon className="mr-2 h-4 w-4 text-slate-400" />
-                          {startDate ? (
-                            format(startDate, "dd/MM/yyyy")
+                          {endDate ? (
+                            format(endDate, "dd/MM/yyyy")
                           ) : (
                             <span>Chọn ngày</span>
                           )}
@@ -460,15 +488,15 @@ export default function CreateRequestPage() {
                         <PopoverContent className="w-auto p-0" align="start">
                           <Calendar
                             mode="single"
-                            selected={startDate}
+                            selected={endDate}
                             onSelect={(newDate) => {
-                              setStartDate(newDate);
+                              setEndDate(newDate);
                               if (newDate) {
                                 const prev = new Date(newDate);
                                 prev.setDate(prev.getDate() - 1);
-                                setEndDate(prev);
+                                setStartDate(prev); // Derived ngày thôi việc = ngày làm cuối - 1
                               } else {
-                                setEndDate(undefined);
+                                setStartDate(undefined);
                               }
                             }}
                             initialFocus
@@ -480,15 +508,15 @@ export default function CreateRequestPage() {
 
                     <div className="space-y-1.5">
                       <Label className="text-[13px] font-semibold text-slate-700">
-                        Ngày làm việc cuối{" "}
+                        Ngày thôi việc{" "}
                         <span className="text-rose-500">*</span>
                       </Label>
                       <div className="w-full flex items-center justify-start text-left font-normal h-10 bg-slate-100 border-slate-200 border rounded-md px-4 text-sm text-slate-700 cursor-not-allowed">
                         <CalendarIcon className="mr-2 h-4 w-4 text-slate-500" />
-                        {endDate ? (
-                          format(endDate, "dd/MM/yyyy")
+                        {startDate ? (
+                          format(startDate, "dd/MM/yyyy")
                         ) : (
-                          <span className="text-slate-400">Tự động chọn</span>
+                          <span className="text-slate-400">Tính tự động</span>
                         )}
                       </div>
                     </div>
@@ -701,7 +729,7 @@ export default function CreateRequestPage() {
 
               <div className="space-y-1.5">
                 <Label className="text-[13px] font-semibold text-slate-700 flex items-center justify-between">
-                  Mô tả
+                  <span>Mô tả <span className="text-rose-500">*</span></span>
                 </Label>
                 <div className="bg-white rounded-md border border-slate-300 overflow-hidden [&_.ql-toolbar]:border-none [&_.ql-toolbar]:border-b [&_.ql-toolbar]:border-slate-200 [&_.ql-toolbar]:bg-slate-50/50 [&_.ql-container]:border-none [&_.ql-editor]:min-h-[100px] [&_.ql-editor]:text-[14px] [&_.ql-editor.ql-blank::before]:text-slate-400 [&_.ql-editor.ql-blank::before]:font-normal">
                   <ReactQuill
@@ -709,7 +737,7 @@ export default function CreateRequestPage() {
                     value={description}
                     onChange={setDescription}
                     modules={quillModules}
-                    placeholder="Mô tả chi tiết (không bắt buộc)..."
+                    placeholder="Nhập mô tả chi tiết (bắt buộc)..."
                   />
                 </div>
               </div>

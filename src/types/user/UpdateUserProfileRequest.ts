@@ -13,6 +13,7 @@ export interface UpdateUserProfileRequest {
   checkInTime?: string;
   checkOutTime?: string;
   phoneNumber?: string;
+  avatarTempKey?: string;
   gender?: Gender;
   dateOfBirth?: string;
   maritalStatus?: MaritalStatus;
@@ -28,8 +29,8 @@ export interface UpdateUserProfileRequest {
   citizenIdNumber?: string;
   citizenIdIssueDate?: string;
   citizenIdIssuePlace?: string;
-  citizenIdFrontImageUrl?: string;
-  citizenIdBackImageUrl?: string;
+  citizenIdFrontImageTempKey?: string;
+  citizenIdBackImageTempKey?: string;
   bankInformations?: BankInformationRequest[];
   dependents?: DependentRequest[];
   educationRecords?: EducationRecordRequest[];

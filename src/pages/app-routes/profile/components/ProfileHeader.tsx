@@ -39,8 +39,8 @@ export default function ProfileHeader() {
           className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-muted shadow-[0_0_0_4px_white,0_4px_20px_rgba(0,0,0,0.08)] shrink-0 flex items-center justify-center text-4xl relative z-10 cursor-grab group-hover/header:shadow-[0_0_0_4px_white,0_8px_30px_rgba(0,0,0,0.12)] transition-shadow duration-300"
         >
           <div className="w-full h-full overflow-hidden rounded-full pointer-events-none group-hover/header:scale-110 transition-transform duration-500">
-            {profile.citizenIdFrontImageUrl ? (
-               <img src={profile.citizenIdFrontImageUrl} alt={profile.fullName} className="w-full h-full object-cover" />
+            {profile.avatarUrl ? (
+               <img src={profile.avatarUrl} alt={profile.fullName} className="w-full h-full object-cover" />
             ) : (
                <img src={`https://api.dicebear.com/7.x/notionists/svg?seed=${profile.englishName || profile.fullName}`} alt={profile.fullName} className="w-full h-full object-cover" />
             )}

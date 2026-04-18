@@ -20,7 +20,11 @@ export interface UserProfileResponse {
   groupName?: string;
   positionId?: string;
   positionName?: string;
+  roleId?: string;
+  roleName?: string;
   phoneNumber?: string;
+  avatarKey?: string;
+  avatarUrl?: string;
   gender?: Gender;
   dateOfBirth?: string;
   maritalStatus?: MaritalStatus;
@@ -36,7 +40,9 @@ export interface UserProfileResponse {
   citizenIdNumber?: string;
   citizenIdIssueDate?: string;
   citizenIdIssuePlace?: string;
+  citizenIdFrontImageKey?: string;
   citizenIdFrontImageUrl?: string;
+  citizenIdBackImageKey?: string;
   citizenIdBackImageUrl?: string;
   bankInformations?: BankInformationResponse[];
   dependents?: DependentResponse[];

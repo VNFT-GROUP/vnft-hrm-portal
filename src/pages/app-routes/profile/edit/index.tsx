@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import type { UpdateCurrentUserProfileRequest } from '@/types/user/UpdateCurrentUserProfileRequest';
+import { s3Service } from "@/services/s3";
 import {
   ALL_COUNTRIES_SORTED as PROFILE_ALL_COUNTRIES_SORTED,
   ETHNICITIES_VN as PROFILE_ETHNICITIES_VN,
@@ -31,6 +32,7 @@ export default function EditProfilePage() {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const session = useAuthStore((state) => state.session);
+  const updateSession = useAuthStore((state) => state.updateSession);
   const [activeTab, setActiveTab] = useState("basic");
 
   const getCountryTranslation = (viName: string) => {
@@ -42,6 +44,27 @@ export default function EditProfilePage() {
 
   const [loading, setLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
+
+  // File Upload Storage States
+  const avatarInputRef = React.useRef<HTMLInputElement>(null);
+  const frontInputRef = React.useRef<HTMLInputElement>(null);
+  const backInputRef = React.useRef<HTMLInputElement>(null);
+
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [citizenIdFrontFile, setCitizenIdFrontFile] = useState<File | null>(null);
+  const [citizenIdBackFile, setCitizenIdBackFile] = useState<File | null>(null);
+
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+  const [citizenIdFrontPreview, setCitizenIdFrontPreview] = useState<string | null>(null);
+  const [citizenIdBackPreview, setCitizenIdBackPreview] = useState<string | null>(null);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, setter: React.Dispatch<React.SetStateAction<File | null>>, previewSetter: React.Dispatch<React.SetStateAction<string | null>>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
+      setter(file);
+      previewSetter(URL.createObjectURL(file));
+    }
+  };
 
   const [formData, setFormData] = useState<ProfileFormData>({
      fullName: session?.fullName || "",
@@ -99,13 +122,17 @@ export default function EditProfilePage() {
              citizenIdNumber: d.citizenIdNumber || "",
              citizenIdIssueDate: d.citizenIdIssueDate?.substring(0, 10) || "",
              citizenIdIssuePlace: d.citizenIdIssuePlace || "",
-             citizenIdFrontImageUrl: d.citizenIdFrontImageUrl || "",
-             citizenIdBackImageUrl: d.citizenIdBackImageUrl || "",
+              // Temporary keys are handled upon manual upload, 
+             // preview urls can be bootstrapped from existing urls if you fetched them
+             // but we'll stick to displaying them conditionally via session/current profile urls if any (we don't get specific URLs inside the request though)
              bankInformations: d.bankInformations?.length ? d.bankInformations : prev.bankInformations,
              dependents: d.dependents?.length ? d.dependents : prev.dependents,
              educationRecords: d.educationRecords?.length ? d.educationRecords : prev.educationRecords,
              workExperiences: d.workExperiences?.length ? d.workExperiences : prev.workExperiences,
            }));
+           if (d.avatarUrl) setAvatarPreview(d.avatarUrl);
+           if (d.citizenIdFrontImageUrl) setCitizenIdFrontPreview(d.citizenIdFrontImageUrl);
+           if (d.citizenIdBackImageUrl) setCitizenIdBackPreview(d.citizenIdBackImageUrl);
         }
       } catch (err) {
         console.error("Failed to load profile:", err);
@@ -153,10 +180,44 @@ export default function EditProfilePage() {
     payload.educationRecords = payload.educationRecords?.filter(ed => ed.institutionName?.trim() || ed.major?.trim());
     payload.workExperiences = payload.workExperiences?.filter(w => w.companyName?.trim() || w.position?.trim());
 
-    console.log("Submitting payload:", payload);
     setLoading(true);
+
     try {
-      await currentUserProfileService.upsertCurrentUserProfile(payload as UpdateCurrentUserProfileRequest);
+      if (avatarFile) {
+        const res = await s3Service.uploadFile(avatarFile, `avatars/${session?.id || 'me'}/${Date.now()}_${avatarFile.name}`);
+        payload.avatarTempKey = res.objectKey;
+      }
+      if (citizenIdFrontFile) {
+        const res = await s3Service.uploadFile(citizenIdFrontFile, `citizen-ids/${session?.id || 'me'}/front_${Date.now()}_${citizenIdFrontFile.name}`);
+        payload.citizenIdFrontImageTempKey = res.objectKey;
+      }
+      if (citizenIdBackFile) {
+        const res = await s3Service.uploadFile(citizenIdBackFile, `citizen-ids/${session?.id || 'me'}/back_${Date.now()}_${citizenIdBackFile.name}`);
+        payload.citizenIdBackImageTempKey = res.objectKey;
+      }
+    } catch (uploadError: unknown) {
+      setLoading(false);
+      const err = uploadError as Error;
+      toast.error(t("editProfile.uploadFailed", { defaultValue: "Lỗi tải ảnh lên hệ thống" }), {
+        description: err.message || "Vui lòng kiểm tra lại ảnh và thử lại."
+      });
+      return;
+    }
+
+    console.log("Submitting payload:", payload);
+    try {
+      const response = await currentUserProfileService.upsertCurrentUserProfile(payload as UpdateCurrentUserProfileRequest);
+
+      // Cập nhật session cục bộ (ví dụ: avatar sau khi build URL, tên, v.v) để navbar/topbar tự redirect lập tức không cần fetch lại
+      if (response.data) {
+        updateSession({
+          avatarUrl: response.data.avatarUrl,
+          fullName: response.data.fullName,
+          englishName: response.data.englishName,
+          gender: response.data.gender,
+        });
+      }
+
       toast.success(t("profile.updateSuccess", { defaultValue: "Cập nhật hồ sơ thành công" }), {
         description: t("editProfile.validation.updateSuccessDesc", { defaultValue: "Toàn bộ thông tin cá nhân và lý lịch đã được lưu trữ an toàn." })
       });
@@ -248,10 +309,15 @@ export default function EditProfilePage() {
                 
                 {/* AVATAR UPLOAD */}
                 <div className="flex flex-col items-center justify-center sm:justify-start sm:flex-row sm:items-center gap-6 mb-8 bg-muted/20 p-5 rounded-2xl border border-border">
-                  <div className="relative group cursor-pointer">
+                  <input type="file" ref={avatarInputRef} className="hidden" accept="image/jpeg, image/png, image/webp" onChange={(e) => handleFileChange(e, setAvatarFile, setAvatarPreview)} />
+                  <div className="relative group cursor-pointer" onClick={() => avatarInputRef.current?.click()}>
                      <div className="w-28 h-28 rounded-full bg-card border-4 border-background shadow-md overflow-hidden flex items-center justify-center shrink-0 text-muted-foreground group-hover:opacity-80 transition-opacity">
-                        {session?.username ? (
-                          <img src={`https://api.dicebear.com/7.x/notionists/svg?seed=Ethan`} alt="Avatar" className="w-full h-full object-cover" />
+                        {avatarPreview ? (
+                          <img src={avatarPreview} alt="Avatar" className="w-full h-full object-cover" />
+                        ) : session?.avatarUrl ? (
+                          <img src={session.avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
+                        ) : session?.username ? (
+                          <img src={`https://api.dicebear.com/7.x/notionists/svg?seed=${session.username}`} alt="Avatar" className="w-full h-full object-cover" />
                         ) : (
                           <User size={48} className="opacity-20" />
                         )}
@@ -263,7 +329,7 @@ export default function EditProfilePage() {
                   <div className="space-y-1.5 text-center sm:text-left">
                      <h3 className="font-semibold text-foreground">{t("editProfile.basicInfo.avatarTitle", { defaultValue: "Ảnh chân dung" })}</h3>
                      <p className="text-xs text-muted-foreground max-w-[200px] sm:max-w-xs">{t("editProfile.basicInfo.avatarHint", { defaultValue: "Định dạng hỗ trợ: JPEG, PNG, WEBP. Kích thước tỷ lệ 1:1, dung lượng tối đa 5MB." })}</p>
-                     <Button type="button" variant="outline" size="sm" className="mt-3 rounded-xl text-xs font-medium bg-card hover:bg-[#2E3192]/5 hover:text-[#2E3192] hover:border-[#2E3192]/30 transition-colors">
+                     <Button type="button" onClick={() => avatarInputRef.current?.click()} variant="outline" size="sm" className="mt-3 rounded-xl text-xs font-medium bg-card hover:bg-[#2E3192]/5 hover:text-[#2E3192] hover:border-[#2E3192]/30 transition-colors">
                         {t("editProfile.basicInfo.uploadAvatarBtn", { defaultValue: "Chọn tệp tải lên" })}
                      </Button>
                   </div>
@@ -477,18 +543,32 @@ export default function EditProfilePage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
                    <div className="space-y-3 relative group">
                       <Label className="font-semibold block">{t("editProfile.identity.frontImg", { defaultValue: "Ảnh mặt trước CCCD" })}</Label>
-                      <div className="border-2 border-dashed border-border rounded-2xl h-48 flex flex-col items-center justify-center text-muted-foreground bg-muted/10 hover:bg-muted/50 hover:border-[#2E3192]/40 transition-colors cursor-pointer overflow-hidden">
-                         <span className="p-3 bg-card rounded-full shadow-sm mb-3 group-hover:scale-110 transition-transform"><Camera size={24} className="text-muted-foreground group-hover:text-[#2E3192] transition-colors" /></span>
-                         <span className="font-medium text-sm text-foreground">{t("editProfile.identity.uploadFrontImg", { defaultValue: "Tải ảnh mặt trước lên" })}</span>
-                         <span className="text-xs opacity-70 mt-1">{t("editProfile.identity.imgHint", { defaultValue: "Định dạng JPEG, PNG, max 5MB" })}</span>
+                      <input type="file" ref={frontInputRef} className="hidden" accept="image/jpeg, image/png, image/webp" onChange={(e) => handleFileChange(e, setCitizenIdFrontFile, setCitizenIdFrontPreview)} />
+                      <div onClick={() => frontInputRef.current?.click()} className="relative border-2 border-dashed border-border rounded-2xl h-48 flex flex-col items-center justify-center text-muted-foreground bg-muted/10 hover:bg-muted/50 hover:border-[#2E3192]/40 transition-colors cursor-pointer overflow-hidden">
+                         {citizenIdFrontPreview ? (
+                            <img src={citizenIdFrontPreview} alt="Front ID" className="w-full h-full object-cover" />
+                         ) : (
+                           <>
+                             <span className="p-3 bg-card rounded-full shadow-sm mb-3 group-hover:scale-110 transition-transform"><Camera size={24} className="text-muted-foreground group-hover:text-[#2E3192] transition-colors" /></span>
+                             <span className="font-medium text-sm text-foreground">{t("editProfile.identity.uploadFrontImg", { defaultValue: "Tải ảnh mặt trước lên" })}</span>
+                             <span className="text-xs opacity-70 mt-1">{t("editProfile.identity.imgHint", { defaultValue: "Định dạng JPEG, PNG, max 5MB" })}</span>
+                           </>
+                         )}
                       </div>
                    </div>
                    <div className="space-y-3 relative group">
                       <Label className="font-semibold block">{t("editProfile.identity.backImg", { defaultValue: "Ảnh mặt sau CCCD" })}</Label>
-                      <div className="border-2 border-dashed border-border rounded-2xl h-48 flex flex-col items-center justify-center text-muted-foreground bg-muted/10 hover:bg-muted/50 hover:border-[#2E3192]/40 transition-colors cursor-pointer overflow-hidden">
-                         <span className="p-3 bg-card rounded-full shadow-sm mb-3 group-hover:scale-110 transition-transform"><Camera size={24} className="text-muted-foreground group-hover:text-[#2E3192] transition-colors" /></span>
-                         <span className="font-medium text-sm text-foreground">{t("editProfile.identity.uploadBackImg", { defaultValue: "Tải ảnh mặt sau lên" })}</span>
-                         <span className="text-xs opacity-70 mt-1">{t("editProfile.identity.imgHint", { defaultValue: "Định dạng JPEG, PNG, max 5MB" })}</span>
+                      <input type="file" ref={backInputRef} className="hidden" accept="image/jpeg, image/png, image/webp" onChange={(e) => handleFileChange(e, setCitizenIdBackFile, setCitizenIdBackPreview)} />
+                      <div onClick={() => backInputRef.current?.click()} className="relative border-2 border-dashed border-border rounded-2xl h-48 flex flex-col items-center justify-center text-muted-foreground bg-muted/10 hover:bg-muted/50 hover:border-[#2E3192]/40 transition-colors cursor-pointer overflow-hidden">
+                         {citizenIdBackPreview ? (
+                            <img src={citizenIdBackPreview} alt="Back ID" className="w-full h-full object-cover" />
+                         ) : (
+                           <>
+                             <span className="p-3 bg-card rounded-full shadow-sm mb-3 group-hover:scale-110 transition-transform"><Camera size={24} className="text-muted-foreground group-hover:text-[#2E3192] transition-colors" /></span>
+                             <span className="font-medium text-sm text-foreground">{t("editProfile.identity.uploadBackImg", { defaultValue: "Tải ảnh mặt sau lên" })}</span>
+                             <span className="text-xs opacity-70 mt-1">{t("editProfile.identity.imgHint", { defaultValue: "Định dạng JPEG, PNG, max 5MB" })}</span>
+                           </>
+                         )}
                       </div>
                    </div>
                 </div>

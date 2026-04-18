@@ -11,6 +11,8 @@ export interface UserSessionResponse {
   fullName?: string;
   englishName?: string;
   gender?: Gender;
+  avatarKey?: string;
+  avatarUrl?: string;
   currentLeaveDays?: number;
   maxLeaveDays?: number;
   currentWfhDays?: number;

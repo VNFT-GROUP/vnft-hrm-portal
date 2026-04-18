@@ -151,14 +151,14 @@ export default function Topbar() {
                <span className="user-name">{session?.username || t('profile.defaultUser')}</span>
                <span className="user-role">{t('profile.roleAdmin')}</span>
             </div>
-            <AvatarPlaceholder name={session?.username} className="user-avatar-circle" />
+            <AvatarPlaceholder name={session?.username} src={session?.avatarUrl} className="user-avatar-circle" />
           </div>
 
         {/* PROFILE DROPDOWN */}
         {isProfileOpen && (
           <div className="profile-dropdown">
             <div className="pd-header">
-              <AvatarPlaceholder name={session?.username} className="pd-avatar-large" />
+              <AvatarPlaceholder name={session?.username} src={session?.avatarUrl} className="pd-avatar-large" />
               <div className="pd-info">
                 <h3 className="pd-name">{session?.username || t('profile.defaultUser', { defaultValue: 'Người Dùng' })}</h3>
                 <div className="pd-role-item"><Briefcase size={15}/> {t('profile.department', { defaultValue: 'HR & ADM' })}</div>

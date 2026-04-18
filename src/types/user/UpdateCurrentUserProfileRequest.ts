@@ -8,6 +8,7 @@ export type MaritalStatus = 'SINGLE' | 'MARRIED';
 
 export interface UpdateCurrentUserProfileRequest {
   phoneNumber: string;
+  avatarTempKey?: string;
   gender?: Gender;
   dateOfBirth: string;
   maritalStatus: MaritalStatus;
@@ -23,8 +24,8 @@ export interface UpdateCurrentUserProfileRequest {
   citizenIdNumber: string;
   citizenIdIssueDate: string;
   citizenIdIssuePlace: string;
-  citizenIdFrontImageUrl?: string;
-  citizenIdBackImageUrl?: string;
+  citizenIdFrontImageTempKey?: string;
+  citizenIdBackImageTempKey?: string;
   bankInformations?: BankInformationRequest[];
   dependents?: DependentRequest[];
   educationRecords?: EducationRecordRequest[];

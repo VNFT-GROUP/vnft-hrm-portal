@@ -24,6 +24,12 @@ export default {
   lunchStart: "午休开始时间",
   lunchEnd: "午休结束时间",
   rawPayloadTitle: "系统有效负载 (Raw)",
+  summaryTitle: "每日自动总结",
+  summaryDesc: "自动出勤计算任务的配置",
+  summaryEnabled: "运行状态",
+  summaryEnabledYes: "进行中",
+  summaryEnabledNo: "已暂停",
+  summaryCron: "执行周期 (Cron)",
   rawPayloadDesc: "数据库服务器返回的序列化详细配置数据结构。",
   loading: "正在同步服务器配置...",
   fetchError: "从服务器获取配置数据时发生错误。请向 IT 报告。"

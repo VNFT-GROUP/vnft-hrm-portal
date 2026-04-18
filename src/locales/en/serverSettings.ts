@@ -24,6 +24,12 @@ export default {
   lunchStart: "Lunch break start",
   lunchEnd: "Lunch break end",
   rawPayloadTitle: "System Payload (Raw)",
+  summaryTitle: "Daily Summary Job",
+  summaryDesc: "Configuration for automated attendance calculation tasks",
+  summaryEnabled: "Job Status",
+  summaryEnabledYes: "Active",
+  summaryEnabledNo: "Paused",
+  summaryCron: "Execution Cycle (Cron)",
   rawPayloadDesc: "Detailed configuration data structure serialized and returned from the Database Server.",
   loading: "Syncing server configurations...",
   fetchError: "An error occurred while fetching configuration data from the server. Please report to IT."

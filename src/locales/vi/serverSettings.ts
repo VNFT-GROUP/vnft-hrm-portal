@@ -24,6 +24,12 @@ export default {
   lunchStart: "Bắt đầu nghỉ trưa",
   lunchEnd: "Kết thúc nghỉ trưa",
   rawPayloadTitle: "System Payload (Raw)",
+  summaryTitle: "Tổng Hợp Điểm Danh",
+  summaryDesc: "Cấu hình tiến trình tính toán và tổng kết điểm danh tự động",
+  summaryEnabled: "Trạng thái tiến trình",
+  summaryEnabledYes: "Đang hoạt động",
+  summaryEnabledNo: "Tạm dừng chay",
+  summaryCron: "Chu kỳ chạy (Cron expression)",
   rawPayloadDesc: "Cấu trúc dữ liệu cài đặt chi tiết được serialize trả về từ Database Server.",
   loading: "Đang đồng bộ cấu hình máy chủ...",
   fetchError: "Đã có lỗi xảy ra khi fetch dữ liệu cấu hình từ máy chủ. Vui lòng phản hồi IT."

@@ -1,6 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Clock, ShieldAlert, Settings, Code, FileJson, Loader2 } from "lucide-react";
+import { Clock, ShieldAlert, Settings, Code, FileJson, Loader2, CalendarClock } from "lucide-react";
 import { m  } from 'framer-motion';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useQuery } from "@tanstack/react-query";
@@ -9,6 +9,21 @@ import { useTranslation } from "react-i18next";
 
 export default function ServerSettingsPage() {
   const { t } = useTranslation();
+
+  const parseCronToText = (cron: string) => {
+    try {
+      const parts = cron.trim().split(/\s+/);
+      if (parts.length === 6 && parts[3] === "*" && parts[4] === "*" && parts[5] === "*") {
+        const sec = parts[0];
+        const min = parts[1].padStart(2, "0");
+        const hr = parts[2].padStart(2, "0");
+        return `Hàng ngày lúc ${hr}:${min}${sec !== "0" ? `:${sec.padStart(2, "0")}` : ''}`;
+      }
+      return "Lịch tự động theo cấu hình hệ thống";
+    } catch {
+      return "Lịch tự động theo cấu hình hệ thống";
+    }
+  };
   
   const { data, isLoading, isError } = useQuery({
     queryKey: ["server-settings"],
@@ -164,6 +179,41 @@ export default function ServerSettingsPage() {
                       <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs flex flex-col gap-1.5">
                         <Label className="text-[12px] font-semibold text-slate-500 uppercase tracking-widest">{t("serverSettings.lunchEnd")}</Label>
                         <p className="font-extrabold text-[15px] text-slate-800">{settings.attendanceLunchBreakEnd}</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+                <Card className="shadow-sm border-slate-200/80 overflow-hidden h-fit lg:col-span-2">
+                  <CardHeader className="pb-4 bg-white border-b border-slate-100">
+                    <CardTitle className="text-[17px] flex items-center gap-2 text-slate-800">
+                      <div className="p-1.5 bg-emerald-50 rounded-md">
+                        <CalendarClock className="w-4 h-4 text-emerald-600" />
+                      </div>
+                      {t("serverSettings.summaryTitle")}
+                    </CardTitle>
+                    <CardDescription className="text-slate-500">
+                      {t("serverSettings.summaryDesc")}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4 pt-5 bg-slate-50/50">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs flex justify-between items-center">
+                        <Label className="text-[14px] font-semibold text-slate-700">{t("serverSettings.summaryEnabled")}</Label>
+                        <span className={`font-bold px-3.5 py-1.5 rounded-lg text-sm shrink-0 border ${
+                           settings.attendanceDailySummaryEnabled 
+                             ? "text-emerald-700 bg-emerald-50 border-emerald-100" 
+                             : "text-slate-600 bg-slate-100 border-slate-200"
+                        }`}>
+                          {settings.attendanceDailySummaryEnabled ? t("serverSettings.summaryEnabledYes") : t("serverSettings.summaryEnabledNo")}
+                        </span>
+                      </div>
+
+                      <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs flex justify-between items-center relative overflow-hidden">
+                        <div className="flex flex-col gap-1.5">
+                           <Label className="text-[14px] font-semibold text-slate-700">{t("serverSettings.summaryCron")}</Label>
+                           <span className="text-[12.5px] font-medium text-emerald-600/90">{parseCronToText(settings.attendanceDailySummaryCron)}</span>
+                        </div>
+                        <p className="font-bold text-indigo-700 font-mono bg-indigo-50 border border-indigo-100 px-3.5 py-1.5 rounded-lg text-sm tracking-tight">{settings.attendanceDailySummaryCron}</p>
                       </div>
                     </div>
                   </CardContent>

@@ -3,7 +3,7 @@ import { Outlet, useLocation } from "react-router-dom";
 import { ScrollArea } from "../../../components/ui/scroll-area";
 import Sidebar from "./components/Sidebar.tsx";
 import Topbar from "./components/Topbar.tsx";
-import ScrollToTopButton from "../../../components/custom/ScrollToTopButton";
+import ScrollToTopButton from "../../../components/custom/ScrollToTopButton/ScrollToTopButton";
 import LoadingPage from "../../../components/custom/loadingPage/LoadingPage";
 import { useAuthStore } from "@/store/useAuthStore";
 import { currentUserProfileService } from "@/services/user/currentUserProfileService";

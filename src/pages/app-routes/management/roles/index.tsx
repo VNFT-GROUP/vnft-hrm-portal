@@ -13,6 +13,7 @@ import type { UpsertRoleRequest } from '@/types/role/UpsertRoleRequest';
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { roleService } from "@/services/role/roleService";
 import { toast } from "sonner";
+import CustomPagination from "@/components/custom/CustomPagination";
 
 export default function RolesPage() {
   const { t } = useTranslation();
@@ -34,6 +35,12 @@ export default function RolesPage() {
   });
 
   const roles = rolesData?.data || [];
+  
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(20);
+
+  const totalPages = Math.ceil(roles.length / pageSize) || 1;
+  const paginatedData = roles.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
   const handleOpenForm = (role?: RoleResponse) => {
     if (role) {
@@ -172,7 +179,10 @@ export default function RolesPage() {
             placeholder={t('management.searchRolePlaceholder', { defaultValue: 'Tìm kiếm chức vụ theo tên...' })}
             className="pl-12 h-12 rounded-xl bg-muted border-border focus-visible:ring-[#2E3192] text-base hover:bg-card transition-colors"
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              setCurrentPage(1);
+            }}
           />
         </div>
         <Button
@@ -196,11 +206,26 @@ export default function RolesPage() {
             <p className="animate-pulse">Đang tải danh sách chức vụ...</p>
           </div>
         ) : (
-          <RoleTable
-            roles={roles}
-            onEdit={handleOpenForm}
-            onDelete={handleDelete}
-          />
+          <>
+            <RoleTable
+              roles={paginatedData}
+              onEdit={handleOpenForm}
+              onDelete={handleDelete}
+            />
+            {roles.length > 0 && (
+              <CustomPagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                pageSize={pageSize}
+                onPageChange={setCurrentPage}
+                onPageSizeChange={(size) => {
+                  setPageSize(size);
+                  setCurrentPage(1);
+                }}
+                className="p-4 border-t border-border mt-auto"
+              />
+            )}
+          </>
         )}
       </m.div>
 

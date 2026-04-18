@@ -13,6 +13,7 @@ import { toast } from 'sonner';
 import type { UpsertEmployeeCodeRequest } from '@/types/user/UpsertEmployeeCodeRequest';
 import type { UpdateEmployeeCodeDescriptionRequest } from '@/types/user/UpdateEmployeeCodeDescriptionRequest';
 import type { EmployeeCodeResponse } from '@/types/user/EmployeeCodeResponse';
+import CustomPagination from '@/components/custom/CustomPagination';
 
 export default function EmployeeCodesPage() {
   const { t } = useTranslation();
@@ -33,6 +34,12 @@ export default function EmployeeCodesPage() {
 
   const codes: EmployeeCodeResponse[] = qData?.data || [];
   const filtered = codes.filter(c => c.prefix.toLowerCase().includes(searchTerm.toLowerCase()));
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(20);
+
+  const totalPages = Math.ceil(filtered.length / pageSize) || 1;
+  const paginatedData = filtered.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
   const handleOpenForm = (item?: EmployeeCodeResponse) => {
     if (item) {
@@ -144,15 +151,28 @@ export default function EmployeeCodesPage() {
       <m.div className='bg-card p-5 rounded-2xl shadow-sm border border-border flex flex-col md:flex-row justify-between items-center gap-4'>
         <div className='relative w-full md:w-96'>
           <Search className='absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground' size={20} />
-          <Input placeholder={t('management.searchPrefixPlaceholder', { defaultValue: 'Tìm kiếm prefix...' })} className='pl-12 h-12 rounded-xl bg-muted border-border focus-visible:ring-[#2E3192] hover:bg-card transition-colors' value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+          <Input placeholder={t('management.searchPrefixPlaceholder', { defaultValue: 'Tìm kiếm prefix...' })} className='pl-12 h-12 rounded-xl bg-muted border-border focus-visible:ring-[#2E3192] hover:bg-card transition-colors' value={searchTerm} onChange={(e) => { setSearchTerm(e.target.value); setCurrentPage(1); }} />
         </div>
         <Button onClick={() => handleOpenForm()} className='w-full md:w-auto h-12 px-6 rounded-xl bg-[#2E3192] hover:bg-[#1E2062] text-white shadow-[#2E3192]/20 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300'>
           <Plus size={20} className='mr-2' /> {t('management.addNew', { defaultValue: 'Tạo mới' })}
         </Button>
       </m.div>
 
-      <m.div className='bg-card rounded-2xl shadow-sm border border-border overflow-hidden flex-1 group hover:shadow-md transition-shadow duration-300'>
-        <EmployeeCodeTable data={filtered} onToggleActive={handleToggleActive} onEdit={handleOpenForm} />
+      <m.div className='bg-card rounded-2xl shadow-sm border border-border overflow-hidden flex-1 flex flex-col group hover:shadow-md transition-shadow duration-300'>
+        <EmployeeCodeTable data={paginatedData} onToggleActive={handleToggleActive} onEdit={handleOpenForm} />
+        {filtered.length > 0 && (
+          <CustomPagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            pageSize={pageSize}
+            onPageChange={setCurrentPage}
+            onPageSizeChange={(size) => {
+              setPageSize(size);
+              setCurrentPage(1);
+            }}
+            className="p-4 border-t border-border mt-auto"
+          />
+        )}
       </m.div>
 
       <EmployeeCodeFormSheet isOpen={isOpen} onOpenChange={setIsOpen} formData={formData} setFormData={setFormData} isEditing={!!editingItem} onSave={handleSave} />

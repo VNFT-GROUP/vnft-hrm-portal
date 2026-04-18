@@ -25,6 +25,7 @@ import GroupInformationSheet from "./components/GroupInformationSheet";
 import ChangePasswordSheet from "./components/ChangePasswordSheet";
 import BasicInformationSheet from "./components/BasicInformationSheet";
 import UserFormSheet from "../users/components/UserFormSheet";
+import CustomPagination from "@/components/custom/CustomPagination";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { userService } from "@/services/user/userService";
 import { toast } from "sonner";
@@ -116,6 +117,12 @@ export default function EmployeesPage() {
         .toLowerCase()
         .includes(searchTerm.toLowerCase()),
   );
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(20);
+
+  const totalPages = Math.ceil(filteredData.length / pageSize) || 1;
+  const paginatedData = filteredData.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
   const createUserMutation = useMutation({
     mutationFn: (data: CreateUserRequest) => userService.createUser(data),
@@ -287,7 +294,10 @@ export default function EmployeesPage() {
             placeholder={t('management.searchEmployeePlaceholder', { defaultValue: 'Tìm kiếm theo Tên hoặc Mã NV...' })}
             className="pl-12 h-12 rounded-xl bg-muted border-border focus-visible:ring-[#2E3192] text-base hover:bg-card text-card-foreground transition-colors"
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              setCurrentPage(1);
+            }}
           />
         </div>
         <div className="flex gap-3 w-full md:w-auto flex-col md:flex-row">
@@ -313,14 +323,29 @@ export default function EmployeesPage() {
             <p className="animate-pulse">Đang tải dữ liệu nhân viên...</p>
           </div>
         ) : (
-          <EmployeeTable
-            employees={filteredData}
-            onDelete={handleDelete}
-            onEditBasicInfo={(emp) => setBasicInfoEmpId(emp.id)}
-            onEditWorkInfo={(id) => setWorkInfoEmpId(id)}
-            onEditGroupInfo={(id) => setGroupInfoEmpId(id)}
-            onEditPassword={(id) => setPasswordEmpId(id)}
-          />
+          <>
+            <EmployeeTable
+              employees={paginatedData}
+              onDelete={handleDelete}
+              onEditBasicInfo={(emp) => setBasicInfoEmpId(emp.id)}
+              onEditWorkInfo={(id) => setWorkInfoEmpId(id)}
+              onEditGroupInfo={(id) => setGroupInfoEmpId(id)}
+              onEditPassword={(id) => setPasswordEmpId(id)}
+            />
+            {filteredData.length > 0 && (
+              <CustomPagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                pageSize={pageSize}
+                onPageChange={setCurrentPage}
+                onPageSizeChange={(size) => {
+                  setPageSize(size);
+                  setCurrentPage(1);
+                }}
+                className="p-4 border-t border-border mt-auto"
+              />
+            )}
+          </>
         )}
       </m.div>
 

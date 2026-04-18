@@ -5,19 +5,11 @@ import { m  } from 'framer-motion';
 import { useQuery } from "@tanstack/react-query";
 import { attendanceService } from "@/services/attendance";
 import { useTranslation } from "react-i18next";
+import CustomPagination from "@/components/custom/CustomPagination";
 import AttendanceTable, {
   AttendanceJsonDialog,
 } from "./components/AttendanceTable";
 import type { AttendanceRecordResponse } from "@/types/attendance/AttendanceRecordResponse";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationPrevious,
-  PaginationNext,
-  PaginationLink,
-  PaginationEllipsis,
-} from "@/components/ui/pagination";
 
 export default function AttendancePage() {
   const { t } = useTranslation();
@@ -26,7 +18,7 @@ export default function AttendancePage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [page, setPage] = useState(1);
-  const size = 10;
+  const [size, setSize] = useState(20);
 
   // JSON view state
   const [isJsonOpen, setIsJsonOpen] = useState(false);
@@ -63,100 +55,6 @@ export default function AttendancePage() {
   const handleOpenJson = (record: AttendanceRecordResponse) => {
     setSelectedRecord(record);
     setIsJsonOpen(true);
-  };
-
-  const renderPaginationItems = () => {
-    const items = [];
-    const maxVisiblePages = 5;
-
-    if (totalPages <= maxVisiblePages) {
-      for (let i = 1; i <= totalPages; i++) {
-        items.push(
-          <PaginationItem key={i}>
-            <PaginationLink
-              href="#"
-              isActive={page === i}
-              onClick={(e) => {
-                e.preventDefault();
-                setPage(i);
-              }}
-            >
-              {i}
-            </PaginationLink>
-          </PaginationItem>,
-        );
-      }
-    } else {
-      const startPage = Math.max(2, page - 1);
-      const endPage = Math.min(totalPages - 1, page + 1);
-
-      // First page
-      items.push(
-        <PaginationItem key={1}>
-          <PaginationLink
-            href="#"
-            isActive={page === 1}
-            onClick={(e) => {
-              e.preventDefault();
-              setPage(1);
-            }}
-          >
-            1
-          </PaginationLink>
-        </PaginationItem>,
-      );
-
-      if (startPage > 2) {
-        items.push(
-          <PaginationItem key="start-ellipsis">
-            <PaginationEllipsis />
-          </PaginationItem>,
-        );
-      }
-
-      for (let i = startPage; i <= endPage; i++) {
-        items.push(
-          <PaginationItem key={i}>
-            <PaginationLink
-              href="#"
-              isActive={page === i}
-              onClick={(e) => {
-                e.preventDefault();
-                setPage(i);
-              }}
-            >
-              {i}
-            </PaginationLink>
-          </PaginationItem>,
-        );
-      }
-
-      if (endPage < totalPages - 1) {
-        items.push(
-          <PaginationItem key="end-ellipsis">
-            <PaginationEllipsis />
-          </PaginationItem>,
-        );
-      }
-
-      // Last page
-      items.push(
-        <PaginationItem key={totalPages}>
-          <PaginationLink
-            href="#"
-            isActive={page === totalPages}
-            onClick={(e) => {
-              e.preventDefault();
-              setPage(totalPages);
-            }}
-          >
-            {totalPages}
-          </PaginationLink>
-        </PaginationItem>,
-      );
-    }
-
-    return items;
   };
 
   return (
@@ -253,38 +151,18 @@ export default function AttendancePage() {
         </div>
 
         {/* 4. Pagination */}
-        {totalPages > 1 && (
-          <div className="p-4 border-t border-border bg-slate-50/50 flex justify-center">
-            <Pagination>
-              <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      if (page > 1) setPage((p) => p - 1);
-                    }}
-                    className={
-                      page <= 1 ? "pointer-events-none opacity-50" : ""
-                    }
-                  />
-                </PaginationItem>
-                {renderPaginationItems()}
-                <PaginationItem>
-                  <PaginationNext
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      if (page < totalPages) setPage((p) => p + 1);
-                    }}
-                    className={
-                      page >= totalPages ? "pointer-events-none opacity-50" : ""
-                    }
-                  />
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
-          </div>
+        {records.length > 0 && (
+          <CustomPagination
+            currentPage={page}
+            totalPages={totalPages}
+            pageSize={size}
+            onPageChange={setPage}
+            onPageSizeChange={(newSize) => {
+              setSize(newSize);
+              setPage(1);
+            }}
+            className="p-4 border-t border-border mt-auto"
+          />
         )}
       </m.div>
 

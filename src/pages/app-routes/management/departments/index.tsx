@@ -12,6 +12,7 @@ import { departmentService } from "@/services/department";
 import { toast } from "sonner";
 import type { UpsertDepartmentRequest } from '@/types/department/UpsertDepartmentRequest';
 import { useTranslation } from "react-i18next";
+import CustomPagination from "@/components/custom/CustomPagination";
 
 export default function DepartmentsPage() {
   const { t } = useTranslation();
@@ -31,6 +32,12 @@ export default function DepartmentsPage() {
   });
 
   const departments: Department[] = departmentsData?.data || [];
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(20);
+
+  const totalPages = Math.ceil(departments.length / pageSize) || 1;
+  const paginatedData = departments.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
   const handleOpenForm = (dept?: Department) => {
     if (dept) {
@@ -157,7 +164,10 @@ export default function DepartmentsPage() {
             placeholder={t("department.searchPlaceholder")} 
             className="pl-12 h-12 rounded-xl bg-muted border-border focus-visible:ring-[#2E3192] text-base hover:bg-card text-card-foreground transition-colors"
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              setCurrentPage(1);
+            }}
           />
         </div>
         <Button 
@@ -173,13 +183,26 @@ export default function DepartmentsPage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
-        className="bg-card text-card-foreground rounded-2xl shadow-sm border border-border overflow-hidden group hover:shadow-md transition-shadow duration-300 flex-1"
+        className="bg-card text-card-foreground rounded-2xl shadow-sm border border-border overflow-hidden group hover:shadow-md transition-shadow duration-300 flex-1 flex flex-col"
       >
         <DepartmentTable 
-          departments={departments} 
+          departments={paginatedData} 
           onEdit={handleOpenForm} 
           onDelete={handleDelete} 
         />
+        {departments.length > 0 && (
+          <CustomPagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            pageSize={pageSize}
+            onPageChange={setCurrentPage}
+            onPageSizeChange={(size) => {
+              setPageSize(size);
+              setCurrentPage(1);
+            }}
+            className="p-4 border-t border-border mt-auto"
+          />
+        )}
       </m.div>
 
       {/* Side Form (Sheet) */}

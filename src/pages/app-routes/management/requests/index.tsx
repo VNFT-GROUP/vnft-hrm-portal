@@ -3,6 +3,7 @@ import { Check, X, FileEdit, Clock, Calendar, Search, Filter } from "lucide-reac
 import { m  } from 'framer-motion';
 import { toast } from "sonner";
 import { Card } from "@/components/ui/card";
+import CustomPagination from "@/components/custom/CustomPagination";
 
 const MOCK_REQUESTS = [
   { id: "REQ-001", user: "Phạm Văn A", type: "Nghỉ phép năm", date: "2026-04-16", reason: "Giải quyết việc gia đình", status: "PENDING" },
@@ -14,6 +15,12 @@ const MOCK_REQUESTS = [
 
 export default function ManagementRequestsPage() {
   const [requests, setRequests] = useState(MOCK_REQUESTS);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(20);
+
+  const totalPages = Math.ceil(requests.length / pageSize) || 1;
+  const paginatedData = requests.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
   const handleAction = (id: string, action: "APPROVE" | "REJECT") => {
     setRequests(prev => prev.map(req => {
@@ -105,7 +112,7 @@ export default function ManagementRequestsPage() {
         </div>
 
         {/* Table */}
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto flex-1 flex flex-col">
           <table className="w-full text-sm text-left">
             <thead className="text-xs text-muted-foreground uppercase bg-muted/40 border-b border-border">
               <tr>
@@ -119,7 +126,7 @@ export default function ManagementRequestsPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {requests.map(req => (
+              {paginatedData.map(req => (
                 <tr key={req.id} className="hover:bg-muted/30 transition-colors">
                   <td className="px-4 py-3 font-medium text-[#2E3192]">{req.id}</td>
                   <td className="px-4 py-3 font-medium">{req.user}</td>
@@ -158,6 +165,19 @@ export default function ManagementRequestsPage() {
               )}
             </tbody>
           </table>
+          {requests.length > 0 && (
+            <CustomPagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              pageSize={pageSize}
+              onPageChange={setCurrentPage}
+              onPageSizeChange={(size) => {
+                setPageSize(size);
+                setCurrentPage(1);
+              }}
+              className="p-4 border-t border-border mt-auto"
+            />
+          )}
         </div>
       </div>
     </div>

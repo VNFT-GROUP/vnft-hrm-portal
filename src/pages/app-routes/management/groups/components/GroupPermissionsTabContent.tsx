@@ -11,6 +11,7 @@ import type { UpsertGroupPermissionRequest } from '@/types/group/UpsertGroupPerm
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { groupPermissionService } from "@/services/group/groupPermissionService";
 import { toast } from "sonner";
+import CustomPagination from "@/components/custom/CustomPagination";
 
 export default function GroupPermissionsTabContent() {
   const { t } = useTranslation();
@@ -37,6 +38,12 @@ export default function GroupPermissionsTabContent() {
   });
 
   const items = qData?.data || [];
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(20);
+
+  const totalPages = Math.ceil(items.length / pageSize) || 1;
+  const paginatedData = items.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
   const handleOpenForm = (item?: GroupPermissionResponse) => {
     if (item) {
@@ -120,7 +127,10 @@ export default function GroupPermissionsTabContent() {
             placeholder={t('management.searchPermPlaceholder', { defaultValue: 'Tìm kiếm mã quyền...' })}
             className="pl-12 h-12 rounded-xl bg-muted border-border focus-visible:ring-[#2E3192] text-base hover:bg-card transition-colors"
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              setCurrentPage(1);
+            }}
           />
         </div>
         <Button
@@ -143,7 +153,22 @@ export default function GroupPermissionsTabContent() {
             <p className="animate-pulse">Đang tải danh sách phân quyền...</p>
           </div>
         ) : (
-          <GroupPermissionTable items={items} onEdit={handleOpenForm} onDelete={(id) => deleteMutation.mutate(id)} />
+          <>
+            <GroupPermissionTable items={paginatedData} onEdit={handleOpenForm} onDelete={(id) => deleteMutation.mutate(id)} />
+            {items.length > 0 && (
+              <CustomPagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                pageSize={pageSize}
+                onPageChange={setCurrentPage}
+                onPageSizeChange={(size) => {
+                  setPageSize(size);
+                  setCurrentPage(1);
+                }}
+                className="p-4 border-t border-border mt-auto"
+              />
+            )}
+          </>
         )}
       </m.div>
 

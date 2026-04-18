@@ -12,6 +12,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { groupService } from "@/services/group/groupService";
 import { groupPermissionService } from "@/services/group/groupPermissionService";
 import { toast } from "sonner";
+import CustomPagination from "@/components/custom/CustomPagination";
 
 export default function GroupsTabContent() {
   const { t } = useTranslation();
@@ -44,6 +45,12 @@ export default function GroupsTabContent() {
   });
 
   const groups = groupsData?.data || [];
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(20);
+
+  const totalPages = Math.ceil(groups.length / pageSize) || 1;
+  const paginatedData = groups.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
   const handleOpenForm = (group?: GroupResponse) => {
     if (group) {
@@ -126,7 +133,10 @@ export default function GroupsTabContent() {
             placeholder={t('management.searchGroupPlaceholder', { defaultValue: 'Tìm kiếm nhóm theo tên...' })}
             className="pl-12 h-12 rounded-xl bg-muted border-border focus-visible:ring-[#2E3192] text-base hover:bg-card transition-colors"
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              setCurrentPage(1);
+            }}
           />
         </div>
         <Button
@@ -149,7 +159,22 @@ export default function GroupsTabContent() {
             <p className="animate-pulse">{t("management.fetchingGroups", "Đang tải danh sách nhóm người dùng...")}</p>
           </div>
         ) : (
-          <GroupTable groups={groups} onEdit={handleOpenForm} onDelete={(id) => deleteMutation.mutate(id)} />
+          <>
+            <GroupTable groups={paginatedData} onEdit={handleOpenForm} onDelete={(id) => deleteMutation.mutate(id)} />
+            {groups.length > 0 && (
+              <CustomPagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                pageSize={pageSize}
+                onPageChange={setCurrentPage}
+                onPageSizeChange={(size) => {
+                  setPageSize(size);
+                  setCurrentPage(1);
+                }}
+                className="p-4 border-t border-border mt-auto"
+              />
+            )}
+          </>
         )}
       </m.div>
 

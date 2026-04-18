@@ -30,11 +30,6 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { userService } from "@/services/user/userService";
 import { toast } from "sonner";
 import type { CreateUserRequest } from '@/types/user/CreateUserRequest';
-import { departmentService } from "@/services/department";
-import { positionService } from "@/services/position";
-import { groupService } from "@/services/group/groupService";
-import { mapIdToName } from "@/lib/utils";
-
 export default function EmployeesPage() {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
@@ -73,25 +68,6 @@ export default function EmployeesPage() {
     queryFn: () => userService.getUsers(1, 1000),
   });
 
-  const { data: departmentsResponse } = useQuery({
-    queryKey: ["departments"],
-    queryFn: () => departmentService.getDepartments(),
-  });
-
-  const { data: positionsResponse } = useQuery({
-    queryKey: ["positions"],
-    queryFn: () => positionService.getPositions(),
-  });
-
-  const { data: groupsResponse } = useQuery({
-    queryKey: ["groups"],
-    queryFn: () => groupService.getGroups(),
-  });
-
-  const departments = departmentsResponse?.data;
-  const positions = positionsResponse?.data;
-  const groups = groupsResponse?.data;
-
   const apiEmployees: Employee[] =
     usersResponse?.data?.content?.map((user) => ({
       id: user.id,
@@ -101,13 +77,14 @@ export default function EmployeesPage() {
       fullName: user.fullName || "Chưa cập nhật",
       englishName: user.englishName || "",
       email: user.username || "",
-      department: mapIdToName(user.departmentId, departments),
-      position: mapIdToName(user.positionId, positions),
-      func: mapIdToName(user.groupId, groups),
+      department: user.departmentName || "-",
+      position: user.positionName || "-",
+      func: user.groupName || "-",
       status: user.active ? "Đang làm" : "Đã nghỉ việc",
       checkInTime: user.checkInTime || "08:00",
       checkOutTime: user.checkOutTime || "17:30",
-      sysRole: "",
+      sysRole: user.roleName || "-",
+      avatarUrl: user.avatarUrl,
     })) || [];
 
   const filteredData = apiEmployees.filter(

@@ -3,6 +3,8 @@ export interface UserResponse {
   username: string;
   fullName?: string;
   englishName?: string;
+  avatarKey?: string;
+  avatarUrl?: string;
   employeeCode?: string;
   attendanceCode?: string;
   departmentId?: string;

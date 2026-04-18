@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import type { UpdateUserProfileRequest } from '@/types/user/UpdateUserProfileRequest';
+import { s3Service } from "@/services/s3";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   ALL_COUNTRIES_SORTED as PROFILE_ALL_COUNTRIES_SORTED,
@@ -45,6 +46,27 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
 
   const [loading, setLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
+
+  // File Upload Storage States
+  const avatarInputRef = React.useRef<HTMLInputElement>(null);
+  const frontInputRef = React.useRef<HTMLInputElement>(null);
+  const backInputRef = React.useRef<HTMLInputElement>(null);
+
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [citizenIdFrontFile, setCitizenIdFrontFile] = useState<File | null>(null);
+  const [citizenIdBackFile, setCitizenIdBackFile] = useState<File | null>(null);
+
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+  const [citizenIdFrontPreview, setCitizenIdFrontPreview] = useState<string | null>(null);
+  const [citizenIdBackPreview, setCitizenIdBackPreview] = useState<string | null>(null);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, setter: React.Dispatch<React.SetStateAction<File | null>>, previewSetter: React.Dispatch<React.SetStateAction<string | null>>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
+      setter(file);
+      previewSetter(URL.createObjectURL(file));
+    }
+  };
 
   const [formData, setFormData] = useState<ProfileFormData>({
      username: "",
@@ -93,6 +115,10 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
 
       if (profileData) {
         const d = profileData;
+        setAvatarPreview(d.avatarUrl || null);
+        setCitizenIdFrontPreview(d.citizenIdFrontImageUrl || null);
+        setCitizenIdBackPreview(d.citizenIdBackImageUrl || null);
+
         setFormData((prev) => ({
           ...prev,
           username: d.username || prev.username,
@@ -152,8 +178,31 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
     payload.educationRecords = payload.educationRecords?.filter((ed) => ed.institutionName?.trim() || ed.major?.trim());
     payload.workExperiences = payload.workExperiences?.filter((w) => w.companyName?.trim() || w.position?.trim());
 
-    console.log("Submitting payload:", payload);
     setLoading(true);
+
+    try {
+      if (avatarFile) {
+        const res = await s3Service.uploadFile(avatarFile, `avatars/${userId}/${Date.now()}_${avatarFile.name}`);
+        payload.avatarTempKey = res.objectKey;
+      }
+      if (citizenIdFrontFile) {
+        const res = await s3Service.uploadFile(citizenIdFrontFile, `citizen-ids/${userId}/front_${Date.now()}_${citizenIdFrontFile.name}`);
+        payload.citizenIdFrontImageTempKey = res.objectKey;
+      }
+      if (citizenIdBackFile) {
+        const res = await s3Service.uploadFile(citizenIdBackFile, `citizen-ids/${userId}/back_${Date.now()}_${citizenIdBackFile.name}`);
+        payload.citizenIdBackImageTempKey = res.objectKey;
+      }
+    } catch (uploadError: unknown) {
+      setLoading(false);
+      const err = uploadError as Error;
+      toast.error(t("editProfile.uploadFailed", { defaultValue: "Lỗi tải ảnh lên hệ thống" }), {
+        description: err.message || "Vui lòng kiểm tra lại ảnh và thử lại."
+      });
+      return;
+    }
+
+    console.log("Submitting payload:", payload);
     let success = false;
     let errorMessage = "Lỗi không xác định khi lưu thông tin";
     
@@ -259,20 +308,31 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
                 </div>
                 
                 <div className="flex flex-col items-center justify-center sm:justify-start sm:flex-row sm:items-center gap-6 mb-8 bg-muted/20 p-5 rounded-2xl border border-border">
-                  <div className="relative group cursor-pointer">
+                  <input type="file" ref={avatarInputRef} disabled={!isEditingMode} className="hidden" accept="image/jpeg, image/png, image/webp" onChange={(e) => handleFileChange(e, setAvatarFile, setAvatarPreview)} />
+                  <div className="relative group cursor-pointer" onClick={() => isEditingMode && avatarInputRef.current?.click()}>
                      <div className="w-28 h-28 rounded-full bg-card border-4 border-background shadow-md overflow-hidden flex items-center justify-center shrink-0 text-muted-foreground group-hover:opacity-80 transition-opacity">
-                        <User size={48} className="opacity-20" />
+                        {avatarPreview ? (
+                          <img src={avatarPreview} alt="Avatar" className="w-full h-full object-cover" />
+                        ) : formData.englishName || formData.fullName ? (
+                           <img src={`https://api.dicebear.com/7.x/notionists/svg?seed=${formData.englishName || formData.fullName}`} alt="Avatar" className="w-full h-full object-cover" />
+                        ) : (
+                          <User size={48} className="opacity-20" />
+                        )}
                      </div>
+                     {isEditingMode && (
                      <button type="button" className="absolute bottom-1 right-1 p-2 bg-[#F7941D] hover:bg-[#E88915] text-white rounded-full shadow-lg transition-transform hover:scale-105 active:scale-95 border-2 border-background">
                        <Camera size={14} />
                      </button>
+                     )}
                   </div>
                   <div className="space-y-1.5 text-center sm:text-left">
                      <h3 className="font-semibold text-foreground">{t("editProfile.basicInfo.avatarTitle", { defaultValue: "Ảnh chân dung" })}</h3>
                      <p className="text-xs text-muted-foreground max-w-[200px] sm:max-w-xs">{t("editProfile.basicInfo.avatarHint", { defaultValue: "Định dạng hỗ trợ: JPEG, PNG, WEBP. Kích thước tỷ lệ 1:1, dung lượng tối đa 5MB." })}</p>
-                     <Button type="button" variant="outline" size="sm" className="mt-3 rounded-xl text-xs font-medium bg-card hover:bg-[#2E3192]/5 hover:text-[#2E3192] hover:border-[#2E3192]/30 transition-colors">
+                     {isEditingMode && (
+                     <Button type="button" onClick={() => avatarInputRef.current?.click()} variant="outline" size="sm" className="mt-3 rounded-xl text-xs font-medium bg-card hover:bg-[#2E3192]/5 hover:text-[#2E3192] hover:border-[#2E3192]/30 transition-colors">
                         {t("editProfile.basicInfo.uploadAvatarBtn", { defaultValue: "Chọn tệp tải lên" })}
                      </Button>
+                     )}
                   </div>
                 </div>
 
@@ -486,18 +546,32 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
                    <div className="space-y-3 relative group">
                       <Label className="font-semibold block">{t("editProfile.identity.frontImg", { defaultValue: "Ảnh mặt trước CCCD" })}</Label>
-                      <div className="border-2 border-dashed border-border rounded-2xl h-48 flex flex-col items-center justify-center text-muted-foreground bg-muted/10 hover:bg-muted/50 hover:border-[#2E3192]/40 transition-colors cursor-pointer overflow-hidden">
-                         <span className="p-3 bg-card rounded-full shadow-sm mb-3 group-hover:scale-110 transition-transform"><Camera size={24} className="text-muted-foreground group-hover:text-[#2E3192] transition-colors" /></span>
-                         <span className="font-medium text-sm text-foreground">{t("editProfile.identity.uploadFrontImg", { defaultValue: "Tải ảnh mặt trước lên" })}</span>
-                         <span className="text-xs opacity-70 mt-1">{t("editProfile.identity.imgHint", { defaultValue: "Định dạng JPEG, PNG, max 5MB" })}</span>
+                      <input type="file" ref={frontInputRef} disabled={!isEditingMode} className="hidden" accept="image/jpeg, image/png, image/webp" onChange={(e) => handleFileChange(e, setCitizenIdFrontFile, setCitizenIdFrontPreview)} />
+                      <div onClick={() => isEditingMode && frontInputRef.current?.click()} className={`relative border-2 border-dashed border-border rounded-2xl h-48 flex flex-col items-center justify-center text-muted-foreground bg-muted/10 transition-colors overflow-hidden ${isEditingMode ? 'hover:bg-muted/50 hover:border-[#2E3192]/40 cursor-pointer' : ''}`}>
+                         {citizenIdFrontPreview ? (
+                            <img src={citizenIdFrontPreview} alt="Front ID" className="w-full h-full object-cover" />
+                         ) : (
+                           <>
+                             <span className={`p-3 bg-card rounded-full shadow-sm mb-3 transition-transform ${isEditingMode ? 'group-hover:scale-110' : ''}`}><Camera size={24} className={`text-muted-foreground transition-colors ${isEditingMode ? 'group-hover:text-[#2E3192]' : ''}`} /></span>
+                             <span className="font-medium text-sm text-foreground">{t("editProfile.identity.uploadFrontImg", { defaultValue: "Tải ảnh mặt trước lên" })}</span>
+                             <span className="text-xs opacity-70 mt-1">{t("editProfile.identity.imgHint", { defaultValue: "Định dạng JPEG, PNG, max 5MB" })}</span>
+                           </>
+                         )}
                       </div>
                    </div>
                    <div className="space-y-3 relative group">
                       <Label className="font-semibold block">{t("editProfile.identity.backImg", { defaultValue: "Ảnh mặt sau CCCD" })}</Label>
-                      <div className="border-2 border-dashed border-border rounded-2xl h-48 flex flex-col items-center justify-center text-muted-foreground bg-muted/10 hover:bg-muted/50 hover:border-[#2E3192]/40 transition-colors cursor-pointer overflow-hidden">
-                         <span className="p-3 bg-card rounded-full shadow-sm mb-3 group-hover:scale-110 transition-transform"><Camera size={24} className="text-muted-foreground group-hover:text-[#2E3192] transition-colors" /></span>
-                         <span className="font-medium text-sm text-foreground">{t("editProfile.identity.uploadBackImg", { defaultValue: "Tải ảnh mặt sau lên" })}</span>
-                         <span className="text-xs opacity-70 mt-1">{t("editProfile.identity.imgHint", { defaultValue: "Định dạng JPEG, PNG, max 5MB" })}</span>
+                      <input type="file" ref={backInputRef} disabled={!isEditingMode} className="hidden" accept="image/jpeg, image/png, image/webp" onChange={(e) => handleFileChange(e, setCitizenIdBackFile, setCitizenIdBackPreview)} />
+                      <div onClick={() => isEditingMode && backInputRef.current?.click()} className={`relative border-2 border-dashed border-border rounded-2xl h-48 flex flex-col items-center justify-center text-muted-foreground bg-muted/10 transition-colors overflow-hidden ${isEditingMode ? 'hover:bg-muted/50 hover:border-[#2E3192]/40 cursor-pointer' : ''}`}>
+                         {citizenIdBackPreview ? (
+                            <img src={citizenIdBackPreview} alt="Back ID" className="w-full h-full object-cover" />
+                         ) : (
+                           <>
+                             <span className={`p-3 bg-card rounded-full shadow-sm mb-3 transition-transform ${isEditingMode ? 'group-hover:scale-110' : ''}`}><Camera size={24} className={`text-muted-foreground transition-colors ${isEditingMode ? 'group-hover:text-[#2E3192]' : ''}`} /></span>
+                             <span className="font-medium text-sm text-foreground">{t("editProfile.identity.uploadBackImg", { defaultValue: "Tải ảnh mặt sau lên" })}</span>
+                             <span className="text-xs opacity-70 mt-1">{t("editProfile.identity.imgHint", { defaultValue: "Định dạng JPEG, PNG, max 5MB" })}</span>
+                           </>
+                         )}
                       </div>
                    </div>
                 </div>

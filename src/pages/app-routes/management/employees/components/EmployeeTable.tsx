@@ -28,6 +28,7 @@ export interface Employee {
   checkInTime: string;
   checkOutTime: string;
   sysRole: string;
+  avatarUrl?: string;
 }
 
 interface EmployeeTableProps {
@@ -85,7 +86,7 @@ export default function EmployeeTable({ employees, onDelete, onEditBasicInfo, on
                 </TableCell>
                 <TableCell className="py-4 border-r border-border text-left align-middle px-6 whitespace-nowrap">
                   <div className="flex items-center gap-3">
-                    <AvatarPlaceholder name={emp.fullName} className="w-10 h-10 text-sm" />
+                    <AvatarPlaceholder name={emp.fullName} src={emp.avatarUrl} className="w-10 h-10 text-sm" />
                     <div className="flex flex-col">
                       <span className="font-bold text-[#1E2062]">{emp.fullName || "-"}</span>
                       {emp.email && <span className="text-xs text-muted-foreground">{emp.email}</span>}

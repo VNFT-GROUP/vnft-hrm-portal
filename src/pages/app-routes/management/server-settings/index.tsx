@@ -195,7 +195,16 @@ export default function ServerSettingsPage() {
                       {t("serverSettings.summaryDesc")}
                     </CardDescription>
                   </CardHeader>
-                  <CardContent className="space-y-4 pt-5 bg-slate-50/50">
+                  <CardContent className="space-y-5 pt-5 bg-slate-50/50">
+                    <div className="bg-emerald-100/50 rounded-xl p-4 border border-emerald-200/60 shadow-sm flex flex-col gap-2.5">
+                      <p className="text-[13.5px] font-semibold text-emerald-900">{t("serverSettings.summaryNoteTitle")}</p>
+                      <ul className="list-disc list-outside pl-4 space-y-1.5 marker:text-emerald-500">
+                        <li className="text-[13px] text-emerald-800/90 leading-tight">{t("serverSettings.summaryNote1")}</li>
+                        <li className="text-[13px] text-emerald-800/90 leading-tight">{t("serverSettings.summaryNote2")}</li>
+                        <li className="text-[13px] text-emerald-800/90 leading-tight">{t("serverSettings.summaryNote3")}</li>
+                      </ul>
+                    </div>
+
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs flex justify-between items-center">
                         <Label className="text-[14px] font-semibold text-slate-700">{t("serverSettings.summaryEnabled")}</Label>

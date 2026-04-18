@@ -29,7 +29,6 @@ export default {
   summaryNoteTitle: "此周期内自动执行的任务：",
   summaryNote1: "扫描打卡数据并重新计算所有员工的实际工作时间。",
   summaryNote2: "汇总并更新违规状态（迟到、早退和缺勤）。",
-  summaryNote3: "同步并结算今天生效的休假、居家办公或出差申请的各项额度。",
   summaryEnabled: "运行状态",
   summaryEnabledYes: "进行中",
   summaryEnabledNo: "已暂停",

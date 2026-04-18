@@ -29,7 +29,6 @@ export default {
   summaryNoteTitle: "Tasks automatically executed during this cycle:",
   summaryNote1: "Scans clock-in data and recalculates actual working hours for all employees.",
   summaryNote2: "Aggregates and updates violation statuses (late arrivals, early departures, and absences).",
-  summaryNote3: "Synchronizes and settles leave quotas for Leaves, WFH, or Business Trips effective today.",
   summaryEnabled: "Job Status",
   summaryEnabledYes: "Active",
   summaryEnabledNo: "Paused",

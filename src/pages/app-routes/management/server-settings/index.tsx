@@ -115,7 +115,7 @@ export default function ServerSettingsPage() {
                         <Label className="text-[14px] font-semibold text-slate-700">{t("serverSettings.lateGrace")}</Label>
                         <span className="text-[12px] text-slate-500 leading-snug">{t("serverSettings.lateGraceNote")}</span>
                       </div>
-                      <span className="font-bold text-indigo-700 bg-indigo-50 border border-indigo-100 px-3.5 py-1.5 rounded-lg text-sm shrink-0">
+                      <span className="font-bold text-[#2E3192] bg-[#2E3192]/10 border border-[#2E3192]/20 px-3.5 py-1.5 rounded-lg text-sm shrink-0">
                         {settings.attendanceLateGraceMinutes} {t("serverSettings.unitMinutes")}
                       </span>
                     </div>
@@ -125,7 +125,7 @@ export default function ServerSettingsPage() {
                         <Label className="text-[14px] font-semibold text-slate-700">{t("serverSettings.earlyLeave")}</Label>
                         <span className="text-[12px] text-slate-500 leading-snug">{t("serverSettings.earlyLeaveNote")}</span>
                       </div>
-                      <span className="font-bold text-rose-700 bg-rose-50 border border-rose-100 px-3.5 py-1.5 rounded-lg text-sm shrink-0">
+                      <span className="font-bold text-[#2E3192] bg-[#2E3192]/10 border border-[#2E3192]/20 px-3.5 py-1.5 rounded-lg text-sm shrink-0">
                         {settings.attendanceEarlyLeaveGraceMinutes} {t("serverSettings.unitMinutes")}
                       </span>
                     </div>
@@ -135,7 +135,7 @@ export default function ServerSettingsPage() {
                          <Label className="text-[14px] font-semibold text-slate-700">{t("serverSettings.halfWorkThreshold")}</Label>
                          <span className="text-[12px] text-slate-500 leading-snug">{t("serverSettings.halfWorkNote", { hours: settings.attendanceHalfWorkUnitHours })}</span>
                        </div>
-                       <span className="font-bold text-emerald-700 bg-emerald-50 border border-emerald-100 px-3.5 py-1.5 rounded-lg text-sm shrink-0">
+                       <span className="font-bold text-[#2E3192] bg-[#2E3192]/10 border border-[#2E3192]/20 px-3.5 py-1.5 rounded-lg text-sm shrink-0">
                          {settings.attendanceHalfWorkUnitHours} {t("serverSettings.unitHours")}
                        </span>
                     </div>
@@ -145,7 +145,7 @@ export default function ServerSettingsPage() {
                          <Label className="text-[14px] font-semibold text-slate-700">{t("serverSettings.fullWorkThreshold")}</Label>
                          <span className="text-[12px] text-slate-500 leading-snug">{t("serverSettings.fullWorkNote", { hours: settings.attendanceFullWorkUnitHours })}</span>
                        </div>
-                       <span className="font-bold text-emerald-700 bg-emerald-50 border border-emerald-100 px-3.5 py-1.5 rounded-lg text-sm shrink-0">
+                       <span className="font-bold text-[#2E3192] bg-[#2E3192]/10 border border-[#2E3192]/20 px-3.5 py-1.5 rounded-lg text-sm shrink-0">
                          {settings.attendanceFullWorkUnitHours} {t("serverSettings.unitHours")}
                        </span>
                     </div>
@@ -155,8 +155,8 @@ export default function ServerSettingsPage() {
                 <Card className="shadow-sm border-slate-200/80 overflow-hidden h-fit">
                   <CardHeader className="pb-4 bg-white border-b border-slate-100">
                     <CardTitle className="text-[17px] flex items-center gap-2 text-slate-800">
-                      <div className="p-1.5 bg-sky-50 rounded-md">
-                        <Clock className="w-4 h-4 text-sky-600" />
+                      <div className="p-1.5 bg-[#2E3192]/10 rounded-md">
+                        <Clock className="w-4 h-4 text-[#2E3192]" />
                       </div>
                       {t("serverSettings.timezoneTitle")}
                     </CardTitle>
@@ -186,8 +186,8 @@ export default function ServerSettingsPage() {
                 <Card className="shadow-sm border-slate-200/80 overflow-hidden h-fit lg:col-span-2">
                   <CardHeader className="pb-4 bg-white border-b border-slate-100">
                     <CardTitle className="text-[17px] flex items-center gap-2 text-slate-800">
-                      <div className="p-1.5 bg-emerald-50 rounded-md">
-                        <CalendarClock className="w-4 h-4 text-emerald-600" />
+                      <div className="p-1.5 bg-[#2E3192]/10 rounded-md">
+                        <CalendarClock className="w-4 h-4 text-[#2E3192]" />
                       </div>
                       {t("serverSettings.summaryTitle")}
                     </CardTitle>
@@ -195,13 +195,12 @@ export default function ServerSettingsPage() {
                       {t("serverSettings.summaryDesc")}
                     </CardDescription>
                   </CardHeader>
-                  <CardContent className="space-y-5 pt-5 bg-slate-50/50">
-                    <div className="bg-emerald-100/50 rounded-xl p-4 border border-emerald-200/60 shadow-sm flex flex-col gap-2.5">
-                      <p className="text-[13.5px] font-semibold text-emerald-900">{t("serverSettings.summaryNoteTitle")}</p>
-                      <ul className="list-disc list-outside pl-4 space-y-1.5 marker:text-emerald-500">
-                        <li className="text-[13px] text-emerald-800/90 leading-tight">{t("serverSettings.summaryNote1")}</li>
-                        <li className="text-[13px] text-emerald-800/90 leading-tight">{t("serverSettings.summaryNote2")}</li>
-                        <li className="text-[13px] text-emerald-800/90 leading-tight">{t("serverSettings.summaryNote3")}</li>
+                  <CardContent className="space-y-4 p-4 md:p-5 bg-slate-50/50">
+                    <div className="bg-[#2E3192]/5 rounded-xl px-4 py-3 border border-[#2E3192]/10 shadow-sm flex flex-col gap-2">
+                      <p className="text-[13.5px] font-semibold text-[#1E2062]">{t("serverSettings.summaryNoteTitle")}</p>
+                      <ul className="list-disc list-outside pl-4 space-y-1.5 marker:text-[#2E3192]/60">
+                        <li className="text-[13px] text-slate-700 leading-tight">{t("serverSettings.summaryNote1")}</li>
+                        <li className="text-[13px] text-slate-700 leading-tight">{t("serverSettings.summaryNote2")}</li>
                       </ul>
                     </div>
 
@@ -210,7 +209,7 @@ export default function ServerSettingsPage() {
                         <Label className="text-[14px] font-semibold text-slate-700">{t("serverSettings.summaryEnabled")}</Label>
                         <span className={`font-bold px-3.5 py-1.5 rounded-lg text-sm shrink-0 border ${
                            settings.attendanceDailySummaryEnabled 
-                             ? "text-emerald-700 bg-emerald-50 border-emerald-100" 
+                             ? "text-[#2E3192] bg-[#2E3192]/10 border-[#2E3192]/20" 
                              : "text-slate-600 bg-slate-100 border-slate-200"
                         }`}>
                           {settings.attendanceDailySummaryEnabled ? t("serverSettings.summaryEnabledYes") : t("serverSettings.summaryEnabledNo")}
@@ -220,9 +219,9 @@ export default function ServerSettingsPage() {
                       <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs flex justify-between items-center relative overflow-hidden">
                         <div className="flex flex-col gap-1.5">
                            <Label className="text-[14px] font-semibold text-slate-700">{t("serverSettings.summaryCron")}</Label>
-                           <span className="text-[12.5px] font-medium text-emerald-600/90">{parseCronToText(settings.attendanceDailySummaryCron)}</span>
+                           <span className="text-[12.5px] font-medium text-slate-500/90">{parseCronToText(settings.attendanceDailySummaryCron)}</span>
                         </div>
-                        <p className="font-bold text-indigo-700 font-mono bg-indigo-50 border border-indigo-100 px-3.5 py-1.5 rounded-lg text-sm tracking-tight">{settings.attendanceDailySummaryCron}</p>
+                        <p className="font-bold text-[#2E3192] font-mono bg-[#2E3192]/10 border border-[#2E3192]/20 px-3.5 py-1.5 rounded-lg text-sm tracking-tight">{settings.attendanceDailySummaryCron}</p>
                       </div>
                     </div>
                   </CardContent>

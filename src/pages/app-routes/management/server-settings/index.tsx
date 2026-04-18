@@ -101,7 +101,7 @@ export default function ServerSettingsPage() {
                         <span className="text-[12px] text-slate-500 leading-snug">{t("serverSettings.lateGraceNote")}</span>
                       </div>
                       <span className="font-bold text-indigo-700 bg-indigo-50 border border-indigo-100 px-3.5 py-1.5 rounded-lg text-sm shrink-0">
-                        {settings.attendance.lateGraceMinutes} {t("serverSettings.unitMinutes")}
+                        {settings.attendanceLateGraceMinutes} {t("serverSettings.unitMinutes")}
                       </span>
                     </div>
 
@@ -111,27 +111,27 @@ export default function ServerSettingsPage() {
                         <span className="text-[12px] text-slate-500 leading-snug">{t("serverSettings.earlyLeaveNote")}</span>
                       </div>
                       <span className="font-bold text-rose-700 bg-rose-50 border border-rose-100 px-3.5 py-1.5 rounded-lg text-sm shrink-0">
-                        {settings.attendance.earlyLeaveGraceMinutes} {t("serverSettings.unitMinutes")}
+                        {settings.attendanceEarlyLeaveGraceMinutes} {t("serverSettings.unitMinutes")}
                       </span>
                     </div>
 
                     <div className="flex justify-between items-center bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
                        <div className="flex flex-col gap-1 max-w-[70%]">
                          <Label className="text-[14px] font-semibold text-slate-700">{t("serverSettings.halfWorkThreshold")}</Label>
-                         <span className="text-[12px] text-slate-500 leading-snug">{t("serverSettings.halfWorkNote", { hours: settings.attendance.halfWorkUnitHours })}</span>
+                         <span className="text-[12px] text-slate-500 leading-snug">{t("serverSettings.halfWorkNote", { hours: settings.attendanceHalfWorkUnitHours })}</span>
                        </div>
                        <span className="font-bold text-emerald-700 bg-emerald-50 border border-emerald-100 px-3.5 py-1.5 rounded-lg text-sm shrink-0">
-                         {settings.attendance.halfWorkUnitHours} {t("serverSettings.unitHours")}
+                         {settings.attendanceHalfWorkUnitHours} {t("serverSettings.unitHours")}
                        </span>
                     </div>
 
                     <div className="flex justify-between items-center bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
                        <div className="flex flex-col gap-1 max-w-[70%]">
                          <Label className="text-[14px] font-semibold text-slate-700">{t("serverSettings.fullWorkThreshold")}</Label>
-                         <span className="text-[12px] text-slate-500 leading-snug">{t("serverSettings.fullWorkNote", { hours: settings.attendance.fullWorkUnitHours })}</span>
+                         <span className="text-[12px] text-slate-500 leading-snug">{t("serverSettings.fullWorkNote", { hours: settings.attendanceFullWorkUnitHours })}</span>
                        </div>
                        <span className="font-bold text-emerald-700 bg-emerald-50 border border-emerald-100 px-3.5 py-1.5 rounded-lg text-sm shrink-0">
-                         {settings.attendance.fullWorkUnitHours} {t("serverSettings.unitHours")}
+                         {settings.attendanceFullWorkUnitHours} {t("serverSettings.unitHours")}
                        </span>
                     </div>
                   </CardContent>
@@ -158,12 +158,12 @@ export default function ServerSettingsPage() {
                     <div className="grid grid-cols-2 gap-4">
                       <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs flex flex-col gap-1.5">
                         <Label className="text-[12px] font-semibold text-slate-500 uppercase tracking-widest">{t("serverSettings.lunchStart")}</Label>
-                        <p className="font-extrabold text-[15px] text-slate-800">{settings.attendance.lunchBreakStart}</p>
+                        <p className="font-extrabold text-[15px] text-slate-800">{settings.attendanceLunchBreakStart}</p>
                       </div>
                       
                       <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs flex flex-col gap-1.5">
                         <Label className="text-[12px] font-semibold text-slate-500 uppercase tracking-widest">{t("serverSettings.lunchEnd")}</Label>
-                        <p className="font-extrabold text-[15px] text-slate-800">{settings.attendance.lunchBreakEnd}</p>
+                        <p className="font-extrabold text-[15px] text-slate-800">{settings.attendanceLunchBreakEnd}</p>
                       </div>
                     </div>
                   </CardContent>

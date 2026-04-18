@@ -1,6 +1,11 @@
-import type { AttendanceSettingsResponse } from "../attendance/AttendanceSettingsResponse";
-
 export interface ServerSettingsResponse {
   timeZone: string;
-  attendance: AttendanceSettingsResponse;
+  attendanceLateGraceMinutes: number;
+  attendanceEarlyLeaveGraceMinutes: number;
+  attendanceHalfWorkUnitHours: number;
+  attendanceFullWorkUnitHours: number;
+  attendanceLunchBreakStart: string;
+  attendanceLunchBreakEnd: string;
+  attendanceDailySummaryEnabled: boolean;
+  attendanceDailySummaryCron: string;
 }

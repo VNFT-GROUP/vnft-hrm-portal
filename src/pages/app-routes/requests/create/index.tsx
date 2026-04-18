@@ -16,9 +16,8 @@ import {
   CheckCircle2,
   Truck,
   UserMinus,
-  Check,
   Home,
-  ChevronsUpDown,
+  Check,
 } from "lucide-react";
 import { toast } from "sonner";
 import {
@@ -26,14 +25,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import {
-  Command,
-  CommandInput,
-  CommandEmpty,
-  CommandGroup,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
+
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { vi } from "date-fns/locale";
@@ -68,7 +60,24 @@ const requestCards = [
     icon: Umbrella,
     color: "text-indigo-500",
     bg: "bg-indigo-50 ring-1 ring-indigo-100",
-    quota: "12 ngày / năm",
+  },
+  {
+    id: "wfh",
+    label: "Đơn WFH",
+    description:
+      "Đơn WFH phát sinh khi bạn được công ty cho phép làm việc tại nhà.",
+    icon: Home,
+    color: "text-purple-500",
+    bg: "bg-purple-50 ring-1 ring-purple-100",
+  },
+  {
+    id: "checkInOut",
+    label: "Đơn checkin/out",
+    description:
+      "Đơn checkin/out phát sinh khi bạn quên chấm công lúc đến hoặc lúc về.",
+    icon: CheckCircle2,
+    color: "text-rose-500",
+    bg: "bg-rose-50 ring-1 ring-rose-100",
   },
   {
     id: "absent",
@@ -80,16 +89,6 @@ const requestCards = [
     bg: "bg-cyan-50 ring-1 ring-cyan-100",
   },
   {
-    id: "checkInOut",
-    label: "Đơn checkin/out",
-    description:
-      "Đơn checkin/out phát sinh khi bạn quên chấm công lúc đến hoặc lúc về.",
-    icon: CheckCircle2,
-    color: "text-rose-500",
-    bg: "bg-rose-50 ring-1 ring-rose-100",
-    quota: "2 lần/tuần",
-  },
-  {
     id: "business",
     label: "Đơn công tác",
     description:
@@ -97,16 +96,6 @@ const requestCards = [
     icon: Truck,
     color: "text-lime-600",
     bg: "bg-lime-50 ring-1 ring-lime-100",
-  },
-  {
-    id: "wfh",
-    label: "Đơn WFH",
-    description:
-      "Đơn WFH phát sinh khi bạn được công ty cho phép làm việc tại nhà.",
-    icon: Home,
-    color: "text-purple-500",
-    bg: "bg-purple-50 ring-1 ring-purple-100",
-    quota: "6 ngày / năm",
   },
   {
     id: "resign",
@@ -118,51 +107,7 @@ const requestCards = [
   },
 ] as const;
 
-const GLOBAL_REASONS = [
-  "Gặp khách hàng",
-  "Việc cá nhân",
-  "Giải quyết việc Công ty",
-  "Lý do khác",
-  "Xin đi muộn/về sớm (dưới 1 tiếng rưỡi)",
-  "Đi ngân hàng/đi thuế",
-  "Văn phòng cúp điện",
-  "Đi khám sức khoẻ tổng quát",
-  "Đi triển lãm",
-];
 
-const CHECKINOUT_REASONS = [
-  "Quên chốt vân tay",
-  "Máy chấm công hỏng",
-  "Chưa được cấp tài khoản",
-];
-
-const LEAVE_REASONS = [
-  {
-    label: "Nghỉ phép năm",
-    desc: "Theo chính sách công ty / thường 12 ngày/năm",
-    isPaid: true,
-  },
-  { label: "Nghỉ tang chế", desc: "Tối đa: 03 ngày/lần", isPaid: true },
-  { label: "Nghỉ đám cưới", desc: "Tối đa: 03 ngày/lần", isPaid: true },
-  { label: "Nghỉ thai sản", desc: "Tối đa: 06 tháng" },
-  {
-    label: "Nghỉ con ốm",
-    desc: "Tối đa: 20 ngày/năm/con (<3 tuổi) hoặc 15 ngày/năm/con (3-<7 tuổi)",
-  },
-  { label: "Nghỉ dưỡng sức sau ốm đau", desc: "Tối đa: 05-10 ngày/năm" },
-  {
-    label: "Nghỉ hội nghị, học tập",
-    desc: "Theo quyết định / chính sách công ty",
-  },
-  { label: "Nghỉ dưỡng sức sau thai sản", desc: "Tối đa: 05-10 ngày" },
-  {
-    label: "Nghỉ dưỡng sức sau điều trị thương tật, tai nạn",
-    desc: "Tối đa: 05-10 ngày/năm",
-  },
-  { label: "Nghỉ tai nạn", desc: "Theo hồ sơ điều trị / quy định BHXH" },
-  { label: "Nghỉ công tác", desc: "Theo quyết định / chính sách công ty" },
-  { label: "Nghỉ khác", desc: "Theo phê duyệt / quy định nội bộ" },
-];
 
 // Modun React-Quill được cấu hình để tắt upload ảnh/chặn media nhưng cho phép chọn màu
 const quillModules = {
@@ -181,10 +126,6 @@ const quillModules = {
 export default function CreateRequestPage() {
   const navigate = useNavigate();
   const [type, setType] = useState<RequestType | "">("");
-  const [reason, setReason] = useState("");
-  const [openReason, setOpenReason] = useState(false);
-  const [reasonTriggerWidth, setReasonTriggerWidth] = useState(0);
-  const reasonTriggerRef = useRef<HTMLButtonElement>(null);
   const [description, setDescription] = useState("");
 
 
@@ -229,7 +170,6 @@ export default function CreateRequestPage() {
     const isFirstTimeSelection = type === "";
 
     setType((val as RequestType) || "");
-    setReason("");
 
     // Automatically scroll down to the form only if no option was previously selected
     if (isFirstTimeSelection && val) {
@@ -240,10 +180,6 @@ export default function CreateRequestPage() {
   };
 
   const onSubmit = () => {
-    if (!reason) {
-      toast.error("Vui lòng chọn lý do tạo đơn.");
-      return;
-    }
     toast.success("Đã tạo đơn thành công!");
     navigate("/app/requests");
   };
@@ -316,13 +252,6 @@ export default function CreateRequestPage() {
                       <span className="text-[12.5px] text-slate-500 leading-snug">
                         {card.description}
                       </span>
-                      {"quota" in card && typeof card.quota === "string" && (
-                        <div className="mt-0.5">
-                          <span className="text-[11.5px] font-medium bg-slate-100/90 text-slate-600 px-2 py-0.5 border border-slate-200 rounded shrink-0 inline-flex items-center">
-                            Giới hạn: {card.quota as string}
-                          </span>
-                        </div>
-                      )}
                     </div>
                     {isSelected && (
                       <div className="absolute top-4 right-4 bg-[#2E3192] text-white rounded-full flex items-center justify-center w-5 h-5 shadow-sm">
@@ -347,7 +276,7 @@ export default function CreateRequestPage() {
                 2. Chi tiết yêu cầu
               </h3>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <div className="grid grid-cols-1 gap-5">
                 <div className="space-y-1.5">
                   <Label className="text-[13px] font-semibold text-slate-700">
                     Loại đơn đăng ký
@@ -355,109 +284,6 @@ export default function CreateRequestPage() {
                   <div className="w-full flex items-center justify-start text-left h-10 bg-slate-100/80 border-slate-200 border rounded-md px-4 text-sm text-slate-700 cursor-not-allowed font-medium">
                     {typeLabels[type as RequestType]}
                   </div>
-                </div>
-
-                <div className="space-y-1.5">
-                  <Label className="text-[13px] font-semibold text-slate-700">
-                    Lý do <span className="text-rose-500">*</span>
-                  </Label>
-                  <Popover
-                    open={openReason}
-                    onOpenChange={(val) => {
-                      if (val && reasonTriggerRef.current) {
-                        setReasonTriggerWidth(
-                          reasonTriggerRef.current.offsetWidth,
-                        );
-                      }
-                      setOpenReason(val);
-                    }}
-                  >
-                    <PopoverTrigger
-                      ref={reasonTriggerRef}
-                      className={cn(
-                        "w-full flex items-center justify-between min-h-[40px] h-auto font-normal bg-white border border-slate-200 rounded-md px-4 py-2 hover:bg-slate-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/20",
-                        !reason && "text-slate-500",
-                      )}
-                    >
-                      <span className="text-[14px] text-left whitespace-normal wrap-break-word">
-                        {reason ? reason : "-- Chọn --"}
-                      </span>
-                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                    </PopoverTrigger>
-                    <PopoverContent
-                      style={{
-                        width:
-                          reasonTriggerWidth > 0 ? reasonTriggerWidth : "auto",
-                      }}
-                      className="p-0"
-                      align="start"
-                    >
-                      <Command>
-                        <CommandInput
-                          placeholder="Tìm kiếm lý do..."
-                          className="h-9"
-                        />
-                        <CommandList>
-                          <CommandEmpty>
-                            Không tìm kiếm được lý do phù hợp.
-                          </CommandEmpty>
-                          <CommandGroup>
-                            {(() => {
-                              const list =
-                                type === "leave"
-                                  ? LEAVE_REASONS
-                                  : type === "checkInOut"
-                                    ? CHECKINOUT_REASONS
-                                    : GLOBAL_REASONS;
-                              return list.map((item, idx) => {
-                                const rs = typeof item === "string" ? item : item.label;
-                                const isPaid =
-                                  typeof item === "string" ? false : ('isPaid' in item ? item.isPaid : false);
-
-                                return (
-                                  <CommandItem
-                                    key={idx}
-                                    value={rs}
-                                    onSelect={(currentValue) => {
-                                      setReason(
-                                        currentValue.toLowerCase() ===
-                                          reason.toLowerCase()
-                                          ? ""
-                                          : rs,
-                                      );
-                                      setOpenReason(false);
-                                    }}
-                                    className="text-[13px] py-1.5 px-3 flex items-start gap-2 cursor-pointer"
-                                  >
-                                    <Check
-                                      className={cn(
-                                        "mt-1 h-4 w-4 shrink-0",
-                                        reason === rs
-                                          ? "opacity-100 text-[#2E3192]"
-                                          : "opacity-0",
-                                      )}
-                                    />
-                                    <div className="flex flex-col gap-0.5">
-                                      <div className="flex flex-row items-center flex-wrap gap-2">
-                                        <span className="font-medium text-slate-800 wrap-break-word">
-                                          {rs}
-                                        </span>
-                                        {isPaid && (
-                                          <span className="inline-flex items-center px-[5px] py-[2px] rounded text-[10px] font-semibold bg-emerald-50 text-emerald-600 border border-emerald-100/60 tracking-wide uppercase leading-none min-h-[16px]">
-                                            Tính công
-                                          </span>
-                                        )}
-                                      </div>
-                                    </div>
-                                  </CommandItem>
-                                );
-                              });
-                            })()}
-                          </CommandGroup>
-                        </CommandList>
-                      </Command>
-                    </PopoverContent>
-                  </Popover>
                 </div>
               </div>
 

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus, Search, Briefcase, Edit2, Trash2, MousePointerClick } from "lucide-react";
+import { Plus, Search, Briefcase, Edit2, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { m  } from 'framer-motion';
@@ -156,11 +156,6 @@ export default function PositionsPage() {
               </span>
               {t("position.legendHideSuffix")}
             </div>
-          </div>
-          <div className="w-full h-px bg-border/50 hidden md:block" />
-          <div className="flex items-center gap-1.5 text-[#2E3192]">
-            <MousePointerClick size={16} />
-            <span className="italic">Mẹo: Click chuột phải vào dòng dữ liệu để thao tác nhanh.</span>
           </div>
         </m.div>
       )}

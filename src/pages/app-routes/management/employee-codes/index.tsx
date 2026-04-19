@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Plus, Search, FileText, MousePointerClick, Edit2, Power } from 'lucide-react';
+import { Plus, Search, FileText, Edit2, Power } from 'lucide-react';
 import { useTranslation } from "react-i18next";
 import { useLayoutStore } from "@/store/useLayoutStore";
 import { Button } from '@/components/ui/button';
@@ -139,11 +139,6 @@ export default function EmployeeCodesPage() {
             <div className="ml-auto flex items-center text-xs text-muted-foreground bg-muted/40 px-2 py-1 rounded-md border border-border opacity-70 hover:opacity-100 transition-opacity">
               {t('management.hideLegendHint', { defaultValue: 'Nhấn Alt + S để bật tắt mục này' })}
             </div>
-          </div>
-          <div className="w-full h-px bg-border/50 hidden md:block" />
-          <div className="flex items-center gap-1.5 text-[#2E3192]">
-            <MousePointerClick size={16} />
-            <span className="italic">{t('management.actionTooltip', { defaultValue: 'Mẹo: Click chuột phải vào dòng dữ liệu để thao tác nhanh.' })}</span>
           </div>
         </m.div>
       )}

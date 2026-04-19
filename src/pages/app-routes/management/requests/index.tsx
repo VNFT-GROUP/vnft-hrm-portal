@@ -1,9 +1,11 @@
 import { useState } from "react";
-import { Check, X, FileEdit, Clock, Calendar, Search, Filter } from "lucide-react";
+import { Check, X, FileEdit, Clock, Calendar, Search, Filter, Eye } from "lucide-react";
 import { m  } from 'framer-motion';
 import { toast } from "sonner";
 import { Card } from "@/components/ui/card";
 import CustomPagination from "@/components/custom/CustomPagination";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { RichTextViewer } from "@/components/custom/RichTextViewer";
 
 const MOCK_REQUESTS = [
   { id: "REQ-001", user: "Phạm Văn A", type: "Nghỉ phép năm", date: "2026-04-16", reason: "Giải quyết việc gia đình", status: "PENDING" },
@@ -18,6 +20,8 @@ export default function ManagementRequestsPage() {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
+  
+  const [selectedRequest, setSelectedRequest] = useState<typeof MOCK_REQUESTS[0] | null>(null);
 
   const totalPages = Math.ceil(requests.length / pageSize) || 1;
   const paginatedData = requests.slice((currentPage - 1) * pageSize, currentPage * pageSize);
@@ -113,54 +117,69 @@ export default function ManagementRequestsPage() {
 
         {/* Table */}
         <div className="overflow-x-auto flex-1 flex flex-col">
-          <table className="w-full text-sm text-left">
-            <thead className="text-xs text-muted-foreground uppercase bg-muted/40 border-b border-border">
+          <table className="w-full text-sm text-left border-collapse border border-slate-200 select-text">
+            <thead className="text-xs text-slate-600 uppercase bg-slate-100 border-b border-slate-200">
               <tr>
-                <th className="px-4 py-3 font-semibold">Mã đơn</th>
-                <th className="px-4 py-3 font-semibold">Nhân viên</th>
-                <th className="px-4 py-3 font-semibold">Loại đơn</th>
-                <th className="px-4 py-3 font-semibold flex items-center gap-1.5"><Calendar size={14}/> Ngày Áp Dụng</th>
-                <th className="px-4 py-3 font-semibold">Lý do</th>
-                <th className="px-4 py-3 font-semibold">Trạng thái</th>
-                <th className="px-4 py-3 font-semibold text-right">Thao tác</th>
+                <th className="px-4 py-3 font-semibold text-center border-x border-slate-200">Mã đơn</th>
+                <th className="px-4 py-3 font-semibold text-left border-x border-slate-200">Nhân viên</th>
+                <th className="px-4 py-3 font-semibold text-left border-x border-slate-200">Loại đơn</th>
+                <th className="px-4 py-3 font-semibold text-center border-x border-slate-200">
+                  <div className="flex items-center justify-center gap-1.5"><Calendar size={14}/> Ngày Áp Dụng</div>
+                </th>
+                <th className="px-4 py-3 font-semibold text-left border-x border-slate-200">Lý do</th>
+                <th className="px-4 py-3 font-semibold text-center border-x border-slate-200">Trạng thái</th>
+                <th className="px-4 py-3 font-semibold text-center border-x border-slate-200">Thao tác</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-border">
+            <tbody className="divide-y divide-slate-200">
               {paginatedData.map(req => (
-                <tr key={req.id} className="hover:bg-muted/30 transition-colors">
-                  <td className="px-4 py-3 font-medium text-[#2E3192]">{req.id}</td>
-                  <td className="px-4 py-3 font-medium">{req.user}</td>
-                  <td className="px-4 py-3">{req.type}</td>
-                  <td className="px-4 py-3">{req.date}</td>
-                  <td className="px-4 py-3 text-muted-foreground max-w-[200px] truncate" title={req.reason}>{req.reason}</td>
-                  <td className="px-4 py-3">{getStatusBadge(req.status)}</td>
-                  <td className="px-4 py-3 text-right">
-                    {req.status === "PENDING" ? (
-                      <div className="flex items-center justify-end gap-2">
-                        <button 
-                          onClick={() => handleAction(req.id, "APPROVE")}
-                          className="bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500 hover:text-white p-1.5 rounded-md transition-all group"
-                          title="Duyệt"
+                <tr key={req.id} className="hover:bg-slate-50 transition-colors">
+                  <td className="px-4 py-3 font-medium text-[#2E3192] border-x border-slate-200 whitespace-nowrap text-center">{req.id}</td>
+                  <td className="px-4 py-3 font-medium border-x border-slate-200 whitespace-nowrap text-left">{req.user}</td>
+                  <td className="px-4 py-3 border-x border-slate-200 whitespace-nowrap text-left">{req.type}</td>
+                  <td className="px-4 py-3 border-x border-slate-200 whitespace-nowrap text-center">{req.date}</td>
+                  <td className="px-4 py-3 text-slate-700 border-x border-slate-200 max-w-[300px]">
+                    <div className="line-clamp-2 whitespace-normal" title={req.reason}>
+                      {req.reason}
+                    </div>
+                  </td>
+                        <td className="px-4 py-3 border-x border-slate-200 whitespace-nowrap text-center">{getStatusBadge(req.status)}</td>
+                        <td className="px-4 py-3 border-x border-slate-200 whitespace-nowrap text-center">
+                          <div className="flex items-center justify-center gap-2">
+                        <button
+                          onClick={() => setSelectedRequest(req)}
+                          className="p-1.5 text-indigo-600 hover:bg-indigo-50 rounded transition-colors"
+                          title="Xem chi tiết"
                         >
-                          <Check size={16} className="group-hover:scale-110 transition-transform" />
+                          <Eye size={18} />
                         </button>
-                        <button 
-                          onClick={() => handleAction(req.id, "REJECT")}
-                          className="bg-red-500/10 text-red-600 hover:bg-red-500 hover:text-white p-1.5 rounded-md transition-all group"
-                          title="Từ chối"
-                        >
-                          <X size={16} className="group-hover:scale-110 transition-transform" />
-                        </button>
-                      </div>
-                    ) : (
-                      <span className="text-muted-foreground text-xs italic">Đã xử lý</span>
-                    )}
+                      {req.status === "PENDING" ? (
+                        <>
+                          <button 
+                            onClick={() => handleAction(req.id, "APPROVE")}
+                            className="bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500 hover:text-white p-1.5 rounded-md transition-all group"
+                            title="Duyệt"
+                          >
+                            <Check size={16} className="group-hover:scale-110 transition-transform" />
+                          </button>
+                          <button 
+                            onClick={() => handleAction(req.id, "REJECT")}
+                            className="bg-red-500/10 text-red-600 hover:bg-red-500 hover:text-white p-1.5 rounded-md transition-all group"
+                            title="Từ chối"
+                          >
+                            <X size={16} className="group-hover:scale-110 transition-transform" />
+                          </button>
+                        </>
+                      ) : (
+                        <span className="text-muted-foreground text-xs italic ml-2">Đã xử lý</span>
+                      )}
+                    </div>
                   </td>
                 </tr>
               ))}
               {requests.length === 0 && (
                 <tr>
-                  <td colSpan={7} className="text-center py-8 text-muted-foreground">Không có dữ liệu</td>
+                  <td colSpan={7} className="text-center py-8 text-muted-foreground border-x border-slate-200">Không có dữ liệu</td>
                 </tr>
               )}
             </tbody>
@@ -180,6 +199,42 @@ export default function ManagementRequestsPage() {
           )}
         </div>
       </div>
+      
+      <Dialog open={!!selectedRequest} onOpenChange={(open) => !open && setSelectedRequest(null)}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle>Chi tiết đơn từ - {selectedRequest?.user}</DialogTitle>
+          </DialogHeader>
+          {selectedRequest && (
+            <div className="space-y-4 pt-4">
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <div>
+                  <span className="text-muted-foreground block mb-1">Loại đơn:</span>
+                  <span className="font-medium text-slate-800">{selectedRequest.type}</span>
+                </div>
+                <div>
+                  <span className="text-muted-foreground block mb-1">Trạng thái:</span>
+                  {getStatusBadge(selectedRequest.status)}
+                </div>
+                <div className="col-span-2">
+                  <span className="text-muted-foreground block mb-1">Thời gian áp dụng:</span>
+                  <span className="font-medium text-slate-800">{selectedRequest.date}</span>
+                </div>
+                <div className="col-span-2">
+                  <span className="text-muted-foreground block mb-2">Mô tả/Lý do:</span>
+                  <div className="p-3 bg-slate-50 border border-slate-200 rounded-md">
+                    {selectedRequest.reason ? (
+                      <RichTextViewer htmlContent={selectedRequest.reason} />
+                    ) : (
+                      <span className="text-slate-400 italic">Không có mô tả</span>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

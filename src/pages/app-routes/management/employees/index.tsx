@@ -6,11 +6,11 @@ import {
   CircleDollarSign,
   Trash2,
   Loader2,
-  MousePointerClick,
   UserCog,
   Briefcase,
   Shield,
-  Key
+  Key,
+  MousePointerClick
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -63,9 +63,12 @@ export default function EmployeesPage() {
     confirmPassword: "",
   });
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(20);
+
   const { data: usersResponse, isLoading } = useQuery({
-    queryKey: ["users"],
-    queryFn: () => userService.getUsers(1, 1000),
+    queryKey: ["users", currentPage, pageSize],
+    queryFn: () => userService.getUsers(currentPage, pageSize),
   });
 
   const apiEmployees: Employee[] =
@@ -95,11 +98,8 @@ export default function EmployeesPage() {
         .includes(searchTerm.toLowerCase()),
   );
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(20);
-
-  const totalPages = Math.ceil(filteredData.length / pageSize) || 1;
-  const paginatedData = filteredData.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+  const totalPages = usersResponse?.data?.totalPages || 1;
+  const paginatedData = filteredData;
 
   const createUserMutation = useMutation({
     mutationFn: (data: CreateUserRequest) => userService.createUser(data),

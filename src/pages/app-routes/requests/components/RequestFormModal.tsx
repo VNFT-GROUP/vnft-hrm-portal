@@ -12,7 +12,6 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import {
   CalendarIcon,
-  ChevronLeft,
   Umbrella,
   User,
   CheckCircle2,
@@ -33,7 +32,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { vi } from "date-fns/locale";
 import { cn } from "@/lib/utils";
-import { useNavigate } from "react-router-dom";
+
 import { RichTextEditor } from "@/components/custom/RichTextEditor";
 
 type RequestType =
@@ -112,8 +111,17 @@ const requestCards = [
 
 
 
-export default function CreateRequestPage() {
-  const navigate = useNavigate();
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import type { RequestFormResponse } from "@/types/requestform/RequestFormResponse";
+import { useEffect } from "react";
+
+interface RequestFormModalProps {
+  isOpen: boolean;
+  onOpenChange: (open: boolean) => void;
+  initialData?: RequestFormResponse | null;
+}
+
+export default function RequestFormModal({ isOpen, onOpenChange, initialData }: RequestFormModalProps) {
   const [type, setType] = useState<RequestType | "">("");
   const [description, setDescription] = useState("");
 
@@ -123,17 +131,50 @@ export default function CreateRequestPage() {
   const [endDate, setEndDate] = useState<Date>();
 
   const [startTime, setStartTime] = useState("");
-  const [checkInOutType, setCheckInOutType] = useState<
-    "checkin" | "checkout" | ""
-  >("");
+  const [checkInOutType, setCheckInOutType] = useState<"checkin" | "checkout" | "">("");
   const [endTime, setEndTime] = useState("");
 
-  const [startSession, setStartSession] = useState<
-    "morning" | "afternoon" | "all"
-  >("all");
-  const [endSession, setEndSession] = useState<"morning" | "afternoon" | "all">(
-    "all",
-  );
+  const [startSession, setStartSession] = useState<"morning" | "afternoon" | "all">("all");
+  const [endSession, setEndSession] = useState<"morning" | "afternoon" | "all">("all");
+
+  useEffect(() => {
+    if (isOpen) {
+      setTimeout(() => {
+        if (initialData) {
+        const typeMap: Record<string, RequestType> = {
+          "LEAVE": "leave",
+          "WFH": "wfh",
+          "ABSENCE": "absent",
+          "BUSINESS_TRIP": "business",
+          "RESIGNATION": "resign",
+          "ATTENDANCE_ADJUSTMENT": "checkInOut",
+        };
+        setType(typeMap[initialData.type] || "");
+        setDescription(initialData.description || "");
+        
+        if (initialData.startDate) setStartDate(new Date(initialData.startDate));
+        if (initialData.endDate) setEndDate(new Date(initialData.endDate));
+        if (initialData.absenceDate) { setDate(new Date(initialData.absenceDate)); setStartTime(initialData.fromTime || ""); setEndTime(initialData.toTime || ""); }
+        if (initialData.attendanceDate) { setDate(new Date(initialData.attendanceDate)); setStartTime(initialData.requestedTime || ""); setCheckInOutType(initialData.timeType === "CHECK_IN" ? "checkin" : "checkout"); }
+        if (initialData.submissionDate) { setDate(new Date(initialData.submissionDate)); setEndDate(new Date(initialData.lastWorkingDate!)); }
+        
+        if (initialData.startSession) setStartSession(initialData.startSession === "FULL_DAY" ? "all" : initialData.startSession.toLowerCase() as "morning" | "afternoon");
+        if (initialData.endSession) setEndSession(initialData.endSession === "FULL_DAY" ? "all" : initialData.endSession.toLowerCase() as "morning" | "afternoon");
+      } else {
+        setType("");
+        setDescription("");
+        setDate(undefined);
+        setStartDate(undefined);
+        setEndDate(undefined);
+        setStartTime("");
+        setEndTime("");
+        setCheckInOutType("");
+        setStartSession("all");
+        setEndSession("all");
+      }
+      }, 0);
+    }
+  }, [isOpen, initialData]);
 
   const calculatedDays = useMemo(() => {
     if (!startDate || !endDate) return 0;
@@ -172,55 +213,68 @@ export default function CreateRequestPage() {
 
   const createMutation = useMutation({
     mutationFn: async () => {
+      const isEdit = !!initialData;
       switch (type) {
-        case "checkInOut":
-          return requestFormMeService.createCurrentUserAttendanceAdjustmentForm({
-            timeType: checkInOutType === "checkin" ? "CHECK_IN" : "CHECK_OUT",
+        case "checkInOut": {
+          const checkInOutPayload = {
+            timeType: checkInOutType === "checkin" ? "CHECK_IN" : "CHECK_OUT" as "CHECK_IN" | "CHECK_OUT",
             attendanceDate: format(date!, "yyyy-MM-dd"),
             requestedTime: startTime,
             description: description,
-          });
-        case "absent":
-          return requestFormMeService.createCurrentUserAbsenceForm({
+          };
+          return isEdit ? requestFormMeService.updateCurrentUserAttendanceAdjustmentForm(initialData.id, checkInOutPayload) : requestFormMeService.createCurrentUserAttendanceAdjustmentForm(checkInOutPayload);
+        }
+        case "absent": {
+          const absentPayload = {
             absenceDate: format(date!, "yyyy-MM-dd"),
             fromTime: startTime,
             toTime: endTime,
             description: description,
-          });
-        case "resign":
-          return requestFormMeService.createCurrentUserResignationForm({
+          };
+          return isEdit ? requestFormMeService.updateCurrentUserAbsenceForm(initialData.id, absentPayload) : requestFormMeService.createCurrentUserAbsenceForm(absentPayload);
+        }
+        case "resign": {
+          const resignPayload = {
             submissionDate: format(date!, "yyyy-MM-dd"),
             lastWorkingDate: format(endDate!, "yyyy-MM-dd"),
             description: description,
-          });
-        case "leave":
-          return requestFormMeService.createCurrentUserLeaveForm({
+          };
+          return isEdit ? requestFormMeService.updateCurrentUserResignationForm(initialData.id, resignPayload) : requestFormMeService.createCurrentUserResignationForm(resignPayload);
+        }
+        case "leave": {
+          const leavePayload = {
             startDate: format(startDate!, "yyyy-MM-dd"),
             startSession: (startSession === "all" ? "FULL_DAY" : startSession.toUpperCase()) as "MORNING" | "AFTERNOON" | "FULL_DAY",
             endDate: format(endDate!, "yyyy-MM-dd"),
             endSession: (endSession === "all" ? "FULL_DAY" : endSession.toUpperCase()) as "MORNING" | "AFTERNOON" | "FULL_DAY",
             description: description,
-          });
-        case "wfh":
-          return requestFormMeService.createCurrentUserWfhForm({
+          };
+          return isEdit ? requestFormMeService.updateCurrentUserLeaveForm(initialData.id, leavePayload) : requestFormMeService.createCurrentUserLeaveForm(leavePayload);
+        }
+        case "wfh": {
+          const wfhPayload = {
             startDate: format(startDate!, "yyyy-MM-dd"),
             endDate: format(endDate!, "yyyy-MM-dd"),
             description: description,
-          });
-        case "business":
-          return requestFormMeService.createCurrentUserBusinessTripForm({
+          };
+          return isEdit ? requestFormMeService.updateCurrentUserWfhForm(initialData.id, wfhPayload) : requestFormMeService.createCurrentUserWfhForm(wfhPayload);
+        }
+        case "business": {
+          const businessPayload = {
             startDate: format(startDate!, "yyyy-MM-dd"),
             endDate: format(endDate!, "yyyy-MM-dd"),
             description: description,
-          });
+          };
+          return isEdit ? requestFormMeService.updateCurrentUserBusinessTripForm(initialData.id, businessPayload) : requestFormMeService.createCurrentUserBusinessTripForm(businessPayload);
+        }
         default:
           throw new Error("Invalid request type");
       }
     },
     onSuccess: () => {
-      toast.success("Đã tạo đơn thành công!");
+      toast.success(initialData ? "Đã cập nhật đơn thành công!" : "Đã tạo đơn thành công!");
       queryClient.invalidateQueries({ queryKey: ["my-request-forms"] });
-      navigate("/app/requests");
+      onOpenChange(false);
     },
     onError: (error: unknown) => {
       const err = error as { response?: { data?: { message?: string } } };
@@ -261,85 +315,77 @@ export default function CreateRequestPage() {
   };
 
   return (
-    <div className="w-full p-4 md:p-6">
-      <div className="w-full space-y-6">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => navigate("/app/requests")}
-              className="p-2 hover:bg-slate-200/50 rounded-full transition-colors text-slate-500 hover:text-slate-700"
-            >
-              <ChevronLeft className="w-5 h-5" />
-            </button>
-            <div>
-              <h1 className="text-2xl font-bold tracking-tight text-slate-900">
-                Tạo đơn mới
-              </h1>
-              <p className="text-sm text-slate-500 mt-1">
-                Điền đầy đủ các thông tin cần thiết để nộp đơn từ.
-              </p>
-            </div>
-          </div>
-        </div>
+    <Sheet open={isOpen} onOpenChange={onOpenChange}>
+      <SheetContent className="w-full sm:max-w-2xl lg:max-w-4xl overflow-y-auto p-4 md:p-6 bg-slate-50 border-none rounded-l-3xl shadow-2xl">
+        <div className="w-full space-y-6">
+          <SheetHeader className="mb-4">
+            <SheetTitle className="text-2xl font-bold tracking-tight text-slate-900 flex items-center justify-between">
+              {initialData ? "Chỉnh sửa đơn từ" : "Tạo đơn mới"}
+            </SheetTitle>
+            <p className="text-sm text-slate-500 mt-1">
+              Điền đầy đủ các thông tin cần thiết để {initialData ? "cập nhật" : "nộp"} đơn từ.
+            </p>
+          </SheetHeader>
 
         {/* Section 1: Types */}
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden p-5 md:p-6">
-          <div className="space-y-4">
-            <div className="space-y-1">
-              <Label className="text-[14px] font-semibold text-slate-800 flex items-center">
-                1. Chọn loại đơn <span className="text-rose-500 ml-1">*</span>
-              </Label>
-              <p className="text-[12.5px] text-slate-500">
-                Bấm vào để chọn loại đơn cần tạo
-              </p>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {requestCards.map((card) => {
-                const isSelected = type === card.id;
-                const Icon = card.icon;
-                return (
-                  <button
-                    key={card.id}
-                    type="button"
-                    onClick={() => handleTypeChange(card.id)}
-                    className={cn(
-                      "relative flex flex-row items-center text-left p-4 rounded-xl border transition-all duration-200 gap-4 select-none outline-none overflow-hidden hover:shadow-sm",
-                      isSelected
-                        ? "border-[#2E3192] ring-1 ring-[#2E3192] bg-[#2E3192]/5"
-                        : "border-slate-200 hover:border-slate-300 hover:bg-slate-50/50 bg-white",
-                    )}
-                  >
-                    <div
+        {!initialData && (
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden p-5 md:p-6">
+            <div className="space-y-4">
+              <div className="space-y-1">
+                <Label className="text-[14px] font-semibold text-slate-800 flex items-center">
+                  1. Chọn loại đơn <span className="text-rose-500 ml-1">*</span>
+                </Label>
+                <p className="text-[12.5px] text-slate-500">
+                  Bấm vào để chọn loại đơn cần tạo
+                </p>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {requestCards.map((card) => {
+                  const isSelected = type === card.id;
+                  const Icon = card.icon;
+                  return (
+                    <button
+                      key={card.id}
+                      type="button"
+                      onClick={() => handleTypeChange(card.id)}
                       className={cn(
-                        "p-2.5 rounded-full shrink-0 flex items-center justify-center",
-                        card.bg,
+                        "relative flex flex-row items-center text-left p-4 rounded-xl border transition-all duration-200 gap-4 select-none outline-none overflow-hidden hover:shadow-sm",
+                        isSelected
+                          ? "border-[#2E3192] ring-1 ring-[#2E3192] bg-[#2E3192]/5"
+                          : "border-slate-200 hover:border-slate-300 hover:bg-slate-50/50 bg-white",
                       )}
                     >
-                      <Icon
-                        className={cn("w-6 h-6", card.color)}
-                        strokeWidth={1.5}
-                      />
-                    </div>
-                    <div className="flex flex-col gap-1.5 pr-6 items-start">
-                      <span className="text-[14px] md:text-[15px] font-semibold text-slate-800 tracking-tight">
-                        {card.label}
-                      </span>
-                      <span className="text-[12.5px] text-slate-500 leading-snug">
-                        {card.description}
-                      </span>
-                    </div>
-                    {isSelected && (
-                      <div className="absolute top-4 right-4 bg-[#2E3192] text-white rounded-full flex items-center justify-center w-5 h-5 shadow-sm">
-                        <Check className="w-3.5 h-3.5" strokeWidth={3} />
+                      <div
+                        className={cn(
+                          "p-2.5 rounded-full shrink-0 flex items-center justify-center",
+                          card.bg,
+                        )}
+                      >
+                        <Icon
+                          className={cn("w-6 h-6", card.color)}
+                          strokeWidth={1.5}
+                        />
                       </div>
-                    )}
-                  </button>
-                );
-              })}
+                      <div className="flex flex-col gap-1.5 pr-6 items-start">
+                        <span className="text-[14px] md:text-[15px] font-semibold text-slate-800 tracking-tight">
+                          {card.label}
+                        </span>
+                        <span className="text-[12.5px] text-slate-500 leading-snug">
+                          {card.description}
+                        </span>
+                      </div>
+                      {isSelected && (
+                        <div className="absolute top-4 right-4 bg-[#2E3192] text-white rounded-full flex items-center justify-center w-5 h-5 shadow-sm">
+                          <Check className="w-3.5 h-3.5" strokeWidth={3} />
+                        </div>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
         {/* Section 2: Form Fields */}
         {type !== "" && (
@@ -791,7 +837,7 @@ export default function CreateRequestPage() {
             <div className="p-5 px-6 md:px-8 bg-slate-50 flex justify-end gap-3 rounded-b-2xl">
               <Button
                 variant="outline"
-                onClick={() => navigate("/app/requests")}
+                onClick={() => onOpenChange(false)}
                 className="h-11 px-6 font-medium text-slate-600 bg-white shadow-sm hover:bg-slate-50 border-slate-200"
               >
                 Hủy
@@ -799,17 +845,18 @@ export default function CreateRequestPage() {
               <Button
                 onClick={onSubmit}
                 disabled={createMutation.isPending}
-                className="h-11 px-8 bg-[#2563EB] hover:bg-[#1d4ed8] text-white font-medium shadow-sm transition-colors"
+                className="h-11 font-medium bg-[#2E3192] hover:bg-[#1E2062] text-white shadow-sm border-none gap-2 px-8"
               >
                 {createMutation.isPending && (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  <Loader2 className="w-4 h-4 animate-spin" />
                 )}
-                Tạo đơn
+                {initialData ? "Lưu thay đổi" : "Tạo yêu cầu"}
               </Button>
             </div>
           </div>
         )}
       </div>
-    </div>
+      </SheetContent>
+    </Sheet>
   );
 }

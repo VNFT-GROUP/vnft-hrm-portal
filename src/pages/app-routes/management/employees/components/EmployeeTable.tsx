@@ -52,10 +52,10 @@ export default function EmployeeTable({ employees, onDelete, onEditBasicInfo, on
   return (
     <div className="overflow-x-auto">
       <ContextMenu>
-        <ContextMenuTrigger className="block w-full">
-          <Table className="border-collapse">
+        <ContextMenuTrigger className="block w-full select-text!">
+          <Table className="border-collapse select-text!">
             <TableHeader className="bg-muted/80">
-          <TableRow className="border-b border-border hover:bg-transparent">
+              <TableRow className="border-b border-border hover:bg-transparent">
             <TableHead className="font-semibold text-foreground w-[120px] border-r border-border text-center align-middle px-4">{t('management.colEmpCode', { defaultValue: 'EMP.CODE' })}</TableHead>
             <TableHead className="font-semibold text-foreground w-[120px] border-r border-border text-center align-middle px-4">{t('management.colAttCode', { defaultValue: 'ATT.CODE' })}</TableHead>
             <TableHead className="font-semibold text-foreground border-r border-border text-center align-middle px-6 min-w-[250px]">{t('management.colFullName', { defaultValue: 'FULLNAME' })}</TableHead>

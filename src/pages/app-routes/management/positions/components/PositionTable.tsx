@@ -31,13 +31,13 @@ export default function PositionTable({ positions, onEdit, onDelete }: PositionT
   return (
     <div className="overflow-x-auto">
       <ContextMenu>
-        <ContextMenuTrigger className="block w-full">
-          <Table className="border-collapse">
+        <ContextMenuTrigger className="block w-full select-text!">
+          <Table className="border-collapse select-text!">
         <TableHeader className="bg-muted/80">
           <TableRow className="border-b border-border hover:bg-transparent">
-            <TableHead className="font-semibold text-foreground w-[220px] border-r border-border text-center align-middle px-6">{t("position.table.name")}</TableHead>
+            <TableHead className="font-semibold text-foreground w-[220px] border-r border-border text-left align-middle px-6">{t("position.table.name")}</TableHead>
             <TableHead className="font-semibold text-foreground w-[150px] border-r border-border text-center align-middle px-4">{t("position.table.level")}</TableHead>
-            <TableHead className="font-semibold text-foreground border-r border-border text-center align-middle px-6">{t("position.table.description")}</TableHead>
+            <TableHead className="font-semibold text-foreground border-r border-border text-left align-middle px-6">{t("position.table.description")}</TableHead>
             <TableHead className="font-semibold text-foreground w-[150px] border-r border-border text-center align-middle px-4">{t("position.table.status")}</TableHead>
             <TableHead className="font-semibold text-foreground w-[160px] border-r border-border text-center align-middle px-4">{t('management.createdAt', { defaultValue: 'Ngày Tạo' })}</TableHead>
             <TableHead className="font-semibold text-foreground w-[180px] border-r border-border text-center align-middle px-4">{t('management.updatedAt', { defaultValue: 'Cập Nhật Lần Cuối' })}</TableHead>

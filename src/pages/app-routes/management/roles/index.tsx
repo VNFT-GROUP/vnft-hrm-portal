@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus, Search, Layers, Edit2, Trash2, Loader2, MousePointerClick } from "lucide-react";
+import { Plus, Search, Layers, Edit2, Trash2, Loader2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -154,11 +154,6 @@ export default function RolesPage() {
               <Trash2 size={16} className="text-rose-500" />
               <span>{t('management.deleteLegend', { defaultValue: 'Xóa / Hủy kích hoạt' })}</span>
             </div>
-          </div>
-          <div className="w-full h-px bg-border/50 hidden md:block" />
-          <div className="flex items-center gap-1.5 text-[#2E3192]">
-            <MousePointerClick size={16} />
-            <span className="italic">{t('management.actionTooltip', { defaultValue: 'Mẹo: Click chuột phải vào dòng dữ liệu để thao tác nhanh.' })}</span>
           </div>
         </m.div>
       )}

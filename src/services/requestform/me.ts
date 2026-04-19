@@ -8,9 +8,11 @@ import type { CreateBusinessTripRequest } from "@/types/requestform/CreateBusine
 import type { CreateResignationRequest } from "@/types/requestform/CreateResignationRequest";
 import type { CreateAttendanceAdjustmentRequest } from "@/types/requestform/CreateAttendanceAdjustmentRequest";
 
+import type { PageResponse } from "@/types/base/PageResponse";
+
 export const requestFormMeService = {
-  getCurrentUserRequestForms: async (): Promise<ApiResponse<RequestFormResponse[]>> => {
-    const response = await apiClient.get("/request-forms/me");
+  getCurrentUserRequestForms: async (page: number = 1, size: number = 10): Promise<ApiResponse<PageResponse<RequestFormResponse>>> => {
+    const response = await apiClient.get("/request-forms/me", { params: { page, size } });
     return response.data;
   },
 
@@ -51,6 +53,36 @@ export const requestFormMeService = {
 
   createCurrentUserAttendanceAdjustmentForm: async (request: CreateAttendanceAdjustmentRequest): Promise<ApiResponse<RequestFormResponse>> => {
     const response = await apiClient.post("/request-forms/me/attendance-adjustments", request);
+    return response.data;
+  },
+
+  updateCurrentUserLeaveForm: async (id: string, request: CreateLeaveRequest): Promise<ApiResponse<RequestFormResponse>> => {
+    const response = await apiClient.put(`/request-forms/me/leaves/${id}`, request);
+    return response.data;
+  },
+
+  updateCurrentUserWfhForm: async (id: string, request: CreateWfhRequest): Promise<ApiResponse<RequestFormResponse>> => {
+    const response = await apiClient.put(`/request-forms/me/wfh/${id}`, request);
+    return response.data;
+  },
+
+  updateCurrentUserAbsenceForm: async (id: string, request: CreateAbsenceRequest): Promise<ApiResponse<RequestFormResponse>> => {
+    const response = await apiClient.put(`/request-forms/me/absences/${id}`, request);
+    return response.data;
+  },
+
+  updateCurrentUserBusinessTripForm: async (id: string, request: CreateBusinessTripRequest): Promise<ApiResponse<RequestFormResponse>> => {
+    const response = await apiClient.put(`/request-forms/me/business-trips/${id}`, request);
+    return response.data;
+  },
+
+  updateCurrentUserResignationForm: async (id: string, request: CreateResignationRequest): Promise<ApiResponse<RequestFormResponse>> => {
+    const response = await apiClient.put(`/request-forms/me/resignations/${id}`, request);
+    return response.data;
+  },
+
+  updateCurrentUserAttendanceAdjustmentForm: async (id: string, request: CreateAttendanceAdjustmentRequest): Promise<ApiResponse<RequestFormResponse>> => {
+    const response = await apiClient.put(`/request-forms/me/attendance-adjustments/${id}`, request);
     return response.data;
   },
 };

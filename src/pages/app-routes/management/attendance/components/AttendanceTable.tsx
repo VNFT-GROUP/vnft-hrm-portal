@@ -94,6 +94,7 @@ export default function AttendanceTable({ records, onViewJson }: AttendanceTable
           ))}
         </tbody>
       </table>
+      </div>
     </div>
   );
 }

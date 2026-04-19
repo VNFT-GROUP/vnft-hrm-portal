@@ -6,39 +6,55 @@ import { Card } from "@/components/ui/card";
 import CustomPagination from "@/components/custom/CustomPagination";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { RichTextViewer } from "@/components/custom/RichTextViewer";
-
-const MOCK_REQUESTS = [
-  { id: "REQ-001", user: "Phạm Văn A", type: "Nghỉ phép năm", date: "2026-04-16", reason: "Giải quyết việc gia đình", status: "PENDING" },
-  { id: "REQ-002", user: "Nguyễn Thị B", type: "Làm thêm giờ", date: "2026-04-15", reason: "Chạy deadline release dự án", status: "PENDING" },
-  { id: "REQ-003", user: "Lê C", type: "Làm từ xa (WFH)", date: "2026-04-17", reason: "Lý do sức khoẻ", status: "PENDING" },
-  { id: "REQ-004", user: "Trần D", type: "Đi công tác", date: "2026-04-20", reason: "Gặp đối tác tại Hà Nội", status: "APPROVED" },
-  { id: "REQ-005", user: "Phạm Văn A", type: "Nghỉ ốm", date: "2026-04-10", reason: "Cảm cúm", status: "REJECTED" },
-];
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { requestFormApprovalService } from "@/services/requestform/approval";
+import type { RequestFormResponse } from "@/types/requestform/RequestFormResponse";
+import { format } from "date-fns";
+import { getErrorMessage } from "@/lib/utils";
 
 export default function ManagementRequestsPage() {
-  const [requests, setRequests] = useState(MOCK_REQUESTS);
+  const queryClient = useQueryClient();
+
+  const { data: response } = useQuery({
+    queryKey: ["approvalRequests"],
+    queryFn: () => requestFormApprovalService.getRequestFormsForApproval()
+  });
+  
+  const requests = response?.data || [];
 
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
   
-  const [selectedRequest, setSelectedRequest] = useState<typeof MOCK_REQUESTS[0] | null>(null);
+  const [selectedRequest, setSelectedRequest] = useState<RequestFormResponse | null>(null);
 
   const totalPages = Math.ceil(requests.length / pageSize) || 1;
   const paginatedData = requests.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
-  const handleAction = (id: string, action: "APPROVE" | "REJECT") => {
-    setRequests(prev => prev.map(req => {
-      if (req.id === id) {
-        return { ...req, status: action === "APPROVE" ? "APPROVED" : "REJECTED" };
-      }
-      return req;
-    }));
-    
-    if (action === "APPROVE") {
+  const approveMutation = useMutation({
+    mutationFn: (id: string) => requestFormApprovalService.approveRequestForm(id),
+    onSuccess: (_, id) => {
       toast.success(`Đã DUYỆT đơn ${id} thành công!`);
-    } else {
-      toast.error(`Đã TỪ CHỐI đơn ${id}.`);
+      queryClient.invalidateQueries({ queryKey: ["approvalRequests"] });
+    },
+    onError: (error) => {
+      toast.error(getErrorMessage(error, "Duyệt thất bại."));
     }
+  });
+
+  const rejectMutation = useMutation({
+    mutationFn: (id: string) => requestFormApprovalService.rejectRequestForm(id),
+    onSuccess: (_, id) => {
+      toast.success(`Đã TỪ CHỐI đơn ${id}.`);
+      queryClient.invalidateQueries({ queryKey: ["approvalRequests"] });
+    },
+    onError: (error) => {
+      toast.error(getErrorMessage(error, "Từ chối thất bại."));
+    }
+  });
+
+  const handleAction = (id: string, action: "APPROVE" | "REJECT") => {
+    if (action === "APPROVE") approveMutation.mutate(id);
+    else rejectMutation.mutate(id);
   };
 
   const getStatusBadge = (status: string) => {
@@ -135,12 +151,14 @@ export default function ManagementRequestsPage() {
               {paginatedData.map(req => (
                 <tr key={req.id} className="hover:bg-slate-50 transition-colors">
                   <td className="px-4 py-3 font-medium text-[#2E3192] border-x border-slate-200 whitespace-nowrap text-center">{req.id}</td>
-                  <td className="px-4 py-3 font-medium border-x border-slate-200 whitespace-nowrap text-left">{req.user}</td>
+                  <td className="px-4 py-3 font-medium border-x border-slate-200 whitespace-nowrap text-left">{req.requesterId}</td>
                   <td className="px-4 py-3 border-x border-slate-200 whitespace-nowrap text-left">{req.type}</td>
-                  <td className="px-4 py-3 border-x border-slate-200 whitespace-nowrap text-center">{req.date}</td>
+                  <td className="px-4 py-3 border-x border-slate-200 whitespace-nowrap text-center">
+                    {req.startDate ? format(new Date(req.startDate), "dd/MM/yyyy") : ""}
+                  </td>
                   <td className="px-4 py-3 text-slate-700 border-x border-slate-200 max-w-[300px]">
-                    <div className="line-clamp-2 whitespace-normal" title={req.reason}>
-                      {req.reason}
+                    <div className="line-clamp-2 whitespace-normal" title={req.description || ""}>
+                      {req.description ? req.description.replace(/<[^>]*>?/gm, "").substring(0, 100) : "Không có lý do"}
                     </div>
                   </td>
                         <td className="px-4 py-3 border-x border-slate-200 whitespace-nowrap text-center">{getStatusBadge(req.status)}</td>
@@ -157,6 +175,7 @@ export default function ManagementRequestsPage() {
                         <>
                           <button 
                             onClick={() => handleAction(req.id, "APPROVE")}
+                            disabled={approveMutation.isPending && approveMutation.variables === req.id}
                             className="bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500 hover:text-white p-1.5 rounded-md transition-all group"
                             title="Duyệt"
                           >
@@ -164,6 +183,7 @@ export default function ManagementRequestsPage() {
                           </button>
                           <button 
                             onClick={() => handleAction(req.id, "REJECT")}
+                            disabled={rejectMutation.isPending && rejectMutation.variables === req.id}
                             className="bg-red-500/10 text-red-600 hover:bg-red-500 hover:text-white p-1.5 rounded-md transition-all group"
                             title="Từ chối"
                           >
@@ -203,7 +223,7 @@ export default function ManagementRequestsPage() {
       <Dialog open={!!selectedRequest} onOpenChange={(open) => !open && setSelectedRequest(null)}>
         <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
-            <DialogTitle>Chi tiết đơn từ - {selectedRequest?.user}</DialogTitle>
+            <DialogTitle>Chi tiết đơn từ - {selectedRequest?.requesterId}</DialogTitle>
           </DialogHeader>
           {selectedRequest && (
             <div className="space-y-4 pt-4">
@@ -218,13 +238,16 @@ export default function ManagementRequestsPage() {
                 </div>
                 <div className="col-span-2">
                   <span className="text-muted-foreground block mb-1">Thời gian áp dụng:</span>
-                  <span className="font-medium text-slate-800">{selectedRequest.date}</span>
+                  <span className="font-medium text-slate-800">
+                    {selectedRequest.startDate ? format(new Date(selectedRequest.startDate), "dd/MM/yyyy HH:mm") : ""}
+                    {selectedRequest.endDate ? ` - ${format(new Date(selectedRequest.endDate), "dd/MM/yyyy HH:mm")}` : ""}
+                  </span>
                 </div>
                 <div className="col-span-2">
                   <span className="text-muted-foreground block mb-2">Mô tả/Lý do:</span>
                   <div className="p-3 bg-slate-50 border border-slate-200 rounded-md">
-                    {selectedRequest.reason ? (
-                      <RichTextViewer htmlContent={selectedRequest.reason} />
+                    {selectedRequest.description ? (
+                      <RichTextViewer htmlContent={selectedRequest.description} />
                     ) : (
                       <span className="text-slate-400 italic">Không có mô tả</span>
                     )}

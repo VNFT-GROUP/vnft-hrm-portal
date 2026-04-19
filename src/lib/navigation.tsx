@@ -71,8 +71,8 @@ export const useNavigationData = () => {
                 icon: <FolderOpen size={20} />,
                 subItems: [
                   {
-                    label: t("sidebar.managementRequests", { defaultValue: "Duyệt đơn" }),
-                    shortName: t("sidebar.managementRequestsShort", { defaultValue: "Duyệt đơn" }),
+                    label: t("sidebar.requests", { defaultValue: "Đơn từ" }),
+                    shortName: t("sidebar.requestsShort", { defaultValue: "Duyệt đơn" }),
                     path: "/app/management/requests",
                     icon: <FileEdit size={16} />,
                   },

@@ -28,5 +28,13 @@ export default {
   attendanceHistory: "海康威视 - 记录",
   attendanceHistoryShort: "海康威视",
   settings: "设置",
-  customize: "个性化"
+  customize: "个性化",
+  managementRequests: "审批请求",
+  managementRequestsShort: "审批",
+  viewAsUser: "员工视图",
+  viewAsAdmin: "管理员视图",
+  switchToUser: "切换到员工视图",
+  switchToAdmin: "切换到管理员视图",
+  adminMode: "管理",
+  userMode: "用户"
 };

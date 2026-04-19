@@ -28,5 +28,13 @@ export default {
   attendanceHistory: "Hikvision - Bản ghi",
   attendanceHistoryShort: "Hikvision Data",
   settings: "Cấu hình",
-  customize: "Cá nhân hoá"
+  customize: "Cá nhân hoá",
+  managementRequests: "Duyệt đơn",
+  managementRequestsShort: "Duyệt đơn",
+  viewAsUser: "Giao diện Sinh hoạt",
+  viewAsAdmin: "Trở lại Quản trị",
+  switchToUser: "Chuyển sang Giao diện Nhân viên",
+  switchToAdmin: "Chuyển sang Giao diện Quản trị",
+  adminMode: "Quản lý",
+  userMode: "Người dùng"
 };

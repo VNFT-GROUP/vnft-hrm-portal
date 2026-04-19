@@ -6,7 +6,10 @@ import {
   ChevronDown,
   ChevronRight as ChevronRightIcon,
   Palette,
+  User,
+  ShieldCheck,
 } from "lucide-react";
+import { useAuthStore } from "@/store/useAuthStore";
 import { useNavigate } from "react-router-dom";
 import { ScrollArea } from "../../../../components/ui/scroll-area";
 import { useLayoutStore } from "../../../../store/useLayoutStore";
@@ -27,6 +30,9 @@ export default function Sidebar() {
   const toggleSidebar = useLayoutStore((state) => state.toggleSidebar);
   const sidebarTheme = useLayoutStore((state) => state.sidebarTheme);
   const hiddenSidebarItems = useLayoutStore((state) => state.hiddenSidebarItems) || [];
+  const sidebarMode = useLayoutStore((state) => state.sidebarMode);
+  const setSidebarMode = useLayoutStore((state) => state.setSidebarMode);
+  const { session } = useAuthStore();
 
   // State for sub-menus
   const [expandedMenus, setExpandedMenus] = useState<Record<string, boolean>>(
@@ -336,13 +342,37 @@ export default function Sidebar() {
 
       {/* Footer Navigation */}
       <div className="sidebar-footer">
+        {session?.groupName === "ADMIN" && (
+          <button 
+            onClick={() => setSidebarMode(sidebarMode === "admin" ? "user" : "admin")} 
+            className={`btn-shimmer flex items-center ${isCollapsed ? "justify-center" : "justify-start px-3"} w-full gap-3 p-2.5 mb-3 rounded-xl border border-white/20 transition-all duration-300 shadow-[0_0_15px_rgba(255,255,255,0.05)] hover:shadow-[0_0_20px_rgba(247,148,29,0.2)] bg-linear-to-r from-white/5 to-white/10 hover:from-white/10 hover:to-white/20 text-white/90 hover:text-white group relative overflow-hidden`}
+            title={sidebarMode === "admin" ? t("sidebar.switchToUser", { defaultValue: "Chuyển sang Giao diện Nhân viên" }) : t("sidebar.switchToAdmin", { defaultValue: "Chuyển sang Giao diện Quản trị" })}
+          >
+            {sidebarMode === "admin" ? (
+               <ShieldCheck size={20} className="shrink-0 text-amber-400 group-hover:scale-110 transition-all duration-300" />
+            ) : (
+               <User size={20} className="shrink-0 text-emerald-400 group-hover:scale-110 transition-all duration-300" />
+            )}
+            {!isCollapsed && (
+              <span className="font-bold text-[13px] tracking-wider uppercase transition-colors duration-500 truncate shrink-0 whitespace-nowrap overflow-hidden flex items-center">
+                <span className={`transition-colors ${sidebarMode === "user" ? "text-emerald-400" : "text-white/40 group-hover:text-white/70"}`}>
+                  {t("sidebar.userMode", { defaultValue: "Người dùng" })}
+                </span>
+                <span className="text-white/20 mx-1.5">/</span>
+                <span className={`transition-colors ${sidebarMode === "admin" ? "text-amber-400" : "text-white/40 group-hover:text-white/70"}`}>
+                  {t("sidebar.adminMode", { defaultValue: "Quản lý" })}
+                </span>
+              </span>
+            )}
+          </button>
+        )}
         <button 
           onClick={() => navigate('/app/settings')} 
-          className={`btn-shimmer flex items-center justify-center w-full gap-2.5 p-2.5 rounded-xl border border-white/20 transition-all duration-300 shadow-[0_0_15px_rgba(255,255,255,0.05)] hover:shadow-[0_0_20px_rgba(247,148,29,0.2)] bg-linear-to-r from-white/5 to-white/10 hover:from-white/10 hover:to-white/20 text-white/90 hover:text-white group`}
+          className={`btn-shimmer flex items-center ${isCollapsed ? "justify-center" : "justify-start px-3"} w-full gap-3 p-2.5 rounded-xl border border-white/20 transition-all duration-300 shadow-[0_0_15px_rgba(255,255,255,0.05)] hover:shadow-[0_0_20px_rgba(247,148,29,0.2)] bg-linear-to-r from-white/5 to-white/10 hover:from-white/10 hover:to-white/20 text-white/90 hover:text-white group`}
         >
           <Palette size={20} className="shrink-0 text-white group-hover:text-[#F7941D] group-hover:scale-110 transition-all duration-300" />
           {!isCollapsed && (
-            <span className="font-bold text-[13px] tracking-wider uppercase text-transparent bg-clip-text bg-linear-to-r from-white to-white group-hover:from-amber-200 group-hover:to-orange-400 transition-colors duration-500">
+            <span className="font-bold text-[13px] tracking-wider uppercase text-white/70 group-hover:text-[#F7941D] transition-colors duration-300">
               {t('sidebar.customize', { defaultValue: 'Cá nhân hoá' })}
             </span>
           )}

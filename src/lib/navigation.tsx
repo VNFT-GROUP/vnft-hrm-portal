@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useAuthStore } from "@/store/useAuthStore";
+import { useLayoutStore } from "@/store/useLayoutStore";
 import {
   Home,
   UserCircle,
@@ -18,6 +19,7 @@ import {
 
 export const useNavigationData = () => {
   const { session } = useAuthStore();
+  const sidebarMode = useLayoutStore((state) => state.sidebarMode);
   const { t } = useTranslation();
 
   const sidebarData = [
@@ -62,7 +64,7 @@ export const useNavigationData = () => {
           path: "/app/requests",
           icon: <FileEdit size={20} />,
         },
-        ...(session?.groupName === "ADMIN"
+        ...(session?.groupName === "ADMIN" && sidebarMode === "admin"
           ? [
               {
                 id: "management",

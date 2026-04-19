@@ -28,5 +28,13 @@ export default {
   attendanceHistory: "Hikvision - Records",
   attendanceHistoryShort: "Hikvision Data",
   settings: "Settings",
-  customize: "Personalize"
+  customize: "Personalize",
+  managementRequests: "Approve Requests",
+  managementRequestsShort: "Approve",
+  viewAsUser: "View As User",
+  viewAsAdmin: "View As Admin",
+  switchToUser: "Switch to Employee View",
+  switchToAdmin: "Switch to Admin View",
+  adminMode: "Admin",
+  userMode: "User"
 };

@@ -20,6 +20,8 @@ interface LayoutState {
   setCursorStyle: (cursor: string) => void;
   hiddenSidebarItems: string[];
   toggleSidebarItemVisibility: (itemId: string) => void;
+  sidebarMode: "user" | "admin";
+  setSidebarMode: (mode: "user" | "admin") => void;
 }
 
 export const useLayoutStore = create<LayoutState>()(
@@ -47,6 +49,8 @@ export const useLayoutStore = create<LayoutState>()(
           ? state.hiddenSidebarItems.filter(id => id !== itemId)
           : [...state.hiddenSidebarItems, itemId]
       })),
+      sidebarMode: "admin",
+      setSidebarMode: (mode) => set({ sidebarMode: mode }),
     }),
     {
       name: 'vnft-layout-storage', // name of the item in localStorage

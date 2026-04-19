@@ -20,7 +20,13 @@ export default function ManagementRequestsPage() {
     queryFn: () => requestFormApprovalService.getRequestFormsForApproval()
   });
   
+  const { data: statsResponse } = useQuery({
+    queryKey: ["approvalRequestsStatistics", "THIS_MONTH"],
+    queryFn: () => requestFormApprovalService.getRequestFormStatistics("THIS_MONTH")
+  });
+
   const requests = response?.data || [];
+  const stats = statsResponse?.data;
 
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
@@ -35,6 +41,7 @@ export default function ManagementRequestsPage() {
     onSuccess: (_, id) => {
       toast.success(`Đã DUYỆT đơn ${id} thành công!`);
       queryClient.invalidateQueries({ queryKey: ["approvalRequests"] });
+      queryClient.invalidateQueries({ queryKey: ["approvalRequestsStatistics"] });
     },
     onError: (error) => {
       toast.error(getErrorMessage(error, "Duyệt thất bại."));
@@ -46,6 +53,7 @@ export default function ManagementRequestsPage() {
     onSuccess: (_, id) => {
       toast.success(`Đã TỪ CHỐI đơn ${id}.`);
       queryClient.invalidateQueries({ queryKey: ["approvalRequests"] });
+      queryClient.invalidateQueries({ queryKey: ["approvalRequestsStatistics"] });
     },
     onError: (error) => {
       toast.error(getErrorMessage(error, "Từ chối thất bại."));
@@ -70,6 +78,18 @@ export default function ManagementRequestsPage() {
     }
   };
 
+  const getRequestTypeLabel = (type: string) => {
+    switch (type) {
+      case "LEAVE": return "Nghỉ phép";
+      case "ABSENCE": return "Vắng mặt";
+      case "ATTENDANCE_ADJUSTMENT": return "Chấm công";
+      case "BUSINESS_TRIP": return "Công tác";
+      case "WFH": return "Làm từ xa";
+      case "RESIGNATION": return "Thôi việc";
+      default: return type;
+    }
+  };
+
   return (
     <div className="p-4 md:p-8 w-full min-h-full flex flex-col gap-6 md:gap-8 relative isolate">
       {/* Header Section */}
@@ -90,29 +110,78 @@ export default function ManagementRequestsPage() {
         </p>
       </m.div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card className="p-4 flex items-center justify-between border-border shadow-sm">
-          <div>
-            <p className="text-sm font-medium text-muted-foreground">Chờ duyệt</p>
-            <p className="text-2xl font-bold text-amber-500">3</p>
+      {/* Stats Cards Dashboard */}
+      <div className="flex flex-col gap-4">
+        <div className="flex items-center justify-between text-sm text-slate-500 font-medium px-1">
+          <span>Tổng quan thống kê tháng này</span>
+          {stats?.startDate && stats?.endDate && (
+             <span>
+               {format(new Date(stats.startDate), "dd/MM")} - {format(new Date(stats.endDate), "dd/MM/yyyy")}
+             </span>
+          )}
+        </div>
+        
+        {/* Main Stats */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <Card className="p-4 flex flex-col justify-center border-border shadow-[0_2px_10px_rgba(0,0,0,0.02)] hover:shadow-md transition-all">
+            <div className="flex items-center gap-2 mb-2">
+              <div className="w-2 h-2 rounded-full bg-blue-500" />
+              <p className="text-sm font-medium text-muted-foreground">Tổng số đơn</p>
+            </div>
+            <p className="text-3xl font-bold text-slate-700">{stats?.total ?? 0}</p>
+          </Card>
+          <Card className="p-4 flex flex-col justify-center border-border shadow-[0_2px_10px_rgba(0,0,0,0.02)] hover:shadow-md transition-all relative overflow-hidden">
+            <div className="absolute right-0 top-0 bottom-0 w-12 bg-amber-500/5 flex items-center justify-center">
+              <Clock size={20} className="text-amber-500/40" />
+            </div>
+            <div className="flex items-center gap-2 mb-2 relative z-10">
+              <div className="w-2 h-2 rounded-full bg-amber-500" />
+              <p className="text-sm font-medium text-muted-foreground">Chờ duyệt</p>
+            </div>
+            <p className="text-3xl font-bold text-amber-500 relative z-10">{stats?.pendingCount ?? 0}</p>
+          </Card>
+          <Card className="p-4 flex flex-col justify-center border-border shadow-[0_2px_10px_rgba(0,0,0,0.02)] hover:shadow-md transition-all relative overflow-hidden">
+            <div className="absolute right-0 top-0 bottom-0 w-12 bg-emerald-500/5 flex items-center justify-center">
+              <Check size={20} className="text-emerald-500/40" />
+            </div>
+            <div className="flex items-center gap-2 mb-2 relative z-10">
+              <div className="w-2 h-2 rounded-full bg-emerald-500" />
+              <p className="text-sm font-medium text-muted-foreground">Đã duyệt</p>
+            </div>
+            <p className="text-3xl font-bold text-emerald-500 relative z-10">{stats?.approvedCount ?? 0}</p>
+          </Card>
+          <Card className="p-4 flex flex-col justify-center border-border shadow-[0_2px_10px_rgba(0,0,0,0.02)] hover:shadow-md transition-all relative overflow-hidden">
+            <div className="absolute right-0 top-0 bottom-0 w-12 bg-red-500/5 flex items-center justify-center">
+              <X size={20} className="text-red-500/40" />
+            </div>
+            <div className="flex items-center gap-2 mb-2 relative z-10">
+              <div className="w-2 h-2 rounded-full bg-red-500" />
+              <p className="text-sm font-medium text-muted-foreground">Từ chối</p>
+            </div>
+            <p className="text-3xl font-bold text-red-500 relative z-10">{stats?.rejectedCount ?? 0}</p>
+          </Card>
+        </div>
+
+        {/* Breakdown by Type */}
+        {stats?.typeStatistics && stats.typeStatistics.length > 0 && (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+            {stats.typeStatistics.map((typeStat) => (
+              <div key={typeStat.type} className="bg-slate-50 border border-slate-100 p-3 rounded-lg flex flex-col justify-between">
+                <span className="text-xs font-semibold text-slate-500 uppercase tracking-tighter mb-1.5 truncate" title={getRequestTypeLabel(typeStat.type)}>
+                  {getRequestTypeLabel(typeStat.type)}
+                </span>
+                <div className="flex items-end justify-between">
+                  <span className="text-xl font-bold text-[#1E2062]">{typeStat.total}</span>
+                  {typeStat.pendingCount > 0 && (
+                    <span className="text-[10px] font-bold bg-amber-500/20 text-amber-700 px-1.5 py-0.5 rounded" title="Chờ duyệt">
+                      {typeStat.pendingCount} chờ
+                    </span>
+                  )}
+                </div>
+              </div>
+            ))}
           </div>
-          <div className="p-3 bg-amber-500/10 rounded-full"><Clock size={20} className="text-amber-500" /></div>
-        </Card>
-        <Card className="p-4 flex items-center justify-between border-border shadow-sm">
-          <div>
-            <p className="text-sm font-medium text-muted-foreground">Đã duyệt (Tháng)</p>
-            <p className="text-2xl font-bold text-emerald-500">24</p>
-          </div>
-          <div className="p-3 bg-emerald-500/10 rounded-full"><Check size={20} className="text-emerald-500" /></div>
-        </Card>
-        <Card className="p-4 flex items-center justify-between border-border shadow-sm">
-          <div>
-            <p className="text-sm font-medium text-muted-foreground">Từ chối (Tháng)</p>
-            <p className="text-2xl font-bold text-red-500">5</p>
-          </div>
-          <div className="p-3 bg-red-500/10 rounded-full"><X size={20} className="text-red-500" /></div>
-        </Card>
+        )}
       </div>
 
       <div className="bg-card border border-border shadow-sm rounded-xl overflow-hidden flex flex-col flex-1">

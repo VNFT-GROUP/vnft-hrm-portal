@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Edit2, Trash2, Briefcase, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 import { m, AnimatePresence  } from 'framer-motion';
@@ -32,19 +31,19 @@ export default function PositionTable({ positions, onEdit, onDelete }: PositionT
     <div className="overflow-x-auto">
       <ContextMenu>
         <ContextMenuTrigger className="block w-full select-text!">
-          <Table className="border-collapse select-text!">
-        <TableHeader className="bg-muted/80">
-          <TableRow className="border-b border-border hover:bg-transparent">
-            <TableHead className="font-semibold text-foreground w-[220px] border-r border-border text-left align-middle px-6">{t("position.table.name")}</TableHead>
-            <TableHead className="font-semibold text-foreground w-[150px] border-r border-border text-center align-middle px-4">{t("position.table.level")}</TableHead>
-            <TableHead className="font-semibold text-foreground border-r border-border text-left align-middle px-6">{t("position.table.description")}</TableHead>
-            <TableHead className="font-semibold text-foreground w-[150px] border-r border-border text-center align-middle px-4">{t("position.table.status")}</TableHead>
-            <TableHead className="font-semibold text-foreground w-[160px] border-r border-border text-center align-middle px-4">{t('management.createdAt', { defaultValue: 'Ngày Tạo' })}</TableHead>
-            <TableHead className="font-semibold text-foreground w-[180px] border-r border-border text-center align-middle px-4">{t('management.updatedAt', { defaultValue: 'Cập Nhật Lần Cuối' })}</TableHead>
-            <TableHead className="font-semibold text-foreground w-[120px] text-center align-middle px-4">{t("position.table.actions")}</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
+          <table className="w-full text-sm text-left border-collapse border border-slate-200 select-text">
+            <thead className="text-xs text-slate-600 uppercase bg-slate-100 border-b border-slate-200">
+              <tr>
+                <th className="px-4 py-3 font-semibold text-left border-x border-slate-200 w-[220px]">{t("position.table.name")}</th>
+                <th className="px-4 py-3 font-semibold text-center border-x border-slate-200 w-[150px]">{t("position.table.level")}</th>
+                <th className="px-4 py-3 font-semibold text-left border-x border-slate-200">{t("position.table.description")}</th>
+                <th className="px-4 py-3 font-semibold text-center border-x border-slate-200 w-[150px]">{t("position.table.status")}</th>
+                <th className="px-4 py-3 font-semibold text-center border-x border-slate-200 w-[160px]">{t('management.createdAt', { defaultValue: 'Ngày Tạo' })}</th>
+                <th className="px-4 py-3 font-semibold text-center border-x border-slate-200 w-[180px]">{t('management.updatedAt', { defaultValue: 'Cập Nhật Lần Cuối' })}</th>
+                <th className="px-4 py-3 font-semibold text-center border-x border-slate-200 w-[120px]">{t("position.table.actions")}</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-200">
           <AnimatePresence>
             {positions.map((position) => (
               <m.tr 
@@ -53,66 +52,68 @@ export default function PositionTable({ positions, onEdit, onDelete }: PositionT
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="border-b border-border group/row hover:bg-[#1E2062]/5 transition-colors duration-200"
+                className="hover:bg-slate-50 transition-colors duration-200"
                 onContextMenu={() => setRightClickedPositionId(position.id)}
               >
-                <TableCell className="font-bold text-[#1E2062] py-4 border-r border-border text-left align-middle px-6">
+                <td className="px-4 py-3 font-bold text-[#2E3192] border-x border-slate-200 align-middle">
                   {position.name}
-                </TableCell>
-                <TableCell className="py-4 border-r border-border text-center align-middle px-4">
+                </td>
+                <td className="px-4 py-3 border-x border-slate-200 text-center align-middle">
                   {position.manager ? (
-                    <Badge variant="outline" className="bg-amber-50 text-amber-600 border-amber-200 font-medium">
-                      <ShieldCheck size={12} className="mr-1" /> {t("position.table.manager")}
+                    <Badge variant="outline" className="bg-amber-50 text-amber-600 border-amber-200 font-medium whitespace-nowrap">
+                      <ShieldCheck size={12} className="mr-1 inline-block" /> {t("position.table.manager")}
                     </Badge>
                   ) : (
-                    <Badge variant="outline" className="bg-slate-50 text-slate-500 border-slate-200 font-medium">
+                    <Badge variant="outline" className="bg-slate-50 text-slate-500 border-slate-200 font-medium whitespace-nowrap">
                       {t("position.table.staff")}
                     </Badge>
                   )}
-                </TableCell>
-                <TableCell className="text-muted-foreground py-4 max-w-[300px] truncate border-r border-border text-left align-middle px-6" title={position.description}>{position.description || "—"}</TableCell>
-                <TableCell className="py-4 border-r border-border text-center align-middle">
+                </td>
+                <td className="px-4 py-3 text-slate-700 border-x border-slate-200 align-middle max-w-[300px]">
+                  <div className="line-clamp-2" title={position.description}>{position.description || "—"}</div>
+                </td>
+                <td className="px-4 py-3 border-x border-slate-200 text-center align-middle">
                   <Badge 
                     variant={position.active ? "default" : "secondary"} 
                     className={position.active 
                       ? "bg-[#10b981] hover:bg-[#10b981]/90 shadow-sm shadow-[#10b981]/20 font-medium border-0" 
-                      : "bg-muted text-muted-foreground hover:bg-slate-800 dark:bg-slate-700 hover:text-muted-foreground font-medium border-0"
+                      : "bg-slate-200 text-slate-500 hover:bg-slate-300 font-medium border-0"
                     }
                   >
                     {position.active ? t("position.table.active") : t("position.table.inactive")}
                   </Badge>
-                </TableCell>
-                <TableCell className="text-center text-muted-foreground text-sm border-r border-border align-middle py-4">
+                </td>
+                <td className="px-4 py-3 text-center text-slate-600 border-x border-slate-200 align-middle">
                   {position.createdAt ? format(new Date(position.createdAt), "dd/MM/yyyy") : "—"}
-                </TableCell>
-                <TableCell className="text-center text-muted-foreground text-sm border-r border-border align-middle py-4">
+                </td>
+                <td className="px-4 py-3 text-center text-slate-600 border-x border-slate-200 align-middle">
                   {position.updatedAt ? format(new Date(position.updatedAt), "dd/MM/yyyy") : "—"}
-                </TableCell>
-                <TableCell className="py-4 text-center align-middle">
+                </td>
+                <td className="px-4 py-3 border-x border-slate-200 text-center align-middle">
                   <div className="flex justify-center gap-2">
-                    <Button variant="ghost" size="icon" onClick={() => onEdit(position)} className="h-8 w-8 text-[#2E3192] hover:bg-[#2E3192]/10 hover:text-[#2E3192] rounded-lg">
+                    <button onClick={() => onEdit(position)} className="p-1.5 text-indigo-600 hover:bg-indigo-50 rounded transition-colors" title="Edit">
                       <Edit2 size={16} />
-                    </Button>
-                    <Button variant="ghost" size="icon" onClick={() => onDelete(position.id)} className="h-8 w-8 text-rose-500 hover:bg-rose-50 hover:text-rose-600 rounded-lg">
+                    </button>
+                    <button onClick={() => onDelete(position.id)} className="p-1.5 text-rose-500 hover:bg-rose-50 rounded transition-colors" title="Delete">
                       <Trash2 size={16} />
-                    </Button>
+                    </button>
                   </div>
-                </TableCell>
+                </td>
               </m.tr>
             ))}
           </AnimatePresence>
           {positions.length === 0 && (
-            <TableRow>
-              <TableCell colSpan={7} className="h-40 text-center">
-                <div className="flex flex-col items-center justify-center text-muted-foreground">
+            <tr>
+              <td colSpan={7} className="h-40 text-center border-x border-slate-200">
+                <div className="flex flex-col items-center justify-center text-slate-500">
                   <Briefcase size={32} className="mb-2 opacity-50" />
                   <p>{t("position.table.notFound")}</p>
                 </div>
-              </TableCell>
-            </TableRow>
+              </td>
+            </tr>
           )}
-        </TableBody>
-      </Table>
+        </tbody>
+      </table>
       </ContextMenuTrigger>
 
       {/* RENDER CONTEXT MENU FOR THE ROW */}

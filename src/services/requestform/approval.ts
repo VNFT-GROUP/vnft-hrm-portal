@@ -5,11 +5,24 @@ import type {
   RequestFormType 
 } from "@/types/requestform/RequestFormEnums";
 import type { RequestFormResponse } from "@/types/requestform/RequestFormResponse";
+import type { RequestFormStatisticPeriod } from "@/types/requestform/RequestFormEnums";
+import type { RequestFormStatisticsResponse } from "@/types/requestform/RequestFormStatisticsResponse";
 
 export const requestFormApprovalService = {
   getRequestFormsForApproval: async (status?: RequestFormStatus, type?: RequestFormType): Promise<ApiResponse<RequestFormResponse[]>> => {
     const response = await apiClient.get("/request-forms/approval", {
       params: { status, type }
+    });
+    return response.data;
+  },
+
+  getRequestFormStatistics: async (
+    period: RequestFormStatisticPeriod = "THIS_MONTH",
+    startDate?: string,
+    endDate?: string
+  ): Promise<ApiResponse<RequestFormStatisticsResponse>> => {
+    const response = await apiClient.get("/request-forms/approval/statistics", {
+      params: { period, startDate, endDate },
     });
     return response.data;
   },

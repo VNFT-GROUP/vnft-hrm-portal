@@ -26,3 +26,8 @@ export type RequestFormType =
   | "BUSINESS_TRIP"
   | "WFH"
   | "RESIGNATION";
+
+export type RequestFormStatisticPeriod =
+  | "THIS_MONTH"
+  | "ALL"
+  | "RANGE";

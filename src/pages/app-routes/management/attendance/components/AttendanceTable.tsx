@@ -1,14 +1,7 @@
 
 import { format } from "date-fns";
 import { Copy, FileJson, X } from "lucide-react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
 import {
@@ -46,74 +39,61 @@ export default function AttendanceTable({ records, onViewJson }: AttendanceTable
 
   return (
     <div className="w-full relative rounded-t-xl bg-white">
-      <Table className="border-collapse">
-        <TableHeader className="bg-slate-50 sticky top-0 z-10">
-          <TableRow className="hover:bg-transparent">
-            <TableHead className="w-[120px] font-semibold text-[#1E2062] border border-slate-200">
-              {t("attendance.date")}
-            </TableHead>
-            <TableHead className="font-semibold text-[#1E2062] text-center w-[100px] border border-slate-200">
-               {t("attendance.employeeCode")}
-            </TableHead>
-            <TableHead className="font-semibold text-[#1E2062] border border-slate-200">
-              {t("attendance.employeeName")}
-            </TableHead>
-            <TableHead className="font-semibold text-[#1E2062] text-center w-[100px] border border-slate-200">
-              {t("attendance.attendanceCode")}
-            </TableHead>
-            <TableHead className="font-semibold text-[#1E2062] text-center border border-slate-200">
-              {t("attendance.checkIn")}
-            </TableHead>
-            <TableHead className="font-semibold text-[#1E2062] text-center border border-slate-200">
-              {t("attendance.checkOut")}
-            </TableHead>
-            <TableHead className="w-[80px] text-right font-semibold text-[#1E2062] border border-slate-200">
-              JSON
-            </TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
+      <div className="overflow-x-auto w-full select-text!">
+        <table className="w-full text-sm text-left border-collapse border border-slate-200 select-text">
+          <thead className="text-xs text-slate-600 uppercase bg-slate-100 border-b border-slate-200">
+            <tr>
+              <th className="px-4 py-3 font-semibold text-center border-x border-slate-200 w-[120px]">{t("attendance.date")}</th>
+              <th className="px-4 py-3 font-semibold text-center border-x border-slate-200 w-[100px]">{t("attendance.employeeCode")}</th>
+              <th className="px-4 py-3 font-semibold text-left border-x border-slate-200">{t("attendance.employeeName")}</th>
+              <th className="px-4 py-3 font-semibold text-center border-x border-slate-200 w-[100px]">{t("attendance.attendanceCode")}</th>
+              <th className="px-4 py-3 font-semibold text-center border-x border-slate-200">{t("attendance.checkIn")}</th>
+              <th className="px-4 py-3 font-semibold text-center border-x border-slate-200">{t("attendance.checkOut")}</th>
+              <th className="px-4 py-3 font-semibold text-right border-x border-slate-200 w-[80px]">JSON</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-slate-200">
           {records.map((record) => (
-            <TableRow 
+            <tr 
               key={record.id}
-              className="group transition-colors ui-state-active:bg-muted/30"
+              className="hover:bg-slate-50 transition-colors duration-200 cursor-pointer"
               onDoubleClick={() => onViewJson(record)}
             >
-              <TableCell className="font-medium text-slate-700 whitespace-nowrap border border-slate-200">
+              <td className="px-4 py-3 font-medium text-slate-700 whitespace-nowrap border-x border-slate-200 align-middle text-center">
                 {record.attendanceDate ? format(new Date(record.attendanceDate), "dd/MM/yyyy") : "-"}
-              </TableCell>
-              <TableCell className="text-center font-medium border border-slate-200">
+              </td>
+              <td className="px-4 py-3 text-center font-medium border-x border-slate-200 align-middle">
                 {record.employeeCode || "-"}
-              </TableCell>
-              <TableCell className="border border-slate-200">
+              </td>
+              <td className="px-4 py-3 border-x border-slate-200 align-middle">
                 <div className="font-medium text-[#1E2062]">
                   {record.employeeName || "-"}
                 </div>
-              </TableCell>
-              <TableCell className="text-slate-500 text-center border border-slate-200">
+              </td>
+              <td className="px-4 py-3 text-slate-500 text-center border-x border-slate-200 align-middle">
                 {record.attendanceCode || "-"}
-              </TableCell>
-              <TableCell className="text-center border border-slate-200">
+              </td>
+              <td className="px-4 py-3 text-center border-x border-slate-200 align-middle text-medium text-slate-700">
                 {record.checkInTime || "-"}
-              </TableCell>
-              <TableCell className="text-center border border-slate-200">
+              </td>
+              <td className="px-4 py-3 text-center border-x border-slate-200 align-middle text-medium text-slate-700">
                 {record.checkOutTime || "-"}
-              </TableCell>
-              <TableCell className="text-right border border-slate-200">
+              </td>
+              <td className="px-4 py-3 text-right border-x border-slate-200 align-middle">
                 <Button 
                    variant="ghost" 
                    size="icon" 
                    onClick={() => onViewJson(record)}
-                   className="text-slate-400 hover:text-[#2E3192] hover:bg-muted focus-visible:ring-1"
+                   className="h-8 w-8 text-sky-500 hover:text-sky-600 hover:bg-sky-50 focus-visible:ring-1"
                    title={t("attendance.viewJson")}
                 >
-                  <FileJson size={18} />
+                  <FileJson size={16} />
                 </Button>
-              </TableCell>
-            </TableRow>
+              </td>
+            </tr>
           ))}
-        </TableBody>
-      </Table>
+        </tbody>
+      </table>
     </div>
   );
 }

@@ -1,9 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Edit2, Trash2, ShieldCheck } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { m, AnimatePresence  } from 'framer-motion';
 import {
@@ -31,19 +29,19 @@ export default function GroupTable({ groups, onEdit, onDelete }: GroupTableProps
   return (
     <div className="overflow-x-auto">
       <ContextMenu>
-        <ContextMenuTrigger className="block w-full">
-          <Table className="border-collapse">
-        <TableHeader className="bg-muted/80">
-          <TableRow className="border-b border-border hover:bg-transparent">
-            <TableHead className="font-semibold text-foreground w-[220px] border-r border-border text-center align-middle px-6">{t('management.colGroupName', { defaultValue: 'Tên nhóm quyền' })}</TableHead>
-            <TableHead className="font-semibold text-foreground border-r border-border text-center align-middle px-6">{t('management.colDesc', { defaultValue: 'Mô tả' })}</TableHead>
-            <TableHead className="font-semibold text-foreground w-[150px] border-r border-border text-center align-middle px-4">{t('management.colStatus', { defaultValue: 'Trạng thái' })}</TableHead>
-            <TableHead className="font-semibold text-foreground w-[160px] border-r border-border text-center align-middle px-4">{t('management.createdAt', { defaultValue: 'Ngày Tạo' })}</TableHead>
-            <TableHead className="font-semibold text-foreground w-[180px] border-r border-border text-center align-middle px-4">{t('management.updatedAt', { defaultValue: 'Cập Nhật Lần Cuối' })}</TableHead>
-            <TableHead className="font-semibold text-foreground w-[120px] text-center align-middle px-4">{t('management.colAction', { defaultValue: 'Thao tác' })}</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
+        <ContextMenuTrigger className="block w-full select-text!">
+          <table className="w-full text-sm text-left border-collapse border border-slate-200 select-text">
+            <thead className="text-xs text-slate-600 uppercase bg-slate-100 border-b border-slate-200">
+              <tr>
+                <th className="px-4 py-3 font-semibold text-center border-x border-slate-200 w-[220px]">{t('management.colGroupName', { defaultValue: 'Tên nhóm quyền' })}</th>
+                <th className="px-4 py-3 font-semibold text-left border-x border-slate-200">{t('management.colDesc', { defaultValue: 'Mô tả' })}</th>
+                <th className="px-4 py-3 font-semibold text-center border-x border-slate-200 w-[150px]">{t('management.colStatus', { defaultValue: 'Trạng thái' })}</th>
+                <th className="px-4 py-3 font-semibold text-center border-x border-slate-200 w-[160px]">{t('management.createdAt', { defaultValue: 'Ngày Tạo' })}</th>
+                <th className="px-4 py-3 font-semibold text-center border-x border-slate-200 w-[180px]">{t('management.updatedAt', { defaultValue: 'Cập Nhật Lần Cuối' })}</th>
+                <th className="px-4 py-3 font-semibold text-center border-x border-slate-200 w-[120px]">{t('management.colAction', { defaultValue: 'Thao tác' })}</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-200">
           <AnimatePresence>
             {groups.map((group) => (
               <m.tr 
@@ -52,57 +50,57 @@ export default function GroupTable({ groups, onEdit, onDelete }: GroupTableProps
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="border-b border-border group/row hover:bg-[#1E2062]/5 transition-colors duration-200"
+                className="hover:bg-slate-50 transition-colors duration-200"
                 onContextMenu={() => setRightClickedGroupId(group.id)}
               >
-                <TableCell className="font-bold text-[#1E2062] py-4 border-r border-border text-left align-middle px-6">
+                <td className="px-4 py-3 font-bold text-[#2E3192] border-x border-slate-200 text-center align-middle">
                   {group.name}
-                </TableCell>
-                <TableCell className="text-muted-foreground py-4 max-w-[300px] truncate border-r border-border text-left align-middle px-6" title={group.description}>
-                  {group.description || "—"}
-                </TableCell>
-                <TableCell className="py-4 border-r border-border text-center align-middle">
+                </td>
+                <td className="px-4 py-3 text-slate-700 border-x border-slate-200 align-middle max-w-[300px]">
+                  <div className="line-clamp-2" title={group.description}>{group.description || "—"}</div>
+                </td>
+                <td className="px-4 py-3 border-x border-slate-200 text-center align-middle">
                   <Badge 
                     variant={group.active ? "default" : "secondary"} 
                     className={group.active 
                       ? "bg-[#10b981] hover:bg-[#10b981]/90 shadow-sm shadow-[#10b981]/20 font-medium border-0" 
-                      : "bg-muted text-muted-foreground hover:bg-slate-800 dark:bg-slate-700 hover:text-muted-foreground font-medium border-0"
+                      : "bg-slate-200 text-slate-500 hover:bg-slate-300 font-medium border-0"
                     }
                   >
                     {group.active ? t('management.statusActive', { defaultValue: 'Hoạt động' }) : t('management.statusInactive', { defaultValue: 'Tạm ngưng' })}
                   </Badge>
-                </TableCell>
-                <TableCell className="text-center text-muted-foreground text-sm border-r border-border align-middle py-4">
+                </td>
+                <td className="px-4 py-3 text-center text-slate-600 border-x border-slate-200 align-middle">
                   {group.createdAt ? format(new Date(group.createdAt), "dd/MM/yyyy") : "—"}
-                </TableCell>
-                <TableCell className="text-center text-muted-foreground text-sm border-r border-border align-middle py-4">
+                </td>
+                <td className="px-4 py-3 text-center text-slate-600 border-x border-slate-200 align-middle">
                   {group.updatedAt ? format(new Date(group.updatedAt), "dd/MM/yyyy") : "—"}
-                </TableCell>
-                <TableCell className="py-4 text-center align-middle">
+                </td>
+                <td className="px-4 py-3 border-x border-slate-200 text-center align-middle">
                   <div className="flex justify-center gap-2">
-                    <Button variant="ghost" size="icon" onClick={() => onEdit(group)} className="h-8 w-8 text-[#2E3192] hover:bg-[#2E3192]/10 hover:text-[#2E3192] rounded-lg">
+                    <button onClick={() => onEdit(group)} className="p-1.5 text-indigo-600 hover:bg-indigo-50 rounded transition-colors" title="Edit">
                       <Edit2 size={16} />
-                    </Button>
-                    <Button variant="ghost" size="icon" onClick={() => onDelete(group.id)} className="h-8 w-8 text-rose-500 hover:bg-rose-50 hover:text-rose-600 rounded-lg">
+                    </button>
+                    <button onClick={() => onDelete(group.id)} className="p-1.5 text-rose-500 hover:bg-rose-50 rounded transition-colors" title="Delete">
                       <Trash2 size={16} />
-                    </Button>
+                    </button>
                   </div>
-                </TableCell>
+                </td>
               </m.tr>
             ))}
           </AnimatePresence>
           {groups.length === 0 && (
-            <TableRow>
-              <TableCell colSpan={6} className="h-40 text-center">
-                <div className="flex flex-col items-center justify-center text-muted-foreground">
+            <tr>
+              <td colSpan={6} className="h-40 text-center border-x border-slate-200">
+                <div className="flex flex-col items-center justify-center text-slate-500">
                   <ShieldCheck size={32} className="mb-2 opacity-50" />
                   <p>{t('management.emptyGroup', { defaultValue: 'Không tìm thấy nhóm quyền nào' })}</p>
                 </div>
-              </TableCell>
-            </TableRow>
+              </td>
+            </tr>
           )}
-        </TableBody>
-      </Table>
+        </tbody>
+      </table>
       </ContextMenuTrigger>
 
       {/* RENDER CONTEXT MENU FOR THE ROW */}

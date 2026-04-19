@@ -1,6 +1,5 @@
 import { Trash2, Users, Shield, CircleDollarSign, UserCog, Briefcase, Key } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { m, AnimatePresence  } from 'framer-motion';
 import {
@@ -53,20 +52,21 @@ export default function EmployeeTable({ employees, onDelete, onEditBasicInfo, on
     <div className="overflow-x-auto">
       <ContextMenu>
         <ContextMenuTrigger className="block w-full select-text!">
-          <Table className="border-collapse select-text!">
-            <TableHeader className="bg-muted/80">
-              <TableRow className="border-b border-border hover:bg-transparent">
-            <TableHead className="font-semibold text-foreground w-[120px] border-r border-border text-center align-middle px-4">{t('management.colEmpCode', { defaultValue: 'EMP.CODE' })}</TableHead>
-            <TableHead className="font-semibold text-foreground w-[120px] border-r border-border text-center align-middle px-4">{t('management.colAttCode', { defaultValue: 'ATT.CODE' })}</TableHead>
-            <TableHead className="font-semibold text-foreground border-r border-border text-center align-middle px-6 min-w-[250px]">{t('management.colFullName', { defaultValue: 'FULLNAME' })}</TableHead>
-            <TableHead className="font-semibold text-foreground border-r border-border text-center align-middle px-6 min-w-[180px]">{t('management.colEnglishName', { defaultValue: 'ENGLISH NAME' })}</TableHead>
-            <TableHead className="font-semibold text-foreground w-[180px] border-r border-border text-center align-middle px-6">{t('management.colDepartment', { defaultValue: 'DEPARTMENT' })}</TableHead>
-            <TableHead className="font-semibold text-foreground w-[180px] border-r border-border text-center align-middle px-6">{t('management.colPosition', { defaultValue: 'POSITION' })}</TableHead>
-            <TableHead className="font-semibold text-foreground w-[150px] border-r border-border text-center align-middle px-4">{t('management.colStatus', { defaultValue: 'STATUS' })}</TableHead>
-            <TableHead className="font-semibold text-foreground w-[180px] text-center align-middle px-4">{t('management.colAction', { defaultValue: 'THAO TÁC' })}</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
+        <ContextMenuTrigger className="block w-full select-text!">
+          <table className="w-full text-sm text-left border-collapse border border-slate-200 select-text">
+            <thead className="text-xs text-slate-600 uppercase bg-slate-100 border-b border-slate-200">
+              <tr>
+                <th className="px-4 py-3 font-semibold text-center border-x border-slate-200 w-[120px]">{t('management.colEmpCode', { defaultValue: 'EMP.CODE' })}</th>
+                <th className="px-4 py-3 font-semibold text-center border-x border-slate-200 w-[120px]">{t('management.colAttCode', { defaultValue: 'ATT.CODE' })}</th>
+                <th className="px-4 py-3 font-semibold text-center border-x border-slate-200 min-w-[250px]">{t('management.colFullName', { defaultValue: 'FULLNAME' })}</th>
+                <th className="px-4 py-3 font-semibold text-center border-x border-slate-200 min-w-[180px]">{t('management.colEnglishName', { defaultValue: 'ENGLISH NAME' })}</th>
+                <th className="px-4 py-3 font-semibold text-center border-x border-slate-200 w-[180px]">{t('management.colDepartment', { defaultValue: 'DEPARTMENT' })}</th>
+                <th className="px-4 py-3 font-semibold text-center border-x border-slate-200 w-[180px]">{t('management.colPosition', { defaultValue: 'POSITION' })}</th>
+                <th className="px-4 py-3 font-semibold text-center border-x border-slate-200 w-[150px]">{t('management.colStatus', { defaultValue: 'STATUS' })}</th>
+                <th className="px-4 py-3 font-semibold text-center border-x border-slate-200 w-[180px]">{t('management.colAction', { defaultValue: 'THAO TÁC' })}</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-200">
           <AnimatePresence>
             {employees.map((emp) => (
               <m.tr 
@@ -75,81 +75,82 @@ export default function EmployeeTable({ employees, onDelete, onEditBasicInfo, on
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="border-b border-border group/row hover:bg-[#1E2062]/5 transition-colors duration-200"
+                className="hover:bg-slate-50 transition-colors duration-200"
                 onContextMenu={() => setRightClickedEmpId(emp.id)}
               >
-                <TableCell className="font-medium text-muted-foreground py-4 border-r border-border text-center align-middle px-4 whitespace-nowrap">
+                <td className="px-4 py-3 font-medium text-[#2E3192] border-x border-slate-200 text-center align-middle whitespace-nowrap">
                   {emp.empCodePrefix}{emp.empCodeId}
-                </TableCell>
-                <TableCell className="font-medium text-muted-foreground py-4 border-r border-border text-center align-middle px-4 whitespace-nowrap">
+                </td>
+                <td className="px-4 py-3 font-medium text-slate-700 border-x border-slate-200 text-center align-middle whitespace-nowrap">
                   {emp.attendanceCode || "-"}
-                </TableCell>
-                <TableCell className="py-4 border-r border-border text-left align-middle px-6 whitespace-nowrap">
+                </td>
+                <td className="px-4 py-3 border-x border-slate-200 text-left align-middle whitespace-nowrap">
                   <div className="flex items-center gap-3">
                     <AvatarPlaceholder name={emp.fullName} src={emp.avatarUrl} className="w-10 h-10 text-sm" />
                     <div className="flex flex-col">
                       <span className="font-bold text-[#1E2062]">{emp.fullName || "-"}</span>
-                      {emp.email && <span className="text-xs text-muted-foreground">{emp.email}</span>}
+                      {emp.email && <span className="text-xs text-slate-500">{emp.email}</span>}
                     </div>
                   </div>
-                </TableCell>
-                <TableCell className="font-medium text-muted-foreground py-4 border-r border-border text-left align-middle px-6 whitespace-nowrap">
+                </td>
+                <td className="px-4 py-3 font-medium text-slate-700 border-x border-slate-200 text-left align-middle whitespace-nowrap">
                   {emp.englishName || "-"}
-                </TableCell>
-                <TableCell className="font-medium text-muted-foreground py-4 border-r border-border text-left align-middle px-6 whitespace-nowrap">
+                </td>
+                <td className="px-4 py-3 font-medium text-slate-700 border-x border-slate-200 text-left align-middle whitespace-nowrap">
                   {emp.department || "-"}
-                </TableCell>
-                <TableCell className="font-medium text-muted-foreground py-4 border-r border-border text-left align-middle px-6 whitespace-nowrap">
+                </td>
+                <td className="px-4 py-3 font-medium text-slate-700 border-x border-slate-200 text-left align-middle whitespace-nowrap">
                   {emp.position || "-"}
-                </TableCell>
-                <TableCell className="py-4 border-r border-border text-center align-middle">
+                </td>
+                <td className="px-4 py-3 border-x border-slate-200 text-center align-middle">
                   <Badge className={`${getEmployeeStatusColor(emp.status)} shadow-sm font-medium border-0`}>
                     {emp.status === "Đang làm" ? t('management.statusWorking', { defaultValue: 'Đang làm' }) : t('management.statusResigned', { defaultValue: 'Đã nghỉ việc' })}
                   </Badge>
-                </TableCell>
-                <TableCell className="py-2 text-center align-middle whitespace-nowrap">
+                </td>
+                <td className="px-4 py-2 border-x border-slate-200 text-center align-middle whitespace-nowrap">
                   <div className="flex flex-col items-center gap-1.5">
                     {/* Hàng 1 */}
                     <div className="flex justify-center gap-1">
-                      <Button variant="ghost" size="icon" title={t('management.titleEditBasicInfo', { defaultValue: 'Xem/tùy chỉnh thông tin cơ bản' })} onClick={() => onEditBasicInfo(emp)} className="h-8 w-8 text-amber-500 hover:bg-amber-50 hover:text-amber-600 rounded-lg transition-colors">
+                      <button title={t('management.titleEditBasicInfo', { defaultValue: 'Xem/tùy chỉnh thông tin cơ bản' })} onClick={() => onEditBasicInfo(emp)} className="p-1.5 text-amber-500 hover:bg-amber-50 hover:text-amber-600 rounded-lg transition-colors">
                         <UserCog size={16} />
-                      </Button>
-                      <Button variant="ghost" size="icon" title={t('management.titleEditWorkInfo', { defaultValue: 'Xem/tùy chỉnh công việc' })} onClick={() => onEditWorkInfo(emp.id)} className="h-8 w-8 text-indigo-500 hover:bg-indigo-50 hover:text-indigo-600 rounded-lg transition-colors">
+                      </button>
+                      <button title={t('management.titleEditWorkInfo', { defaultValue: 'Xem/tùy chỉnh công việc' })} onClick={() => onEditWorkInfo(emp.id)} className="p-1.5 text-indigo-500 hover:bg-indigo-50 hover:text-indigo-600 rounded-lg transition-colors">
                         <Briefcase size={16} />
-                      </Button>
-                      <Button variant="ghost" size="icon" title={t('management.titleEditGroupInfo', { defaultValue: 'Xem/tùy chỉnh nhóm quyền' })} onClick={() => onEditGroupInfo(emp.id)} className="h-8 w-8 text-violet-500 hover:bg-violet-50 hover:text-violet-600 rounded-lg transition-colors">
+                      </button>
+                      <button title={t('management.titleEditGroupInfo', { defaultValue: 'Xem/tùy chỉnh nhóm quyền' })} onClick={() => onEditGroupInfo(emp.id)} className="p-1.5 text-violet-500 hover:bg-violet-50 hover:text-violet-600 rounded-lg transition-colors">
                         <Shield size={16} />
-                      </Button>
+                      </button>
                     </div>
                     {/* Hàng 2 */}
                     <div className="flex justify-center gap-1 mt-1">
-                      <Button variant="ghost" size="icon" title={t('management.titleEditSalary', { defaultValue: 'Xem/tùy chỉnh lương' })} className="h-8 w-8 text-emerald-500 hover:bg-emerald-50 hover:text-emerald-600 rounded-lg transition-colors">
+                      <button title={t('management.titleEditSalary', { defaultValue: 'Xem/tùy chỉnh lương' })} className="p-1.5 text-emerald-500 hover:bg-emerald-50 hover:text-emerald-600 rounded-lg transition-colors">
                         <CircleDollarSign size={16} />
-                      </Button>
-                      <Button variant="ghost" size="icon" title={t('management.titleEditPassword', { defaultValue: 'Đổi mật khẩu' })} onClick={() => onEditPassword(emp.id)} className="h-8 w-8 text-teal-500 hover:bg-teal-50 hover:text-teal-600 rounded-lg transition-colors">
+                      </button>
+                      <button title={t('management.titleEditPassword', { defaultValue: 'Đổi mật khẩu' })} onClick={() => onEditPassword(emp.id)} className="p-1.5 text-teal-500 hover:bg-teal-50 hover:text-teal-600 rounded-lg transition-colors">
                         <Key size={16} />
-                      </Button>
-                      <Button variant="ghost" size="icon" title={t('management.titleDeactivate', { defaultValue: 'Hủy kích hoạt tài khoản' })} onClick={() => onDelete(emp.id)} className="h-8 w-8 text-rose-500 hover:bg-rose-50 hover:text-rose-600 rounded-lg transition-colors">
+                      </button>
+                      <button title={t('management.titleDeactivate', { defaultValue: 'Hủy kích hoạt tài khoản' })} onClick={() => onDelete(emp.id)} className="p-1.5 text-rose-500 hover:bg-rose-50 hover:text-rose-600 rounded-lg transition-colors">
                         <Trash2 size={16} />
-                      </Button>
+                      </button>
                     </div>
                   </div>
-                </TableCell>
+                </td>
               </m.tr>
             ))}
           </AnimatePresence>
           {employees.length === 0 && (
-            <TableRow>
-              <TableCell colSpan={8} className="h-40 text-center">
-                <div className="flex flex-col items-center justify-center text-muted-foreground">
+          {employees.length === 0 && (
+            <tr>
+              <td colSpan={8} className="h-40 text-center border-x border-slate-200">
+                <div className="flex flex-col items-center justify-center text-slate-500">
                   <Users size={32} className="mb-2 opacity-50" />
                   <p>{t('management.emptyEmployee', { defaultValue: 'Không tìm thấy nhân viên nào' })}</p>
                 </div>
-              </TableCell>
-            </TableRow>
+              </td>
+            </tr>
           )}
-        </TableBody>
-      </Table>
+        </tbody>
+      </table>
       </ContextMenuTrigger>
 
       {/* RENDER CONTEXT MENU FOR THE HOVERED ROW */}

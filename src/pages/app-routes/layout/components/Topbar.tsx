@@ -50,13 +50,16 @@ export default function Topbar() {
     try {
       // Gọi API xoá cookie refresh token ở Backend
       await authService.logout();
-    } catch {
-      // Bõ qua lỗi gọi API (ví dụ server down), ta vẫn cần cho user out ra login ở client
-    } finally {
       logoutAction(); // Xoá zustand store state trong bộ nhớ
       localStorage.clear(); // Clear toàn bộ localStorage (bao gồm zustand persist)
       sessionStorage.clear(); // Clear toàn bộ session
       window.location.href = '/login'; // F5 cứng lại app để xoá hoàn toàn memory (cực an toàn)
+    } catch {
+      // Bõ qua lỗi gọi API (ví dụ server down), ta vẫn cần cho user out ra login ở client
+      logoutAction();
+      localStorage.clear();
+      sessionStorage.clear();
+      window.location.href = '/login';
     }
   };
 

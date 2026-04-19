@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Save, User, Shield, BookOpen, Briefcase, MapPin, Plus, Trash2, Users, Camera, Info, RotateCw } from "lucide-react";
 import { useAuthStore } from "@/store/useAuthStore";
 import { toast } from "sonner";
+import { useQuery } from "@tanstack/react-query";
 import { currentUserProfileService } from "@/services/user/currentUserProfileService";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -57,19 +58,17 @@ export default function EditProfilePage() {
 
   const [loading, setLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
+  const { data: bankResp } = useQuery({
+    queryKey: ['vietqr-banks'],
+    queryFn: async () => {
+      const res = await fetch('https://api.vietqr.io/v2/banks');
+      return res.json();
+    },
+    staleTime: 24 * 60 * 60 * 1000,
+  });
 
-  const [bankList, setBankList] = useState<VietQRBank[]>([]);
+  const bankList: VietQRBank[] = bankResp?.data || [];
 
-  React.useEffect(() => {
-    fetch('https://api.vietqr.io/v2/banks')
-      .then(res => res.json())
-      .then(data => {
-        if (data && data.data) {
-          setBankList(data.data);
-        }
-      })
-      .catch(err => console.error("Failed to fetch banks", err));
-  }, []);
 
   // File Upload Storage States
   const avatarInputRef = React.useRef<HTMLInputElement>(null);
@@ -196,9 +195,9 @@ export default function EditProfilePage() {
            if (d.citizenIdFrontImageUrl) setCitizenIdFrontPreview(d.citizenIdFrontImageUrl);
            if (d.citizenIdBackImageUrl) setCitizenIdBackPreview(d.citizenIdBackImageUrl);
         }
+        setIsFetching(false);
       } catch (err) {
         console.error("Failed to load profile:", err);
-      } finally {
         setIsFetching(false);
       }
     };
@@ -284,13 +283,13 @@ export default function EditProfilePage() {
         description: t("editProfile.validation.updateSuccessDesc", { defaultValue: "Toàn bộ thông tin cá nhân và lý lịch đã được lưu trữ an toàn." })
       });
       navigate("/app/profile");
+      setLoading(false);
     } catch (error) {
       console.error(error);
       const err = error as Error & { response?: { data?: { message?: string } } };
       toast.error(t("editProfile.validation.updateFailed", { defaultValue: "Cập nhật thất bại" }), {
         description: err?.response?.data?.message || err?.message || "Lỗi không xác định khi lưu thông tin"
       });
-    } finally {
       setLoading(false);
     }
   };

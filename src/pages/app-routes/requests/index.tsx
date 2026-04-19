@@ -13,6 +13,23 @@ import { toast } from "sonner";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { RichTextViewer } from "@/components/custom/RichTextViewer";
 import RequestFormModal from "./components/RequestFormModal";
+const ApplicableDate = ({ req }: { req: RequestFormResponse }) => {
+  let displayDate = "N/A";
+  try {
+    if (req.startDate && req.endDate) {
+      displayDate = `${format(new Date(req.startDate), 'dd/MM/yyyy')} - ${format(new Date(req.endDate), 'dd/MM/yyyy')}`;
+    } else if (req.absenceDate) {
+      displayDate = format(new Date(req.absenceDate), 'dd/MM/yyyy');
+    } else if (req.attendanceDate) {
+      displayDate = format(new Date(req.attendanceDate), 'dd/MM/yyyy');
+    } else if (req.submissionDate) {
+      displayDate = format(new Date(req.submissionDate), 'dd/MM/yyyy');
+    }
+  } catch {
+    displayDate = "Không xác định";
+  }
+  return <>{displayDate}</>;
+};
 
 export default function RequestsPage() {
   const navigate = useNavigate();
@@ -50,6 +67,7 @@ export default function RequestsPage() {
   const totalPages = response?.data?.totalPages || 1;
   const paginatedData = requests;
 
+
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "PENDING":
@@ -75,20 +93,6 @@ export default function RequestsPage() {
       case "RESIGNATION": return "Thôi việc";
       default: return type;
     }
-  };
-
-  const renderApplicableDate = (req: RequestFormResponse) => {
-    try {
-      if (req.startDate && req.endDate) {
-        return `${format(new Date(req.startDate), 'dd/MM/yyyy')} - ${format(new Date(req.endDate), 'dd/MM/yyyy')}`;
-      }
-      if (req.absenceDate) return format(new Date(req.absenceDate), 'dd/MM/yyyy');
-      if (req.attendanceDate) return format(new Date(req.attendanceDate), 'dd/MM/yyyy');
-      if (req.submissionDate) return format(new Date(req.submissionDate), 'dd/MM/yyyy');
-    } catch {
-      return "Không xác định";
-    }
-    return "N/A";
   };
 
   const extractPlainText = (html?: string) => {
@@ -197,7 +201,7 @@ export default function RequestsPage() {
                       <tr key={req.id} className="hover:bg-slate-50 transition-colors">
                         <td className="px-4 py-3.5 font-medium text-slate-800 border-x border-slate-200 whitespace-nowrap text-left">{getTypeName(req.type)}</td>
                         <td className="px-4 py-3.5 border-x border-slate-200 whitespace-nowrap text-center">{getStatusBadge(req.status)}</td>
-                        <td className="px-4 py-3.5 text-slate-600 border-x border-slate-200 whitespace-nowrap text-center">{renderApplicableDate(req)}</td>
+                        <td className="px-4 py-3.5 text-slate-600 border-x border-slate-200 whitespace-nowrap text-center"><ApplicableDate req={req} /></td>
                         <td className="px-4 py-3.5 text-slate-700 border-x border-slate-200 max-w-[300px]">
                           <div className="line-clamp-2 whitespace-normal" title={extractPlainText(req.description)}>
                             {extractPlainText(req.description)}
@@ -283,7 +287,7 @@ export default function RequestsPage() {
                 </div>
                 <div className="col-span-2">
                   <span className="text-muted-foreground block mb-1">Thời gian áp dụng:</span>
-                  <span className="font-medium text-slate-800">{renderApplicableDate(selectedRequest)}</span>
+                  <span className="font-medium text-slate-800"><ApplicableDate req={selectedRequest} /></span>
                 </div>
                 <div className="col-span-2">
                   <span className="text-muted-foreground block mb-2">Mô tả/Lý do:</span>

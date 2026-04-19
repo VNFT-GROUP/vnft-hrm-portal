@@ -110,7 +110,7 @@ export default function ProfileHeader() {
               </span>
             </m.button>
             {session?.requiredProfileCompleted === false && (
-              <span className="text-xs font-bold text-red-500 flex items-center gap-1.5 bg-red-500/10 px-2.5 py-1 rounded-full animate-bounce">
+              <span className="text-xs font-bold text-red-500 flex items-center gap-1.5 bg-red-500/10 px-2.5 py-1 rounded-full animate-pulse">
                 <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>
                 {t("profile.requiredUpdateHint", { defaultValue: "Bắt buộc điền đầy đủ!" })}
               </span>

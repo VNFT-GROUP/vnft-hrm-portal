@@ -21,9 +21,9 @@ export default function ProfilePage() {
         setLoading(true);
         const res = await currentUserProfileService.getCurrentUserProfile();
         setProfile(res.data || null);
+        setLoading(false);
       } catch (err) {
         console.error("Failed to fetch profile", err);
-      } finally {
         setLoading(false);
       }
     };

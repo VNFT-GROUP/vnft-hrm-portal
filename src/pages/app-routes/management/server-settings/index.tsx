@@ -1,5 +1,5 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
+
 import { Clock, ShieldAlert, Settings, Code, FileJson, Loader2, CalendarClock } from "lucide-react";
 import { m  } from 'framer-motion';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -112,7 +112,7 @@ export default function ServerSettingsPage() {
                   <CardContent className="space-y-4 pt-5 bg-slate-50/50">
                     <div className="flex justify-between items-center bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
                       <div className="flex flex-col gap-1 max-w-[70%]">
-                        <Label className="text-[14px] font-semibold text-slate-700">{t("serverSettings.lateGrace")}</Label>
+                        <div className="text-[14px] font-semibold text-slate-700">{t("serverSettings.lateGrace")}</div>
                         <span className="text-[12px] text-slate-500 leading-snug">{t("serverSettings.lateGraceNote")}</span>
                       </div>
                       <span className="font-bold text-[#2E3192] bg-[#2E3192]/10 border border-[#2E3192]/20 px-3.5 py-1.5 rounded-lg text-sm shrink-0">
@@ -122,7 +122,7 @@ export default function ServerSettingsPage() {
 
                     <div className="flex justify-between items-center bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
                       <div className="flex flex-col gap-1 max-w-[70%]">
-                        <Label className="text-[14px] font-semibold text-slate-700">{t("serverSettings.earlyLeave")}</Label>
+                        <div className="text-[14px] font-semibold text-slate-700">{t("serverSettings.earlyLeave")}</div>
                         <span className="text-[12px] text-slate-500 leading-snug">{t("serverSettings.earlyLeaveNote")}</span>
                       </div>
                       <span className="font-bold text-[#2E3192] bg-[#2E3192]/10 border border-[#2E3192]/20 px-3.5 py-1.5 rounded-lg text-sm shrink-0">
@@ -132,7 +132,7 @@ export default function ServerSettingsPage() {
 
                     <div className="flex justify-between items-center bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
                        <div className="flex flex-col gap-1 max-w-[70%]">
-                         <Label className="text-[14px] font-semibold text-slate-700">{t("serverSettings.halfWorkThreshold")}</Label>
+                         <div className="text-[14px] font-semibold text-slate-700">{t("serverSettings.halfWorkThreshold")}</div>
                          <span className="text-[12px] text-slate-500 leading-snug">{t("serverSettings.halfWorkNote", { hours: settings.attendanceHalfWorkUnitHours })}</span>
                        </div>
                        <span className="font-bold text-[#2E3192] bg-[#2E3192]/10 border border-[#2E3192]/20 px-3.5 py-1.5 rounded-lg text-sm shrink-0">
@@ -142,7 +142,7 @@ export default function ServerSettingsPage() {
 
                     <div className="flex justify-between items-center bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
                        <div className="flex flex-col gap-1 max-w-[70%]">
-                         <Label className="text-[14px] font-semibold text-slate-700">{t("serverSettings.fullWorkThreshold")}</Label>
+                         <div className="text-[14px] font-semibold text-slate-700">{t("serverSettings.fullWorkThreshold")}</div>
                          <span className="text-[12px] text-slate-500 leading-snug">{t("serverSettings.fullWorkNote", { hours: settings.attendanceFullWorkUnitHours })}</span>
                        </div>
                        <span className="font-bold text-[#2E3192] bg-[#2E3192]/10 border border-[#2E3192]/20 px-3.5 py-1.5 rounded-lg text-sm shrink-0">
@@ -166,18 +166,18 @@ export default function ServerSettingsPage() {
                   </CardHeader>
                   <CardContent className="space-y-4 pt-5 bg-slate-50/50">
                     <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs flex justify-between items-center">
-                        <Label className="text-[14px] font-semibold text-slate-700">{t("serverSettings.serverTimezone")}</Label>
+                        <div className="text-[14px] font-semibold text-slate-700">{t("serverSettings.serverTimezone")}</div>
                         <p className="font-bold text-slate-800 font-mono bg-slate-100 px-3.5 py-1.5 rounded-lg text-sm tracking-tight">{settings.timeZone}</p>
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
                       <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs flex flex-col gap-1.5">
-                        <Label className="text-[12px] font-semibold text-slate-500 uppercase tracking-widest">{t("serverSettings.lunchStart")}</Label>
+                        <div className="text-[12px] font-semibold text-slate-500 uppercase tracking-widest">{t("serverSettings.lunchStart")}</div>
                         <p className="font-extrabold text-[15px] text-slate-800">{settings.attendanceLunchBreakStart}</p>
                       </div>
                       
                       <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs flex flex-col gap-1.5">
-                        <Label className="text-[12px] font-semibold text-slate-500 uppercase tracking-widest">{t("serverSettings.lunchEnd")}</Label>
+                        <div className="text-[12px] font-semibold text-slate-500 uppercase tracking-widest">{t("serverSettings.lunchEnd")}</div>
                         <p className="font-extrabold text-[15px] text-slate-800">{settings.attendanceLunchBreakEnd}</p>
                       </div>
                     </div>
@@ -206,7 +206,7 @@ export default function ServerSettingsPage() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs flex justify-between items-center">
-                        <Label className="text-[14px] font-semibold text-slate-700">{t("serverSettings.summaryEnabled")}</Label>
+                        <div className="text-[14px] font-semibold text-slate-700">{t("serverSettings.summaryEnabled")}</div>
                         <span className={`font-bold px-3.5 py-1.5 rounded-lg text-sm shrink-0 border ${
                            settings.attendanceDailySummaryEnabled 
                              ? "text-[#2E3192] bg-[#2E3192]/10 border-[#2E3192]/20" 
@@ -218,7 +218,7 @@ export default function ServerSettingsPage() {
 
                       <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs flex justify-between items-center relative overflow-hidden">
                         <div className="flex flex-col gap-1.5">
-                           <Label className="text-[14px] font-semibold text-slate-700">{t("serverSettings.summaryCron")}</Label>
+                           <div className="text-[14px] font-semibold text-slate-700">{t("serverSettings.summaryCron")}</div>
                            <span className="text-[12.5px] font-medium text-slate-500/90">{parseCronToText(settings.attendanceDailySummaryCron)}</span>
                         </div>
                         <p className="font-bold text-[#2E3192] font-mono bg-[#2E3192]/10 border border-[#2E3192]/20 px-3.5 py-1.5 rounded-lg text-sm tracking-tight">{settings.attendanceDailySummaryCron}</p>

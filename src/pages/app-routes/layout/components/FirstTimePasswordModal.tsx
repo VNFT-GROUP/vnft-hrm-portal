@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Eye, EyeOff, Lock, CheckCircle2, LogOut } from 'lucide-react';
 import {
@@ -25,14 +25,21 @@ interface FirstTimePasswordModalProps {
 export default function FirstTimePasswordModal({ isOpen, onSuccess }: FirstTimePasswordModalProps) {
   const { t } = useTranslation();
   
-  const [showCurrent, setShowCurrent] = useState(false);
-  const [showNew, setShowNew] = useState(false);
-  const [showConfirm, setShowConfirm] = useState(false);
-  
-  // States for passwords
-  const [currentPassword, setCurrentPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const initialState = {
+    showCurrent: false,
+    showNew: false,
+    showConfirm: false,
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: '',
+  };
+
+  // State for passwords and visibility consolidated into a reducer
+  const [state, dispatch] = React.useReducer(
+    (prev: typeof initialState, next: Partial<typeof initialState>) => ({ ...prev, ...next }),
+    initialState
+  );
+  const { showCurrent, showNew, showConfirm, currentPassword, newPassword, confirmPassword } = state;
 
   const queryClient = useQueryClient();
 
@@ -47,9 +54,7 @@ export default function FirstTimePasswordModal({ isOpen, onSuccess }: FirstTimeP
       useAuthStore.getState().updateSession({ passwordChangedAt: new Date().toISOString() });
       onSuccess();
       // Reset fields
-      setCurrentPassword('');
-      setNewPassword('');
-      setConfirmPassword('');
+      dispatch({ currentPassword: '', newPassword: '', confirmPassword: '' });
     },
     onError: (error) => {
       let message = "Không thể thay đổi mật khẩu. Vui lòng kiểm tra lại mật khẩu hiện tại.";
@@ -136,12 +141,12 @@ export default function FirstTimePasswordModal({ isOpen, onSuccess }: FirstTimeP
                 className="pr-10 h-10"
                 placeholder={t('profile.passwordForm.currentPasswordPlaceholder')}
                 value={currentPassword}
-                onChange={(e) => setCurrentPassword(e.target.value)}
+                onChange={(e) => dispatch({ currentPassword: e.target.value })}
                 required
               />
               <button 
                 type="button" 
-                onClick={() => setShowCurrent(!showCurrent)}
+                onClick={() => dispatch({ showCurrent: !showCurrent })}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
               >
                 {showCurrent ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -162,12 +167,12 @@ export default function FirstTimePasswordModal({ isOpen, onSuccess }: FirstTimeP
                 className="pr-10 h-10"
                 placeholder={t('profile.passwordForm.newPasswordPlaceholder')}
                 value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
+                onChange={(e) => dispatch({ newPassword: e.target.value })}
                 required
               />
               <button 
                 type="button" 
-                onClick={() => setShowNew(!showNew)}
+                onClick={() => dispatch({ showNew: !showNew })}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
               >
                 {showNew ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -189,12 +194,12 @@ export default function FirstTimePasswordModal({ isOpen, onSuccess }: FirstTimeP
                 className={`pr-10 h-10 ${confirmPassword && newPassword !== confirmPassword ? 'border-destructive focus-visible:ring-destructive/20' : ''} ${confirmPassword && newPassword === confirmPassword ? 'border-emerald-500/50 focus-visible:ring-emerald-500/20' : ''}`}
                 placeholder={t('profile.passwordForm.confirmPasswordPlaceholder')}
                 value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
+                onChange={(e) => dispatch({ confirmPassword: e.target.value })}
                 required
               />
               <button 
                 type="button" 
-                onClick={() => setShowConfirm(!showConfirm)}
+                onClick={() => dispatch({ showConfirm: !showConfirm })}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
               >
                 {showConfirm ? <EyeOff size={16} /> : <Eye size={16} />}

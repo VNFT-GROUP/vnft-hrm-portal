@@ -1,8 +1,7 @@
 import { useState } from "react";
-import { Check, X, FileEdit, Clock, Calendar, Search, Filter, Eye } from "lucide-react";
+import { Check, X, FileEdit, Calendar, Search, Filter, Eye, Activity } from "lucide-react";
 import { m  } from 'framer-motion';
 import { toast } from "sonner";
-import { Card } from "@/components/ui/card";
 import CustomPagination from "@/components/custom/CustomPagination";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { RichTextViewer } from "@/components/custom/RichTextViewer";
@@ -112,76 +111,70 @@ export default function ManagementRequestsPage() {
 
       {/* Stats Cards Dashboard */}
       <div className="flex flex-col gap-4">
-        <div className="flex items-center justify-between text-sm text-slate-500 font-medium px-1">
-          <span>Tổng quan thống kê tháng này</span>
-          {stats?.startDate && stats?.endDate && (
-             <span>
-               {format(new Date(stats.startDate), "dd/MM")} - {format(new Date(stats.endDate), "dd/MM/yyyy")}
-             </span>
-          )}
-        </div>
-        
-        {/* Main Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <Card className="p-4 flex flex-col justify-center border-border shadow-[0_2px_10px_rgba(0,0,0,0.02)] hover:shadow-md transition-all">
-            <div className="flex items-center gap-2 mb-2">
-              <div className="w-2 h-2 rounded-full bg-blue-500" />
-              <p className="text-sm font-medium text-muted-foreground">Tổng số đơn</p>
+        <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+          {/* Header */}
+          <div className="bg-[#2E3192] text-white px-5 py-3 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Activity size={18} className="text-blue-100" />
+              <h3 className="font-semibold text-base">Tổng quan quản lý đơn từ</h3>
             </div>
-            <p className="text-3xl font-bold text-slate-700">{stats?.total ?? 0}</p>
-          </Card>
-          <Card className="p-4 flex flex-col justify-center border-border shadow-[0_2px_10px_rgba(0,0,0,0.02)] hover:shadow-md transition-all relative overflow-hidden">
-            <div className="absolute right-0 top-0 bottom-0 w-12 bg-amber-500/5 flex items-center justify-center">
-              <Clock size={20} className="text-amber-500/40" />
-            </div>
-            <div className="flex items-center gap-2 mb-2 relative z-10">
-              <div className="w-2 h-2 rounded-full bg-amber-500" />
-              <p className="text-sm font-medium text-muted-foreground">Chờ duyệt</p>
-            </div>
-            <p className="text-3xl font-bold text-amber-500 relative z-10">{stats?.pendingCount ?? 0}</p>
-          </Card>
-          <Card className="p-4 flex flex-col justify-center border-border shadow-[0_2px_10px_rgba(0,0,0,0.02)] hover:shadow-md transition-all relative overflow-hidden">
-            <div className="absolute right-0 top-0 bottom-0 w-12 bg-emerald-500/5 flex items-center justify-center">
-              <Check size={20} className="text-emerald-500/40" />
-            </div>
-            <div className="flex items-center gap-2 mb-2 relative z-10">
-              <div className="w-2 h-2 rounded-full bg-emerald-500" />
-              <p className="text-sm font-medium text-muted-foreground">Đã duyệt</p>
-            </div>
-            <p className="text-3xl font-bold text-emerald-500 relative z-10">{stats?.approvedCount ?? 0}</p>
-          </Card>
-          <Card className="p-4 flex flex-col justify-center border-border shadow-[0_2px_10px_rgba(0,0,0,0.02)] hover:shadow-md transition-all relative overflow-hidden">
-            <div className="absolute right-0 top-0 bottom-0 w-12 bg-red-500/5 flex items-center justify-center">
-              <X size={20} className="text-red-500/40" />
-            </div>
-            <div className="flex items-center gap-2 mb-2 relative z-10">
-              <div className="w-2 h-2 rounded-full bg-red-500" />
-              <p className="text-sm font-medium text-muted-foreground">Từ chối</p>
-            </div>
-            <p className="text-3xl font-bold text-red-500 relative z-10">{stats?.rejectedCount ?? 0}</p>
-          </Card>
-        </div>
-
-        {/* Breakdown by Type */}
-        {stats?.typeStatistics && stats.typeStatistics.length > 0 && (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-            {stats.typeStatistics.map((typeStat) => (
-              <div key={typeStat.type} className="bg-slate-50 border border-slate-100 p-3 rounded-lg flex flex-col justify-between">
-                <span className="text-xs font-semibold text-slate-500 uppercase tracking-tighter mb-1.5 truncate" title={getRequestTypeLabel(typeStat.type)}>
-                  {getRequestTypeLabel(typeStat.type)}
-                </span>
-                <div className="flex items-end justify-between">
-                  <span className="text-xl font-bold text-[#1E2062]">{typeStat.total}</span>
-                  {typeStat.pendingCount > 0 && (
-                    <span className="text-[10px] font-bold bg-amber-500/20 text-amber-700 px-1.5 py-0.5 rounded" title="Chờ duyệt">
-                      {typeStat.pendingCount} chờ
-                    </span>
-                  )}
-                </div>
-              </div>
-            ))}
+            {stats?.startDate && stats?.endDate && (
+               <span className="text-white/80 text-sm font-medium">
+                 {format(new Date(stats.startDate), "dd/MM")} - {format(new Date(stats.endDate), "dd/MM/yyyy")}
+               </span>
+            )}
           </div>
-        )}
+          
+          <div className="grid grid-cols-1 md:grid-cols-2">
+            {/* Left Column */}
+            <div className="p-5 border-r border-slate-100 flex flex-col">
+              <span className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">THỐNG KÊ TRẠNG THÁI</span>
+              <ul className="divide-y divide-slate-100 flex-1 flex flex-col justify-start">
+                <li className="flex justify-between items-center py-3">
+                  <span className="text-slate-600 font-medium">Tổng số đơn</span>
+                  <span className="font-bold text-[#1E2062] text-lg">{stats?.total ?? 0} <span className="text-sm font-normal text-slate-400 ml-1">đơn</span></span>
+                </li>
+                <li className="flex justify-between items-center py-3">
+                  <span className="text-slate-600 font-medium">Chờ duyệt</span>
+                  <span className="font-bold text-amber-500 text-lg">{stats?.pendingCount ?? 0}</span>
+                </li>
+                <li className="flex justify-between items-center py-3">
+                  <span className="text-slate-600 font-medium">Đã duyệt</span>
+                  <span className="font-bold text-emerald-500 text-lg">{stats?.approvedCount ?? 0}</span>
+                </li>
+                <li className="flex justify-between items-center py-3">
+                  <span className="text-slate-600 font-medium">Từ chối</span>
+                  <span className="font-bold text-red-500 text-lg">{stats?.rejectedCount ?? 0}</span>
+                </li>
+              </ul>
+            </div>
+            
+            {/* Right Column */}
+            <div className="p-5 flex flex-col bg-slate-50/30">
+              <span className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">PHÂN LOẠI ĐƠN TỪ</span>
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 flex-1 content-start">
+                {(stats?.typeStatistics || []).map((typeStat) => (
+                  <div key={typeStat.type} className="bg-white border border-slate-200 p-3 rounded-lg flex flex-col justify-between shadow-sm hover:shadow transition-shadow">
+                    <span className="text-sm font-medium text-slate-600 mb-2 truncate" title={getRequestTypeLabel(typeStat.type)}>
+                      {getRequestTypeLabel(typeStat.type)}
+                    </span>
+                    <div className="flex items-end justify-between">
+                      <span className="font-bold text-[#1E2062] text-xl leading-none">{typeStat.total}</span>
+                      {typeStat.pendingCount > 0 && (
+                        <span className="text-[10px] font-semibold text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-100" title="Chờ duyệt">
+                          {typeStat.pendingCount} chờ
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                ))}
+                {(!stats?.typeStatistics || stats.typeStatistics.length === 0) && (
+                  <div className="col-span-full py-4 text-center text-slate-400 text-sm">Chưa có dữ liệu phân loại</div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div className="bg-card border border-border shadow-sm rounded-xl overflow-hidden flex flex-col flex-1">

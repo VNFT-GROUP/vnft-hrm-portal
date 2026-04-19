@@ -1,5 +1,4 @@
 import { Trash2, Users, Shield, CircleDollarSign, UserCog, Briefcase, Key } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { m, AnimatePresence  } from 'framer-motion';
 import {
@@ -51,7 +50,6 @@ export default function EmployeeTable({ employees, onDelete, onEditBasicInfo, on
   return (
     <div className="overflow-x-auto">
       <ContextMenu>
-        <ContextMenuTrigger className="block w-full select-text!">
         <ContextMenuTrigger className="block w-full select-text!">
           <table className="w-full text-sm text-left border-collapse border border-slate-200 select-text">
             <thead className="text-xs text-slate-600 uppercase bg-slate-100 border-b border-slate-200">
@@ -138,7 +136,6 @@ export default function EmployeeTable({ employees, onDelete, onEditBasicInfo, on
               </m.tr>
             ))}
           </AnimatePresence>
-          {employees.length === 0 && (
           {employees.length === 0 && (
             <tr>
               <td colSpan={8} className="h-40 text-center border-x border-slate-200">

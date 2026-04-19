@@ -40,9 +40,9 @@ export default function ProfileHeader() {
         >
           <div className="w-full h-full overflow-hidden rounded-full pointer-events-none group-hover/header:scale-110 transition-transform duration-500">
             {profile.avatarUrl ? (
-               <img src={profile.avatarUrl} alt={profile.fullName} className="w-full h-full object-cover" />
+               <img src={profile.avatarUrl} alt={profile.fullName} className="w-full h-full object-contain bg-muted" />
             ) : (
-               <img src={`https://api.dicebear.com/7.x/notionists/svg?seed=${profile.englishName || profile.fullName}`} alt={profile.fullName} className="w-full h-full object-cover" />
+               <img src={`https://api.dicebear.com/7.x/notionists/svg?seed=${profile.englishName || profile.fullName}`} alt={profile.fullName} className="w-full h-full object-contain bg-muted" />
             )}
           </div>
         </m.div>
@@ -56,7 +56,7 @@ export default function ProfileHeader() {
               {profile.employeeCode || "---"}
             </span>
             {profile.active ? (
-              <span className="px-3 py-1 bg-[#F7941D]/10 text-[#F7941D] rounded-full text-xs font-semibold">
+              <span className="px-3 py-1 bg-[#10b981]/10 text-[#10b981] rounded-full text-xs font-semibold">
                 {t("profile.workingStatus.active", { defaultValue: "Đang làm việc" })}
               </span>
             ) : (
@@ -74,7 +74,7 @@ export default function ProfileHeader() {
             {profile.username && (
             <div className="flex items-center gap-1.5 hover:text-foreground transition-colors">
               <Mail size={16} className="text-muted-foreground" />
-              <span>{profile.username}@vnftgroup.com</span>
+              <span>{profile.username}</span>
             </div>
             )}
             <div className="flex items-center gap-1.5 hover:text-foreground transition-colors">

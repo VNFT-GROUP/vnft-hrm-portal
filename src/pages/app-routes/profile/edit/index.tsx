@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Save, User, Shield, BookOpen, Briefcase, MapPin, Plus, Trash2, Users, Camera, Info } from "lucide-react";
+import { ArrowLeft, Save, User, Shield, BookOpen, Briefcase, MapPin, Plus, Trash2, Users, Camera, Info, RotateCw } from "lucide-react";
 import { useAuthStore } from "@/store/useAuthStore";
 import { toast } from "sonner";
 import { currentUserProfileService } from "@/services/user/currentUserProfileService";
@@ -28,6 +28,19 @@ type ProfileFormData = Partial<UpdateCurrentUserProfileRequest> & {
 import { ProfileSearchableSelect } from "@/components/custom/ProfileSearchableSelect";
 // from "@/components/custom/ProfileSearchableSelect";
 
+import { rotateImageFile } from "@/lib/utils";
+
+interface VietQRBank {
+  id: number;
+  name: string;
+  code: string;
+  bin: string;
+  shortName: string;
+  logo: string;
+  transferSupported: number;
+  lookupSupported: number;
+}
+
 export default function EditProfilePage() {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
@@ -44,6 +57,19 @@ export default function EditProfilePage() {
 
   const [loading, setLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
+
+  const [bankList, setBankList] = useState<VietQRBank[]>([]);
+
+  React.useEffect(() => {
+    fetch('https://api.vietqr.io/v2/banks')
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.data) {
+          setBankList(data.data);
+        }
+      })
+      .catch(err => console.error("Failed to fetch banks", err));
+  }, []);
 
   // File Upload Storage States
   const avatarInputRef = React.useRef<HTMLInputElement>(null);
@@ -63,6 +89,42 @@ export default function EditProfilePage() {
       const file = e.target.files[0];
       setter(file);
       previewSetter(URL.createObjectURL(file));
+    }
+  };
+
+  const handleRotateImage = async (e: React.MouseEvent, type: 'avatar' | 'front' | 'back') => {
+    e.stopPropagation();
+    e.preventDefault();
+    try {
+      if (type === 'avatar') {
+        const source = avatarFile || avatarPreview || session?.avatarUrl || session?.username;
+        if (!source) return;
+        const newFile = await rotateImageFile(
+            avatarFile ? avatarFile : (avatarPreview || session?.avatarUrl ? (avatarPreview || session?.avatarUrl) : `https://api.dicebear.com/7.x/notionists/svg?seed=${session?.username}`)!,
+            90,
+            "avatar.jpg"
+        );
+        setAvatarFile(newFile);
+        setAvatarPreview(URL.createObjectURL(newFile));
+      } else if (type === 'front') {
+        const source = citizenIdFrontFile || citizenIdFrontPreview;
+        if (!source) return;
+        const newFile = await rotateImageFile(source, 90, "front_id.jpg");
+        setCitizenIdFrontFile(newFile);
+        setCitizenIdFrontPreview(URL.createObjectURL(newFile));
+      } else if (type === 'back') {
+        const source = citizenIdBackFile || citizenIdBackPreview;
+        if (!source) return;
+        const newFile = await rotateImageFile(source, 90, "back_id.jpg");
+        setCitizenIdBackFile(newFile);
+        setCitizenIdBackPreview(URL.createObjectURL(newFile));
+      }
+    } catch (error) {
+      console.error(error);
+      const e = error as Error;
+      toast.error(t("editProfile.rotateFailed", { defaultValue: "Lỗi xoay ảnh, có thể do định dạng hoặc lỗi CORS." }), {
+        description: e.message || ""
+      });
     }
   };
 
@@ -313,25 +375,32 @@ export default function EditProfilePage() {
                   <div className="relative group cursor-pointer" onClick={() => avatarInputRef.current?.click()}>
                      <div className="w-28 h-28 rounded-full bg-card border-4 border-background shadow-md overflow-hidden flex items-center justify-center shrink-0 text-muted-foreground group-hover:opacity-80 transition-opacity">
                         {avatarPreview ? (
-                          <img src={avatarPreview} alt="Avatar" className="w-full h-full object-cover" />
+                          <img src={avatarPreview} alt="Avatar" className="w-full h-full object-contain bg-muted" />
                         ) : session?.avatarUrl ? (
-                          <img src={session.avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
+                          <img src={session.avatarUrl} alt="Avatar" className="w-full h-full object-contain bg-muted" />
                         ) : session?.username ? (
-                          <img src={`https://api.dicebear.com/7.x/notionists/svg?seed=${session.username}`} alt="Avatar" className="w-full h-full object-cover" />
+                          <img src={`https://api.dicebear.com/7.x/notionists/svg?seed=${session.username}`} alt="Avatar" className="w-full h-full object-contain bg-muted" />
                         ) : (
                           <User size={48} className="opacity-20" />
                         )}
                      </div>
-                     <button type="button" className="absolute bottom-1 right-1 p-2 bg-[#F7941D] hover:bg-[#E88915] text-white rounded-full shadow-lg transition-transform hover:scale-105 active:scale-95 border-2 border-background">
+                     <button type="button" className="absolute bottom-1 right-1 p-2 bg-[#F7941D] hover:bg-[#E88915] text-white rounded-full shadow-lg transition-transform hover:scale-105 active:scale-95 border-2 border-background z-10">
                        <Camera size={14} />
                      </button>
                   </div>
                   <div className="space-y-1.5 text-center sm:text-left">
                      <h3 className="font-semibold text-foreground">{t("editProfile.basicInfo.avatarTitle", { defaultValue: "Ảnh chân dung" })}</h3>
                      <p className="text-xs text-muted-foreground max-w-[200px] sm:max-w-xs">{t("editProfile.basicInfo.avatarHint", { defaultValue: "Định dạng hỗ trợ: JPEG, PNG, WEBP. Kích thước tỷ lệ 1:1, dung lượng tối đa 5MB." })}</p>
-                     <Button type="button" onClick={() => avatarInputRef.current?.click()} variant="outline" size="sm" className="mt-3 rounded-xl text-xs font-medium bg-card hover:bg-[#2E3192]/5 hover:text-[#2E3192] hover:border-[#2E3192]/30 transition-colors">
-                        {t("editProfile.basicInfo.uploadAvatarBtn", { defaultValue: "Chọn tệp tải lên" })}
-                     </Button>
+                     <div className="flex items-center justify-center sm:justify-start gap-2 mt-3">
+                         <Button type="button" onClick={() => avatarInputRef.current?.click()} variant="outline" size="sm" className="rounded-xl text-xs font-medium bg-card hover:bg-[#2E3192]/5 hover:text-[#2E3192] hover:border-[#2E3192]/30 transition-colors">
+                            {t("editProfile.basicInfo.uploadAvatarBtn", { defaultValue: "Chọn tệp tải lên" })}
+                         </Button>
+                         {(avatarPreview || session?.avatarUrl || session?.username) && (
+                           <Button type="button" onClick={(e) => handleRotateImage(e, 'avatar')} variant="outline" size="sm" className="rounded-xl text-xs font-medium bg-card hover:bg-blue-50 hover:text-blue-600 border-border hover:border-blue-200 transition-colors gap-1.5 px-3">
+                              <RotateCw size={14} /> Xoay ảnh
+                           </Button>
+                         )}
+                     </div>
                   </div>
                 </div>
 
@@ -544,31 +613,49 @@ export default function EditProfilePage() {
                    <div className="space-y-3 relative group">
                       <Label className="font-semibold block">{t("editProfile.identity.frontImg", { defaultValue: "Ảnh mặt trước CCCD" })}</Label>
                       <input type="file" ref={frontInputRef} className="hidden" accept="image/jpeg, image/png, image/webp" onChange={(e) => handleFileChange(e, setCitizenIdFrontFile, setCitizenIdFrontPreview)} />
-                      <div onClick={() => frontInputRef.current?.click()} className="relative border-2 border-dashed border-border rounded-2xl h-48 flex flex-col items-center justify-center text-muted-foreground bg-muted/10 hover:bg-muted/50 hover:border-[#2E3192]/40 transition-colors cursor-pointer overflow-hidden">
-                         {citizenIdFrontPreview ? (
-                            <img src={citizenIdFrontPreview} alt="Front ID" className="w-full h-full object-cover" />
-                         ) : (
-                           <>
-                             <span className="p-3 bg-card rounded-full shadow-sm mb-3 group-hover:scale-110 transition-transform"><Camera size={24} className="text-muted-foreground group-hover:text-[#2E3192] transition-colors" /></span>
-                             <span className="font-medium text-sm text-foreground">{t("editProfile.identity.uploadFrontImg", { defaultValue: "Tải ảnh mặt trước lên" })}</span>
-                             <span className="text-xs opacity-70 mt-1">{t("editProfile.identity.imgHint", { defaultValue: "Định dạng JPEG, PNG, max 5MB" })}</span>
-                           </>
-                         )}
+                      <div className="flex flex-col gap-2">
+                          <div onClick={() => frontInputRef.current?.click()} className="relative border-2 border-dashed border-border rounded-2xl h-48 flex flex-col items-center justify-center text-muted-foreground bg-muted/10 hover:bg-muted/50 hover:border-[#2E3192]/40 transition-colors cursor-pointer overflow-hidden">
+                             {citizenIdFrontPreview ? (
+                                <img src={citizenIdFrontPreview} alt="Front ID" className="w-full h-full object-contain bg-muted" />
+                             ) : (
+                               <>
+                                 <span className="p-3 bg-card rounded-full shadow-sm mb-3 group-hover:scale-110 transition-transform"><Camera size={24} className="text-muted-foreground group-hover:text-[#2E3192] transition-colors" /></span>
+                                 <span className="font-medium text-sm text-foreground">{t("editProfile.identity.uploadFrontImg", { defaultValue: "Tải ảnh mặt trước lên" })}</span>
+                                 <span className="text-xs opacity-70 mt-1">{t("editProfile.identity.imgHint", { defaultValue: "Định dạng JPEG, PNG, max 5MB" })}</span>
+                               </>
+                             )}
+                          </div>
+                          {citizenIdFrontPreview && (
+                              <div className="flex justify-end">
+                                 <Button type="button" onClick={(e) => handleRotateImage(e, 'front')} variant="outline" size="sm" className="h-8 text-xs rounded-lg gap-1.5 font-medium bg-card hover:bg-blue-50 hover:text-blue-600 border-border hover:border-blue-200 transition-colors">
+                                    <RotateCw size={14} /> Xoay ảnh
+                                 </Button>
+                              </div>
+                          )}
                       </div>
                    </div>
                    <div className="space-y-3 relative group">
                       <Label className="font-semibold block">{t("editProfile.identity.backImg", { defaultValue: "Ảnh mặt sau CCCD" })}</Label>
                       <input type="file" ref={backInputRef} className="hidden" accept="image/jpeg, image/png, image/webp" onChange={(e) => handleFileChange(e, setCitizenIdBackFile, setCitizenIdBackPreview)} />
-                      <div onClick={() => backInputRef.current?.click()} className="relative border-2 border-dashed border-border rounded-2xl h-48 flex flex-col items-center justify-center text-muted-foreground bg-muted/10 hover:bg-muted/50 hover:border-[#2E3192]/40 transition-colors cursor-pointer overflow-hidden">
-                         {citizenIdBackPreview ? (
-                            <img src={citizenIdBackPreview} alt="Back ID" className="w-full h-full object-cover" />
-                         ) : (
-                           <>
-                             <span className="p-3 bg-card rounded-full shadow-sm mb-3 group-hover:scale-110 transition-transform"><Camera size={24} className="text-muted-foreground group-hover:text-[#2E3192] transition-colors" /></span>
-                             <span className="font-medium text-sm text-foreground">{t("editProfile.identity.uploadBackImg", { defaultValue: "Tải ảnh mặt sau lên" })}</span>
-                             <span className="text-xs opacity-70 mt-1">{t("editProfile.identity.imgHint", { defaultValue: "Định dạng JPEG, PNG, max 5MB" })}</span>
-                           </>
-                         )}
+                      <div className="flex flex-col gap-2">
+                          <div onClick={() => backInputRef.current?.click()} className="relative border-2 border-dashed border-border rounded-2xl h-48 flex flex-col items-center justify-center text-muted-foreground bg-muted/10 hover:bg-muted/50 hover:border-[#2E3192]/40 transition-colors cursor-pointer overflow-hidden">
+                             {citizenIdBackPreview ? (
+                                <img src={citizenIdBackPreview} alt="Back ID" className="w-full h-full object-contain bg-muted" />
+                             ) : (
+                               <>
+                                 <span className="p-3 bg-card rounded-full shadow-sm mb-3 group-hover:scale-110 transition-transform"><Camera size={24} className="text-muted-foreground group-hover:text-[#2E3192] transition-colors" /></span>
+                                 <span className="font-medium text-sm text-foreground">{t("editProfile.identity.uploadBackImg", { defaultValue: "Tải ảnh mặt sau lên" })}</span>
+                                 <span className="text-xs opacity-70 mt-1">{t("editProfile.identity.imgHint", { defaultValue: "Định dạng JPEG, PNG, max 5MB" })}</span>
+                               </>
+                             )}
+                          </div>
+                          {citizenIdBackPreview && (
+                              <div className="flex justify-end">
+                                 <Button type="button" onClick={(e) => handleRotateImage(e, 'back')} variant="outline" size="sm" className="h-8 text-xs rounded-lg gap-1.5 font-medium bg-card hover:bg-blue-50 hover:text-blue-600 border-border hover:border-blue-200 transition-colors">
+                                    <RotateCw size={14} /> Xoay ảnh
+                                 </Button>
+                              </div>
+                          )}
                       </div>
                    </div>
                 </div>
@@ -580,18 +667,30 @@ export default function EditProfilePage() {
                 <div className="space-y-4">
                   {formData.bankInformations?.map((bank, index) => (
                     <div key={index} className="flex flex-col md:flex-row gap-4 items-start md:items-end bg-muted/30 p-4 rounded-xl border border-border">
-                       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 flex-1 w-full">
+                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1 w-full">
                           <div className="space-y-1">
                             <Label className="text-xs">{t("editProfile.bank.bankName", { defaultValue: "Ngân hàng" })}</Label>
-                            <Input placeholder={t("editProfile.bank.bankNamePlaceholder", { defaultValue: "VD: Vietcombank" })} value={bank.bankName} onChange={e => {
-                               const newBanks = [...formData.bankInformations!];
-                               newBanks[index].bankName = e.target.value;
-                               handleTextChange("bankInformations", newBanks);
-                            }} />
+                            <ProfileSearchableSelect 
+                              options={bankList.length > 0 ? bankList.map(b => b.name) : (bank.bankName ? [bank.bankName] : [])} 
+                              value={bank.bankName || ""} 
+                              onChange={(v) => {
+                                 const newBanks = [...formData.bankInformations!];
+                                 newBanks[index].bankName = v;
+                                 handleTextChange("bankInformations", newBanks);
+                              }} 
+                              placeholder={t("editProfile.bank.unselected", { defaultValue: "Chưa chọn" })} 
+                              getTranslation={(val) => {
+                                 const match = bankList.find(b => b.name === val);
+                                 if (match) {
+                                   return `${match.name} (${match.shortName} - ${match.code})`;
+                                 }
+                                 return val;
+                              }}
+                            />
                           </div>
                           <div className="space-y-1">
                              <Label className="text-xs">{t("editProfile.bank.branch", { defaultValue: "Chi nhánh" })}</Label>
-                             <Input placeholder={t("editProfile.bank.branchPlaceholder", { defaultValue: "VD: HCM" })} value={bank.bankBranch} onChange={e => {
+                             <Input className="h-11 rounded-xl" value={bank.bankBranch} onChange={e => {
                                const newBanks = [...formData.bankInformations!];
                                newBanks[index].bankBranch = e.target.value;
                                handleTextChange("bankInformations", newBanks);
@@ -599,7 +698,7 @@ export default function EditProfilePage() {
                           </div>
                           <div className="space-y-1">
                              <Label className="text-xs">{t("editProfile.bank.accountName", { defaultValue: "Tên chủ tài khoản" })}</Label>
-                             <Input placeholder={t("editProfile.bank.accountNamePlaceholder", { defaultValue: "Nhập tên chủ tài khoản" })} value={bank.bankAccountName || ''} onChange={e => {
+                             <Input className="h-11 rounded-xl" value={bank.bankAccountName || ''} onChange={e => {
                                const newBanks = [...formData.bankInformations!];
                                newBanks[index].bankAccountName = e.target.value;
                                handleTextChange("bankInformations", newBanks);
@@ -607,7 +706,7 @@ export default function EditProfilePage() {
                           </div>
                           <div className="space-y-1">
                              <Label className="text-xs">{t("editProfile.bank.accountNumber", { defaultValue: "Số tài khoản" })}</Label>
-                             <Input placeholder={t("editProfile.bank.accountNumberPlaceholder", { defaultValue: "VD: 99120xxxxx" })} value={bank.bankAccountNumber||''} onChange={e => {
+                             <Input className="h-11 rounded-xl" value={bank.bankAccountNumber||''} onChange={e => {
                                const newBanks = [...formData.bankInformations!];
                                newBanks[index].bankAccountNumber = e.target.value;
                                handleTextChange("bankInformations", newBanks);

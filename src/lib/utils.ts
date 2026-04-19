@@ -30,3 +30,53 @@ export function getEmployeeStatusColor(status: string) {
       return "bg-muted text-muted-foreground border-0";
   }
 }
+
+export const rotateImageFile = async (fileOrUrl: File | string, angle: number = 90, defaultName: string = "rotated_image.jpeg"): Promise<File> => {
+  return new Promise((resolve, reject) => {
+    try {
+      let imageSrc = "";
+      let originalType = "image/jpeg";
+      
+      if (typeof fileOrUrl === 'string') {
+        imageSrc = fileOrUrl;
+      } else {
+        originalType = fileOrUrl.type || originalType;
+        defaultName = fileOrUrl.name;
+        imageSrc = URL.createObjectURL(fileOrUrl);
+      }
+
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return reject(new Error("No 2d context"));
+
+        if (angle % 180 === 90) {
+          canvas.width = img.height;
+          canvas.height = img.width;
+        } else {
+          canvas.width = img.width;
+          canvas.height = img.height;
+        }
+
+        ctx.translate(canvas.width / 2, canvas.height / 2);
+        ctx.rotate((angle * Math.PI) / 180);
+        ctx.drawImage(img, -img.width / 2, -img.height / 2);
+
+        canvas.toBlob((blob) => {
+          if (!blob) return reject(new Error("Canvas is empty"));
+          const newFile = new File([blob], defaultName, {
+             type: originalType,
+             lastModified: Date.now(),
+          });
+          resolve(newFile);
+        }, originalType, 0.95);
+      };
+      img.onerror = () => reject(new Error("Lỗi tải ảnh để xoay, có thể do định dạng hoặc lỗi CORS"));
+      img.src = imageSrc;
+    } catch (err) {
+      reject(err);
+    }
+  });
+};

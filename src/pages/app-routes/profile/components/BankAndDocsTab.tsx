@@ -76,7 +76,7 @@ export default function BankAndDocsTab() {
             </div>
             {profile.citizenIdFrontImageUrl ? (
                <div className="w-full h-[180px] rounded-xl overflow-hidden shadow-sm border border-border">
-                  <img src={profile.citizenIdFrontImageUrl} alt="CCCD Mặt trước" className="w-full h-full object-cover" />
+                  <img src={profile.citizenIdFrontImageUrl} alt="CCCD Mặt trước" className="w-full h-full object-contain bg-muted" />
                </div>
             ) : (
                <div className="flex flex-col items-center justify-center p-6 text-center bg-muted/50 rounded-xl border border-dashed border-border h-[140px]">
@@ -93,7 +93,7 @@ export default function BankAndDocsTab() {
             </div>
             {profile.citizenIdBackImageUrl ? (
                <div className="w-full h-[180px] rounded-xl overflow-hidden shadow-sm border border-border">
-                  <img src={profile.citizenIdBackImageUrl} alt="CCCD Mặt sau" className="w-full h-full object-cover" />
+                  <img src={profile.citizenIdBackImageUrl} alt="CCCD Mặt sau" className="w-full h-full object-contain bg-muted" />
                </div>
             ) : (
                <div className="flex flex-col items-center justify-center p-6 text-center bg-muted/50 rounded-xl border border-dashed border-border h-[140px]">

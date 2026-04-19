@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -20,6 +20,7 @@ export function ProfileSearchableSelect({
   disabled?: boolean;
 }) {
   const [open, setOpen] = useState(false);
+  const listRef = useRef<HTMLDivElement>(null);
   const { t } = useTranslation();
 
   const displayValue = value ? (getTranslation ? getTranslation(value) : value) : t(placeholder);
@@ -35,8 +36,15 @@ export function ProfileSearchableSelect({
       </PopoverTrigger>
       <PopoverContent className="p-0 rounded-xl w-[calc(100vw-2rem)] sm:w-[350px] md:w-[450px]" align="start">
         <Command>
-          <CommandInput placeholder={t("editProfile.searchableSelect.searchPlaceholder", { defaultValue: "Tìm kiếm..." })} />
-          <CommandList className="max-h-[350px]">
+          <CommandInput 
+            placeholder={t("editProfile.searchableSelect.searchPlaceholder", { defaultValue: "Tìm kiếm..." })} 
+            onValueChange={() => {
+              if (listRef.current) {
+                listRef.current.scrollTop = 0;
+              }
+            }}
+          />
+          <CommandList ref={listRef} className="max-h-[350px]">
             <CommandEmpty>{t("editProfile.searchableSelect.noResults", { defaultValue: "Không tìm thấy kết quả." })}</CommandEmpty>
             <CommandGroup>
               {options.map((opt) => (

@@ -2,13 +2,15 @@ import { useState } from "react";
 import { Check, X, FileEdit, Calendar, Search, Filter, Eye, Activity } from "lucide-react";
 import { m  } from 'framer-motion';
 import { toast } from "sonner";
-import CustomPagination from "@/components/custom/CustomPagination";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select";
+import CustomPagination from "@/components/custom/CustomPagination";
 import { RichTextViewer } from "@/components/custom/RichTextViewer";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { requestFormApprovalService } from "@/services/requestform/approval";
 import type { RequestFormResponse } from "@/types/requestform/RequestFormResponse";
-import { format } from "date-fns";
+import type { RequestFormStatisticPeriod } from "@/types/requestform/RequestFormEnums";
+import { format, subMonths, setDate } from "date-fns";
 import { getErrorMessage } from "@/lib/utils";
 
 export default function ManagementRequestsPage() {
@@ -19,9 +21,28 @@ export default function ManagementRequestsPage() {
     queryFn: () => requestFormApprovalService.getRequestFormsForApproval()
   });
   
+  const [statisticPeriod, setStatisticPeriod] = useState<RequestFormStatisticPeriod>("THIS_MONTH");
+  const [startDate, setStartDate] = useState<string>("");
+  const [endDate, setEndDate] = useState<string>("");
+
+  const handlePeriodChange = (val: RequestFormStatisticPeriod) => {
+    setStatisticPeriod(val);
+    if (val === "RANGE") {
+      const today = new Date();
+      const lastMonth25 = setDate(subMonths(today, 1), 25);
+      const thisMonth24 = setDate(today, 24);
+      
+      setStartDate(format(lastMonth25, "yyyy-MM-dd"));
+      setEndDate(format(thisMonth24, "yyyy-MM-dd"));
+    } else {
+      setStartDate("");
+      setEndDate("");
+    }
+  };
+
   const { data: statsResponse } = useQuery({
-    queryKey: ["approvalRequestsStatistics", "THIS_MONTH"],
-    queryFn: () => requestFormApprovalService.getRequestFormStatistics("THIS_MONTH")
+    queryKey: ["approvalRequestsStatistics", statisticPeriod, startDate, endDate],
+    queryFn: () => requestFormApprovalService.getRequestFormStatistics(statisticPeriod, startDate || undefined, endDate || undefined)
   });
 
   const requests = response?.data || [];
@@ -112,17 +133,62 @@ export default function ManagementRequestsPage() {
       {/* Stats Cards Dashboard */}
       <div className="flex flex-col gap-4">
         <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
-          {/* Header */}
-          <div className="bg-[#2E3192] text-white px-5 py-3 flex items-center justify-between">
+          <div className="bg-[#2E3192] text-white px-5 py-3 flex flex-col md:flex-row md:items-center justify-between border-b border-[#2E3192]/80 gap-3 md:gap-0">
             <div className="flex items-center gap-2">
-              <Activity size={18} className="text-blue-100" />
+              <Activity size={18} className="text-blue-200" />
               <h3 className="font-semibold text-base">Tổng quan quản lý đơn từ</h3>
             </div>
-            {stats?.startDate && stats?.endDate && (
-               <span className="text-white/80 text-sm font-medium">
-                 {format(new Date(stats.startDate), "dd/MM")} - {format(new Date(stats.endDate), "dd/MM/yyyy")}
-               </span>
-            )}
+            
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between text-sm text-blue-100 font-medium px-1 gap-3">
+              <div className="flex flex-wrap items-center gap-2">
+                <Select 
+                  value={statisticPeriod} 
+                  onValueChange={(val) => handlePeriodChange(val as RequestFormStatisticPeriod)}
+                >
+                  <SelectTrigger className="w-[180px] h-9 bg-white/10 border-white/20 text-white hover:bg-white/20 transition-colors focus:ring-white/30">
+                    <div className="flex-1 text-left truncate">
+                      {statisticPeriod === "ALL" ? "Tất cả thời gian" : 
+                      statisticPeriod === "THIS_MONTH" ? "Tháng này (mặc định)" : 
+                      "Tìm ngày tùy chọn"}
+                    </div>
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="ALL">Tất cả thời gian</SelectItem>
+                    <SelectItem value="THIS_MONTH">Tháng này (mặc định)</SelectItem>
+                    <SelectItem value="RANGE">Tìm ngày tùy chọn</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                {statisticPeriod === "RANGE" && (
+                  <div className="flex items-center gap-2 animate-in fade-in slide-in-from-right-4 duration-300">
+                    <input 
+                      type="date" 
+                      style={{ colorScheme: "dark" }}
+                      className="border border-white/20 rounded px-2 h-9 text-sm bg-white/10 text-white focus:bg-white/20 focus:ring-1 focus:ring-white/40 outline-none transition-colors"
+                      value={startDate}
+                      onChange={(e) => setStartDate(e.target.value)}
+                    />
+                    <span className="text-blue-200">đến</span>
+                    <input 
+                      type="date" 
+                      style={{ colorScheme: "dark" }}
+                      className="border border-white/20 rounded px-2 h-9 text-sm bg-white/10 text-white focus:bg-white/20 focus:ring-1 focus:ring-white/40 outline-none transition-colors"
+                      value={endDate}
+                      onChange={(e) => setEndDate(e.target.value)}
+                    />
+                  </div>
+                )}
+                
+                {stats?.startDate && stats?.endDate && statisticPeriod !== "RANGE" && (
+                   <div className="hidden md:flex items-center gap-1.5 ml-2 text-white/80 font-medium border-l border-blue-400 pl-3 h-6">
+                     <Calendar size={14} />
+                     <span>
+                       {format(new Date(stats.startDate), "dd/MM")} - {format(new Date(stats.endDate), "dd/MM/yyyy")}
+                     </span>
+                   </div>
+                )}
+              </div>
+            </div>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2">

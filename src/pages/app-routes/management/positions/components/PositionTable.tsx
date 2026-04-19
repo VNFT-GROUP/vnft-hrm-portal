@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Edit2, Trash2, Briefcase, ShieldCheck } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 import { m, AnimatePresence  } from 'framer-motion';

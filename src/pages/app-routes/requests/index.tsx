@@ -12,6 +12,7 @@ import { format } from "date-fns";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { RichTextViewer } from "@/components/custom/RichTextViewer";
+import { getErrorMessage } from "@/lib/utils";
 import RequestFormModal from "./components/RequestFormModal";
 const ApplicableDate = ({ req }: { req: RequestFormResponse }) => {
   let displayDate = "N/A";
@@ -52,8 +53,7 @@ export default function RequestsPage() {
       queryClient.invalidateQueries({ queryKey: ["my-request-forms"] });
     },
     onError: (error: unknown) => {
-      const err = error as { response?: { data?: { message?: string } } };
-      toast.error(err?.response?.data?.message || "Lỗi khi thu hồi đơn.");
+      toast.error(getErrorMessage(error, "Lỗi khi thu hồi đơn."));
     }
   });
 

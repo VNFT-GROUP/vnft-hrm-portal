@@ -12,6 +12,7 @@ import { Textarea } from "@/components/ui/textarea";
 import type { UpdateUserProfileRequest } from '@/types/user/UpdateUserProfileRequest';
 import { s3Service } from "@/services/s3";
 import { useQueryClient } from "@tanstack/react-query";
+import { getErrorMessage } from "@/lib/utils";
 import {
   ALL_COUNTRIES_SORTED as PROFILE_ALL_COUNTRIES_SORTED,
   ETHNICITIES_VN as PROFILE_ETHNICITIES_VN,
@@ -211,8 +212,7 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
       success = true;
     } catch (error) {
       console.error(error);
-      const err = error as Error & { response?: { data?: { message?: string } } };
-      errorMessage = err?.response?.data?.message || err?.message || errorMessage;
+      errorMessage = getErrorMessage(error, errorMessage);
       setLoading(false);
     }
     setLoading(false);
@@ -581,8 +581,10 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
                 </div>
 
                 <div className="space-y-4">
-                  {formData.bankInformations?.map((bank, index) => (
-                    <div key={index} className="flex flex-col md:flex-row gap-4 items-start md:items-end bg-muted/30 p-4 rounded-xl border border-border">
+                  {formData.bankInformations?.map((bank, index) => {
+                    const keyStr = bank.bankAccountNumber ? `bank-${bank.bankAccountNumber}` : `bank-new-${index}`;
+                    return (
+                    <div key={keyStr} className="flex flex-col md:flex-row gap-4 items-start md:items-end bg-muted/30 p-4 rounded-xl border border-border">
                        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 flex-1 w-full">
                           <div className="space-y-1">
                             <Label className="text-xs">{t("editProfile.bank.bankName", { defaultValue: "Ngân hàng" })}</Label>
@@ -620,7 +622,8 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
                        <Button disabled={!isEditingMode || loading} type="button" variant="destructive" size="icon" className="shrink-0 rounded-xl" onClick={() => { handleTextChange("bankInformations", formData.bankInformations!.filter((_, i: number) => i !== index));
                        }}><Trash2 size={16}/></Button>
                     </div>
-                  ))}
+                    );
+                  })}
                   
                   <Button type="button" variant="outline" disabled={!isEditingMode || loading} onClick={() => { handleTextChange("bankInformations", [...(formData.bankInformations||[]), { bankName: '', bankBranch: '', bankAccountName: '', bankAccountNumber: '' }]);
                   }} className="border-dashed border-2 gap-2 w-full h-12 rounded-xl text-muted-foreground hover:text-primary"><Plus size={16}/> {t("editProfile.bank.addBtn", { defaultValue: "Thêm Tài khoản Ngân hàng" })}</Button>
@@ -635,8 +638,10 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
                 </div>
                 
                 <div className="space-y-4">
-                  {formData.educationRecords?.map((edu, index) => (
-                    <div key={index} className="flex gap-4 items-start bg-muted/30 p-5 rounded-2xl border border-border">
+                  {formData.educationRecords?.map((edu, index) => {
+                    const keyStr = edu.institutionName ? `edu-${edu.institutionName}-${index}` : `edu-new-${index}`;
+                    return (
+                    <div key={keyStr} className="flex gap-4 items-start bg-muted/30 p-5 rounded-2xl border border-border">
                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1">
                           <div className="grid grid-cols-2 gap-4 md:col-span-2">
                              <div className="space-y-1.5">
@@ -680,7 +685,8 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
                        <Button disabled={!isEditingMode || loading} type="button" variant="destructive" size="icon" className="shrink-0 rounded-xl" onClick={() => { handleTextChange("educationRecords", formData.educationRecords!.filter((_, i: number) => i !== index));
                        }}><Trash2 size={16}/></Button>
                     </div>
-                  ))}
+                    );
+                  })}
                   
                   <Button type="button" variant="outline" disabled={!isEditingMode || loading} onClick={() => { handleTextChange("educationRecords", [...(formData.educationRecords||[]), { trainingMode: '' }]);
                   }} className="border-dashed border-2 gap-2 w-full h-12 rounded-xl text-muted-foreground"><Plus size={16}/> {t("editProfile.education.addBtn", { defaultValue: "Thêm Bằng cấp/Học vấn" })}</Button>
@@ -695,8 +701,10 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
                 </div>
                 
                 <div className="space-y-4">
-                  {formData.workExperiences?.map((work, index) => (
-                    <div key={index} className="flex gap-4 items-start bg-muted/30 p-5 rounded-2xl border border-border">
+                  {formData.workExperiences?.map((work, index) => {
+                    const keyStr = work.companyName ? `exp-${work.companyName}-${index}` : `exp-new-${index}`;
+                    return (
+                    <div key={keyStr} className="flex gap-4 items-start bg-muted/30 p-5 rounded-2xl border border-border">
                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1">
                           <div className="grid grid-cols-2 gap-4 md:col-span-2">
                              <div className="space-y-1.5">
@@ -746,7 +754,8 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
                        <Button disabled={!isEditingMode || loading} type="button" variant="destructive" size="icon" className="shrink-0 rounded-xl" onClick={() => { handleTextChange("workExperiences", formData.workExperiences!.filter((_, i: number) => i !== index));
                        }}><Trash2 size={16}/></Button>
                     </div>
-                  ))}
+                    );
+                  })}
                   
                   <Button type="button" variant="outline" disabled={!isEditingMode || loading} onClick={() => { handleTextChange("workExperiences", [...(formData.workExperiences||[]), { companyName: '' }]);
                   }} className="border-dashed border-2 gap-2 w-full h-12 rounded-xl text-muted-foreground"><Plus size={16}/> {t("editProfile.experience.addBtn", { defaultValue: "Thêm Kinh nghiệm" })}</Button>
@@ -761,8 +770,10 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
                 </div>
                 
                 <div className="space-y-4">
-                  {formData.dependents?.map((dep, index) => (
-                    <div key={index} className="flex gap-4 items-start bg-muted/30 p-4 rounded-xl border border-border">
+                  {formData.dependents?.map((dep, index) => {
+                    const keyStr = dep.dependentFullName ? `dep-${dep.dependentFullName}-${index}` : `dep-new-${index}`;
+                    return (
+                    <div key={keyStr} className="flex gap-4 items-start bg-muted/30 p-4 rounded-xl border border-border">
                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1">
                           <Input disabled={!isEditingMode || loading} placeholder={t("editProfile.dependents.fullNamePlaceholder", { defaultValue: "Họ và Tên" })} value={dep.dependentFullName || ''} onChange={(e) => {
                              const arr = [...formData.dependents!]; arr[index].dependentFullName = e.target.value; handleTextChange("dependents", arr);
@@ -786,7 +797,8 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
                        <Button disabled={!isEditingMode || loading} type="button" variant="destructive" size="icon" className="shrink-0 rounded-xl" onClick={() => { handleTextChange("dependents", formData.dependents!.filter((_, i: number) => i !== index));
                        }}><Trash2 size={16}/></Button>
                     </div>
-                  ))}
+                    );
+                  })}
                   
                   <Button type="button" variant="outline" disabled={!isEditingMode || loading} onClick={() => { handleTextChange("dependents", [...(formData.dependents||[]), { dependentFullName: '', dependentRelationship: '' }]);
                   }} className="border-dashed border-2 gap-2 w-full h-12 rounded-xl text-muted-foreground"><Plus size={16}/> {t("editProfile.dependents.addBtn", { defaultValue: "Thêm Khai báo NPT" })}</Button>

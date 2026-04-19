@@ -106,17 +106,17 @@ export default function NetworkPage() {
           <List size={20} />
           <span>{t('network.branchListBtn')}</span>
         </SheetTrigger>
-        <SheetContent side="right" className="w-[400px] sm:w-[450px] p-0 border-l border-slate-200 bg-white/95 backdrop-blur-xl flex flex-col z-[2000]">
-          <SheetHeader className="p-6 border-b border-slate-100 flex-shrink-0">
+        <SheetContent side="right" className="w-[400px] sm:w-[450px] p-0 border-l border-slate-200 bg-white/95 backdrop-blur-xl flex flex-col z-2000">
+          <SheetHeader className="p-6 border-b border-slate-100 shrink-0">
             <SheetTitle className="text-[#1E2062] font-bold text-xl text-left tracking-wide">
               {t('network.globalOffices')}
             </SheetTitle>
           </SheetHeader>
           
           <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-5">
-            {BRANCHES.map((branch, idx) => (
+            {BRANCHES.map((branch) => (
               <div 
-                key={idx} 
+                key={branch.name} 
                 className="branch-card-light shadow-sm cursor-pointer hover:bg-slate-50 transition-colors"
                 onClick={() => setActiveLocation(branch.coords)}
               >

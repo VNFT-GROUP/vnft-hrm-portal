@@ -29,12 +29,13 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { vi } from "date-fns/locale";
 import { cn } from "@/lib/utils";
+import { Calendar } from "@/components/ui/calendar";
 import { useNavigate } from "react-router-dom";
 import { RichTextEditor } from "@/components/custom/RichTextEditor";
+import { getErrorMessage } from "@/lib/utils";
 
 type RequestType =
   | "leave"
@@ -223,8 +224,7 @@ export default function CreateRequestPage() {
       navigate("/app/requests");
     },
     onError: (error: unknown) => {
-      const err = error as { response?: { data?: { message?: string } } };
-      toast.error(err?.response?.data?.message || "Có lỗi xảy ra khi tạo đơn.");
+      toast.error(getErrorMessage(error, "Có lỗi xảy ra khi tạo đơn."));
     },
   });
 

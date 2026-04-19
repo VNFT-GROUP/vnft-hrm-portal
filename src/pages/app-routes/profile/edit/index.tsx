@@ -6,6 +6,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { toast } from "sonner";
 import { useQuery } from "@tanstack/react-query";
 import { currentUserProfileService } from "@/services/user/currentUserProfileService";
+import { getErrorMessage } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -286,9 +287,9 @@ export default function EditProfilePage() {
       setLoading(false);
     } catch (error) {
       console.error(error);
-      const err = error as Error & { response?: { data?: { message?: string } } };
+      const errorMsg = getErrorMessage(error, "Lỗi không xác định khi lưu thông tin");
       toast.error(t("editProfile.validation.updateFailed", { defaultValue: "Cập nhật thất bại" }), {
-        description: err?.response?.data?.message || err?.message || "Lỗi không xác định khi lưu thông tin"
+        description: errorMsg
       });
       setLoading(false);
     }
@@ -664,8 +665,10 @@ export default function EditProfilePage() {
                 </div>
 
                 <div className="space-y-4">
-                  {formData.bankInformations?.map((bank, index) => (
-                    <div key={index} className="flex flex-col md:flex-row gap-4 items-start md:items-end bg-muted/30 p-4 rounded-xl border border-border">
+                  {formData.bankInformations?.map((bank, index) => {
+                    const keyStr = bank.bankAccountNumber ? `bank-${bank.bankAccountNumber}` : `bank-new-${index}`;
+                    return (
+                    <div key={keyStr} className="flex flex-col md:flex-row gap-4 items-start md:items-end bg-muted/30 p-4 rounded-xl border border-border">
                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1 w-full">
                           <div className="space-y-1">
                             <Label className="text-xs">{t("editProfile.bank.bankName", { defaultValue: "Ngân hàng" })}</Label>
@@ -716,7 +719,8 @@ export default function EditProfilePage() {
                           handleTextChange("bankInformations", formData.bankInformations!.filter((_, i) => i !== index));
                        }}><Trash2 size={16}/></Button>
                     </div>
-                  ))}
+                    );
+                  })}
                   
                   <Button type="button" variant="outline" onClick={() => {
                      handleTextChange("bankInformations", [...(formData.bankInformations||[]), { bankName: '', bankBranch: '', bankAccountName: '', bankAccountNumber: '' }]);
@@ -733,8 +737,10 @@ export default function EditProfilePage() {
                 </div>
                 
                 <div className="space-y-4">
-                  {formData.educationRecords?.map((edu, index) => (
-                    <div key={index} className="flex gap-4 items-start bg-muted/30 p-5 rounded-2xl border border-border">
+                  {formData.educationRecords?.map((edu, index) => {
+                    const keyStr = edu.institutionName ? `edu-${edu.institutionName}-${index}` : `edu-new-${index}`;
+                    return (
+                    <div key={keyStr} className="flex gap-4 items-start bg-muted/30 p-5 rounded-2xl border border-border">
                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1">
                           <div className="grid grid-cols-2 gap-4 md:col-span-2">
                              <div className="space-y-1.5">
@@ -779,7 +785,8 @@ export default function EditProfilePage() {
                           handleTextChange("educationRecords", formData.educationRecords!.filter((_, i) => i !== index));
                        }}><Trash2 size={16}/></Button>
                     </div>
-                  ))}
+                    );
+                  })}
                   
                   <Button type="button" variant="outline" onClick={() => {
                      handleTextChange("educationRecords", [...(formData.educationRecords||[]), { trainingMode: '' }]);
@@ -796,8 +803,10 @@ export default function EditProfilePage() {
                 </div>
                 
                 <div className="space-y-4">
-                  {formData.workExperiences?.map((work, index) => (
-                    <div key={index} className="flex gap-4 items-start bg-muted/30 p-5 rounded-2xl border border-border">
+                  {formData.workExperiences?.map((work, index) => {
+                    const keyStr = work.companyName ? `exp-${work.companyName}-${index}` : `exp-new-${index}`;
+                    return (
+                    <div key={keyStr} className="flex gap-4 items-start bg-muted/30 p-5 rounded-2xl border border-border">
                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1">
                           <div className="grid grid-cols-2 gap-4 md:col-span-2">
                              <div className="space-y-1.5">
@@ -848,7 +857,8 @@ export default function EditProfilePage() {
                           handleTextChange("workExperiences", formData.workExperiences!.filter((_, i) => i !== index));
                        }}><Trash2 size={16}/></Button>
                     </div>
-                  ))}
+                    );
+                  })}
                   
                   <Button type="button" variant="outline" onClick={() => {
                      handleTextChange("workExperiences", [...(formData.workExperiences||[]), { companyName: '' }]);
@@ -865,8 +875,10 @@ export default function EditProfilePage() {
                 </div>
                 
                 <div className="space-y-4">
-                  {formData.dependents?.map((dep, index) => (
-                    <div key={index} className="flex gap-4 items-start bg-muted/30 p-4 rounded-xl border border-border">
+                  {formData.dependents?.map((dep, index) => {
+                    const keyStr = dep.dependentFullName ? `dep-${dep.dependentFullName}-${index}` : `dep-new-${index}`;
+                    return (
+                    <div key={keyStr} className="flex gap-4 items-start bg-muted/30 p-4 rounded-xl border border-border">
                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1">
                           <Input placeholder={t("editProfile.dependents.fullNamePlaceholder", { defaultValue: "Họ và Tên" })} value={dep.dependentFullName || ''} onChange={(e) => {
                              const arr = [...formData.dependents!]; arr[index].dependentFullName = e.target.value; handleTextChange("dependents", arr);
@@ -891,7 +903,8 @@ export default function EditProfilePage() {
                           handleTextChange("dependents", formData.dependents!.filter((_, i) => i !== index));
                        }}><Trash2 size={16}/></Button>
                     </div>
-                  ))}
+                    );
+                  })}
                   
                   <Button type="button" variant="outline" onClick={() => {
                      handleTextChange("dependents", [...(formData.dependents||[]), { dependentFullName: '', dependentRelationship: '' }]);

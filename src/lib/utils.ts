@@ -80,3 +80,8 @@ export const rotateImageFile = async (fileOrUrl: File | string, angle: number = 
     }
   });
 };
+
+export function getErrorMessage(error: unknown, defaultMessage?: string): string {
+  const err = error as Error & { response?: { data?: { message?: string } } };
+  return err?.response?.data?.message || err?.message || defaultMessage || "Lỗi không xác định";
+}

@@ -31,7 +31,7 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { vi } from "date-fns/locale";
-import { cn } from "@/lib/utils";
+import { cn, getErrorMessage } from "@/lib/utils";
 
 import { RichTextEditor } from "@/components/custom/RichTextEditor";
 
@@ -277,8 +277,7 @@ export default function RequestFormModal({ isOpen, onOpenChange, initialData }: 
       onOpenChange(false);
     },
     onError: (error: unknown) => {
-      const err = error as { response?: { data?: { message?: string } } };
-      toast.error(err?.response?.data?.message || "Có lỗi xảy ra khi tạo đơn.");
+      toast.error(getErrorMessage(error, "Có lỗi xảy ra khi tạo đơn."));
     },
   });
 

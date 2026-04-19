@@ -1,6 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 import { Clock, ShieldAlert, Settings, Code, FileJson, Loader2, CalendarClock } from "lucide-react";
+import DOMPurify from "dompurify";
 import { m  } from 'framer-motion';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useQuery } from "@tanstack/react-query";
@@ -244,10 +245,12 @@ export default function ServerSettingsPage() {
                   <div className="bg-[#0D1117] p-6 overflow-x-auto">
                     <pre className="text-[13.5px] font-mono leading-loose tracking-wide">
                       <code dangerouslySetInnerHTML={{ 
-                        __html: JSON.stringify(settings, null, 2)
-                          .replace(/"(.*?)":/g, '<span style="color: #82AAFF">"$1"</span>:')
-                          .replace(/: "(.*?)"/g, ': <span style="color: #C3E88D">"$1"</span>')
-                          .replace(/: (\d+)/g, ': <span style="color: #F78C6C">$1</span>')
+                        __html: DOMPurify.sanitize(
+                          JSON.stringify(settings, null, 2)
+                            .replace(/"(.*?)":/g, '<span style="color: #82AAFF">"$1"</span>:')
+                            .replace(/: "(.*?)"/g, ': <span style="color: #C3E88D">"$1"</span>')
+                            .replace(/: (\d+)/g, ': <span style="color: #F78C6C">$1</span>')
+                        )
                       }} />
                     </pre>
                   </div>

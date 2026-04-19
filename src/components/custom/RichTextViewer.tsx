@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import DOMPurify from "dompurify";
 
 export interface RichTextViewerProps {
   htmlContent: string;
@@ -19,7 +20,7 @@ export function RichTextViewer({ htmlContent, className }: RichTextViewerProps) 
         className
       )}
       style={{ wordBreak: 'break-word', overflowWrap: 'anywhere' }}
-      dangerouslySetInnerHTML={{ __html: htmlContent }}
+      dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(htmlContent) }}
     />
   );
 }

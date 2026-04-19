@@ -12,10 +12,10 @@ export default function NdaDialog() {
         <span className="relative z-10">{t('login.nda')}</span>
       </DialogTrigger>
       
-      <DialogContent className="!max-w-6xl !w-[95vw] !h-[90vh] !max-h-[1000px] p-0 bg-gradient-to-br from-slate-50/95 to-slate-100/95 backdrop-blur-2xl border border-white/40 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] rounded-3xl overflow-hidden flex flex-col nda-dialog-container" showCloseButton={true}>
+      <DialogContent className="max-w-6xl! w-[95vw]! h-[90vh]! max-h-[1000px]! p-0 bg-linear-to-br from-slate-50/95 to-slate-100/95 backdrop-blur-2xl border border-white/40 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] rounded-3xl overflow-hidden flex flex-col nda-dialog-container" showCloseButton={true}>
         
         {/* Fancy Hero Header */}
-        <div className="relative w-full shrink-0 px-8 pt-10 pb-8 bg-gradient-to-r from-[#1E2062] to-[#2B2D85] overflow-hidden">
+        <div className="relative w-full shrink-0 px-8 pt-10 pb-8 bg-linear-to-r from-[#1E2062] to-[#2B2D85] overflow-hidden">
           {/* Background decorations */}
           <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
             <svg viewBox="0 0 400 400" className="absolute -top-32 -left-32 w-96 h-96 animate-[spin_60s_linear_infinite]">
@@ -59,8 +59,8 @@ export default function NdaDialog() {
               </h3>
               <p className="mb-3 text-slate-700 font-medium">{t('ndaContent.section1.desc')}</p>
               <ul className="space-y-3">
-                {(t('ndaContent.section1.items', { returnObjects: true }) as string[]).map((item, idx) => (
-                  <li key={idx} className="flex gap-3 text-justify">
+                {(t('ndaContent.section1.items', { returnObjects: true }) as string[]).map((item) => (
+                  <li key={item.substring(0, 30)} className="flex gap-3 text-justify">
                     <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[#F7941D] shrink-0" />
                     <span>{item}</span>
                   </li>
@@ -74,8 +74,8 @@ export default function NdaDialog() {
                 {t('ndaContent.section2.title').replace(/^2\.\s*/, '')}
               </h3>
               <ul className="space-y-3">
-                {(t('ndaContent.section2.items', { returnObjects: true }) as string[]).map((item, idx) => (
-                  <li key={idx} className="flex gap-3 text-justify">
+                {(t('ndaContent.section2.items', { returnObjects: true }) as string[]).map((item) => (
+                  <li key={item.substring(0, 30)} className="flex gap-3 text-justify">
                     <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[#1E2062] opacity-70 shrink-0" />
                     <span>{item}</span>
                   </li>
@@ -107,8 +107,8 @@ export default function NdaDialog() {
                 {t('ndaContent.section5.title').replace(/^5\.\s*/, '')}
               </h3>
               <ul className="space-y-3">
-                {(t('ndaContent.section5.items', { returnObjects: true }) as string[]).map((item, idx) => (
-                  <li key={idx} className="flex gap-3 text-justify">
+                {(t('ndaContent.section5.items', { returnObjects: true }) as string[]).map((item) => (
+                  <li key={item.substring(0, 30)} className="flex gap-3 text-justify">
                     <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[#F7941D] shrink-0" />
                     <span>{item}</span>
                   </li>
@@ -120,7 +120,7 @@ export default function NdaDialog() {
         </div>
 
         {/* Bottom Fade Gradient for Scroll affordance */}
-        <div className="h-6 w-full bg-gradient-to-t from-slate-50/95 to-transparent absolute bottom-0 left-0 pointer-events-none rounded-b-3xl"></div>
+        <div className="h-6 w-full bg-linear-to-t from-slate-50/95 to-transparent absolute bottom-0 left-0 pointer-events-none rounded-b-3xl"></div>
       </DialogContent>
     </Dialog>
   );

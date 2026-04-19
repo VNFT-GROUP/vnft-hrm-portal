@@ -63,21 +63,21 @@ export default function CustomPagination({
         for (let i = 1; i <= 5; i++) {
           pages.push(i);
         }
-        pages.push("ellipsis");
+        pages.push("ellipsis-1");
         pages.push(totalPages);
       } else if (currentPage >= totalPages - 3) {
         pages.push(1);
-        pages.push("ellipsis");
+        pages.push("ellipsis-1");
         for (let i = totalPages - 4; i <= totalPages; i++) {
           pages.push(i);
         }
       } else {
         pages.push(1);
-        pages.push("ellipsis");
+        pages.push("ellipsis-1");
         pages.push(currentPage - 1);
         pages.push(currentPage);
         pages.push(currentPage + 1);
-        pages.push("ellipsis");
+        pages.push("ellipsis-2");
         pages.push(totalPages);
       }
     }
@@ -122,9 +122,9 @@ export default function CustomPagination({
               />
             </PaginationItem>
 
-            {getPageNumbers().map((page, index) => (
-              <PaginationItem key={index}>
-                {page === "ellipsis" ? (
+            {getPageNumbers().map((page) => (
+              <PaginationItem key={page.toString()}>
+                {typeof page === "string" && page.startsWith("ellipsis") ? (
                   <PaginationEllipsis />
                 ) : (
                   <PaginationLink

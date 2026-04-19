@@ -18,8 +18,10 @@ export function ProfileEducationFields({ data, onChange, disabled }: ProfileEduc
 
   return (
     <div className="space-y-4">
-      {eduList.map((edu, index) => (
-        <div key={index} className="flex gap-4 items-start bg-muted/30 p-5 rounded-2xl border border-border">
+      {eduList.map((edu, index) => {
+        const keyStr = edu.institutionName ? `edu-${edu.institutionName}-${index}` : `edu-new-${index}`;
+        return (
+        <div key={keyStr} className="flex gap-4 items-start bg-muted/30 p-5 rounded-2xl border border-border">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1">
             <div className="grid grid-cols-2 gap-4 md:col-span-2">
                 <div className="space-y-1.5">
@@ -83,7 +85,8 @@ export function ProfileEducationFields({ data, onChange, disabled }: ProfileEduc
             <Trash2 size={16}/>
           </Button>
         </div>
-      ))}
+        );
+      })}
       
       <Button 
         type="button" variant="outline" disabled={disabled} 

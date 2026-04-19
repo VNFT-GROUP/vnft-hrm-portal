@@ -18,8 +18,10 @@ export function ProfileBankFields({ data, onChange, disabled }: ProfileBankField
 
   return (
     <div className="space-y-4">
-      {bankList.map((bank, index) => (
-        <div key={index} className="flex flex-col md:flex-row gap-4 items-start md:items-end bg-muted/30 p-4 rounded-xl border border-border">
+      {bankList.map((bank, index) => {
+        const keyStr = bank.bankAccountNumber ? `bank-${bank.bankAccountNumber}` : `bank-new-${index}`;
+        return (
+        <div key={keyStr} className="flex flex-col md:flex-row gap-4 items-start md:items-end bg-muted/30 p-4 rounded-xl border border-border">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 flex-1 w-full">
             <div className="space-y-1">
               <Label className="text-xs">{t("editProfile.bank.bankName", { defaultValue: "Ngân hàng" })}</Label>
@@ -85,7 +87,8 @@ export function ProfileBankFields({ data, onChange, disabled }: ProfileBankField
             <Trash2 size={16}/>
           </Button>
         </div>
-      ))}
+        );
+      })}
       
       <Button 
         type="button" 

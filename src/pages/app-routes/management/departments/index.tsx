@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import type { UpsertDepartmentRequest } from '@/types/department/UpsertDepartmentRequest';
 import { useTranslation } from "react-i18next";
 import CustomPagination from "@/components/custom/CustomPagination";
+import { useDebounce } from "@/hooks/useDebounce";
 
 export default function DepartmentsPage() {
   const { t } = useTranslation();
@@ -26,9 +27,11 @@ export default function DepartmentsPage() {
     name: "", description: "", active: true
   });
 
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
+
   const { data: departmentsData } = useQuery({
-    queryKey: ["departments", searchTerm],
-    queryFn: () => departmentService.getDepartments(searchTerm),
+    queryKey: ["departments", debouncedSearchTerm],
+    queryFn: () => departmentService.getDepartments(debouncedSearchTerm || undefined),
   });
 
   const departments: Department[] = departmentsData?.data || [];

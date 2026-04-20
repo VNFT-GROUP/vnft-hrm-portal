@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Search, Calendar as CalendarIcon, Info } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { m  } from 'framer-motion';
@@ -10,13 +10,14 @@ import AttendanceTable, {
   AttendanceJsonDialog,
 } from "./components/AttendanceTable";
 import type { AttendanceRecordResponse } from "@/types/attendance/AttendanceRecordResponse";
+import { useDebounce } from "@/hooks/useDebounce";
 
 export default function AttendancePage() {
   const { t } = useTranslation();
 
   // Basic States
   const [searchTerm, setSearchTerm] = useState("");
-  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const debouncedSearch = useDebounce(searchTerm, 500);
   const [page, setPage] = useState(1);
   const [size, setSize] = useState(20);
 
@@ -25,17 +26,9 @@ export default function AttendancePage() {
   const [selectedRecord, setSelectedRecord] =
     useState<AttendanceRecordResponse | null>(null);
 
-  // Example dates if we wanted a date picker, but here we just pass undefined to fetch all
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
 
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedSearch(searchTerm);
-      setPage(1); // Reset page on new search
-    }, 500);
-    return () => clearTimeout(handler);
-  }, [searchTerm]);
 
   const { data: attendanceData, isLoading } = useQuery({
     queryKey: ["attendance", page, size, debouncedSearch, startDate, endDate],
@@ -106,7 +99,10 @@ export default function AttendancePage() {
               placeholder={t("attendance.searchPlaceholder")}
               className="pl-11 h-11 rounded-xl bg-muted border-border focus-visible:ring-[#2E3192] text-sm hover:bg-card text-card-foreground transition-colors w-full"
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+                setPage(1);
+              }}
             />
           </div>
         </div>

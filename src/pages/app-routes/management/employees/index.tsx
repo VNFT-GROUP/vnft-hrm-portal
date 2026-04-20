@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { m  } from 'framer-motion';
 import { useTranslation } from "react-i18next";
 import { useLayoutStore } from "@/store/useLayoutStore";
+import { useDebounce } from "@/hooks/useDebounce";
 
 import EmployeeTable, { type Employee } from "./components/EmployeeTable";
 import EmployeeFormSheet from "./components/EmployeeFormSheet";
@@ -67,10 +68,11 @@ export default function EmployeesPage() {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
   const { data: usersResponse, isLoading } = useQuery({
-    queryKey: ["users", currentPage, pageSize],
-    queryFn: () => userService.getUsers(currentPage, pageSize),
+    queryKey: ["users", currentPage, pageSize, debouncedSearchTerm],
+    queryFn: () => userService.getUsers(currentPage, pageSize, debouncedSearchTerm || undefined),
   });
 
   const apiEmployees: Employee[] =
@@ -92,16 +94,8 @@ export default function EmployeesPage() {
       avatarUrl: user.avatarUrl,
     })) || [];
 
-  const filteredData = apiEmployees.filter(
-    (e) =>
-      e.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      `${e.empCodePrefix}${e.empCodeId}`
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase()),
-  );
-
   const totalPages = usersResponse?.data?.totalPages || 1;
-  const paginatedData = filteredData;
+  const paginatedData = apiEmployees;
 
   const createUserMutation = useMutation({
     mutationFn: (data: CreateUserRequest) => userService.createUser(data),
@@ -312,7 +306,7 @@ export default function EmployeesPage() {
               onEditPassword={(id) => setPasswordEmpId(id)}
               onEditSalary={(id) => setSalaryEmpId(id)}
             />
-            {filteredData.length > 0 && (
+            {apiEmployees.length > 0 && (
               <CustomPagination
                 currentPage={currentPage}
                 totalPages={totalPages}

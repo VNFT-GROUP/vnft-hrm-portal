@@ -12,9 +12,9 @@ import { employeeCodeService } from '@/services/employeeCode';
 import { toast } from 'sonner';
 import type { UpsertEmployeeCodeRequest } from '@/types/user/UpsertEmployeeCodeRequest';
 import type { UpdateEmployeeCodeDescriptionRequest } from '@/types/user/UpdateEmployeeCodeDescriptionRequest';
-import type { EmployeeCodeResponse } from '@/types/user/EmployeeCodeResponse';
 import CustomPagination from '@/components/custom/CustomPagination';
-
+import { useDebounce } from "@/hooks/useDebounce";
+import type { EmployeeCodeResponse } from '@/types/user/EmployeeCodeResponse';
 export default function EmployeeCodesPage() {
   const { t } = useTranslation();
   const showRoleLegend = useLayoutStore((state) => state.showRoleLegend);
@@ -27,13 +27,15 @@ export default function EmployeeCodesPage() {
     prefix: '', description: '', active: true
   });
 
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
+
   const { data: qData } = useQuery({
     queryKey: ['employee-codes'],
     queryFn: () => employeeCodeService.getEmployeeCodes(),
   });
 
   const codes: EmployeeCodeResponse[] = qData?.data || [];
-  const filtered = codes.filter(c => c.prefix.toLowerCase().includes(searchTerm.toLowerCase()));
+  const filtered = codes.filter(c => c.prefix.toLowerCase().includes(debouncedSearchTerm.toLowerCase()));
 
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);

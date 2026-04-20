@@ -13,6 +13,7 @@ import { groupService } from "@/services/group/groupService";
 import { groupPermissionService } from "@/services/group/groupPermissionService";
 import { toast } from "sonner";
 import CustomPagination from "@/components/custom/CustomPagination";
+import { useDebounce } from "@/hooks/useDebounce";
 
 export default function GroupsTabContent() {
   const { t } = useTranslation();
@@ -39,9 +40,11 @@ export default function GroupsTabContent() {
   });
   const availablePermissions = permissionsData?.data || [];
 
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
+
   const { data: groupsData, isLoading } = useQuery({
-    queryKey: ["groups", searchTerm],
-    queryFn: () => groupService.getGroups(searchTerm),
+    queryKey: ["groups", debouncedSearchTerm],
+    queryFn: () => groupService.getGroups(debouncedSearchTerm || undefined),
   });
 
   const groups = groupsData?.data || [];

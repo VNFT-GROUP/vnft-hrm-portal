@@ -14,6 +14,7 @@ import { positionService } from "@/services/position";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 import CustomPagination from "@/components/custom/CustomPagination";
+import { useDebounce } from "@/hooks/useDebounce";
 
 export default function PositionsPage() {
   const { t } = useTranslation();
@@ -30,9 +31,11 @@ export default function PositionsPage() {
     manager: false,
   });
 
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
+
   const { data: positionsData } = useQuery({
-    queryKey: ["positions", searchTerm],
-    queryFn: () => positionService.getPositions(searchTerm),
+    queryKey: ["positions", debouncedSearchTerm],
+    queryFn: () => positionService.getPositions(debouncedSearchTerm || undefined),
   });
 
   const positions = positionsData?.data || [];

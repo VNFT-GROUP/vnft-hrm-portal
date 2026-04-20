@@ -30,9 +30,10 @@ export const userService = {
   getUsers: async (
     page: number = 1,
     size: number = 10,
+    keyword?: string,
   ): Promise<ApiResponse<PageResponse<UserResponse>>> => {
     const response = await apiClient.get("/users", {
-      params: { page, size },
+      params: { page, size, ...(keyword && { keyword }) },
     });
     return response.data;
   },

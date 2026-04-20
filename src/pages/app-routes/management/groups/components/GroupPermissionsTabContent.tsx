@@ -12,6 +12,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { groupPermissionService } from "@/services/group/groupPermissionService";
 import { toast } from "sonner";
 import CustomPagination from "@/components/custom/CustomPagination";
+import { useDebounce } from "@/hooks/useDebounce";
 
 export default function GroupPermissionsTabContent() {
   const { t } = useTranslation();
@@ -32,9 +33,11 @@ export default function GroupPermissionsTabContent() {
     active: true,
   });
 
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
+
   const { data: qData, isLoading } = useQuery({
-    queryKey: ["group-permissions", searchTerm],
-    queryFn: () => groupPermissionService.getGroupPermissions(searchTerm),
+    queryKey: ["group-permissions", debouncedSearchTerm],
+    queryFn: () => groupPermissionService.getGroupPermissions(debouncedSearchTerm || undefined),
   });
 
   const items = qData?.data || [];

@@ -14,6 +14,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { roleService } from "@/services/role/roleService";
 import { toast } from "sonner";
 import CustomPagination from "@/components/custom/CustomPagination";
+import { useDebounce } from "@/hooks/useDebounce";
 
 export default function RolesPage() {
   const { t } = useTranslation();
@@ -29,9 +30,11 @@ export default function RolesPage() {
     active: true,
   });
 
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
+
   const { data: rolesData, isLoading } = useQuery({
-    queryKey: ["roles", searchTerm],
-    queryFn: () => roleService.getRoles(searchTerm),
+    queryKey: ["roles", debouncedSearchTerm],
+    queryFn: () => roleService.getRoles(debouncedSearchTerm || undefined),
   });
 
   const roles = rolesData?.data || [];

@@ -1,4 +1,4 @@
-import { UserPlus, User, Key, Fingerprint, Mail, Building2, MapPin, Users, UserCircle, Clock, Layers } from "lucide-react";
+import { UserPlus, User, Key, Fingerprint, Mail, Building2, MapPin, Users, UserCircle, Layers } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";

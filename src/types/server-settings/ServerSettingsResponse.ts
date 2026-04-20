@@ -19,4 +19,8 @@ export interface ServerSettingsResponse {
   userProfileDefaultMaxLeaveDays: number;
   userProfileDefaultRemainingWfhDays: number;
   userProfileDefaultMaxWfhDays: number;
+  attendanceLeaveDeductionPerExcessWfhDay: number;
+  attendanceExcellentDisciplineAllowance: number;
+  attendanceGoodDisciplineAllowance: number;
+  attendanceAcceptableDisciplineAllowance: number;
 }

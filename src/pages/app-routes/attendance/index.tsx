@@ -4,7 +4,7 @@ import { vi } from "date-fns/locale";
 
 import { attendanceService } from "@/services/attendance";
 import type { AttendanceDailySummaryResponse } from "@/types/attendance/AttendanceDailySummaryResponse";
-import { Loader2, Calendar as CalendarIcon, ChevronLeft, ChevronRight, X, CalendarCheck, Briefcase, Target, Clock, UserX, AlertTriangle, TrendingDown } from "lucide-react";
+import { Loader2, Calendar as CalendarIcon, ChevronLeft, ChevronRight, X, CalendarCheck, Briefcase, Target, Clock, UserX, AlertTriangle, TrendingDown, Medal, Home, AlertOctagon } from "lucide-react";
 import { m  } from 'framer-motion';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useTranslation } from "react-i18next";
@@ -131,43 +131,132 @@ export default function MyAttendancePage() {
           </m.div>
         )}
 
-        {!loading && data && (data.summary?.majorLateEarlyViolationTimes ?? 0) > 0 && (
-          <m.div 
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="grid grid-cols-1 sm:grid-cols-3 gap-3 lg:gap-4 -mt-2"
-          >
-            <div className="bg-rose-50 border border-rose-200/60 rounded-xl p-3.5 sm:p-4 flex flex-col justify-center gap-1.5 shadow-sm">
-              <div className="flex items-center gap-2">
-                <div className="p-1.5 bg-rose-100 text-rose-600 rounded-md">
-                  <AlertTriangle size={16} strokeWidth={2.5} />
+        {!loading && data && (
+          <div className="flex flex-col gap-3 lg:gap-4 -mt-2">
+            <m.div 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4"
+            >
+              <div className="bg-white border border-slate-200 rounded-xl p-3.5 sm:p-4 flex flex-col justify-center gap-1.5 shadow-sm">
+                <div className="flex items-center gap-2">
+                  <div className="p-1.5 bg-indigo-50 text-indigo-600 rounded-md">
+                    <Home size={16} strokeWidth={2.5} />
+                  </div>
+                  <span className="text-[12px] font-bold text-slate-500 uppercase tracking-wider">{t("myAttendance.summary.approvedWfh", { defaultValue: "Ngày WFH đã duyệt" })}</span>
                 </div>
-                <span className="text-[12px] font-bold text-rose-800 uppercase tracking-wider">{t("myAttendance.summary.majorViolations", { defaultValue: "Lỗi vi phạm nặng" })}</span>
+                <span className="text-2xl sm:text-3xl font-black text-[#1E2062]">{data.summary?.approvedWfhDays ?? 0}</span>
               </div>
-              <span className="text-2xl sm:text-3xl font-black text-rose-600">{data.summary?.majorLateEarlyViolationTimes ?? 0}</span>
-            </div>
 
-            <div className="bg-rose-50 border border-rose-200/60 rounded-xl p-3.5 sm:p-4 flex flex-col justify-center gap-1.5 shadow-sm">
-              <div className="flex items-center gap-2">
-                <div className="p-1.5 bg-rose-100 text-rose-600 rounded-md">
-                  <AlertTriangle size={16} strokeWidth={2.5} />
+              <div className="bg-amber-50 border border-amber-200/60 rounded-xl p-3.5 sm:p-4 flex flex-col justify-center gap-1.5 shadow-sm">
+                <div className="flex items-center gap-2">
+                  <div className="p-1.5 bg-amber-100 text-amber-600 rounded-md">
+                    <TrendingDown size={16} strokeWidth={2.5} />
+                  </div>
+                  <span className="text-[12px] font-bold text-amber-800 uppercase tracking-wider">{t("myAttendance.summary.wfhOverLimit", { defaultValue: "Ngày WFH vượt quota" })}</span>
                 </div>
-                <span className="text-[12px] font-bold text-rose-800 uppercase tracking-wider">{t("myAttendance.summary.deductedViolations", { defaultValue: "Số lần bị trừ phép" })}</span>
+                <span className="text-2xl sm:text-3xl font-black text-amber-600">+{data.summary?.wfhOverLimitDays ?? 0}</span>
               </div>
-              <span className="text-2xl sm:text-3xl font-black text-rose-600">{data.summary?.leaveDeductionViolationTimes ?? 0}</span>
-            </div>
 
-            <div className="bg-rose-50 border border-rose-200/60 rounded-xl p-3.5 sm:p-4 flex flex-col justify-center gap-1.5 shadow-sm">
-              <div className="flex items-center gap-2">
-                <div className="p-1.5 bg-rose-500 text-white rounded-md">
-                  <TrendingDown size={16} strokeWidth={2.5} />
+              <div className="bg-rose-50 border border-rose-200/60 rounded-xl p-3.5 sm:p-4 flex flex-col justify-center gap-1.5 shadow-sm">
+                <div className="flex items-center gap-2">
+                  <div className="p-1.5 bg-rose-100 text-rose-600 rounded-md">
+                    <AlertOctagon size={16} strokeWidth={2.5} />
+                  </div>
+                  <span className="text-[12px] font-bold text-rose-800 uppercase tracking-wider">{t("myAttendance.summary.majorViolations", { defaultValue: "Phạm lỗi trễ/về sớm (>2h)" })}</span>
                 </div>
-                <span className="text-[12px] font-bold text-rose-800 uppercase tracking-wider">{t("myAttendance.summary.deductedDays", { defaultValue: "Tổng phép đã trừ" })}</span>
+                <span className="text-2xl sm:text-3xl font-black text-rose-600">{data.summary?.majorLateEarlyViolationTimes ?? 0}</span>
               </div>
-              <span className="text-2xl sm:text-3xl font-black text-rose-600">-{data.summary?.leaveDeductionDays ?? 0}</span>
-            </div>
-          </m.div>
+
+              <div className="bg-rose-50 border border-rose-200/60 rounded-xl p-3.5 sm:p-4 flex flex-col justify-center gap-1.5 shadow-sm">
+                <div className="flex items-center gap-2">
+                  <div className="p-1.5 bg-rose-100 text-rose-600 rounded-md">
+                    <AlertTriangle size={16} strokeWidth={2.5} />
+                  </div>
+                  <span className="text-[12px] font-bold text-rose-800 uppercase tracking-wider">{t("myAttendance.summary.deductedViolations", { defaultValue: "Lần phạt trừ phép" })}</span>
+                </div>
+                <span className="text-2xl sm:text-3xl font-black text-rose-600">{data.summary?.leaveDeductionViolationTimes ?? 0}</span>
+              </div>
+            </m.div>
+
+            <m.div 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4"
+            >
+              <div className="bg-rose-50 border border-rose-200/60 rounded-xl p-3.5 sm:p-4 flex flex-col justify-center gap-1.5 shadow-sm">
+                <div className="flex items-center gap-2">
+                  <div className="p-1.5 bg-rose-500 text-white rounded-md">
+                    <TrendingDown size={16} strokeWidth={2.5} />
+                  </div>
+                  <span className="text-[12px] font-bold text-rose-800 uppercase tracking-wider">{t("myAttendance.summary.deductedDays", { defaultValue: "Phép trừ do vi phạm" })}</span>
+                </div>
+                <span className="text-2xl sm:text-3xl font-black text-rose-600">-{data.summary?.leaveDeductionDays ?? 0}</span>
+              </div>
+              
+              <div className="bg-amber-50 border border-amber-200/60 rounded-xl p-3.5 sm:p-4 flex flex-col justify-center gap-1.5 shadow-sm">
+                <div className="flex items-center gap-2">
+                  <div className="p-1.5 bg-amber-500 text-white rounded-md">
+                    <TrendingDown size={16} strokeWidth={2.5} />
+                  </div>
+                  <span className="text-[12px] font-bold text-amber-800 uppercase tracking-wider">{t("myAttendance.summary.wfhLeaveDeduction", { defaultValue: "Phép trừ do WFH vượt" })}</span>
+                </div>
+                <span className="text-2xl sm:text-3xl font-black text-amber-600">-{data.summary?.wfhLeaveDeductionDays ?? 0}</span>
+              </div>
+
+              {(() => {
+                const score = data.summary?.disciplineScore ?? 0;
+                let bgColors = "bg-white border-slate-200";
+                let textColors = "text-[#1E2062]";
+                let iconColors = "bg-[#2E3192]/10 text-[#2E3192]";
+                let titleColor = "text-slate-500";
+                
+                if (score >= 4) {
+                  bgColors = "bg-emerald-50 border-emerald-200/60";
+                  textColors = "text-emerald-700";
+                  iconColors = "bg-emerald-100 text-emerald-600";
+                  titleColor = "text-emerald-800";
+                } else if (score === 3) {
+                  bgColors = "bg-amber-50 border-amber-200/60";
+                  textColors = "text-amber-600";
+                  iconColors = "bg-amber-100 text-amber-600";
+                  titleColor = "text-amber-800";
+                } else if (score > 0 && score <= 2) {
+                  bgColors = "bg-rose-50 border-rose-200/60";
+                  textColors = "text-rose-600";
+                  iconColors = "bg-rose-100 text-rose-600";
+                  titleColor = "text-rose-800";
+                }
+
+                return (
+                  <div className={`${bgColors} border rounded-xl p-3.5 sm:p-4 flex flex-col justify-center gap-1.5 shadow-sm`}>
+                    <div className="flex items-center gap-2">
+                      <div className={`p-1.5 rounded-md ${iconColors}`}>
+                        <Target size={16} strokeWidth={2.5} />
+                      </div>
+                      <span className={`text-[12px] font-bold uppercase tracking-wider ${titleColor}`}>{t("myAttendance.summary.disciplineScore", { defaultValue: "Điểm kỷ luật giờ giấc" })}</span>
+                    </div>
+                    <span className={`text-2xl sm:text-3xl font-black ${textColors}`}>{score}/5</span>
+                  </div>
+                );
+              })()}
+
+              <div className="bg-indigo-50 border border-indigo-200/60 rounded-xl p-3.5 sm:p-4 flex flex-col justify-center gap-1.5 shadow-sm">
+                <div className="flex items-center gap-2">
+                  <div className="p-1.5 bg-indigo-100 text-indigo-600 rounded-md">
+                    <Medal size={16} strokeWidth={2.5} />
+                  </div>
+                  <span className="text-[12px] font-bold text-indigo-800 uppercase tracking-wider">{t("myAttendance.summary.allowance", { defaultValue: "Phụ cấp kỷ luật" })}</span>
+                </div>
+                <div className="flex items-end gap-1">
+                  <span className="text-2xl sm:text-3xl font-black text-indigo-600">+{(data.summary?.punctualityDisciplineAllowance ?? 0).toLocaleString('en-US')}</span>
+                  <span className="text-sm font-bold text-indigo-500 mb-1 absolute mt-1 right-5">VNĐ</span>
+                </div>
+              </div>
+            </m.div>
+          </div>
         )}
 
         {/* Content */}

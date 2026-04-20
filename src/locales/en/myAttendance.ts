@@ -41,6 +41,14 @@ export default {
     workingDays: "Working Days",
     workUnits: "Work Units",
     lateDays: "Late Days",
-    absentDays: "Absent Days"
+    absentDays: "Absent Days",
+    majorViolations: "Major Violations (>2h)",
+    deductedViolations: "Leave Deduction Violations",
+    deductedDays: "Total Leave Deductions",
+    approvedWfh: "Approved WFH Days",
+    wfhOverLimit: "WFH Over Limit",
+    wfhLeaveDeduction: "WFH Leave Deductions",
+    disciplineScore: "Punctuality Score",
+    allowance: "Discipline Allowance"
   }
 };

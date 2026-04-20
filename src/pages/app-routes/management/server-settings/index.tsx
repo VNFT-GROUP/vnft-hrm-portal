@@ -1,6 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
-import { Clock, ShieldAlert, Settings, Code, FileJson, Loader2, CalendarClock, UserPlus } from "lucide-react";
+import { Clock, ShieldAlert, Settings, Code, FileJson, Loader2, CalendarClock, UserPlus, Medal } from "lucide-react";
 import DOMPurify from "dompurify";
 import { m  } from 'framer-motion';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -218,12 +218,12 @@ export default function ServerSettingsPage() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-4 p-4 md:p-5 bg-slate-50/50">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                       <div className="flex flex-col gap-2 bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
                         <span className="text-[13px] font-semibold text-slate-700">{t("serverSettings.majorViolationMinutes", { defaultValue: "Ngưỡng tính vi phạm nặng" })}</span>
                         <div className="flex items-center gap-2">
                           <span className="font-bold text-rose-600 bg-rose-50 border border-rose-100 px-3 py-1.5 rounded-lg text-lg tracking-tight">
-                            &ge; {settings.attendanceMajorLateEarlyViolationMinutes}
+                            &gt; {settings.attendanceMajorLateEarlyViolationMinutes}
                           </span>
                           <span className="text-xs text-slate-500 font-medium">{t("serverSettings.unitMinutes", { defaultValue: "phút" })}</span>
                         </div>
@@ -246,6 +246,63 @@ export default function ServerSettingsPage() {
                             - {settings.attendanceLeaveDeductionPerMajorLateEarlyViolation}
                           </span>
                           <span className="text-xs text-slate-500 font-medium">{t("serverSettings.unitDays", { defaultValue: "ngày phép / lần vi phạm" })}</span>
+                        </div>
+                      </div>
+
+                      <div className="flex flex-col gap-2 bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
+                        <span className="text-[13px] font-semibold text-slate-700">{t("serverSettings.wfhLeaveDeduction", { defaultValue: "Trừ phép khi WFH vượt mức" })}</span>
+                        <div className="flex items-center gap-2">
+                          <span className="font-bold text-amber-600 bg-amber-50 border border-amber-200/60 px-3 py-1.5 rounded-lg text-lg tracking-tight">
+                            - {settings.attendanceLeaveDeductionPerExcessWfhDay ?? 0}
+                          </span>
+                          <span className="text-xs text-slate-500 font-medium">{t("serverSettings.unitDaysPerDay", { defaultValue: "ngày phép / ngày WFH" })}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="shadow-sm border-slate-200/80 overflow-hidden h-fit lg:col-span-2">
+                  <CardHeader className="pb-4 bg-white border-b border-slate-100">
+                    <CardTitle className="text-[17px] flex items-center gap-2 text-emerald-800">
+                      <div className="p-1.5 bg-emerald-50 rounded-md">
+                        <Medal className="w-4 h-4 text-emerald-600" />
+                      </div>
+                      {t("serverSettings.disciplineAllowanceTitle", { defaultValue: "Phụ cấp Kỷ luật Giờ giấc" })}
+                    </CardTitle>
+                    <CardDescription className="text-slate-500">
+                      {t("serverSettings.disciplineAllowanceDesc", { defaultValue: "Hạn mức phụ cấp được cộng vào lương dựa trên điểm kỷ luật chuyên cần." })}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4 p-4 md:p-5 bg-slate-50/50">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div className="flex flex-col gap-2 bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
+                        <span className="text-[13px] font-semibold text-slate-700">{t("serverSettings.excellentAllowance", { defaultValue: "Điểm tuyệt đối (5đ)" })}</span>
+                        <div className="flex items-center gap-2">
+                          <span className="font-bold text-emerald-600 bg-emerald-50 border border-emerald-100 px-3 py-1.5 rounded-lg text-lg tracking-tight">
+                            + {(settings.attendanceExcellentDisciplineAllowance ?? 0).toLocaleString('en-US')}
+                          </span>
+                          <span className="text-xs text-slate-500 font-medium">VNĐ</span>
+                        </div>
+                      </div>
+
+                      <div className="flex flex-col gap-2 bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
+                        <span className="text-[13px] font-semibold text-slate-700">{t("serverSettings.goodAllowance", { defaultValue: "Điểm tốt (4đ)" })}</span>
+                        <div className="flex items-center gap-2">
+                          <span className="font-bold text-blue-600 bg-blue-50 border border-blue-100 px-3 py-1.5 rounded-lg text-lg tracking-tight">
+                            + {(settings.attendanceGoodDisciplineAllowance ?? 0).toLocaleString('en-US')}
+                          </span>
+                          <span className="text-xs text-slate-500 font-medium">VNĐ</span>
+                        </div>
+                      </div>
+
+                      <div className="flex flex-col gap-2 bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
+                        <span className="text-[13px] font-semibold text-slate-700">{t("serverSettings.acceptableAllowance", { defaultValue: "Điểm khá (3đ)" })}</span>
+                        <div className="flex items-center gap-2">
+                          <span className="font-bold text-indigo-600 bg-indigo-50 border border-indigo-100 px-3 py-1.5 rounded-lg text-lg tracking-tight">
+                            + {(settings.attendanceAcceptableDisciplineAllowance ?? 0).toLocaleString('en-US')}
+                          </span>
+                          <span className="text-xs text-slate-500 font-medium">VNĐ</span>
                         </div>
                       </div>
                     </div>
@@ -310,19 +367,19 @@ export default function ServerSettingsPage() {
                   <CardContent className="space-y-4 p-4 md:p-5 bg-slate-50/50">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="flex justify-between items-center bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
-                        <div className="text-[14px] font-semibold text-slate-700">{t("serverSettings.defaultCurrentLeave")}</div>
+                        <div className="text-[14px] font-semibold text-slate-700">{t("serverSettings.defaultCurrentLeave", { defaultValue: "Ngày phép còn lại mặc định" })}</div>
                         <span className="font-bold text-[#2E3192] bg-[#2E3192]/10 border border-[#2E3192]/20 px-3.5 py-1.5 rounded-lg text-sm shrink-0">
                           {settings.userProfileDefaultRemainingLeaveDays}
                         </span>
                       </div>
                       <div className="flex justify-between items-center bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
-                        <div className="text-[14px] font-semibold text-slate-700">{t("serverSettings.defaultMaxLeave")}</div>
+                        <div className="text-[14px] font-semibold text-slate-700">{t("serverSettings.defaultMaxLeave", { defaultValue: "Tổng ngày phép chuẩn mặc định" })}</div>
                         <span className="font-bold text-[#2E3192] bg-[#2E3192]/10 border border-[#2E3192]/20 px-3.5 py-1.5 rounded-lg text-sm shrink-0">
                           {settings.userProfileDefaultMaxLeaveDays}
                         </span>
                       </div>
                       <div className="flex justify-between items-center bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
-                         <div className="text-[14px] font-semibold text-slate-700">{t("serverSettings.defaultCurrentWfh")}</div>
+                         <div className="text-[14px] font-semibold text-slate-700">{t("serverSettings.defaultCurrentWfh", { defaultValue: "Ngày WFH còn lại mặc định" })}</div>
                          <span className="font-bold text-[#2E3192] bg-[#2E3192]/10 border border-[#2E3192]/20 px-3.5 py-1.5 rounded-lg text-sm shrink-0">
                            {settings.userProfileDefaultRemainingWfhDays}
                          </span>

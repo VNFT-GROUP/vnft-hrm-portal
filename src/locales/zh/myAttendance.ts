@@ -41,6 +41,14 @@ export default {
     workingDays: "工作日数",
     workUnits: "总计工时",
     lateDays: "迟到天数",
-    absentDays: "缺勤天数"
+    absentDays: "缺勤天数",
+    majorViolations: "严重违规 (>2h)",
+    deductedViolations: "扣除年假次数",
+    deductedDays: "总共扣除年假",
+    approvedWfh: "已批准居家办公天数",
+    wfhOverLimit: "居家办公超限",
+    wfhLeaveDeduction: "居家办公超限扣假",
+    disciplineScore: "纪律得分",
+    allowance: "纪律津贴"
   }
 };

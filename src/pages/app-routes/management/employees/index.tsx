@@ -1,8 +1,5 @@
 import { useState } from "react";
 import {
-  Search,
-  Users,
-  UserPlus,
   CircleDollarSign,
   Trash2,
   Loader2,
@@ -10,11 +7,15 @@ import {
   Briefcase,
   Shield,
   Key,
-  MousePointerClick
+  MousePointerClick,
+  FileUp,
+  Users,
+  Search,
+  UserPlus,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { m  } from 'framer-motion';
+import { m } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { useLayoutStore } from "@/store/useLayoutStore";
 import { useDebounce } from "@/hooks/useDebounce";
@@ -26,18 +27,20 @@ import GroupInformationSheet from "./components/GroupInformationSheet";
 import ChangePasswordSheet from "./components/ChangePasswordSheet";
 import BasicInformationSheet from "./components/BasicInformationSheet";
 import CompensationInformationSheet from "./components/CompensationInformationSheet";
+import ImportEmployeeModal from "./components/ImportEmployeeModal";
 import UserFormSheet from "../users/components/UserFormSheet";
 import CustomPagination from "@/components/custom/CustomPagination";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { userService } from "@/services/user/userService";
 import { toast } from "sonner";
-import type { CreateUserRequest } from '@/types/user/CreateUserRequest';
+import type { CreateUserRequest } from "@/types/user/CreateUserRequest";
 export default function EmployeesPage() {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [isUserFormOpen, setIsUserFormOpen] = useState(false);
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false);
   const showEmployeeLegend = useLayoutStore(
     (state) => state.showEmployeeLegend,
   );
@@ -46,7 +49,9 @@ export default function EmployeesPage() {
   const [groupInfoEmpId, setGroupInfoEmpId] = useState<string | null>(null);
   const [passwordEmpId, setPasswordEmpId] = useState<string | null>(null);
   const [basicInfoEmpId, setBasicInfoEmpId] = useState<string | null>(null);
-  const [compensationEmpId, setCompensationEmpId] = useState<string | null>(null);
+  const [compensationEmpId, setCompensationEmpId] = useState<string | null>(
+    null,
+  );
 
   const [formData, setFormData] = useState({
     empCodePrefix: "VNSGN",
@@ -60,7 +65,6 @@ export default function EmployeesPage() {
     func: "",
     status: "Đang làm",
 
-
     sysRole: "",
     password: "",
     confirmPassword: "",
@@ -72,7 +76,12 @@ export default function EmployeesPage() {
 
   const { data: usersResponse, isLoading } = useQuery({
     queryKey: ["users", currentPage, pageSize, debouncedSearchTerm],
-    queryFn: () => userService.getUsers(currentPage, pageSize, debouncedSearchTerm || undefined),
+    queryFn: () =>
+      userService.getUsers(
+        currentPage,
+        pageSize,
+        debouncedSearchTerm || undefined,
+      ),
   });
 
   const apiEmployees: Employee[] =
@@ -88,7 +97,6 @@ export default function EmployeesPage() {
       position: user.positionName || "-",
       func: user.groupName || "-",
       status: user.active ? "Đang làm" : "Đã nghỉ việc",
-
 
       sysRole: user.roleName || "-",
       avatarUrl: user.avatarUrl,
@@ -145,7 +153,6 @@ export default function EmployeesPage() {
         func: "",
         status: "Đang làm",
 
-
         sysRole: "",
         password: "",
         confirmPassword: "",
@@ -172,10 +179,8 @@ export default function EmployeesPage() {
       groupId: formData.func,
       roleId: formData.sysRole,
       positionId: formData.position,
-
-
     };
-    
+
     createUserMutation.mutate(requestData);
   };
 
@@ -196,10 +201,13 @@ export default function EmployeesPage() {
           <span className="p-2.5 bg-[#2E3192]/10 text-[#2E3192] rounded-xl">
             <Users size={28} />
           </span>
-          {t('management.employeesTitle', { defaultValue: 'Hồ sơ nhân viên' })}
+          {t("management.employeesTitle", { defaultValue: "Hồ sơ nhân viên" })}
         </h1>
         <p className="text-muted-foreground text-base md:text-lg ml-1">
-          {t('management.employeesDesc', { defaultValue: 'Quản lý toàn bộ thông tin nhân sự và cấp phát tài khoản trong hệ thống.' })}
+          {t("management.employeesDesc", {
+            defaultValue:
+              "Quản lý toàn bộ thông tin nhân sự và cấp phát tài khoản trong hệ thống.",
+          })}
         </p>
       </m.div>
 
@@ -211,42 +219,75 @@ export default function EmployeesPage() {
           transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
           className="bg-card p-4 rounded-xl border border-border flex flex-col gap-3 text-sm text-muted-foreground w-full shadow-sm"
         >
-            <div className="flex flex-wrap items-center gap-x-6 gap-y-3 w-full">
-              <span className="font-semibold text-[#1E2062] mr-2">
-                {t('management.actionLegend', { defaultValue: 'Chú thích thao tác:' })}
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-3 w-full">
+            <span className="font-semibold text-[#1E2062] mr-2">
+              {t("management.actionLegend", {
+                defaultValue: "Chú thích thao tác:",
+              })}
+            </span>
+            <div className="flex items-center gap-2">
+              <CircleDollarSign size={16} className="text-emerald-500" />
+              <span>
+                {t("management.titleEditSalary", {
+                  defaultValue: "Xem/tùy chỉnh lương",
+                })}
               </span>
-              <div className="flex items-center gap-2">
-                <CircleDollarSign size={16} className="text-emerald-500" />
-                <span>{t('management.titleEditSalary', { defaultValue: 'Xem/tùy chỉnh lương' })}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <UserCog size={16} className="text-amber-500" />
-                <span>{t('management.titleEditBasicInfo', { defaultValue: 'Xem/tùy chỉnh thông tin cơ bản' })}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Briefcase size={16} className="text-indigo-500" />
-                <span>{t('management.titleEditWorkInfo', { defaultValue: 'Xem/tùy chỉnh công việc' })}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Shield size={16} className="text-violet-500" />
-                <span>{t('management.titleEditGroupInfo', { defaultValue: 'Xem/tùy chỉnh nhóm quyền' })}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Key size={16} className="text-teal-500" />
-                <span>{t('management.titleEditPassword', { defaultValue: 'Đổi mật khẩu' })}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Trash2 size={16} className="text-rose-500" />
-                <span>{t('management.titleDeactivate', { defaultValue: 'Hủy kích hoạt tài khoản' })}</span>
-              </div>
-              <div className="ml-auto flex items-center text-xs text-muted-foreground bg-muted/40 px-2 py-1 rounded-md border border-border opacity-70 hover:opacity-100 transition-opacity">
-                {t('management.hideLegendHint', { defaultValue: 'Nhấn Alt + S để bật tắt mục này' })}
-              </div>
             </div>
+            <div className="flex items-center gap-2">
+              <UserCog size={16} className="text-amber-500" />
+              <span>
+                {t("management.titleEditBasicInfo", {
+                  defaultValue: "Xem/tùy chỉnh thông tin cơ bản",
+                })}
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Briefcase size={16} className="text-indigo-500" />
+              <span>
+                {t("management.titleEditWorkInfo", {
+                  defaultValue: "Xem/tùy chỉnh công việc",
+                })}
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Shield size={16} className="text-violet-500" />
+              <span>
+                {t("management.titleEditGroupInfo", {
+                  defaultValue: "Xem/tùy chỉnh nhóm quyền",
+                })}
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Key size={16} className="text-teal-500" />
+              <span>
+                {t("management.titleEditPassword", {
+                  defaultValue: "Đổi mật khẩu",
+                })}
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Trash2 size={16} className="text-rose-500" />
+              <span>
+                {t("management.titleDeactivate", {
+                  defaultValue: "Hủy kích hoạt tài khoản",
+                })}
+              </span>
+            </div>
+            <div className="ml-auto flex items-center text-xs text-muted-foreground bg-muted/40 px-2 py-1 rounded-md border border-border opacity-70 hover:opacity-100 transition-opacity">
+              {t("management.hideLegendHint", {
+                defaultValue: "Nhấn Alt + S để bật tắt mục này",
+              })}
+            </div>
+          </div>
           <div className="w-full h-px bg-border/50 hidden md:block" />
           <div className="flex items-center gap-1.5 text-[#2E3192]">
             <MousePointerClick size={16} />
-            <span className="italic">{t('management.actionTooltip', { defaultValue: 'Mẹo: Click chuột phải vào dòng dữ liệu để thao tác nhanh.' })}</span>
+            <span className="italic">
+              {t("management.actionTooltip", {
+                defaultValue:
+                  "Mẹo: Click chuột phải vào dòng dữ liệu để thao tác nhanh.",
+              })}
+            </span>
           </div>
         </m.div>
       )}
@@ -264,7 +305,9 @@ export default function EmployeesPage() {
             size={20}
           />
           <Input
-            placeholder={t('management.searchEmployeePlaceholder', { defaultValue: 'Tìm kiếm theo Tên hoặc Mã NV...' })}
+            placeholder={t("management.searchEmployeePlaceholder", {
+              defaultValue: "Tìm kiếm theo Tên hoặc Mã NV...",
+            })}
             className="pl-12 h-12 rounded-xl bg-muted border-border focus-visible:ring-[#2E3192] text-base hover:bg-card text-card-foreground transition-colors"
             value={searchTerm}
             onChange={(e) => {
@@ -275,10 +318,18 @@ export default function EmployeesPage() {
         </div>
         <div className="flex gap-3 w-full md:w-auto flex-col md:flex-row">
           <Button
+            onClick={() => setIsImportModalOpen(true)}
+            variant="outline"
+            className="w-full md:w-auto h-12 px-5 rounded-xl border-indigo-200 text-indigo-700 hover:bg-indigo-50 hover:text-indigo-800 transition-all font-semibold shadow-sm"
+          >
+            <FileUp size={20} className="mr-2" /> Import nhân viên
+          </Button>
+          <Button
             onClick={() => handleOpenForm()}
             className="w-full md:w-auto h-12 px-6 rounded-xl bg-[#2E3192] hover:bg-[#1E2062] text-white shadow-md shadow-[#2E3192]/20 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 text-base font-semibold"
           >
-            <UserPlus size={20} className="mr-2" /> {t('management.addEmployee', { defaultValue: 'Thêm nhân viên' })}
+            <UserPlus size={20} className="mr-2" />{" "}
+            {t("management.addEmployee", { defaultValue: "Thêm nhân viên" })}
           </Button>
         </div>
       </m.div>
@@ -300,7 +351,6 @@ export default function EmployeesPage() {
             <EmployeeTable
               employees={paginatedData}
               onDelete={handleDelete}
-
               onEditBasicInfo={(emp) => setBasicInfoEmpId(emp.id)}
               onEditWorkInfo={(id) => setWorkInfoEmpId(id)}
               onEditGroupInfo={(id) => setGroupInfoEmpId(id)}
@@ -348,7 +398,7 @@ export default function EmployeesPage() {
         }}
         userId={workInfoEmpId}
       />
-      
+
       <GroupInformationSheet
         isOpen={!!groupInfoEmpId}
         onOpenChange={(open) => {
@@ -356,7 +406,7 @@ export default function EmployeesPage() {
         }}
         userId={groupInfoEmpId}
       />
-      
+
       <ChangePasswordSheet
         isOpen={!!passwordEmpId}
         onOpenChange={(open) => {
@@ -364,7 +414,7 @@ export default function EmployeesPage() {
         }}
         userId={passwordEmpId}
       />
-      
+
       <BasicInformationSheet
         isOpen={!!basicInfoEmpId}
         onOpenChange={(open) => {
@@ -378,6 +428,11 @@ export default function EmployeesPage() {
         isOpen={!!compensationEmpId}
         onOpenChange={(open) => !open && setCompensationEmpId(null)}
         userId={compensationEmpId}
+      />
+
+      <ImportEmployeeModal
+        isOpen={isImportModalOpen}
+        onOpenChange={setIsImportModalOpen}
       />
     </div>
   );

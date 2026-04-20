@@ -84,178 +84,148 @@ export default function MyAttendancePage() {
         </div>
 
         {!loading && data && (
-          <m.div 
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="grid grid-cols-2 sm:grid-cols-4 gap-3 lg:gap-4"
-          >
-            <div className="bg-white border border-slate-200 rounded-xl p-3.5 sm:p-4 flex flex-col justify-center gap-1.5 shadow-sm">
-              <div className="flex items-center gap-2">
-                <div className="p-1.5 bg-indigo-50 text-indigo-600 rounded-md">
-                  <Briefcase size={16} strokeWidth={2.5} />
-                </div>
-                <span className="text-[12px] font-bold text-slate-500 uppercase tracking-wider">{t("myAttendance.summary.workingDays")}</span>
-              </div>
-              <span className="text-2xl sm:text-3xl font-black text-[#1E2062]">{data.summary?.workingDays ?? 0}</span>
-            </div>
-
-            <div className="bg-white border border-slate-200 rounded-xl p-3.5 sm:p-4 flex flex-col justify-center gap-1.5 shadow-sm">
-              <div className="flex items-center gap-2">
-                <div className="p-1.5 bg-indigo-50 text-indigo-600 rounded-md">
-                  <Target size={16} strokeWidth={2.5} />
-                </div>
-                <span className="text-[12px] font-bold text-slate-500 uppercase tracking-wider">{t("myAttendance.summary.workUnits")}</span>
-              </div>
-              <span className="text-2xl sm:text-3xl font-black text-[#1E2062]">{data.summary?.workUnits ?? 0}</span>
-            </div>
-
-            <div className="bg-white border border-slate-200 rounded-xl p-3.5 sm:p-4 flex flex-col justify-center gap-1.5 shadow-sm">
-              <div className="flex items-center gap-2">
-                <div className="p-1.5 bg-indigo-50 text-indigo-600 rounded-md">
-                  <Clock size={16} strokeWidth={2.5} />
-                </div>
-                <span className="text-[12px] font-bold text-slate-500 uppercase tracking-wider">{t("myAttendance.summary.lateDays")}</span>
-              </div>
-              <span className="text-2xl sm:text-3xl font-black text-[#1E2062]">{data.summary?.lateDays ?? 0}</span>
-            </div>
-
-            <div className="bg-white border border-slate-200 rounded-xl p-3.5 sm:p-4 flex flex-col justify-center gap-1.5 shadow-sm">
-              <div className="flex items-center gap-2">
-                <div className="p-1.5 bg-indigo-50 text-indigo-600 rounded-md">
-                  <UserX size={16} strokeWidth={2.5} />
-                </div>
-                <span className="text-[12px] font-bold text-slate-500 uppercase tracking-wider">{t("myAttendance.summary.absentDays")}</span>
-              </div>
-              <span className="text-2xl sm:text-3xl font-black text-[#1E2062]">{data.summary?.absentDays ?? 0}</span>
-            </div>
-          </m.div>
-        )}
-
-        {!loading && data && (
-          <div className="flex flex-col gap-3 lg:gap-4 -mt-2">
+          <div className="flex flex-col gap-4">
+            {/* TOP HIGHLIGHTS */}
             <m.div 
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4"
+              className="grid grid-cols-1 md:grid-cols-3 gap-4"
             >
-              <div className="bg-white border border-slate-200 rounded-xl p-3.5 sm:p-4 flex flex-col justify-center gap-1.5 shadow-sm">
-                <div className="flex items-center gap-2">
-                  <div className="p-1.5 bg-indigo-50 text-indigo-600 rounded-md">
-                    <Home size={16} strokeWidth={2.5} />
+              {/* WORK UNITS */}
+              <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs flex flex-col justify-between">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2 text-slate-500">
+                    <Target size={18} strokeWidth={2} />
+                    <span className="text-[11px] font-semibold uppercase tracking-wider">{t("myAttendance.summary.workUnits")}</span>
                   </div>
-                  <span className="text-[12px] font-bold text-slate-500 uppercase tracking-wider">{t("myAttendance.summary.approvedWfh", { defaultValue: "Ngày WFH đã duyệt" })}</span>
                 </div>
-                <span className="text-2xl sm:text-3xl font-black text-[#1E2062]">{data.summary?.approvedWfhDays ?? 0}</span>
+                <div>
+                  <div className="text-3xl font-bold text-slate-800">{data.summary?.workUnits ?? 0}</div>
+                </div>
               </div>
 
-              <div className="bg-amber-50 border border-amber-200/60 rounded-xl p-3.5 sm:p-4 flex flex-col justify-center gap-1.5 shadow-sm">
-                <div className="flex items-center gap-2">
-                  <div className="p-1.5 bg-amber-100 text-amber-600 rounded-md">
-                    <TrendingDown size={16} strokeWidth={2.5} />
-                  </div>
-                  <span className="text-[12px] font-bold text-amber-800 uppercase tracking-wider">{t("myAttendance.summary.wfhOverLimit", { defaultValue: "Ngày WFH vượt quota" })}</span>
-                </div>
-                <span className="text-2xl sm:text-3xl font-black text-amber-600">+{data.summary?.wfhOverLimitDays ?? 0}</span>
-              </div>
-
-              <div className="bg-rose-50 border border-rose-200/60 rounded-xl p-3.5 sm:p-4 flex flex-col justify-center gap-1.5 shadow-sm">
-                <div className="flex items-center gap-2">
-                  <div className="p-1.5 bg-rose-100 text-rose-600 rounded-md">
-                    <AlertOctagon size={16} strokeWidth={2.5} />
-                  </div>
-                  <span className="text-[12px] font-bold text-rose-800 uppercase tracking-wider">{t("myAttendance.summary.majorViolations", { defaultValue: "Phạm lỗi trễ/về sớm (>2h)" })}</span>
-                </div>
-                <span className="text-2xl sm:text-3xl font-black text-rose-600">{data.summary?.majorLateEarlyViolationTimes ?? 0}</span>
-              </div>
-
-              <div className="bg-rose-50 border border-rose-200/60 rounded-xl p-3.5 sm:p-4 flex flex-col justify-center gap-1.5 shadow-sm">
-                <div className="flex items-center gap-2">
-                  <div className="p-1.5 bg-rose-100 text-rose-600 rounded-md">
-                    <AlertTriangle size={16} strokeWidth={2.5} />
-                  </div>
-                  <span className="text-[12px] font-bold text-rose-800 uppercase tracking-wider">{t("myAttendance.summary.deductedViolations", { defaultValue: "Lần phạt trừ phép" })}</span>
-                </div>
-                <span className="text-2xl sm:text-3xl font-black text-rose-600">{data.summary?.leaveDeductionViolationTimes ?? 0}</span>
-              </div>
-            </m.div>
-
-            <m.div 
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4"
-            >
-              <div className="bg-rose-50 border border-rose-200/60 rounded-xl p-3.5 sm:p-4 flex flex-col justify-center gap-1.5 shadow-sm">
-                <div className="flex items-center gap-2">
-                  <div className="p-1.5 bg-rose-500 text-white rounded-md">
-                    <TrendingDown size={16} strokeWidth={2.5} />
-                  </div>
-                  <span className="text-[12px] font-bold text-rose-800 uppercase tracking-wider">{t("myAttendance.summary.deductedDays", { defaultValue: "Phép trừ do vi phạm" })}</span>
-                </div>
-                <span className="text-2xl sm:text-3xl font-black text-rose-600">-{data.summary?.leaveDeductionDays ?? 0}</span>
-              </div>
-              
-              <div className="bg-amber-50 border border-amber-200/60 rounded-xl p-3.5 sm:p-4 flex flex-col justify-center gap-1.5 shadow-sm">
-                <div className="flex items-center gap-2">
-                  <div className="p-1.5 bg-amber-500 text-white rounded-md">
-                    <TrendingDown size={16} strokeWidth={2.5} />
-                  </div>
-                  <span className="text-[12px] font-bold text-amber-800 uppercase tracking-wider">{t("myAttendance.summary.wfhLeaveDeduction", { defaultValue: "Phép trừ do WFH vượt" })}</span>
-                </div>
-                <span className="text-2xl sm:text-3xl font-black text-amber-600">-{data.summary?.wfhLeaveDeductionDays ?? 0}</span>
-              </div>
-
+              {/* DISCIPLINE SCORE */}
               {(() => {
                 const score = data.summary?.disciplineScore ?? 0;
-                let bgColors = "bg-white border-slate-200";
-                let textColors = "text-[#1E2062]";
-                let iconColors = "bg-[#2E3192]/10 text-[#2E3192]";
-                let titleColor = "text-slate-500";
+                let textColor = "text-slate-800";
                 
                 if (score >= 4) {
-                  bgColors = "bg-emerald-50 border-emerald-200/60";
-                  textColors = "text-emerald-700";
-                  iconColors = "bg-emerald-100 text-emerald-600";
-                  titleColor = "text-emerald-800";
+                  textColor = "text-emerald-600";
                 } else if (score === 3) {
-                  bgColors = "bg-amber-50 border-amber-200/60";
-                  textColors = "text-amber-600";
-                  iconColors = "bg-amber-100 text-amber-600";
-                  titleColor = "text-amber-800";
+                  textColor = "text-amber-500";
                 } else if (score > 0 && score <= 2) {
-                  bgColors = "bg-rose-50 border-rose-200/60";
-                  textColors = "text-rose-600";
-                  iconColors = "bg-rose-100 text-rose-600";
-                  titleColor = "text-rose-800";
+                  textColor = "text-rose-500";
                 }
 
                 return (
-                  <div className={`${bgColors} border rounded-xl p-3.5 sm:p-4 flex flex-col justify-center gap-1.5 shadow-sm`}>
-                    <div className="flex items-center gap-2">
-                      <div className={`p-1.5 rounded-md ${iconColors}`}>
-                        <Target size={16} strokeWidth={2.5} />
+                  <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs flex flex-col justify-between">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-2 text-slate-500">
+                        <Medal size={18} strokeWidth={2} />
+                        <span className="text-[11px] font-semibold uppercase tracking-wider">{t("myAttendance.summary.disciplineScore", { defaultValue: "Điểm kỷ luật" })}</span>
                       </div>
-                      <span className={`text-[12px] font-bold uppercase tracking-wider ${titleColor}`}>{t("myAttendance.summary.disciplineScore", { defaultValue: "Điểm kỷ luật giờ giấc" })}</span>
                     </div>
-                    <span className={`text-2xl sm:text-3xl font-black ${textColors}`}>{score}/5</span>
+                    <div className="flex items-baseline gap-1">
+                      <div className={`text-3xl font-bold ${textColor}`}>{score}</div>
+                      <div className="text-sm font-semibold text-slate-400">/5</div>
+                    </div>
                   </div>
                 );
               })()}
 
-              <div className="bg-indigo-50 border border-indigo-200/60 rounded-xl p-3.5 sm:p-4 flex flex-col justify-center gap-1.5 shadow-sm">
-                <div className="flex items-center gap-2">
-                  <div className="p-1.5 bg-indigo-100 text-indigo-600 rounded-md">
-                    <Medal size={16} strokeWidth={2.5} />
+              {/* ALLOWANCE */}
+              <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs flex flex-col justify-between">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2 text-slate-500">
+                    <TrendingDown size={18} strokeWidth={2} className="rotate-180" />
+                    <span className="text-[11px] font-semibold uppercase tracking-wider">{t("myAttendance.summary.allowance", { defaultValue: "Phụ cấp" })}</span>
                   </div>
-                  <span className="text-[12px] font-bold text-indigo-800 uppercase tracking-wider">{t("myAttendance.summary.allowance", { defaultValue: "Phụ cấp kỷ luật" })}</span>
                 </div>
-                <div className="flex items-end gap-1">
-                  <span className="text-2xl sm:text-3xl font-black text-indigo-600">+{(data.summary?.punctualityDisciplineAllowance ?? 0).toLocaleString('en-US')}</span>
-                  <span className="text-sm font-bold text-indigo-500 mb-1 absolute mt-1 right-5">VNĐ</span>
+                <div className="flex items-baseline gap-1">
+                  {(data.summary?.punctualityDisciplineAllowance ?? 0) > 0 && <span className="text-xl font-medium text-emerald-600">+</span>}
+                  <div className="text-3xl font-bold text-slate-800 shrink-0">{(data.summary?.punctualityDisciplineAllowance ?? 0).toLocaleString('en-US')}</div>
+                  <div className="text-xs font-semibold text-slate-400 ml-1">VNĐ</div>
                 </div>
               </div>
             </m.div>
+
+            {/* LOWER GRIDS */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              
+              {/* NORMAL ATTENDANCE */}
+              <m.div 
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+                className="bg-white rounded-xl border border-slate-200 shadow-xs flex flex-col"
+              >
+                <div className="px-5 py-3.5 border-b border-slate-100 flex items-center gap-2">
+                  <CalendarCheck size={16} className="text-slate-400" />
+                  <h3 className="font-semibold text-slate-700 text-sm">{t("myAttendance.section.attendance", { defaultValue: "Chi tiết đi làm" })}</h3>
+                </div>
+                <div className="p-5 grid grid-cols-2 gap-y-5 gap-x-6 flex-1">
+                  <div className="flex flex-col gap-1">
+                    <span className="text-[11px] font-medium text-slate-500">{t("myAttendance.summary.workingDays")}</span>
+                    <span className="text-xl font-bold text-slate-800">{data.summary?.workingDays ?? 0}</span>
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <span className="text-[11px] font-medium text-slate-500">{t("myAttendance.summary.approvedWfh", { defaultValue: "WFH đã duyệt" })}</span>
+                    <span className="text-xl font-bold text-slate-700">{data.summary?.approvedWfhDays ?? 0}</span>
+                  </div>
+                  <div className="flex flex-col gap-1 border-t border-slate-100 pt-3">
+                    <span className="text-[11px] font-medium text-slate-500">{t("myAttendance.summary.lateDays")}</span>
+                    <span className="text-xl font-bold text-slate-700">{data.summary?.lateDays ?? 0}</span>
+                  </div>
+                  <div className="flex flex-col gap-1 border-t border-slate-100 pt-3">
+                    <span className="text-[11px] font-medium text-slate-500">{t("myAttendance.summary.absentDays")}</span>
+                    <span className="text-xl font-bold text-slate-700">{data.summary?.absentDays ?? 0}</span>
+                  </div>
+                </div>
+              </m.div>
+
+              {/* VIOLATIONS AND DEDUCTIONS */}
+              <m.div 
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="bg-white rounded-xl border border-slate-200 shadow-xs flex flex-col"
+              >
+                <div className="px-5 py-3.5 border-b border-slate-100 flex items-center gap-2">
+                  <AlertOctagon size={16} className="text-slate-400" />
+                  <h3 className="font-semibold text-slate-700 text-sm">{t("myAttendance.section.violations", { defaultValue: "Vi phạm & Phạt" })}</h3>
+                </div>
+                <div className="p-5 grid grid-cols-2 md:grid-cols-3 gap-y-5 gap-x-4 flex-1">
+                  <div className="flex flex-col gap-1">
+                    <span className="text-[11px] font-medium text-slate-500" title={t("myAttendance.summary.majorViolations", { defaultValue: "Trễ/sớm (>2h)" })}>{t("myAttendance.summary.majorViolations", { defaultValue: "Lỗi lớn (>2h)" })}</span>
+                    <span className="text-xl font-bold text-slate-800">{data.summary?.majorLateEarlyViolationTimes ?? 0}</span>
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <span className="text-[11px] font-medium text-slate-500">{t("myAttendance.summary.wfhOverLimit", { defaultValue: "WFH vượt quota" })}</span>
+                    <span className="text-xl font-bold text-slate-800">{data.summary?.wfhOverLimitDays ?? 0}</span>
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <span className="text-[11px] font-medium text-slate-500">{t("myAttendance.summary.deductedViolations", { defaultValue: "Lần phạt vi phạm" })}</span>
+                    <span className="text-xl font-bold text-slate-800">{data.summary?.leaveDeductionViolationTimes ?? 0}</span>
+                  </div>
+                  
+                  <div className="flex flex-col gap-1 border-t border-slate-100 pt-3">
+                    <span className="text-[11px] font-medium text-slate-500">{t("myAttendance.summary.deductedDays", { defaultValue: "Bị trừ do vi phạm" })}</span>
+                    <div className="flex items-center gap-1">
+                      <span className="text-xl font-bold text-rose-500">-{data.summary?.leaveDeductionDays ?? 0}</span>
+                      {(data.summary?.leaveDeductionDays ?? 0) > 0 && <span className="text-[10px] text-slate-400 uppercase">Ngày</span>}
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-1 border-t border-slate-100 pt-3 md:col-span-2">
+                    <span className="text-[11px] font-medium text-slate-500">{t("myAttendance.summary.wfhLeaveDeduction", { defaultValue: "Bị trừ do WFH vượt" })}</span>
+                    <div className="flex items-center gap-1">
+                      <span className="text-xl font-bold text-rose-500">-{data.summary?.wfhLeaveDeductionDays ?? 0}</span>
+                      {(data.summary?.wfhLeaveDeductionDays ?? 0) > 0 && <span className="text-[10px] text-slate-400 uppercase">Ngày</span>}
+                    </div>
+                  </div>
+                </div>
+              </m.div>
+
+            </div>
           </div>
         )}
 

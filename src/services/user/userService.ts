@@ -13,6 +13,7 @@ import type { UserProfileResponse } from '@/types/user/UserProfileResponse';
 import type { UserCompensationsResponse } from '@/types/user/salary/UserCompensationsResponse';
 import type { UserCompensationResponse } from '@/types/user/salary/UserCompensationResponse';
 import type { UpdateUserCompensationsRequest } from '@/types/user/salary/UpdateUserCompensationsRequest';
+import type { ImportUserResponse } from '@/types/user/ImportUserResponse';
 
 export const userService = {
   createUser: async (
@@ -118,6 +119,24 @@ export const userService = {
     data: UpdateUserCompensationsRequest,
   ): Promise<ApiResponse<UserCompensationResponse[]>> => {
     const response = await apiClient.put(`/users/${id}/compensations`, data);
+    return response.data;
+  },
+
+  importUsers: async (file: File): Promise<ApiResponse<ImportUserResponse>> => {
+    const formData = new FormData();
+    formData.append("file", file);
+    const response = await apiClient.post("/users/import", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data;
+  },
+
+  downloadImportTemplate: async (): Promise<Blob> => {
+    const response = await apiClient.get("/users/import/template", {
+      responseType: "blob",
+    });
     return response.data;
   },
 };

@@ -136,39 +136,35 @@ export default function RequestsPage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          <div className="bg-card border-border text-card-foreground shadow-sm rounded-2xl p-5 flex flex-col gap-1.5 transition-all duration-200 hover:shadow-md border">
-            <div className="flex items-center gap-3 mb-2">
-              <span className="p-2.5 flex items-center justify-center rounded-lg bg-indigo-50/80 text-indigo-600 border border-indigo-100">
-                <Umbrella className="w-5 h-5" strokeWidth={2} />
-              </span>
-              <h3 className="text-sm font-semibold text-slate-700 leading-tight">Ngày nghỉ phép</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs flex flex-col justify-between">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2 text-slate-500">
+                <Umbrella size={18} strokeWidth={2} />
+                <span className="text-[11px] font-semibold uppercase tracking-wider">Ngày nghỉ phép</span>
+              </div>
             </div>
-            <div className="flex items-baseline gap-1.5 mt-2">
-              <span className="text-[28px] font-extrabold tracking-tight text-[#2E3192]">{session?.remainingLeaveDays ?? 0}</span>
-              <span className="text-[22px] font-bold text-slate-300">/</span>
-              <span className="text-[22px] font-bold text-slate-400">{session?.maxLeaveDays ?? 0}</span>
-              <span className="text-sm text-slate-500 font-medium ml-1">ngày / năm</span>
+            <div className="flex items-baseline gap-1">
+              <div className="text-3xl font-bold text-slate-800">{session?.remainingLeaveDays ?? 0}</div>
+              <div className="text-sm font-semibold text-slate-400">/ {session?.maxLeaveDays ?? 0} ngày</div>
             </div>
           </div>
 
-          <div className="bg-card border-border text-card-foreground shadow-sm rounded-2xl p-5 flex flex-col gap-1.5 transition-all duration-200 hover:shadow-md border">
-            <div className="flex items-center gap-3 mb-2">
-              <span className="p-2.5 flex items-center justify-center rounded-lg bg-purple-50/80 text-purple-600 border border-purple-100">
-                <Home className="w-5 h-5" strokeWidth={2} />
-              </span>
-              <h3 className="text-sm font-semibold text-slate-700 leading-tight">Ngày WFH</h3>
+          <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs flex flex-col justify-between">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2 text-slate-500">
+                <Home size={18} strokeWidth={2} />
+                <span className="text-[11px] font-semibold uppercase tracking-wider">Ngày WFH</span>
+              </div>
             </div>
-            <div className="flex items-baseline gap-1.5 mt-2">
-              <span className="text-[28px] font-extrabold tracking-tight text-purple-700">{session?.remainingWfhDays ?? 0}</span>
-              <span className="text-[22px] font-bold text-slate-300">/</span>
-              <span className="text-[22px] font-bold text-slate-400">{session?.maxWfhDays ?? 0}</span>
-              <span className="text-sm text-slate-500 font-medium ml-1">ngày / năm</span>
+            <div className="flex items-baseline gap-1">
+              <div className="text-3xl font-bold text-slate-800">{session?.remainingWfhDays ?? 0}</div>
+              <div className="text-sm font-semibold text-slate-400">/ {session?.maxWfhDays ?? 0} ngày</div>
             </div>
           </div>
         </div>
 
-        <div className="bg-card rounded-2xl border border-border shadow-sm flex flex-col flex-1 min-h-[400px]">
+        <div className="bg-white rounded-xl border border-slate-200 shadow-xs flex flex-col flex-1 min-h-[400px] overflow-hidden">
           {isLoading ? (
             <div className="flex-1 flex flex-col items-center justify-center text-muted-foreground p-12">
               <Loader2 className="w-10 h-10 animate-spin mb-4 text-indigo-500" />

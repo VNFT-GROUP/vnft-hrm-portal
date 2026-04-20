@@ -69,7 +69,7 @@ export default function SalaryTab() {
             })}
           </div>
 
-          <div className="mt-6 p-5 bg-gradient-to-r from-muted/50 to-muted/20 rounded-2xl flex flex-col sm:flex-row justify-between items-center border border-border/80 gap-3">
+          <div className="mt-6 p-5 bg-linear-to-r from-muted/50 to-muted/20 rounded-2xl flex flex-col sm:flex-row justify-between items-center border border-border/80 gap-3">
             <span className="font-semibold text-muted-foreground uppercase tracking-wider text-sm">Tổng thực nhận năm 2026</span>
             <span className="text-2xl font-mono font-bold text-[#1E2062]">0 <span className="text-sm font-sans text-muted-foreground">VNĐ</span></span>
           </div>

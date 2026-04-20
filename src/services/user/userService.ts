@@ -10,9 +10,9 @@ import type { UpdateUserGroupRequest } from '@/types/user/UpdateUserGroupRequest
 import type { UserGroupResponse } from '@/types/user/UserGroupResponse';
 import type { UpdateUserProfileRequest } from '@/types/user/UpdateUserProfileRequest';
 import type { UserProfileResponse } from '@/types/user/UserProfileResponse';
-import type { UserSalaryComponentsResponse } from '@/types/user/salary/UserSalaryComponentsResponse';
-import type { UserSalaryComponentResponse } from '@/types/user/salary/UserSalaryComponentResponse';
-import type { UpdateUserSalaryComponentsRequest } from '@/types/user/salary/UpdateUserSalaryComponentsRequest';
+import type { UserCompensationsResponse } from '@/types/user/salary/UserCompensationsResponse';
+import type { UserCompensationResponse } from '@/types/user/salary/UserCompensationResponse';
+import type { UpdateUserCompensationsRequest } from '@/types/user/salary/UpdateUserCompensationsRequest';
 
 export const userService = {
   createUser: async (
@@ -96,28 +96,28 @@ export const userService = {
     return response.data;
   },
 
-  getUserSalaryComponents: async (
+  getUserCompensations: async (
     page: number = 1,
     size: number = 10,
-  ): Promise<ApiResponse<PageResponse<UserSalaryComponentsResponse>>> => {
-    const response = await apiClient.get("/users/salary-components", {
+  ): Promise<ApiResponse<PageResponse<UserCompensationsResponse>>> => {
+    const response = await apiClient.get("/users/compensations", {
       params: { page, size },
     });
     return response.data;
   },
 
-  getSalaryComponents: async (
+  getCompensations: async (
     id: string,
-  ): Promise<ApiResponse<UserSalaryComponentResponse[]>> => {
-    const response = await apiClient.get(`/users/${id}/salary-components`);
+  ): Promise<ApiResponse<UserCompensationResponse[]>> => {
+    const response = await apiClient.get(`/users/${id}/compensations`);
     return response.data;
   },
 
-  updateSalaryComponents: async (
+  updateCompensations: async (
     id: string,
-    data: UpdateUserSalaryComponentsRequest,
-  ): Promise<ApiResponse<UserSalaryComponentResponse[]>> => {
-    const response = await apiClient.put(`/users/${id}/salary-components`, data);
+    data: UpdateUserCompensationsRequest,
+  ): Promise<ApiResponse<UserCompensationResponse[]>> => {
+    const response = await apiClient.put(`/users/${id}/compensations`, data);
     return response.data;
   },
 };

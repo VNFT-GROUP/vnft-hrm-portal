@@ -25,7 +25,7 @@ import WorkInformationSheet from "./components/WorkInformationSheet";
 import GroupInformationSheet from "./components/GroupInformationSheet";
 import ChangePasswordSheet from "./components/ChangePasswordSheet";
 import BasicInformationSheet from "./components/BasicInformationSheet";
-import SalaryInformationSheet from "./components/SalaryInformationSheet";
+import CompensationInformationSheet from "./components/CompensationInformationSheet";
 import UserFormSheet from "../users/components/UserFormSheet";
 import CustomPagination from "@/components/custom/CustomPagination";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -46,7 +46,7 @@ export default function EmployeesPage() {
   const [groupInfoEmpId, setGroupInfoEmpId] = useState<string | null>(null);
   const [passwordEmpId, setPasswordEmpId] = useState<string | null>(null);
   const [basicInfoEmpId, setBasicInfoEmpId] = useState<string | null>(null);
-  const [salaryEmpId, setSalaryEmpId] = useState<string | null>(null);
+  const [compensationEmpId, setCompensationEmpId] = useState<string | null>(null);
 
   const [formData, setFormData] = useState({
     empCodePrefix: "VNSGN",
@@ -300,11 +300,12 @@ export default function EmployeesPage() {
             <EmployeeTable
               employees={paginatedData}
               onDelete={handleDelete}
+
               onEditBasicInfo={(emp) => setBasicInfoEmpId(emp.id)}
               onEditWorkInfo={(id) => setWorkInfoEmpId(id)}
               onEditGroupInfo={(id) => setGroupInfoEmpId(id)}
               onEditPassword={(id) => setPasswordEmpId(id)}
-              onEditSalary={(id) => setSalaryEmpId(id)}
+              onEditSalary={(id) => setCompensationEmpId(id)}
             />
             {apiEmployees.length > 0 && (
               <CustomPagination
@@ -372,12 +373,11 @@ export default function EmployeesPage() {
         userId={basicInfoEmpId}
       />
 
-      <SalaryInformationSheet
-        isOpen={!!salaryEmpId}
-        onOpenChange={(open) => {
-          if (!open) setSalaryEmpId(null);
-        }}
-        userId={salaryEmpId}
+      {/* 5. Compensation (Lương) Form Sheet */}
+      <CompensationInformationSheet
+        isOpen={!!compensationEmpId}
+        onOpenChange={(open) => !open && setCompensationEmpId(null)}
+        userId={compensationEmpId}
       />
     </div>
   );

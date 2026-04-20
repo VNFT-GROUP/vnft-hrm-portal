@@ -9,8 +9,8 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { userService } from "@/services/user/userService";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
-import type { UpdateUserSalaryComponentsRequest } from "@/types/user/salary/UpdateUserSalaryComponentsRequest";
-import type { UserSalaryComponentRequest } from "@/types/user/salary/UserSalaryComponentRequest";
+import type { UpdateUserCompensationsRequest } from "@/types/user/salary/UpdateUserCompensationsRequest";
+import type { UserCompensationRequest } from "@/types/user/salary/UserCompensationRequest";
 import type { SalaryComponentCode } from "@/types/user/salary/SalaryComponentCode";
 import type { SalaryComponentCategory } from "@/types/user/salary/SalaryComponentCategory";
 import { format } from "date-fns";
@@ -40,11 +40,11 @@ export default function SalaryInformationSheet({ isOpen, onOpenChange, userId }:
   const { t } = useTranslation();
 
   const [isEditingMode, setIsEditingMode] = useState(false);
-  const [formData, setFormData] = useState<UserSalaryComponentRequest[]>([]);
+  const [formData, setFormData] = useState<UserCompensationRequest[]>([]);
 
   const { data: salaryData, isFetching } = useQuery({
-    queryKey: ['userSalaryComponents', userId],
-    queryFn: () => userService.getSalaryComponents(userId!),
+    queryKey: ['userCompensations', userId],
+    queryFn: () => userService.getCompensations(userId!),
     enabled: isOpen && !!userId,
   });
 
@@ -54,7 +54,7 @@ export default function SalaryInformationSheet({ isOpen, onOpenChange, userId }:
         salaryData.data.map(config => ({
           effectiveFrom: config.effectiveFrom,
           note: config.note || "",
-          salaryComponents: config.salaryComponents.map(item => ({
+          compensationItems: config.compensationItems.map(item => ({
             code: item.code,
             name: item.name,
             category: item.category,
@@ -76,10 +76,10 @@ export default function SalaryInformationSheet({ isOpen, onOpenChange, userId }:
   };
 
   const updateMutation = useMutation({
-    mutationFn: (data: UpdateUserSalaryComponentsRequest) => userService.updateSalaryComponents(userId!, data),
+    mutationFn: (data: UpdateUserCompensationsRequest) => userService.updateCompensations(userId!, data),
     onSuccess: () => {
       toast.success(t('management.updateSalarySuccess', { defaultValue: 'Cập nhật thông tin lương thành công!' }));
-      queryClient.invalidateQueries({ queryKey: ["userSalaryComponents", userId] });
+      queryClient.invalidateQueries({ queryKey: ["userCompensations", userId] });
       setIsEditingMode(false);
     },
     onError: () => {
@@ -90,14 +90,14 @@ export default function SalaryInformationSheet({ isOpen, onOpenChange, userId }:
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!userId) return;
-    updateMutation.mutate({ userSalaryComponents: formData });
+    updateMutation.mutate({ compensations: formData });
   };
 
   const handleAddComponentConfig = () => {
     const today = format(new Date(), 'yyyy-MM-dd');
     setFormData([
       ...formData,
-      { effectiveFrom: today, note: "", salaryComponents: [] }
+      { effectiveFrom: today, note: "", compensationItems: [] }
     ]);
   };
 
@@ -109,7 +109,7 @@ export default function SalaryInformationSheet({ isOpen, onOpenChange, userId }:
 
   const handleAddDetailItem = (configIdx: number) => {
     const newForm = [...formData];
-    newForm[configIdx].salaryComponents.push({
+    newForm[configIdx].compensationItems.push({
       code: "BASIC_GROSS_SALARY",
       name: "Lương cơ bản (Gross)",
       category: "SALARY",
@@ -121,13 +121,13 @@ export default function SalaryInformationSheet({ isOpen, onOpenChange, userId }:
 
   const handleRemoveDetailItem = (configIdx: number, itemIdx: number) => {
     const newForm = [...formData];
-    newForm[configIdx].salaryComponents.splice(itemIdx, 1);
+    newForm[configIdx].compensationItems.splice(itemIdx, 1);
     setFormData(newForm);
   };
 
   const handleItemChange = (configIdx: number, itemIdx: number, field: string, val: any) => {
     const newForm = [...formData];
-    const item: any = newForm[configIdx].salaryComponents[itemIdx];
+    const item: any = newForm[configIdx].compensationItems[itemIdx];
     if (field === 'code') {
       const def = DEFAULT_COMPONENTS.find(c => c.value === val);
       if (def) {
@@ -262,7 +262,7 @@ export default function SalaryInformationSheet({ isOpen, onOpenChange, userId }:
                           )}
                         </div>
                         
-                        {config.salaryComponents.length > 0 ? (
+                        {config.compensationItems.length > 0 ? (
                           <div className="border border-border rounded-lg overflow-x-auto">
                             <table className="w-full text-sm text-left">
                               <thead className="bg-muted text-muted-foreground text-xs uppercase">
@@ -274,7 +274,7 @@ export default function SalaryInformationSheet({ isOpen, onOpenChange, userId }:
                                 </tr>
                               </thead>
                               <tbody className="divide-y divide-border">
-                                {config.salaryComponents.map((item, itemIdx) => (
+                                {config.compensationItems.map((item, itemIdx) => (
                                   <tr key={itemIdx}>
                                     <td className="px-3 py-2">
                                       {isEditingMode ? (

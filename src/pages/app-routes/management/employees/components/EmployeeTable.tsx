@@ -23,8 +23,6 @@ export interface Employee {
   position: string;
   func: string;
   status: string;
-  checkInTime: string;
-  checkOutTime: string;
   sysRole: string;
   avatarUrl?: string;
 }

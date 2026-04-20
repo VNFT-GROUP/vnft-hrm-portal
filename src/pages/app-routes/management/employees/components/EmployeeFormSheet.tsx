@@ -81,7 +81,7 @@ export default function EmployeeFormSheet({ isOpen, onOpenChange, formData, setF
         
         <form onSubmit={(e) => { 
           e.preventDefault(); 
-          if (formData.fullName?.trim() && formData.englishName?.trim() && formData.email?.trim() && formData.password?.trim() && formData.empCodePrefix && formData.checkInTime && formData.checkOutTime && formData.func) {
+          if (formData.fullName?.trim() && formData.englishName?.trim() && formData.email?.trim() && formData.password?.trim() && formData.empCodePrefix && formData.func) {
             onSave();
           }
         }} className="flex flex-col flex-1 overflow-hidden">
@@ -216,33 +216,6 @@ export default function EmployeeFormSheet({ isOpen, onOpenChange, formData, setF
               />
             </div>
 
-            <div className="space-y-2">
-              <Label className="text-sm font-semibold text-foreground flex items-center gap-1.5">
-                <Clock size={14} className="text-muted-foreground"/>
-                Giờ vào <span className="text-rose-500">*</span>
-              </Label>
-              <Input 
-                type="time"
-                value={formData.checkInTime}
-                onChange={e => setFormData({...formData, checkInTime: e.target.value})}
-                required
-                className="rounded-xl border-border focus-visible:ring-[#2E3192] h-11 bg-background shadow-sm"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label className="text-sm font-semibold text-foreground flex items-center gap-1.5">
-                <Clock size={14} className="text-muted-foreground"/>
-                Giờ ra <span className="text-rose-500">*</span>
-              </Label>
-              <Input 
-                type="time"
-                value={formData.checkOutTime}
-                onChange={e => setFormData({...formData, checkOutTime: e.target.value})}
-                required
-                className="rounded-xl border-border focus-visible:ring-[#2E3192] h-11 bg-background shadow-sm"
-              />
-            </div>
           </div>
         </div>
         

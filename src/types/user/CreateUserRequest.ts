@@ -9,8 +9,4 @@ export interface CreateUserRequest {
   groupId: string;
   positionId?: string;
   roleId?: string;
-  checkInTime?: string;
-  checkOutTime?: string;
-  annualLeaveBalance?: number;
-  wfhBalance?: number;
 }

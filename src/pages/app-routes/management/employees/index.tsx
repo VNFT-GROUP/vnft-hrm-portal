@@ -59,8 +59,8 @@ export default function EmployeesPage() {
     position: "",
     func: "",
     status: "Đang làm",
-    checkInTime: "08:00",
-    checkOutTime: "17:30",
+
+
     sysRole: "",
     password: "",
     confirmPassword: "",
@@ -88,8 +88,8 @@ export default function EmployeesPage() {
       position: user.positionName || "-",
       func: user.groupName || "-",
       status: user.active ? "Đang làm" : "Đã nghỉ việc",
-      checkInTime: user.checkInTime || "08:00",
-      checkOutTime: user.checkOutTime || "17:30",
+
+
       sysRole: user.roleName || "-",
       avatarUrl: user.avatarUrl,
     })) || [];
@@ -144,8 +144,8 @@ export default function EmployeesPage() {
         position: "",
         func: "",
         status: "Đang làm",
-        checkInTime: "08:00",
-        checkOutTime: "17:30",
+
+
         sysRole: "",
         password: "",
         confirmPassword: "",
@@ -172,8 +172,8 @@ export default function EmployeesPage() {
       groupId: formData.func,
       roleId: formData.sysRole,
       positionId: formData.position,
-      checkInTime: formData.checkInTime.length === 5 ? `${formData.checkInTime}:00` : formData.checkInTime,
-      checkOutTime: formData.checkOutTime.length === 5 ? `${formData.checkOutTime}:00` : formData.checkOutTime,
+
+
     };
     
     createUserMutation.mutate(requestData);

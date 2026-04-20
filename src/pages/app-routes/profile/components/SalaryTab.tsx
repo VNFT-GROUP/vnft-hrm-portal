@@ -98,22 +98,36 @@ export default function SalaryTab() {
               </div>
             </div>
 
-            <div className="space-y-0 text-left">
-              {currentConfig.compensationItems.map((item, idx) => (
-                <div key={idx} className="flex flex-col sm:flex-row sm:items-center justify-between py-5 border-b border-border/60 last:border-0 gap-3">
-                  <div className="space-y-1">
-                    <p className="text-base text-foreground font-medium">{item.name}</p>
-                    {(item.note || currentConfig.note) && (
-                      <p className="text-sm text-slate-500 italic uppercase">
-                        {item.note || currentConfig.note}
-                      </p>
-                    )}
-                  </div>
-                  <div className="px-5 py-2.5 bg-purple-50 text-purple-600 font-semibold font-mono rounded-xl shrink-0 sm:text-right shadow-sm border border-purple-100/50 min-w-[140px] text-center">
-                    {formatCurrency(item.amount)}
-                  </div>
-                </div>
-              ))}
+            {currentConfig.note && (
+              <div className="bg-amber-50/50 text-amber-700 px-4 py-3 rounded-xl text-sm italic border border-amber-100/50">
+                <span className="font-semibold mr-2">Ghi chú đợt lương:</span> 
+                {currentConfig.note}
+              </div>
+            )}
+
+            <div className="overflow-x-auto rounded-xl border border-border shadow-sm">
+              <table className="w-full text-left text-sm text-muted-foreground min-w-[400px]">
+                <thead className="text-xs uppercase bg-muted/40 text-muted-foreground border-b border-border">
+                  <tr>
+                    <th className="px-4 py-3.5 font-semibold">Khoản mục</th>
+                    <th className="px-4 py-3.5 font-semibold text-right w-[160px]">Số tiền (VNĐ)</th>
+                    <th className="px-4 py-3.5 font-semibold max-w-[200px]">Ghi chú</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-border">
+                  {currentConfig.compensationItems.map((item, idx) => (
+                    <tr key={idx} className="hover:bg-muted/20 transition-colors">
+                      <td className="px-4 py-3 font-medium text-foreground">{item.name}</td>
+                      <td className="px-4 py-3 text-right font-medium text-foreground">
+                        {formatCurrency(item.amount)}
+                      </td>
+                      <td className="px-4 py-3 italic text-xs text-muted-foreground truncate max-w-[150px]" title={item.note || ""}>
+                        {item.note || "-"}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
         )}

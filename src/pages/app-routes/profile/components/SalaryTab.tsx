@@ -40,31 +40,38 @@ export default function SalaryTab() {
             </div>
           </div>
           
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm text-muted-foreground">
-              <thead className="text-xs uppercase bg-muted text-muted-foreground rounded-t-lg">
-                <tr>
-                  <th className="px-4 py-3 font-semibold rounded-tl-lg">Tháng</th>
-                  <th className="px-4 py-3 font-semibold text-right rounded-tr-lg">Lương thực nhận (VNĐ)</th>
-                </tr>
-              </thead>
-              <tbody>
-                {months.map(month => (
-                  <tr key={month} className="border-b border-slate-50 hover:bg-[#1E2062]/5 transition-colors duration-200 cursor-default">
-                    <td className="px-4 py-3 font-medium text-foreground">Tháng {month}</td>
-                    <td className="px-4 py-3 text-right font-mono font-semibold">
-                      {month <= 4 ? "0" : "—"}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-              <tfoot>
-                <tr className="bg-[#2E3192]/5 font-bold text-[#1E2062] rounded-b-lg">
-                  <td className="px-4 py-4 rounded-bl-lg">Tổng thu nhập năm</td>
-                  <td className="px-4 py-4 text-right font-mono text-base rounded-br-lg">0</td>
-                </tr>
-              </tfoot>
-            </table>
+          <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
+            {months.map(month => {
+              const isFuture = month > 4; // Mock logic
+              return (
+                <div 
+                  key={month} 
+                  className={`relative flex flex-col justify-between p-4 rounded-2xl border transition-all duration-300 ${
+                    !isFuture 
+                      ? "bg-card border-border hover:border-[#2E3192]/30 hover:shadow-md cursor-pointer group" 
+                      : "bg-muted/30 border-dashed border-border/60 opacity-60 grayscale"
+                  }`}
+                >
+                  <div className="flex items-center justify-between mb-3">
+                    <span className={`text-xs font-bold uppercase tracking-wider ${!isFuture ? "text-muted-foreground group-hover:text-[#2E3192] transition-colors" : "text-muted-foreground/50"}`}>
+                      Tháng {month}
+                    </span>
+                  </div>
+                  <div className="text-right">
+                    {!isFuture ? (
+                      <span className="text-lg font-bold font-mono text-foreground">0<span className="text-xs font-sans text-muted-foreground ml-1">đ</span></span>
+                    ) : (
+                      <span className="text-lg font-bold text-muted-foreground/30">—</span>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="mt-6 p-5 bg-gradient-to-r from-muted/50 to-muted/20 rounded-2xl flex flex-col sm:flex-row justify-between items-center border border-border/80 gap-3">
+            <span className="font-semibold text-muted-foreground uppercase tracking-wider text-sm">Tổng thực nhận năm 2026</span>
+            <span className="text-2xl font-mono font-bold text-[#1E2062]">0 <span className="text-sm font-sans text-muted-foreground">VNĐ</span></span>
           </div>
         </div>
       </div>

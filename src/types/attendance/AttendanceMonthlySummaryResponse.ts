@@ -12,6 +12,9 @@ export interface AttendanceMonthlySummaryResponse {
   workUnits: number;
   lateDays: number;
   absentDays: number;
+  majorLateEarlyViolationTimes?: number;
+  leaveDeductionViolationTimes?: number;
+  leaveDeductionDays?: number;
   locked: boolean;
   note: string | null;
 }

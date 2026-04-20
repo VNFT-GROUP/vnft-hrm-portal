@@ -4,7 +4,7 @@ import { vi } from "date-fns/locale";
 
 import { attendanceService } from "@/services/attendance";
 import type { AttendanceDailySummaryResponse } from "@/types/attendance/AttendanceDailySummaryResponse";
-import { Loader2, Calendar as CalendarIcon, ChevronLeft, ChevronRight, X, CalendarCheck, Briefcase, Target, Clock, UserX } from "lucide-react";
+import { Loader2, Calendar as CalendarIcon, ChevronLeft, ChevronRight, X, CalendarCheck, Briefcase, Target, Clock, UserX, AlertTriangle, TrendingDown } from "lucide-react";
 import { m  } from 'framer-motion';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useTranslation } from "react-i18next";
@@ -127,6 +127,45 @@ export default function MyAttendancePage() {
                 <span className="text-[12px] font-bold text-slate-500 uppercase tracking-wider">{t("myAttendance.summary.absentDays")}</span>
               </div>
               <span className="text-2xl sm:text-3xl font-black text-[#1E2062]">{data.summary?.absentDays ?? 0}</span>
+            </div>
+          </m.div>
+        )}
+
+        {!loading && data && (data.summary?.majorLateEarlyViolationTimes ?? 0) > 0 && (
+          <m.div 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="grid grid-cols-1 sm:grid-cols-3 gap-3 lg:gap-4 -mt-2"
+          >
+            <div className="bg-rose-50 border border-rose-200/60 rounded-xl p-3.5 sm:p-4 flex flex-col justify-center gap-1.5 shadow-sm">
+              <div className="flex items-center gap-2">
+                <div className="p-1.5 bg-rose-100 text-rose-600 rounded-md">
+                  <AlertTriangle size={16} strokeWidth={2.5} />
+                </div>
+                <span className="text-[12px] font-bold text-rose-800 uppercase tracking-wider">{t("myAttendance.summary.majorViolations", { defaultValue: "Lỗi vi phạm nặng" })}</span>
+              </div>
+              <span className="text-2xl sm:text-3xl font-black text-rose-600">{data.summary?.majorLateEarlyViolationTimes ?? 0}</span>
+            </div>
+
+            <div className="bg-rose-50 border border-rose-200/60 rounded-xl p-3.5 sm:p-4 flex flex-col justify-center gap-1.5 shadow-sm">
+              <div className="flex items-center gap-2">
+                <div className="p-1.5 bg-rose-100 text-rose-600 rounded-md">
+                  <AlertTriangle size={16} strokeWidth={2.5} />
+                </div>
+                <span className="text-[12px] font-bold text-rose-800 uppercase tracking-wider">{t("myAttendance.summary.deductedViolations", { defaultValue: "Số lần bị trừ phép" })}</span>
+              </div>
+              <span className="text-2xl sm:text-3xl font-black text-rose-600">{data.summary?.leaveDeductionViolationTimes ?? 0}</span>
+            </div>
+
+            <div className="bg-rose-50 border border-rose-200/60 rounded-xl p-3.5 sm:p-4 flex flex-col justify-center gap-1.5 shadow-sm">
+              <div className="flex items-center gap-2">
+                <div className="p-1.5 bg-rose-500 text-white rounded-md">
+                  <TrendingDown size={16} strokeWidth={2.5} />
+                </div>
+                <span className="text-[12px] font-bold text-rose-800 uppercase tracking-wider">{t("myAttendance.summary.deductedDays", { defaultValue: "Tổng phép đã trừ" })}</span>
+              </div>
+              <span className="text-2xl sm:text-3xl font-black text-rose-600">-{data.summary?.leaveDeductionDays ?? 0}</span>
             </div>
           </m.div>
         )}

@@ -338,9 +338,21 @@ export default function HomePage() {
                       <span className="text-[13px] font-medium text-slate-600 cursor-help" title={t("dashboard.lateEarlyTooltip")}>{t("dashboard.lateEarlyDays")}</span>
                       <span className="text-[15px] font-semibold text-amber-600">{session?.currentMonthAttendance?.lateDays ?? 0}</span>
                     </div>
-                    <div className="flex items-center justify-between py-2">
+                    <div className="flex items-center justify-between py-2 border-b border-border/50">
                       <span className="text-[13px] font-medium text-slate-600">{t("dashboard.workingDays")}</span>
                       <span className="text-[15px] font-semibold text-slate-700">{session?.currentMonthAttendance?.workingDays ?? 0}</span>
+                    </div>
+                    <div className="flex items-center justify-between py-2 border-b border-border/50">
+                      <span className="text-[13px] font-medium text-slate-600 cursor-help" title={t("dashboard.majorLateEarlyViolationTooltip")}>{t("dashboard.majorLateEarlyViolationTimes", { defaultValue: "Vi phạm nặng (trễ / sớm)" })}</span>
+                      <span className="text-[15px] font-semibold text-rose-500">{session?.currentMonthAttendance?.majorLateEarlyViolationTimes ?? 0} <span className="text-[11px] font-normal text-muted-foreground">{t("dashboard.times", { defaultValue: "lần" })}</span></span>
+                    </div>
+                    <div className="flex items-center justify-between py-2 border-b border-border/50">
+                      <span className="text-[13px] font-medium text-slate-600">{t("dashboard.leaveDeductionViolationTimes", { defaultValue: "Vi phạm bị trừ phép" })}</span>
+                      <span className="text-[15px] font-semibold text-rose-600">{session?.currentMonthAttendance?.leaveDeductionViolationTimes ?? 0} <span className="text-[11px] font-normal text-muted-foreground">{t("dashboard.times", { defaultValue: "lần" })}</span></span>
+                    </div>
+                    <div className="flex items-center justify-between py-2">
+                      <span className="text-[13px] font-medium text-rose-600">{t("dashboard.leaveDeductionDays", { defaultValue: "Tổng phép bị trừ" })}</span>
+                      <span className="text-[15px] font-bold text-rose-600">-{session?.currentMonthAttendance?.leaveDeductionDays ?? 0} <span className="text-[11px] font-normal text-rose-500/80">{t("dashboard.days")}</span></span>
                     </div>
                   </div>
                 </div>

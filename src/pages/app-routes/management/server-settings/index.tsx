@@ -204,6 +204,53 @@ export default function ServerSettingsPage() {
                     </div>
                   </CardContent>
                 </Card>
+
+                <Card className="shadow-sm border-slate-200/80 overflow-hidden h-fit lg:col-span-2">
+                  <CardHeader className="pb-4 bg-white border-b border-slate-100">
+                    <CardTitle className="text-[17px] flex items-center gap-2 text-rose-800">
+                      <div className="p-1.5 bg-rose-50 rounded-md">
+                        <ShieldAlert className="w-4 h-4 text-rose-600" />
+                      </div>
+                      {t("serverSettings.violationTitle", { defaultValue: "Cấu hình Trừ phép do Vi phạm Đi trễ/Về sớm" })}
+                    </CardTitle>
+                    <CardDescription className="text-slate-500">
+                      {t("serverSettings.violationDesc", { defaultValue: "Quy định liên quan đến việc phạt trừ phép nếu vi phạm quá mức thời lượng và số lần cho phép trong kỳ." })}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4 p-4 md:p-5 bg-slate-50/50">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div className="flex flex-col gap-2 bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
+                        <span className="text-[13px] font-semibold text-slate-700">{t("serverSettings.majorViolationMinutes", { defaultValue: "Ngưỡng tính vi phạm nặng" })}</span>
+                        <div className="flex items-center gap-2">
+                          <span className="font-bold text-rose-600 bg-rose-50 border border-rose-100 px-3 py-1.5 rounded-lg text-lg tracking-tight">
+                            &ge; {settings.attendanceMajorLateEarlyViolationMinutes}
+                          </span>
+                          <span className="text-xs text-slate-500 font-medium">{t("serverSettings.unitMinutes", { defaultValue: "phút" })}</span>
+                        </div>
+                      </div>
+
+                      <div className="flex flex-col gap-2 bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
+                        <span className="text-[13px] font-semibold text-slate-700">{t("serverSettings.violationFreeTimes", { defaultValue: "Số lần miễn trừ thứ tự/tháng" })}</span>
+                        <div className="flex items-center gap-2">
+                          <span className="font-bold text-[#2E3192] bg-[#2E3192]/10 border border-[#2E3192]/20 px-3 py-1.5 rounded-lg text-lg tracking-tight">
+                            {settings.attendanceMajorLateEarlyViolationFreeTimes}
+                          </span>
+                          <span className="text-xs text-slate-500 font-medium">{t("serverSettings.unitTimes", { defaultValue: "lần đầu tiên" })}</span>
+                        </div>
+                      </div>
+
+                      <div className="flex flex-col gap-2 bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
+                        <span className="text-[13px] font-semibold text-slate-700">{t("serverSettings.leaveDeduction", { defaultValue: "Phạt áp dụng những lần sau đó" })}</span>
+                        <div className="flex items-center gap-2">
+                          <span className="font-bold text-amber-600 bg-amber-50 border border-amber-200/60 px-3 py-1.5 rounded-lg text-lg tracking-tight">
+                            - {settings.attendanceLeaveDeductionPerMajorLateEarlyViolation}
+                          </span>
+                          <span className="text-xs text-slate-500 font-medium">{t("serverSettings.unitDays", { defaultValue: "ngày phép / lần vi phạm" })}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
                 <Card className="shadow-sm border-slate-200/80 overflow-hidden h-fit lg:col-span-2">
                   <CardHeader className="pb-4 bg-white border-b border-slate-100">
                     <CardTitle className="text-[17px] flex items-center gap-2 text-slate-800">
@@ -265,7 +312,7 @@ export default function ServerSettingsPage() {
                       <div className="flex justify-between items-center bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
                         <div className="text-[14px] font-semibold text-slate-700">{t("serverSettings.defaultCurrentLeave")}</div>
                         <span className="font-bold text-[#2E3192] bg-[#2E3192]/10 border border-[#2E3192]/20 px-3.5 py-1.5 rounded-lg text-sm shrink-0">
-                          {settings.userProfileDefaultCurrentLeaveDays}
+                          {settings.userProfileDefaultRemainingLeaveDays}
                         </span>
                       </div>
                       <div className="flex justify-between items-center bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
@@ -277,7 +324,7 @@ export default function ServerSettingsPage() {
                       <div className="flex justify-between items-center bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
                          <div className="text-[14px] font-semibold text-slate-700">{t("serverSettings.defaultCurrentWfh")}</div>
                          <span className="font-bold text-[#2E3192] bg-[#2E3192]/10 border border-[#2E3192]/20 px-3.5 py-1.5 rounded-lg text-sm shrink-0">
-                           {settings.userProfileDefaultCurrentWfhDays}
+                           {settings.userProfileDefaultRemainingWfhDays}
                          </span>
                       </div>
                       <div className="flex justify-between items-center bg-white p-4 rounded-xl border border-slate-200 shadow-xs">

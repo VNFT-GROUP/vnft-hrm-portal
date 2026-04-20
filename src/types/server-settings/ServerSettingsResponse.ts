@@ -10,10 +10,13 @@ export interface ServerSettingsResponse {
   attendanceAfternoonEnd: string;
   attendanceLunchBreakStart: string;
   attendanceLunchBreakEnd: string;
+  attendanceMajorLateEarlyViolationMinutes: number;
+  attendanceMajorLateEarlyViolationFreeTimes: number;
+  attendanceLeaveDeductionPerMajorLateEarlyViolation: number;
   attendanceDailySummaryEnabled: boolean;
   attendanceDailySummaryCron: string;
-  userProfileDefaultCurrentLeaveDays: number;
+  userProfileDefaultRemainingLeaveDays: number;
   userProfileDefaultMaxLeaveDays: number;
-  userProfileDefaultCurrentWfhDays: number;
+  userProfileDefaultRemainingWfhDays: number;
   userProfileDefaultMaxWfhDays: number;
 }

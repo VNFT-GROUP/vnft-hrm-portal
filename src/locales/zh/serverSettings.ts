@@ -39,5 +39,11 @@ export default {
   summaryCron: "执行周期 (Cron)",
   rawPayloadDesc: "数据库服务器返回的序列化详细配置数据结构。",
   loading: "正在同步服务器配置...",
-  fetchError: "从服务器获取配置数据时发生错误。请向 IT 报告。"
+  fetchError: "从服务器获取配置数据时发生错误。请向 IT 报告。",
+  userProfileDefaultsTitle: "默认用户配置文件配置",
+  userProfileDefaultsDesc: "创建新用户时的默认休假和WFH配置。",
+  defaultCurrentLeave: "初始年假",
+  defaultMaxLeave: "最大年假",
+  defaultCurrentWfh: "初始WFH天数",
+  defaultMaxWfh: "最大WFH天数",
 };

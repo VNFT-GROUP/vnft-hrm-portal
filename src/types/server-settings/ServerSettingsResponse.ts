@@ -12,4 +12,8 @@ export interface ServerSettingsResponse {
   attendanceLunchBreakEnd: string;
   attendanceDailySummaryEnabled: boolean;
   attendanceDailySummaryCron: string;
+  userProfileDefaultCurrentLeaveDays: number;
+  userProfileDefaultMaxLeaveDays: number;
+  userProfileDefaultCurrentWfhDays: number;
+  userProfileDefaultMaxWfhDays: number;
 }

@@ -39,5 +39,11 @@ export default {
   summaryCron: "Chu kỳ chạy (Cron expression)",
   rawPayloadDesc: "Cấu trúc dữ liệu cài đặt chi tiết được serialize trả về từ Database Server.",
   loading: "Đang đồng bộ cấu hình máy chủ...",
-  fetchError: "Đã có lỗi xảy ra khi fetch dữ liệu cấu hình từ máy chủ. Vui lòng phản hồi IT."
+  fetchError: "Đã có lỗi xảy ra khi fetch dữ liệu cấu hình từ máy chủ. Vui lòng phản hồi IT.",
+  userProfileDefaultsTitle: "Khởi tạo Hồ sơ Mặc định",
+  userProfileDefaultsDesc: "Thiết lập mặc định số ngày phép và WFH khi tạo mới người dùng.",
+  defaultCurrentLeave: "Số phép năm ban đầu",
+  defaultMaxLeave: "Số phép năm tối đa",
+  defaultCurrentWfh: "Số ngày WFH ban đầu",
+  defaultMaxWfh: "Số ngày WFH tối đa",
 };

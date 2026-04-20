@@ -39,5 +39,11 @@ export default {
   summaryCron: "Execution Cycle (Cron)",
   rawPayloadDesc: "Detailed configuration data structure serialized and returned from the Database Server.",
   loading: "Syncing server configurations...",
-  fetchError: "An error occurred while fetching configuration data from the server. Please report to IT."
+  fetchError: "An error occurred while fetching configuration data from the server. Please report to IT.",
+  userProfileDefaultsTitle: "Default Profile Settings",
+  userProfileDefaultsDesc: "Default leave and WFH configurations when creating a new user.",
+  defaultCurrentLeave: "Initial Annual Leave",
+  defaultMaxLeave: "Maximum Annual Leave",
+  defaultCurrentWfh: "Initial WFH Days",
+  defaultMaxWfh: "Maximum WFH Days",
 };

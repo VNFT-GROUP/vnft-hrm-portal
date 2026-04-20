@@ -7,7 +7,8 @@ import ProfileHeader from "./components/ProfileHeader";
 import PersonalInfoTab from "./components/PersonalInfoTab";
 import FamilyEduTab from "./components/FamilyEduTab";
 import BankAndDocsTab from "./components/BankAndDocsTab";
-import { User, GraduationCap, FileText, Loader2 } from "lucide-react";
+import SalaryTab from "./components/SalaryTab";
+import { User, GraduationCap, FileText, Loader2, CircleDollarSign } from "lucide-react";
 
 export default function ProfilePage() {
   const { t } = useTranslation();
@@ -34,6 +35,7 @@ export default function ProfilePage() {
     { id: "personal", label: t('profile.tabs.personal'), icon: <User size={16} /> },
     { id: "family-edu", label: t('profile.tabs.familyEdu'), icon: <GraduationCap size={16} /> },
     { id: "bank-docs", label: t('profile.tabs.bankDocs'), icon: <FileText size={16} /> },
+    { id: "salary", label: t('profile.tabs.salary', { defaultValue: 'Lương & Phụ cấp' }), icon: <CircleDollarSign size={16} /> },
   ];
 
   if (loading) {
@@ -76,6 +78,7 @@ export default function ProfilePage() {
         {activeTab === "personal" && <PersonalInfoTab />}
         {activeTab === "family-edu" && <FamilyEduTab />}
         {activeTab === "bank-docs" && <BankAndDocsTab />}
+        {activeTab === "salary" && <SalaryTab />}
       </div>
     </div>
   </ProfileContext.Provider>

@@ -1,7 +1,19 @@
-import { Wallet, BarChart3 } from "lucide-react";
+import { AlertCircle, ChevronDown, BarChart3 } from "lucide-react";
+import { useContext, useState } from "react";
+import { ProfileContext } from "../contexts/ProfileContext";
 
 export default function SalaryTab() {
+  const { profile } = useContext(ProfileContext);
   const months = Array.from({ length: 12 }, (_, i) => i + 1);
+
+  const allConfigs = profile?.compensations || [];
+  // Sort directly by createdAt descending
+  const sortedConfigs = [...allConfigs].sort((a,b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime());
+  
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const currentConfig = sortedConfigs.length > 0 ? sortedConfigs[selectedIndex] : null;
+
+  const formatCurrency = (amount: number) => new Intl.NumberFormat('vi-VN').format(amount);
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500 fill-mode-both">
@@ -57,88 +69,56 @@ export default function SalaryTab() {
         </div>
       </div>
 
-      {/* Cột phải: Chi tiết từng tháng */}
+      {/* Cột phải: Chi tiết mốc lương hiện tại / lịch sử */}
       <div className="lg:col-span-1">
-        <div className="bg-card text-card-foreground p-6 rounded-2xl shadow-sm border border-border hover:border-border hover:shadow-md transition-all duration-300 group sticky top-6">
-          <div className="flex items-center gap-2 mb-6 pb-4 border-b border-border">
-            <div className="p-1.5 bg-[#F7941D]/10 text-[#F7941D] rounded">
-              <Wallet size={18} />
-            </div>
-            <h3 className="text-lg font-bold text-[#1E2062]">Chi tiết lương Tháng 4 2026</h3>
+        <div className="bg-card text-card-foreground p-6 rounded-2xl shadow-sm border border-border sticky top-6">
+          <h3 className="text-lg font-bold text-[#1E2062] mb-6 pb-4 border-b border-border/80">Lịch sử cấu hình lương</h3>
+        
+        {!currentConfig ? (
+          <div className="flex flex-col items-center justify-center py-10 text-center text-muted-foreground">
+            <AlertCircle size={32} className="mb-3 opacity-30" />
+            <p className="text-sm">Chưa có cấu hình lương nào được thiết lập.</p>
           </div>
-          
-          <div className="space-y-4">
-            <div className="flex justify-between items-center py-2 border-b border-dashed border-border">
-              <span className="text-sm font-medium text-muted-foreground">Phòng ban</span>
-              <span className="text-sm font-bold text-foreground">HR & ADM</span>
-            </div>
-            <div className="flex justify-between items-center py-2 border-b border-dashed border-border">
-              <span className="text-sm font-medium text-muted-foreground">Lương cơ bản</span>
-              <span className="text-sm font-semibold font-mono text-foreground">0</span>
-            </div>
-            <div className="flex justify-between items-center py-2 border-b border-dashed border-border">
-              <span className="text-sm font-medium text-muted-foreground">Lương vị trí</span>
-              <span className="text-sm font-semibold font-mono text-foreground">0</span>
-            </div>
-            <div className="flex justify-between items-center py-2 border-b border-dashed border-border">
-              <span className="text-sm font-medium text-muted-foreground">Target</span>
-              <span className="text-sm font-semibold font-mono text-foreground">0</span>
-            </div>
-            <div className="flex justify-between items-center py-2 border-b border-dashed border-border">
-              <span className="text-sm font-medium text-muted-foreground">Lương kinh doanh</span>
-              <span className="text-sm font-semibold font-mono text-foreground">0</span>
-            </div>
-            {/* Phụ cấp */}
-            <div className="pt-2">
-              <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest block mb-2">Phụ cấp</span>
-              <div className="pl-3 border-l-2 border-border space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-muted-foreground">Gửi xe</span>
-                  <span className="text-sm font-mono text-muted-foreground">0</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-muted-foreground">Xăng xe</span>
-                  <span className="text-sm font-mono text-muted-foreground">0</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-muted-foreground">Điện thoại</span>
-                  <span className="text-sm font-mono text-muted-foreground">0</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-muted-foreground">Quản lý</span>
-                  <span className="text-sm font-mono text-muted-foreground">0</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-muted-foreground">Công việc</span>
-                  <span className="text-sm font-mono text-muted-foreground">0</span>
-                </div>
+        ) : (
+          <div className="space-y-6">
+            <div className="relative hover:scale-[1.01] transition-transform">
+              <select 
+                value={selectedIndex}
+                onChange={(e) => setSelectedIndex(Number(e.target.value))}
+                className="w-full appearance-none bg-slate-50 border-0 text-[#1E2062] font-bold text-lg rounded-xl px-5 py-4 pr-12 focus:outline-none focus:ring-2 focus:ring-purple-500/20 hover:bg-slate-100 transition-colors cursor-pointer shadow-sm"
+              >
+                {sortedConfigs.map((config, idx) => (
+                  <option key={idx} value={idx}>
+                    {config.effectiveFrom}
+                  </option>
+                ))}
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-5 text-slate-400">
+                <ChevronDown size={20} strokeWidth={3} />
               </div>
             </div>
-            {/* Thưởng / Phạt */}
-            <div className="pt-3 border-t border-border">
-              <div className="flex justify-between items-center py-2 border-b border-dashed border-border">
-                <span className="text-sm font-medium text-muted-foreground">Phí ADMIN</span>
-                <span className="text-sm font-semibold font-mono text-foreground">0</span>
-              </div>
-              <div className="flex justify-between items-center py-2 border-b border-dashed border-border">
-                <span className="text-sm font-medium text-muted-foreground">Balance bảo hiểm</span>
-                <span className="text-sm font-semibold font-mono text-foreground">0</span>
-              </div>
-              <div className="flex justify-between items-center py-2 border-b border-dashed border-border bg-muted px-2 rounded -mx-2">
-                <span className="text-sm font-bold text-[#1E2062]">Lương BHXH</span>
-                <span className="text-sm font-bold font-mono text-[#1E2062]">8.000.000</span>
-              </div>
-            </div>
-          </div>
 
-          <div className="mt-6 pt-4 border-t-2 border-border">
-            <div className="flex flex-col items-center justify-center p-4 bg-gradient-to-r from-[#2E3192] to-[#1E2062] rounded-xl text-white shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer">
-              <span className="text-xs uppercase tracking-wider font-semibold opacity-80 mb-1">Thực nhận cuối</span>
-              <span className="text-3xl font-bold font-mono tracking-tight text-[#F7941D]">0 <span className="text-sm opacity-80">VNĐ</span></span>
+            <div className="space-y-0 text-left">
+              {currentConfig.compensationItems.map((item, idx) => (
+                <div key={idx} className="flex flex-col sm:flex-row sm:items-center justify-between py-5 border-b border-border/60 last:border-0 gap-3">
+                  <div className="space-y-1">
+                    <p className="text-base text-foreground font-medium">{item.name}</p>
+                    {(item.note || currentConfig.note) && (
+                      <p className="text-sm text-slate-500 italic uppercase">
+                        {item.note || currentConfig.note}
+                      </p>
+                    )}
+                  </div>
+                  <div className="px-5 py-2.5 bg-purple-50 text-purple-600 font-semibold font-mono rounded-xl shrink-0 sm:text-right shadow-sm border border-purple-100/50 min-w-[140px] text-center">
+                    {formatCurrency(item.amount)}
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
+   </div>
   );
 }

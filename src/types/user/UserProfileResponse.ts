@@ -4,6 +4,7 @@ import type { BankInformationResponse } from './BankInformation/BankInformationR
 import type { DependentResponse } from './Dependent/DependentResponse';
 import type { EducationRecordResponse } from './EducationRecord/EducationRecordResponse';
 import type { WorkExperienceResponse } from './WorkExperience/WorkExperienceResponse';
+import type { UserCompensationResponse } from './salary/UserCompensationResponse';
 
 export interface UserProfileResponse {
   id: string;
@@ -48,6 +49,7 @@ export interface UserProfileResponse {
   dependents?: DependentResponse[];
   educationRecords?: EducationRecordResponse[];
   workExperiences?: WorkExperienceResponse[];
+  compensations?: UserCompensationResponse[];
   active?: boolean;
   createdAt?: string;
   updatedAt?: string;

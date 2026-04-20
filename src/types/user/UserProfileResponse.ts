@@ -29,6 +29,10 @@ export interface UserProfileResponse {
   gender?: Gender;
   dateOfBirth?: string;
   maritalStatus?: MaritalStatus;
+  remainingLeaveDays?: number;
+  maxLeaveDays?: number;
+  remainingWfhDays?: number;
+  maxWfhDays?: number;
   placeOfBirth?: string;
   placeOfOrigin?: string;
   nationality?: string;

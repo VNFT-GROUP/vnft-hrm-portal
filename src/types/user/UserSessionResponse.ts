@@ -13,9 +13,9 @@ export interface UserSessionResponse {
   gender?: Gender;
   avatarKey?: string;
   avatarUrl?: string;
-  currentLeaveDays?: number;
+  remainingLeaveDays?: number;
   maxLeaveDays?: number;
-  currentWfhDays?: number;
+  remainingWfhDays?: number;
   maxWfhDays?: number;
   groupId?: string;
   groupName?: string;

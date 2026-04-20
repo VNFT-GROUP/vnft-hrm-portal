@@ -296,7 +296,7 @@ export default function HomePage() {
                         <span className="text-[13px] font-medium text-slate-700">{t("dashboard.leaveDays")}</span>
                       </div>
                       <div className="flex items-baseline gap-1">
-                        <span className="text-[15px] font-semibold text-foreground">{session?.currentLeaveDays ?? 0}</span>
+                        <span className="text-[15px] font-semibold text-foreground">{session?.remainingLeaveDays ?? 0}</span>
                         <span className="text-[12px] text-muted-foreground">/ {session?.maxLeaveDays ?? 0} {t("dashboard.days")}</span>
                       </div>
                     </div>
@@ -307,7 +307,7 @@ export default function HomePage() {
                         <span className="text-[13px] font-medium text-slate-700">{t("dashboard.wfhDays")}</span>
                       </div>
                       <div className="flex items-baseline gap-1">
-                        <span className="text-[15px] font-semibold text-foreground">{session?.currentWfhDays ?? 0}</span>
+                        <span className="text-[15px] font-semibold text-foreground">{session?.remainingWfhDays ?? 0}</span>
                         <span className="text-[12px] text-muted-foreground">/ {session?.maxWfhDays ?? 0} {t("dashboard.days")}</span>
                       </div>
                     </div>

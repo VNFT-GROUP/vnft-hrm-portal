@@ -145,7 +145,7 @@ export default function RequestsPage() {
               <h3 className="text-sm font-semibold text-slate-700 leading-tight">Ngày nghỉ phép</h3>
             </div>
             <div className="flex items-baseline gap-1.5 mt-2">
-              <span className="text-[28px] font-extrabold tracking-tight text-[#2E3192]">{session?.currentLeaveDays ?? 0}</span>
+              <span className="text-[28px] font-extrabold tracking-tight text-[#2E3192]">{session?.remainingLeaveDays ?? 0}</span>
               <span className="text-[22px] font-bold text-slate-300">/</span>
               <span className="text-[22px] font-bold text-slate-400">{session?.maxLeaveDays ?? 0}</span>
               <span className="text-sm text-slate-500 font-medium ml-1">ngày / năm</span>
@@ -160,7 +160,7 @@ export default function RequestsPage() {
               <h3 className="text-sm font-semibold text-slate-700 leading-tight">Ngày WFH</h3>
             </div>
             <div className="flex items-baseline gap-1.5 mt-2">
-              <span className="text-[28px] font-extrabold tracking-tight text-purple-700">{session?.currentWfhDays ?? 0}</span>
+              <span className="text-[28px] font-extrabold tracking-tight text-purple-700">{session?.remainingWfhDays ?? 0}</span>
               <span className="text-[22px] font-bold text-slate-300">/</span>
               <span className="text-[22px] font-bold text-slate-400">{session?.maxWfhDays ?? 0}</span>
               <span className="text-sm text-slate-500 font-medium ml-1">ngày / năm</span>

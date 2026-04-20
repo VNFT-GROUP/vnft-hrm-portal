@@ -15,11 +15,7 @@ export interface UserResponse {
   positionName?: string;
   roleId?: string;
   roleName?: string;
-  checkInTime?: string;
-  checkOutTime?: string;
   passwordChangedAt?: string;
-  annualLeaveBalance?: number;
-  wfhBalance?: number;
   active?: boolean;
   createdAt?: string;
   updatedAt?: string;

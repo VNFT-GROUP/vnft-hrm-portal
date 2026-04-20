@@ -13,8 +13,6 @@ export interface UserProfileResponse {
   englishName?: string;
   employeeCode?: string;
   attendanceCode?: string;
-  checkInTime?: string;
-  checkOutTime?: string;
   departmentId?: string;
   departmentName?: string;
   groupId?: string;

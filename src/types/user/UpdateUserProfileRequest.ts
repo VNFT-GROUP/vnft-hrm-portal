@@ -10,8 +10,6 @@ export interface UpdateUserProfileRequest {
   fullName?: string;
   englishName?: string;
   attendanceCode?: string;
-  checkInTime?: string;
-  checkOutTime?: string;
   phoneNumber?: string;
   avatarTempKey?: string;
   gender?: Gender;

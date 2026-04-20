@@ -36,12 +36,13 @@ interface EmployeeTableProps {
   onEditWorkInfo: (id: string) => void;
   onEditGroupInfo: (id: string) => void;
   onEditPassword: (id: string) => void;
+  onEditSalary: (id: string) => void;
 }
 
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
-export default function EmployeeTable({ employees, onDelete, onEditBasicInfo, onEditWorkInfo, onEditGroupInfo, onEditPassword }: EmployeeTableProps) {
+export default function EmployeeTable({ employees, onDelete, onEditBasicInfo, onEditWorkInfo, onEditGroupInfo, onEditPassword, onEditSalary }: EmployeeTableProps) {
   const { t } = useTranslation();
   const [rightClickedEmpId, setRightClickedEmpId] = useState<string | null>(null);
 
@@ -121,7 +122,7 @@ export default function EmployeeTable({ employees, onDelete, onEditBasicInfo, on
                     </div>
                     {/* Hàng 2 */}
                     <div className="flex justify-center gap-1 mt-1">
-                      <button title={t('management.titleEditSalary', { defaultValue: 'Xem/tùy chỉnh lương' })} className="p-1.5 text-emerald-500 hover:bg-emerald-50 hover:text-emerald-600 rounded-lg transition-colors">
+                      <button title={t('management.titleEditSalary', { defaultValue: 'Xem/tùy chỉnh lương' })} onClick={() => onEditSalary(emp.id)} className="p-1.5 text-emerald-500 hover:bg-emerald-50 hover:text-emerald-600 rounded-lg transition-colors">
                         <CircleDollarSign size={16} />
                       </button>
                       <button title={t('management.titleEditPassword', { defaultValue: 'Đổi mật khẩu' })} onClick={() => onEditPassword(emp.id)} className="p-1.5 text-teal-500 hover:bg-teal-50 hover:text-teal-600 rounded-lg transition-colors">
@@ -153,7 +154,7 @@ export default function EmployeeTable({ employees, onDelete, onEditBasicInfo, on
       {/* RENDER CONTEXT MENU FOR THE HOVERED ROW */}
       {activeEmp && (
         <ContextMenuContent className="w-64 z-100">
-          <ContextMenuItem className="cursor-pointer">
+          <ContextMenuItem className="cursor-pointer" onClick={() => onEditSalary(activeEmp.id)}>
             <CircleDollarSign className="mr-2 h-4 w-4 text-emerald-500" />
             <span>{t('management.titleEditSalary', { defaultValue: 'Xem/tùy chỉnh lương' })}</span>
           </ContextMenuItem>

@@ -24,6 +24,7 @@ import WorkInformationSheet from "./components/WorkInformationSheet";
 import GroupInformationSheet from "./components/GroupInformationSheet";
 import ChangePasswordSheet from "./components/ChangePasswordSheet";
 import BasicInformationSheet from "./components/BasicInformationSheet";
+import SalaryInformationSheet from "./components/SalaryInformationSheet";
 import UserFormSheet from "../users/components/UserFormSheet";
 import CustomPagination from "@/components/custom/CustomPagination";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -44,6 +45,7 @@ export default function EmployeesPage() {
   const [groupInfoEmpId, setGroupInfoEmpId] = useState<string | null>(null);
   const [passwordEmpId, setPasswordEmpId] = useState<string | null>(null);
   const [basicInfoEmpId, setBasicInfoEmpId] = useState<string | null>(null);
+  const [salaryEmpId, setSalaryEmpId] = useState<string | null>(null);
 
   const [formData, setFormData] = useState({
     empCodePrefix: "VNSGN",
@@ -308,6 +310,7 @@ export default function EmployeesPage() {
               onEditWorkInfo={(id) => setWorkInfoEmpId(id)}
               onEditGroupInfo={(id) => setGroupInfoEmpId(id)}
               onEditPassword={(id) => setPasswordEmpId(id)}
+              onEditSalary={(id) => setSalaryEmpId(id)}
             />
             {filteredData.length > 0 && (
               <CustomPagination
@@ -373,6 +376,14 @@ export default function EmployeesPage() {
           if (!open) setBasicInfoEmpId(null);
         }}
         userId={basicInfoEmpId}
+      />
+
+      <SalaryInformationSheet
+        isOpen={!!salaryEmpId}
+        onOpenChange={(open) => {
+          if (!open) setSalaryEmpId(null);
+        }}
+        userId={salaryEmpId}
       />
     </div>
   );

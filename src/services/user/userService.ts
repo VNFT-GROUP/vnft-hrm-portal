@@ -10,6 +10,9 @@ import type { UpdateUserGroupRequest } from '@/types/user/UpdateUserGroupRequest
 import type { UserGroupResponse } from '@/types/user/UserGroupResponse';
 import type { UpdateUserProfileRequest } from '@/types/user/UpdateUserProfileRequest';
 import type { UserProfileResponse } from '@/types/user/UserProfileResponse';
+import type { UserSalaryComponentsResponse } from '@/types/user/salary/UserSalaryComponentsResponse';
+import type { UserSalaryComponentResponse } from '@/types/user/salary/UserSalaryComponentResponse';
+import type { UpdateUserSalaryComponentsRequest } from '@/types/user/salary/UpdateUserSalaryComponentsRequest';
 
 export const userService = {
   createUser: async (
@@ -89,6 +92,31 @@ export const userService = {
     data: UpdateUserProfileRequest,
   ): Promise<ApiResponse<UserProfileResponse>> => {
     const response = await apiClient.put(`/users/${id}/profile`, data);
+    return response.data;
+  },
+
+  getUserSalaryComponents: async (
+    page: number = 1,
+    size: number = 10,
+  ): Promise<ApiResponse<PageResponse<UserSalaryComponentsResponse>>> => {
+    const response = await apiClient.get("/users/salary-components", {
+      params: { page, size },
+    });
+    return response.data;
+  },
+
+  getSalaryComponents: async (
+    id: string,
+  ): Promise<ApiResponse<UserSalaryComponentResponse[]>> => {
+    const response = await apiClient.get(`/users/${id}/salary-components`);
+    return response.data;
+  },
+
+  updateSalaryComponents: async (
+    id: string,
+    data: UpdateUserSalaryComponentsRequest,
+  ): Promise<ApiResponse<UserSalaryComponentResponse[]>> => {
+    const response = await apiClient.put(`/users/${id}/salary-components`, data);
     return response.data;
   },
 };

@@ -18,6 +18,8 @@ export interface UserResponse {
   checkInTime?: string;
   checkOutTime?: string;
   passwordChangedAt?: string;
+  annualLeaveBalance?: number;
+  wfhBalance?: number;
   active?: boolean;
   createdAt?: string;
   updatedAt?: string;

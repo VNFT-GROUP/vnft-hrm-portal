@@ -11,4 +11,6 @@ export interface CreateUserRequest {
   roleId?: string;
   checkInTime?: string;
   checkOutTime?: string;
+  annualLeaveBalance?: number;
+  wfhBalance?: number;
 }

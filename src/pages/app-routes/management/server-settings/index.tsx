@@ -172,14 +172,34 @@ export default function ServerSettingsPage() {
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
+                      {/* Morning Shift */}
                       <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs flex flex-col gap-1.5">
-                        <div className="text-[12px] font-semibold text-slate-500 uppercase tracking-widest">{t("serverSettings.lunchStart")}</div>
-                        <p className="font-extrabold text-[15px] text-slate-800">{settings.attendanceLunchBreakStart}</p>
+                        <div className="text-[12px] font-semibold text-slate-500 uppercase tracking-widest">{t("serverSettings.morningStart")}</div>
+                        <p className="font-extrabold text-[15px] text-slate-800">{settings.attendanceMorningStart}</p>
                       </div>
-                      
                       <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs flex flex-col gap-1.5">
-                        <div className="text-[12px] font-semibold text-slate-500 uppercase tracking-widest">{t("serverSettings.lunchEnd")}</div>
-                        <p className="font-extrabold text-[15px] text-slate-800">{settings.attendanceLunchBreakEnd}</p>
+                        <div className="text-[12px] font-semibold text-slate-500 uppercase tracking-widest">{t("serverSettings.morningEnd")}</div>
+                        <p className="font-extrabold text-[15px] text-slate-800">{settings.attendanceMorningEnd}</p>
+                      </div>
+
+                      {/* Lunch Break */}
+                      <div className="bg-orange-50/50 p-4 rounded-xl border border-orange-200/60 shadow-xs flex flex-col gap-1.5">
+                        <div className="text-[12px] font-semibold text-orange-600/80 uppercase tracking-widest">{t("serverSettings.lunchStart")}</div>
+                        <p className="font-extrabold text-[15px] text-orange-900">{settings.attendanceLunchBreakStart}</p>
+                      </div>
+                      <div className="bg-orange-50/50 p-4 rounded-xl border border-orange-200/60 shadow-xs flex flex-col gap-1.5">
+                        <div className="text-[12px] font-semibold text-orange-600/80 uppercase tracking-widest">{t("serverSettings.lunchEnd")}</div>
+                        <p className="font-extrabold text-[15px] text-orange-900">{settings.attendanceLunchBreakEnd}</p>
+                      </div>
+
+                      {/* Afternoon Shift */}
+                      <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs flex flex-col gap-1.5">
+                        <div className="text-[12px] font-semibold text-slate-500 uppercase tracking-widest">{t("serverSettings.afternoonStart")}</div>
+                        <p className="font-extrabold text-[15px] text-slate-800">{settings.attendanceAfternoonStart}</p>
+                      </div>
+                      <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs flex flex-col gap-1.5">
+                        <div className="text-[12px] font-semibold text-slate-500 uppercase tracking-widest">{t("serverSettings.afternoonEnd")}</div>
+                        <p className="font-extrabold text-[15px] text-slate-800">{settings.attendanceAfternoonEnd}</p>
                       </div>
                     </div>
                   </CardContent>

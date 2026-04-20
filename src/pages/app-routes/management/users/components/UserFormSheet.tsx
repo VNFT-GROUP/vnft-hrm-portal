@@ -44,6 +44,8 @@ export default function UserFormSheet({
     englishName: "",
     employeeCodeId: "",
     groupId: "",
+    annualLeaveBalance: 12,
+    wfhBalance: 6,
   });
 
   // Reset form khi mở Sheet
@@ -57,6 +59,8 @@ export default function UserFormSheet({
           englishName: "",
           employeeCodeId: "",
           groupId: "",
+          annualLeaveBalance: 12,
+          wfhBalance: 6,
         });
       }, 0);
       return () => clearTimeout(timeout);
@@ -336,6 +340,44 @@ export default function UserFormSheet({
                     )}
                   </SelectContent>
                 </Select>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4 pb-4 border-t border-slate-100 pt-4">
+                <div className="space-y-2">
+                  <Label className="text-sm font-semibold text-foreground">
+                    Ngày phép năm (Annual Leave)
+                  </Label>
+                  <Input
+                    type="number"
+                    value={formData.annualLeaveBalance}
+                    onChange={(e) =>
+                      setFormData({ ...formData, annualLeaveBalance: Number(e.target.value) })
+                    }
+                    className="rounded-xl border-border focus-visible:ring-[#2E3192]"
+                    min={0}
+                  />
+                  <p className="text-[11.5px] text-muted-foreground leading-tight">
+                    Mặc định: 12 ngày. Đi trễ quá 2h từ lần thứ 3 trong tháng sẽ bị trừ 0.5 phép/lần.
+                  </p>
+                </div>
+
+                <div className="space-y-2">
+                  <Label className="text-sm font-semibold text-foreground">
+                    Ngày làm từ xa (WFH)
+                  </Label>
+                  <Input
+                    type="number"
+                    value={formData.wfhBalance}
+                    onChange={(e) =>
+                      setFormData({ ...formData, wfhBalance: Number(e.target.value) })
+                    }
+                    className="rounded-xl border-border focus-visible:ring-[#2E3192]"
+                    min={0}
+                  />
+                  <p className="text-[11.5px] text-muted-foreground leading-tight">
+                    Mặc định: 6 ngày/năm (cho Back Office, Sales, MKT). Dùng lố trừ vào phép năm.
+                  </p>
+                </div>
               </div>
             </div>
           </div>

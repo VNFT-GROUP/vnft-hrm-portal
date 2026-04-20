@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CircleDollarSign, Plus, Trash2, ChevronDown, ChevronRight } from "lucide-react";
+import { CircleDollarSign, Plus, Trash2, ChevronDown, ChevronRight, ArrowUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Label } from "@/components/ui/label";
@@ -49,15 +49,20 @@ export default function SalaryInformationSheet({ isOpen, onOpenChange, userId }:
     enabled: isOpen && !!userId,
   });
 
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
   const currentDataString = salaryData?.data ? JSON.stringify(salaryData.data) : '';
   const [prevDataString, setPrevDataString] = useState<string>('');
+  const [prevSortOrder, setPrevSortOrder] = useState<'asc' | 'desc'>('asc');
 
-  if (currentDataString !== prevDataString && !isFetching) {
+  if ((currentDataString !== prevDataString || sortOrder !== prevSortOrder) && !isFetching) {
     setPrevDataString(currentDataString);
+    setPrevSortOrder(sortOrder);
     if (salaryData?.data) {
-      const sortedData = [...salaryData.data].sort((a, b) => 
-        new Date(b.updatedAt || 0).getTime() - new Date(a.updatedAt || 0).getTime()
-      );
+      const sortedData = [...salaryData.data].sort((a, b) => {
+        const timeA = new Date(a.createdAt || 0).getTime();
+        const timeB = new Date(b.createdAt || 0).getTime();
+        return sortOrder === 'asc' ? timeA - timeB : timeB - timeA;
+      });
 
       setFormData(
         sortedData.map(config => ({
@@ -187,15 +192,29 @@ export default function SalaryInformationSheet({ isOpen, onOpenChange, userId }:
           ) : (
             <>
               <div className="flex items-center justify-between pb-2 border-b border-border/50">
-                <div className="space-y-0.5">
-                  <Label className="text-base font-semibold">Chế độ chỉnh sửa</Label>
-                  <p className="text-xs text-muted-foreground">Bật để thêm mới hoặc sửa đổi cấu hình lương</p>
+                <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+                  <div className="space-y-0.5">
+                    <Label className="text-base font-semibold">Chế độ chỉnh sửa</Label>
+                    <p className="text-xs text-muted-foreground">Bật để thêm mới hoặc sửa đổi cấu hình lương</p>
+                  </div>
+                  <Switch 
+                    checked={isEditingMode}
+                    onCheckedChange={setIsEditingMode}
+                    className="data-[state=unchecked]:bg-slate-300 data-[state=checked]:bg-emerald-600 shadow-inner border border-black/5 mr-4"
+                  />
                 </div>
-                <Switch 
-                  checked={isEditingMode}
-                  onCheckedChange={setIsEditingMode}
-                  className="data-[state=unchecked]:bg-slate-300 data-[state=checked]:bg-emerald-600 shadow-inner border border-black/5"
-                />
+                
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')}
+                  className="h-8 gap-2 text-xs"
+                  disabled={isEditingMode}
+                >
+                  <ArrowUpDown size={14} />
+                  Sắp xếp: {sortOrder === 'asc' ? 'Cũ nhất' : 'Mới nhất'}
+                </Button>
               </div>
 
               {formData.length === 0 && !isEditingMode ? (

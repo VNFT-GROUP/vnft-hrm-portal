@@ -15,7 +15,7 @@ export default function LoginPage() {
   const navigate = useNavigate();
 
   const currentTitle =
-    formState === 'login' ? "VNFT Logistics" :
+    formState === 'login' ? t('login.title', "VNFT HRM") :
       formState === 'forgot_email' ? t('login.forgotTitle', "QUÊN MẬT KHẨU") :
         formState === 'forgot_otp' ? t('login.otpTitle', "XÁC NHẬN OTP") :
           t('login.resetTitle', "MẬT KHẨU MỚI");

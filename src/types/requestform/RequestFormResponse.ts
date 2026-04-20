@@ -9,6 +9,8 @@ export interface RequestFormResponse {
   id: string;
   detailId: string;
   requesterId: string;
+  requesterName: string;
+  requesterEmployeeCode: string;
   type: RequestFormType;
   status: RequestFormStatus;
   description: string;

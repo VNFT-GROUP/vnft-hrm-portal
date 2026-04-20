@@ -279,7 +279,12 @@ export default function ManagementRequestsPage() {
               {paginatedData.map(req => (
                 <tr key={req.id} className="hover:bg-slate-50 transition-colors">
                   <td className="px-4 py-3 font-medium text-[#2E3192] border-x border-slate-200 whitespace-nowrap text-center">{req.id}</td>
-                  <td className="px-4 py-3 font-medium border-x border-slate-200 whitespace-nowrap text-left">{req.requesterId}</td>
+                  <td className="px-4 py-3 font-medium border-x border-slate-200 whitespace-nowrap text-left">
+                    <div className="flex flex-col">
+                      <span className="font-semibold text-slate-800">{req.requesterName || "N/A"}</span>
+                      <span className="text-xs text-slate-500">{req.requesterEmployeeCode || req.requesterId}</span>
+                    </div>
+                  </td>
                   <td className="px-4 py-3 border-x border-slate-200 whitespace-nowrap text-left">{req.type}</td>
                   <td className="px-4 py-3 border-x border-slate-200 whitespace-nowrap text-center">
                     {req.startDate ? format(new Date(req.startDate), "dd/MM/yyyy") : ""}
@@ -351,7 +356,7 @@ export default function ManagementRequestsPage() {
       <Dialog open={!!selectedRequest} onOpenChange={(open) => !open && setSelectedRequest(null)}>
         <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
-            <DialogTitle>Chi tiết đơn từ - {selectedRequest?.requesterId}</DialogTitle>
+            <DialogTitle>Chi tiết đơn từ {selectedRequest?.requesterName ? `- ${selectedRequest.requesterName}` : `(Mã NV: ${selectedRequest?.requesterEmployeeCode || selectedRequest?.requesterId})`}</DialogTitle>
           </DialogHeader>
           {selectedRequest && (
             <div className="space-y-4 pt-4">

@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { CircleDollarSign, Plus, Trash2, CalendarDays } from "lucide-react";
+import { useState } from "react";
+import { CircleDollarSign, Plus, Trash2, ChevronDown, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Label } from "@/components/ui/label";
@@ -41,6 +41,7 @@ export default function SalaryInformationSheet({ isOpen, onOpenChange, userId }:
 
   const [isEditingMode, setIsEditingMode] = useState(false);
   const [formData, setFormData] = useState<UserCompensationRequest[]>([]);
+  const [expandedConfigs, setExpandedConfigs] = useState<number[]>([]);
 
   const { data: salaryData, isFetching } = useQuery({
     queryKey: ['userCompensations', userId],
@@ -48,10 +49,18 @@ export default function SalaryInformationSheet({ isOpen, onOpenChange, userId }:
     enabled: isOpen && !!userId,
   });
 
-  useEffect(() => {
-    if (salaryData?.data && !isFetching) {
+  const currentDataString = salaryData?.data ? JSON.stringify(salaryData.data) : '';
+  const [prevDataString, setPrevDataString] = useState<string>('');
+
+  if (currentDataString !== prevDataString && !isFetching) {
+    setPrevDataString(currentDataString);
+    if (salaryData?.data) {
+      const sortedData = [...salaryData.data].sort((a, b) => 
+        new Date(b.updatedAt || 0).getTime() - new Date(a.updatedAt || 0).getTime()
+      );
+
       setFormData(
-        salaryData.data.map(config => ({
+        sortedData.map(config => ({
           effectiveFrom: config.effectiveFrom,
           note: config.note || "",
           compensationItems: config.compensationItems.map(item => ({
@@ -63,10 +72,10 @@ export default function SalaryInformationSheet({ isOpen, onOpenChange, userId }:
           }))
         }))
       );
-    } else if (!salaryData?.data && !isFetching) {
+    } else {
       setFormData([]);
     }
-  }, [salaryData, isFetching]);
+  }
 
   const handleOpenChange = (open: boolean) => {
     if (!open) {
@@ -99,6 +108,7 @@ export default function SalaryInformationSheet({ isOpen, onOpenChange, userId }:
       ...formData,
       { effectiveFrom: today, note: "", compensationItems: [] }
     ]);
+    setExpandedConfigs(prev => [...prev, formData.length]);
   };
 
   const handleRemoveComponentConfig = (idx: number) => {
@@ -125,9 +135,9 @@ export default function SalaryInformationSheet({ isOpen, onOpenChange, userId }:
     setFormData(newForm);
   };
 
-  const handleItemChange = (configIdx: number, itemIdx: number, field: string, val: any) => {
+  const handleItemChange = (configIdx: number, itemIdx: number, field: string, val: string | number) => {
     const newForm = [...formData];
-    const item: any = newForm[configIdx].compensationItems[itemIdx];
+    const item = newForm[configIdx].compensationItems[itemIdx];
     if (field === 'code') {
       const def = DEFAULT_COMPONENTS.find(c => c.value === val);
       if (def) {
@@ -135,10 +145,18 @@ export default function SalaryInformationSheet({ isOpen, onOpenChange, userId }:
         item.name = def.label;
         item.category = def.category as SalaryComponentCategory;
       }
-    } else {
-      item[field] = field === 'amount' ? Number(val) : val;
+    } else if (field === 'amount') {
+      item.amount = Number(val);
+    } else if (field === 'note') {
+      item.note = String(val);
     }
     setFormData(newForm);
+  };
+
+  const toggleConfig = (idx: number) => {
+    setExpandedConfigs(prev => 
+      prev.includes(idx) ? prev.filter(i => i !== idx) : [...prev, idx]
+    );
   };
 
   return (
@@ -187,27 +205,12 @@ export default function SalaryInformationSheet({ isOpen, onOpenChange, userId }:
               ) : null}
 
               <div className="space-y-6">
-                {formData.map((config, configIdx) => (
-                  <div key={configIdx} className="bg-card border border-border shadow-sm rounded-xl overflow-hidden">
-                    <div className="bg-muted/40 p-3 border-b border-border flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <CalendarDays size={16} className="text-muted-foreground" />
-                        <span className="font-semibold text-sm">Cấu hình {configIdx + 1}</span>
-                      </div>
-                      {isEditingMode && (
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="sm"
-                          className="h-8 text-rose-500 hover:text-rose-600 hover:bg-rose-50 px-2"
-                          onClick={() => handleRemoveComponentConfig(configIdx)}
-                        >
-                          <Trash2 size={16} />
-                        </Button>
-                      )}
-                    </div>
-                    <div className="p-4 space-y-4">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {formData.map((config, configIdx) => {
+                  const isExpanded = expandedConfigs.includes(configIdx);
+                  return (
+                  <div key={configIdx} className="bg-card border border-border shadow-sm rounded-xl overflow-hidden p-4">
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1">
                         <div className="space-y-2">
                           <Label className="text-sm font-semibold">Ngày hiệu lực</Label>
                           {isEditingMode ? (
@@ -245,9 +248,34 @@ export default function SalaryInformationSheet({ isOpen, onOpenChange, userId }:
                           )}
                         </div>
                       </div>
+                      
+                      {isEditingMode && (
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          className="h-9 w-9 mt-[26px] p-0 text-rose-500 hover:text-rose-600 hover:bg-rose-50 shrink-0"
+                          onClick={() => handleRemoveComponentConfig(configIdx)}
+                        >
+                          <Trash2 size={16} />
+                        </Button>
+                      )}
+                    </div>
 
-                      <div className="pt-2">
-                        <div className="flex items-center justify-between mb-2">
+                    <div 
+                      className="flex items-center justify-between py-3 mt-4 border-t border-border cursor-pointer text-[#2E3192] hover:text-[#1E2062] transition-colors"
+                      onClick={() => toggleConfig(configIdx)}
+                    >
+                      <span className="text-sm font-semibold">Danh sách khoản mục ({config.compensationItems.length})</span>
+                      <div className="flex items-center gap-1 text-xs font-medium">
+                        {isExpanded ? "Thu gọn" : "Xem chi tiết"}
+                        {isExpanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+                      </div>
+                    </div>
+
+                    {isExpanded && (
+                      <div className="pt-2 animate-in slide-in-from-top-2 fade-in duration-200">
+                        <div className="flex items-center justify-between mb-3">
                           <Label className="text-sm font-semibold">Danh sách khoản mục</Label>
                           {isEditingMode && (
                             <Button
@@ -294,11 +322,13 @@ export default function SalaryInformationSheet({ isOpen, onOpenChange, userId }:
                                     <td className="px-3 py-2">
                                       {isEditingMode ? (
                                         <Input
-                                          type="number"
+                                          type="text"
                                           className="h-9"
-                                          min={0}
-                                          value={item.amount}
-                                          onChange={e => handleItemChange(configIdx, itemIdx, 'amount', e.target.value)}
+                                          value={item.amount ? new Intl.NumberFormat('vi-VN').format(Number(item.amount)) : ""}
+                                          onChange={e => {
+                                            const rawValue = e.target.value.replace(/\D/g, '');
+                                            handleItemChange(configIdx, itemIdx, 'amount', rawValue ? parseInt(rawValue, 10) : 0);
+                                          }}
                                           required
                                         />
                                       ) : (
@@ -344,9 +374,10 @@ export default function SalaryInformationSheet({ isOpen, onOpenChange, userId }:
                           </div>
                         )}
                       </div>
-                    </div>
+                    )}
                   </div>
-                ))}
+                );
+              })}
                 
                 {isEditingMode && (
                   <Button

@@ -74,6 +74,18 @@ export default function ServerSettingsPage() {
     queryFn: () => settingsService.getServerSettings()
   });
 
+  const getGraceTimeRange = () => {
+    if (!settings?.attendanceMorningStart) return "08:00 - 08:15";
+    try {
+      const [h, m] = settings.attendanceMorningStart.split(':').map(Number);
+      const date = new Date();
+      date.setHours(h, m + (settings.attendanceLateGraceMinutes ?? 15), 0);
+      return `${settings.attendanceMorningStart.slice(0, 5)} - ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+    } catch {
+      return "08:15";
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="w-full h-[60vh] flex flex-col items-center justify-center gap-4 text-indigo-600">
@@ -370,7 +382,7 @@ export default function ServerSettingsPage() {
                              </span>
                           </div>
                           <ul className="list-none text-[13px] text-slate-600 space-y-1.5">
-                             <li className="flex gap-2 items-start"><span className="text-emerald-400 mt-0.5">•</span> <span>Check-in trước hoặc <strong className="font-semibold">đúng giờ</strong> bắt đầu làm việc.</span></li>
+                             <li className="flex gap-2 items-start"><span className="text-emerald-400 mt-0.5">•</span> <span>Check-in trước hoặc <strong className="font-semibold">đúng giờ</strong> bắt đầu làm việc ({settings.attendanceMorningStart?.slice(0, 5) ?? '08:00'}).</span></li>
                              <li className="flex gap-2 items-start"><span className="text-emerald-400 mt-0.5">•</span> <span>Đảm bảo <strong className="font-semibold">đủ công</strong> mỗi ngày.</span></li>
                           </ul>
                         </div>
@@ -392,8 +404,8 @@ export default function ServerSettingsPage() {
                              </span>
                           </div>
                           <ul className="list-none text-[13px] text-slate-600 space-y-1.5">
-                             <li className="flex gap-2 items-start"><span className="text-blue-400 mt-0.5">•</span> <span><strong className="font-semibold">Không có ngày trễ</strong> sau thời gian cho phép (grace).</span></li>
-                             <li className="flex gap-2 items-start"><span className="text-blue-400 mt-0.5">•</span> <span>Có check-in trong khoảng thời gian cho phép (grace {settings.attendanceLateGraceMinutes} phút).</span></li>
+                             <li className="flex gap-2 items-start"><span className="text-blue-400 mt-0.5">•</span> <span><strong className="font-semibold">Không có ngày trễ</strong> quá thời gian cho phép.</span></li>
+                             <li className="flex gap-2 items-start"><span className="text-blue-400 mt-0.5">•</span> <span>Có check-in trong khoảng thời gian cho phép (<strong className="font-semibold">{getGraceTimeRange()}</strong>).</span></li>
                              <li className="flex gap-2 items-start"><span className="text-blue-400 mt-0.5">•</span> <span>Đảm bảo <strong className="font-semibold">đủ công</strong> mỗi ngày.</span></li>
                           </ul>
                         </div>
@@ -415,7 +427,7 @@ export default function ServerSettingsPage() {
                              </span>
                           </div>
                           <ul className="list-none text-[13px] text-slate-600 space-y-1.5">
-                             <li className="flex gap-2 items-start"><span className="text-indigo-400 mt-0.5">•</span> <span>Số lần trễ sau grace <strong className="font-semibold text-rose-500">tối đa {settings.attendanceAcceptableDisciplineLateTimes ?? 3} lần</strong>.</span></li>
+                             <li className="flex gap-2 items-start"><span className="text-indigo-400 mt-0.5">•</span> <span>Số lần trễ quá thời gian cho phép <strong className="font-semibold text-rose-500">tối đa {settings.attendanceAcceptableDisciplineLateTimes ?? 3} lần</strong>.</span></li>
                              <li className="flex gap-2 items-start"><span className="text-indigo-400 mt-0.5">•</span> <span>Không có lần trễ nào <strong className="font-semibold">quá {settings.attendanceDisciplineLightLateLimitMinutes ?? 60} phút</strong>.</span></li>
                              <li className="flex gap-2 items-start"><span className="text-indigo-400 mt-0.5">•</span> <span>Đảm bảo <strong className="font-semibold">đủ công</strong> mỗi ngày.</span></li>
                           </ul>
@@ -438,7 +450,7 @@ export default function ServerSettingsPage() {
                              </span>
                           </div>
                           <ul className="list-none text-[13px] text-slate-600 space-y-1.5">
-                             <li className="flex gap-2 items-start"><span className="text-amber-400 mt-0.5">•</span> <span>Số lần trễ sau grace từ <strong className="font-semibold text-rose-500">{(settings.attendanceAcceptableDisciplineLateTimes ?? 3) + 1} đến {settings.attendanceLightViolationDisciplineLateMaxTimes ?? 7} lần</strong>.</span></li>
+                             <li className="flex gap-2 items-start"><span className="text-amber-400 mt-0.5">•</span> <span>Số lần trễ quá thời gian cho phép từ <strong className="font-semibold text-rose-500">{(settings.attendanceAcceptableDisciplineLateTimes ?? 3) + 1} đến {settings.attendanceLightViolationDisciplineLateMaxTimes ?? 7} lần</strong>.</span></li>
                              <li className="flex gap-2 items-start"><span className="text-amber-400 mt-0.5">•</span> <span>Không có lần trễ nào <strong className="font-semibold">quá {settings.attendanceDisciplineLightLateLimitMinutes ?? 60} phút</strong>.</span></li>
                           </ul>
                         </div>
@@ -460,7 +472,7 @@ export default function ServerSettingsPage() {
                              </span>
                           </div>
                           <ul className="list-none text-[13px] text-rose-900/80 space-y-1.5">
-                             <li className="flex gap-2 items-start"><span className="text-rose-400 mt-0.5">•</span> <span>Số lần trễ sau grace <strong className="font-semibold text-rose-600">trên {settings.attendanceLightViolationDisciplineLateMaxTimes ?? 7} lần</strong>.</span></li>
+                             <li className="flex gap-2 items-start"><span className="text-rose-400 mt-0.5">•</span> <span>Số lần trễ quá thời gian cho phép <strong className="font-semibold text-rose-600">trên {settings.attendanceLightViolationDisciplineLateMaxTimes ?? 7} lần</strong>.</span></li>
                              <li className="flex gap-2 items-start"><span className="text-rose-400 mt-0.5">•</span> <span>Hoặc có lần trễ <strong className="font-semibold text-rose-600">quá {settings.attendanceDisciplineLightLateLimitMinutes ?? 60} phút</strong>.</span></li>
                              <li className="flex gap-2 items-start"><span className="text-rose-400 mt-0.5">•</span> <span>Hoặc <strong className="font-semibold text-rose-600">không đủ công</strong>, vắng không phép.</span></li>
                           </ul>

@@ -169,8 +169,13 @@ export default function MyAttendancePage() {
                     Giải thích chỉ số
                   </button>
                 </div>
-                <div className="flex items-baseline gap-1 mt-1">
-                  <div className="text-3xl font-bold text-slate-800">{data.summary?.workUnits ?? 0}</div>
+                <div className="flex items-center mt-1">
+                  <div className="flex flex-col">
+                    <span className="text-[10px] font-medium text-slate-400 uppercase mb-0.5">Tổng số công</span>
+                    <div className="flex items-baseline gap-1">
+                      <div className="text-3xl font-bold text-slate-800">{data.summary?.workUnits ?? 0}</div>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -311,15 +316,13 @@ export default function MyAttendancePage() {
           ) : (
             <div className="bg-slate-200 border-x border-b border-slate-200">
               {/* Header Days */}
-              <div className="grid grid-cols-7 gap-px border-b border-slate-200">
+              <div className="grid grid-cols-5 gap-px border-b border-slate-200">
                 {[
                   t("myAttendance.days.mon"), 
                   t("myAttendance.days.tue"), 
                   t("myAttendance.days.wed"), 
                   t("myAttendance.days.thu"), 
-                  t("myAttendance.days.fri"), 
-                  t("myAttendance.days.sat"), 
-                  t("myAttendance.days.sun")
+                  t("myAttendance.days.fri")
                 ].map(d => (
                   <div key={d} className="bg-slate-50/80 py-3 text-center text-[13px] font-semibold text-slate-600 uppercase tracking-widest">
                     {d}
@@ -328,7 +331,7 @@ export default function MyAttendancePage() {
               </div>
               
               {/* Grid content */}
-              <div className="grid grid-cols-7 gap-px">
+              <div className="grid grid-cols-5 gap-px">
                 {(() => {
                   const startInterval = new Date(year, month - 2, 25);
                   const endInterval = new Date(year, month - 1, 24);

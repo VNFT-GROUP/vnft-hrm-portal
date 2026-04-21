@@ -22,27 +22,6 @@ export default function ServerSettingsPage() {
     { id: "defaults", label: "Cấu hình Hồ sơ Mặc định", icon: <UserPlus className="w-4 h-4" /> },
   ];
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveSection(entry.target.id);
-          }
-        });
-      },
-      { rootMargin: "-20% 0px -60% 0px", threshold: 0 }
-    );
-
-    sections.forEach((s) => {
-      const el = document.getElementById(s.id);
-      if (el) observer.observe(el);
-    });
-
-    return () => observer.disconnect();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   const scrollToSection = (id: string) => {
     setActiveSection(id);
     const element = document.getElementById(id);
@@ -73,6 +52,37 @@ export default function ServerSettingsPage() {
     queryKey: ["server-settings"],
     queryFn: () => settingsService.getServerSettings()
   });
+
+  useEffect(() => {
+    if (isLoading) return;
+
+    let observer: IntersectionObserver | null = null;
+
+    // Use a small timeout to allow DOM elements to fully paint after loading
+    const timer = setTimeout(() => {
+      observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              setActiveSection(entry.target.id);
+            }
+          });
+        },
+        { rootMargin: "-20% 0px -60% 0px", threshold: 0 }
+      );
+
+      sections.forEach((s) => {
+        const el = document.getElementById(s.id);
+        if (el) observer?.observe(el);
+      });
+    }, 100);
+
+    return () => {
+      clearTimeout(timer);
+      if (observer) observer.disconnect();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoading]);
 
   const getGraceTimeRange = () => {
     if (!settings?.attendanceMorningStart) return "08:00 - 08:15";

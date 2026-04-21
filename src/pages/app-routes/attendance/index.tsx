@@ -4,7 +4,7 @@ import { vi } from "date-fns/locale";
 
 import { attendanceService } from "@/services/attendance";
 import type { AttendanceDailySummaryResponse } from "@/types/attendance/AttendanceDailySummaryResponse";
-import { Loader2, Calendar as CalendarIcon, ChevronLeft, ChevronRight, X, CalendarCheck, Briefcase, Target, Clock, UserX, AlertTriangle, TrendingDown, Medal, Home, AlertOctagon } from "lucide-react";
+import { Loader2, Calendar as CalendarIcon, ChevronLeft, ChevronRight, X, CalendarCheck, Target, TrendingDown, Medal, AlertOctagon } from "lucide-react";
 import { m  } from 'framer-motion';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useTranslation } from "react-i18next";
@@ -196,7 +196,7 @@ export default function MyAttendancePage() {
                 </div>
                 <div className="p-5 grid grid-cols-2 md:grid-cols-3 gap-y-5 gap-x-4 flex-1">
                   <div className="flex flex-col gap-1">
-                    <span className="text-[11px] font-medium text-slate-500" title={t("myAttendance.summary.majorViolations", { defaultValue: "Trễ/sớm (>=2h)" })}>{t("myAttendance.summary.majorViolations", { defaultValue: "Lỗi lớn (>=2h)" })}</span>
+                    <span className="text-[11px] font-medium text-slate-500" title={t("myAttendance.summary.majorViolations", { defaultValue: "Số lần vi phạm lớn" })}>{t("myAttendance.summary.majorViolations", { defaultValue: "Số lần vi phạm lớn" })}</span>
                     <span className="text-xl font-bold text-slate-800">{data.summary?.majorLateEarlyViolationTimes ?? 0}</span>
                   </div>
                   <div className="flex flex-col gap-1">
@@ -204,12 +204,12 @@ export default function MyAttendancePage() {
                     <span className="text-xl font-bold text-slate-800">{data.summary?.wfhOverLimitDays ?? 0}</span>
                   </div>
                   <div className="flex flex-col gap-1">
-                    <span className="text-[11px] font-medium text-slate-500">{t("myAttendance.summary.deductedViolations", { defaultValue: "Lần phạt vi phạm" })}</span>
+                    <span className="text-[11px] font-medium text-slate-500">{t("myAttendance.summary.deductedViolations", { defaultValue: "Số lần bị trừ" })}</span>
                     <span className="text-xl font-bold text-slate-800">{data.summary?.leaveDeductionViolationTimes ?? 0}</span>
                   </div>
                   
                   <div className="flex flex-col gap-1 border-t border-slate-100 pt-3">
-                    <span className="text-[11px] font-medium text-slate-500">{t("myAttendance.summary.deductedDays", { defaultValue: "Bị trừ do vi phạm" })}</span>
+                    <span className="text-[11px] font-medium text-slate-500">{t("myAttendance.summary.deductedDays", { defaultValue: "Số ngày bị trừ" })}</span>
                     <div className="flex items-center gap-1">
                       <span className="text-xl font-bold text-rose-500">-{data.summary?.leaveDeductionDays ?? 0}</span>
                       {(data.summary?.leaveDeductionDays ?? 0) > 0 && <span className="text-[10px] text-slate-400 uppercase">Ngày</span>}

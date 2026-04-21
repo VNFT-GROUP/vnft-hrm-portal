@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 import { Clock, ShieldAlert, Settings, Code, FileJson, Loader2, CalendarClock, UserPlus, Medal, AlertTriangle, Globe, SlidersHorizontal } from "lucide-react";
@@ -14,13 +14,45 @@ export default function ServerSettingsPage() {
   const [activeSection, setActiveSection] = useState<string>("flex");
 
   const sections = [
-    { id: "flex", label: "Linh động đi làm", icon: <SlidersHorizontal className="w-4 h-4" /> },
-    { id: "timezone", label: "Thời gian & Múi giờ", icon: <Globe className="w-4 h-4" /> },
-    { id: "violation", label: "Trừ phép do Vi phạm", icon: <ShieldAlert className="w-4 h-4" /> },
-    { id: "discipline", label: "Chấm điểm kỷ luật", icon: <Medal className="w-4 h-4" /> },
-    { id: "summary", label: "Tổng hợp Điểm danh", icon: <CalendarClock className="w-4 h-4" /> },
-    { id: "defaults", label: "Hồ sơ Mặc định", icon: <UserPlus className="w-4 h-4" /> },
+    { id: "flex", label: "Cấu hình Linh động đi làm", icon: <SlidersHorizontal className="w-4 h-4" /> },
+    { id: "timezone", label: "Cấu hình Thời gian & Múi giờ", icon: <Globe className="w-4 h-4" /> },
+    { id: "violation", label: "Cấu hình Trừ phép do Vi phạm", icon: <ShieldAlert className="w-4 h-4" /> },
+    { id: "discipline", label: "Cấu hình Chấm điểm kỷ luật", icon: <Medal className="w-4 h-4" /> },
+    { id: "summary", label: "Cấu hình Tổng hợp Điểm danh", icon: <CalendarClock className="w-4 h-4" /> },
+    { id: "defaults", label: "Cấu hình Hồ sơ Mặc định", icon: <UserPlus className="w-4 h-4" /> },
   ];
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id);
+          }
+        });
+      },
+      { rootMargin: "-20% 0px -60% 0px", threshold: 0 }
+    );
+
+    sections.forEach((s) => {
+      const el = document.getElementById(s.id);
+      if (el) observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const scrollToSection = (id: string) => {
+    setActiveSection(id);
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+  };
 
   const parseCronToText = (cron: string) => {
     try {
@@ -114,7 +146,7 @@ export default function ServerSettingsPage() {
                    {sections.map(s => (
                      <button
                        key={s.id}
-                       onClick={() => setActiveSection(s.id)}
+                       onClick={() => scrollToSection(s.id)}
                        className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13.5px] font-semibold transition-all duration-200 text-left ${activeSection === s.id ? "bg-indigo-50/80 text-indigo-700 shadow-xs ring-1 ring-indigo-100" : "hover:bg-slate-50 text-slate-600 border border-transparent"}`}
                      >
                        {s.icon}
@@ -122,9 +154,8 @@ export default function ServerSettingsPage() {
                      </button>
                    ))}
                  </div>
-                 <div className="flex-1 w-full min-h-[400px]">
-                    {activeSection === "flex" && (
-                    <Card className="shadow-sm border-slate-200/80 overflow-hidden">
+                 <div className="flex-1 w-full flex flex-col gap-8 pb-32">
+                    <Card id="flex" className="shadow-sm border-slate-200/80 overflow-hidden scroll-mt-24">
                   <CardHeader className="pb-4 bg-white border-b border-slate-100">
                     <CardTitle className="text-[17px] flex items-center gap-2 text-slate-800">
                       <div className="p-1.5 bg-indigo-50 rounded-md">
@@ -178,10 +209,8 @@ export default function ServerSettingsPage() {
                     </div>
                   </CardContent>
                 </Card>
-                )}
 
-                {activeSection === "timezone" && (
-                <Card className="shadow-sm border-slate-200/80 overflow-hidden h-fit">
+                <Card id="timezone" className="shadow-sm border-slate-200/80 overflow-hidden h-fit scroll-mt-24">
                   <CardHeader className="pb-4 bg-white border-b border-slate-100">
                     <CardTitle className="text-[17px] flex items-center gap-2 text-slate-800">
                       <div className="p-1.5 bg-[#2E3192]/10 rounded-md">
@@ -232,10 +261,8 @@ export default function ServerSettingsPage() {
                     </div>
                   </CardContent>
                 </Card>
-                )}
 
-                {activeSection === "violation" && (
-                <Card className="shadow-sm border-slate-200/80 overflow-hidden h-fit lg:col-span-2">
+                <Card id="violation" className="shadow-sm border-slate-200/80 overflow-hidden h-fit scroll-mt-24">
                   <CardHeader className="pb-4 bg-white border-b border-slate-100">
                     <CardTitle className="text-[17px] flex items-center gap-2 text-rose-800">
                       <div className="p-1.5 bg-rose-50 rounded-md">
@@ -260,24 +287,21 @@ export default function ServerSettingsPage() {
                           <div className="font-semibold text-slate-700 mb-2 flex items-center gap-1.5">
                             <ShieldAlert className="w-4 h-4 text-slate-400" /> Ví dụ minh họa:
                           </div>
-                          <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-2 list-none ml-1">
-                            <li className="flex items-start gap-2">
-                              <span className="text-rose-400 mt-0.5">•</span> 
-                              <span><strong className="font-semibold text-slate-700">{settings.attendanceMajorLateEarlyViolationFreeTimes} lần</strong> vi phạm lớn: <strong className="font-semibold text-emerald-600">chưa trừ</strong>.</span>
-                            </li>
-                            <li className="flex items-start gap-2">
-                              <span className="text-rose-400 mt-0.5">•</span> 
-                              <span><strong className="font-semibold text-slate-700">{settings.attendanceMajorLateEarlyViolationFreeTimes + 1} lần</strong> vi phạm lớn: <strong className="font-semibold text-rose-600">trừ {settings.attendanceLeaveDeductionPerMajorLateEarlyViolation} ngày</strong>.</span>
-                            </li>
-                            <li className="flex items-start gap-2">
-                              <span className="text-rose-400 mt-0.5">•</span> 
-                              <span><strong className="font-semibold text-slate-700">{settings.attendanceMajorLateEarlyViolationFreeTimes + 2} lần</strong> vi phạm lớn: <strong className="font-semibold text-rose-600">vẫn trừ {settings.attendanceLeaveDeductionPerMajorLateEarlyViolation} ngày</strong>, lần thứ {settings.attendanceMajorLateEarlyViolationFreeTimes + 2} bắt đầu chu kỳ mới.</span>
-                            </li>
-                            <li className="flex items-start gap-2">
-                              <span className="text-rose-400 mt-0.5">•</span> 
-                              <span><strong className="font-semibold text-slate-700">{(settings.attendanceMajorLateEarlyViolationFreeTimes + 1) * 2} lần</strong> vi phạm lớn: <strong className="font-semibold text-rose-600">trừ tổng {(settings.attendanceLeaveDeductionPerMajorLateEarlyViolation * 2).toFixed(1)} ngày</strong>.</span>
-                            </li>
-                          </ul>
+                          
+                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+                            {[
+                              { majorTimes: settings.attendanceMajorLateEarlyViolationFreeTimes, deductionTimes: 0, deductionDays: 0 },
+                              { majorTimes: settings.attendanceMajorLateEarlyViolationFreeTimes + 1, deductionTimes: 1, deductionDays: settings.attendanceLeaveDeductionPerMajorLateEarlyViolation },
+                              { majorTimes: settings.attendanceMajorLateEarlyViolationFreeTimes + 2, deductionTimes: 1, deductionDays: settings.attendanceLeaveDeductionPerMajorLateEarlyViolation },
+                              { majorTimes: (settings.attendanceMajorLateEarlyViolationFreeTimes + 1) * 2, deductionTimes: 2, deductionDays: settings.attendanceLeaveDeductionPerMajorLateEarlyViolation * 2 }
+                            ].map((ex, idx) => (
+                              <div key={idx} className="bg-slate-50 border border-slate-100/80 rounded-lg p-3 flex flex-col text-[13px] text-slate-600 gap-1.5 shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]">
+                                <div className="flex justify-between items-center px-1"><span>Số lần VP lớn:</span><strong className="text-slate-800">{ex.majorTimes}</strong></div>
+                                <div className="flex justify-between items-center px-1"><span>Số lần bị trừ:</span><strong className={ex.deductionTimes > 0 ? "text-rose-600" : "text-emerald-600"}>{ex.deductionTimes}</strong></div>
+                                <div className="flex justify-between items-center px-1 border-t border-slate-200/60 pt-1 mt-0.5"><span>Số ngày trừ:</span><strong className={ex.deductionDays > 0 ? "text-rose-600 font-bold" : "text-emerald-600"}>{ex.deductionDays.toFixed(1)}</strong></div>
+                              </div>
+                            ))}
+                          </div>
                         </div>
                       </div>
 
@@ -315,16 +339,14 @@ export default function ServerSettingsPage() {
                     </div>
                   </CardContent>
                 </Card>
-                )}
 
-                {activeSection === "discipline" && (
-                <Card className="shadow-sm border-slate-200/80 overflow-hidden h-fit lg:col-span-2">
+                <Card id="discipline" className="shadow-sm border-slate-200/80 overflow-hidden h-fit scroll-mt-24">
                   <CardHeader className="pb-4 bg-white border-b border-slate-100">
                     <CardTitle className="text-[17px] flex items-center gap-2 text-emerald-800">
                       <div className="p-1.5 bg-emerald-50 rounded-md">
                         <Medal className="w-4 h-4 text-emerald-600" />
                       </div>
-                      Quy định chấm điểm kỷ luật giờ giấc
+                      Cấu hình Chấm điểm kỷ luật giờ giấc
                     </CardTitle>
                     <CardDescription className="text-slate-500">
                       Tiêu chí đánh giá xếp loại chuyên cần và hạn mức phụ cấp tương ứng được áp dụng hàng tháng.
@@ -448,10 +470,8 @@ export default function ServerSettingsPage() {
                     </div>
                   </CardContent>
                 </Card>
-                )}
 
-                {activeSection === "summary" && (
-                <Card className="shadow-sm border-slate-200/80 overflow-hidden h-fit lg:col-span-2">
+                <Card id="summary" className="shadow-sm border-slate-200/80 overflow-hidden h-fit scroll-mt-24">
                   <CardHeader className="pb-4 bg-white border-b border-slate-100">
                     <CardTitle className="text-[17px] flex items-center gap-2 text-slate-800">
                       <div className="p-1.5 bg-[#2E3192]/10 rounded-md">
@@ -494,10 +514,8 @@ export default function ServerSettingsPage() {
                     </div>
                   </CardContent>
                 </Card>
-                )}
 
-                {activeSection === "defaults" && (
-                <Card className="shadow-sm border-slate-200/80 overflow-hidden h-fit lg:col-span-2">
+                <Card id="defaults" className="shadow-sm border-slate-200/80 overflow-hidden h-fit scroll-mt-24">
                   <CardHeader className="pb-4 bg-white border-b border-slate-100">
                     <CardTitle className="text-[17px] flex items-center gap-2 text-slate-800">
                       <div className="p-1.5 bg-indigo-50 rounded-md">
@@ -538,7 +556,6 @@ export default function ServerSettingsPage() {
                     </div>
                   </CardContent>
                 </Card>
-                )}
                  </div>
               </div>
            </TabsContent>

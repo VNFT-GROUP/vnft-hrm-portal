@@ -23,4 +23,7 @@ export interface ServerSettingsResponse {
   attendanceExcellentDisciplineAllowance: number;
   attendanceGoodDisciplineAllowance: number;
   attendanceAcceptableDisciplineAllowance: number;
+  attendanceDisciplineLightLateLimitMinutes: number;
+  attendanceAcceptableDisciplineLateTimes: number;
+  attendanceLightViolationDisciplineLateMaxTimes: number;
 }

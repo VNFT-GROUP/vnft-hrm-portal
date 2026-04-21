@@ -42,7 +42,7 @@ export default {
     workUnits: "Công ghi nhận",
     lateDays: "Số ngày đi muộn",
     absentDays: "Số ngày vắng",
-    majorViolations: "Phạm lỗi trễ/về sớm (>2h)",
+    majorViolations: "Phạm lỗi trễ/về sớm (>=2h)",
     deductedViolations: "Lần phạt trừ phép",
     deductedDays: "Phép trừ do vi phạm",
     approvedWfh: "Ngày WFH đã duyệt",

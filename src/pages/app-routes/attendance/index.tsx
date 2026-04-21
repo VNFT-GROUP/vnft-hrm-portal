@@ -196,7 +196,7 @@ export default function MyAttendancePage() {
                 </div>
                 <div className="p-5 grid grid-cols-2 md:grid-cols-3 gap-y-5 gap-x-4 flex-1">
                   <div className="flex flex-col gap-1">
-                    <span className="text-[11px] font-medium text-slate-500" title={t("myAttendance.summary.majorViolations", { defaultValue: "Trễ/sớm (>2h)" })}>{t("myAttendance.summary.majorViolations", { defaultValue: "Lỗi lớn (>2h)" })}</span>
+                    <span className="text-[11px] font-medium text-slate-500" title={t("myAttendance.summary.majorViolations", { defaultValue: "Trễ/sớm (>=2h)" })}>{t("myAttendance.summary.majorViolations", { defaultValue: "Lỗi lớn (>=2h)" })}</span>
                     <span className="text-xl font-bold text-slate-800">{data.summary?.majorLateEarlyViolationTimes ?? 0}</span>
                   </div>
                   <div className="flex flex-col gap-1">

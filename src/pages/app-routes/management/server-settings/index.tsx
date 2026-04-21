@@ -1,6 +1,7 @@
+import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
-import { Clock, ShieldAlert, Settings, Code, FileJson, Loader2, CalendarClock, UserPlus, Medal } from "lucide-react";
+import { Clock, ShieldAlert, Settings, Code, FileJson, Loader2, CalendarClock, UserPlus, Medal, AlertTriangle, Globe, SlidersHorizontal } from "lucide-react";
 import DOMPurify from "dompurify";
 import { m  } from 'framer-motion';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -10,6 +11,16 @@ import { useTranslation } from "react-i18next";
 
 export default function ServerSettingsPage() {
   const { t } = useTranslation();
+  const [activeSection, setActiveSection] = useState<string>("flex");
+
+  const sections = [
+    { id: "flex", label: "Linh động đi làm", icon: <SlidersHorizontal className="w-4 h-4" /> },
+    { id: "timezone", label: "Thời gian & Múi giờ", icon: <Globe className="w-4 h-4" /> },
+    { id: "violation", label: "Trừ phép do Vi phạm", icon: <ShieldAlert className="w-4 h-4" /> },
+    { id: "discipline", label: "Chấm điểm kỷ luật", icon: <Medal className="w-4 h-4" /> },
+    { id: "summary", label: "Tổng hợp Điểm danh", icon: <CalendarClock className="w-4 h-4" /> },
+    { id: "defaults", label: "Hồ sơ Mặc định", icon: <UserPlus className="w-4 h-4" /> },
+  ];
 
   const parseCronToText = (cron: string) => {
     try {
@@ -97,8 +108,23 @@ export default function ServerSettingsPage() {
            </TabsList>
   
            <TabsContent value="visual" className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-500">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <Card className="shadow-sm border-slate-200/80 overflow-hidden">
+              <div className="flex flex-col md:flex-row gap-6 items-start">
+                 {/* Sidebar Navigation */}
+                 <div className="w-full md:w-64 flex flex-col gap-1.5 shrink-0 box-border border border-slate-200 bg-white p-2 text-slate-700 shadow-sm rounded-xl sticky top-4">
+                   {sections.map(s => (
+                     <button
+                       key={s.id}
+                       onClick={() => setActiveSection(s.id)}
+                       className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13.5px] font-semibold transition-all duration-200 text-left ${activeSection === s.id ? "bg-indigo-50/80 text-indigo-700 shadow-xs ring-1 ring-indigo-100" : "hover:bg-slate-50 text-slate-600 border border-transparent"}`}
+                     >
+                       {s.icon}
+                       {s.label}
+                     </button>
+                   ))}
+                 </div>
+                 <div className="flex-1 w-full min-h-[400px]">
+                    {activeSection === "flex" && (
+                    <Card className="shadow-sm border-slate-200/80 overflow-hidden">
                   <CardHeader className="pb-4 bg-white border-b border-slate-100">
                     <CardTitle className="text-[17px] flex items-center gap-2 text-slate-800">
                       <div className="p-1.5 bg-indigo-50 rounded-md">
@@ -152,7 +178,9 @@ export default function ServerSettingsPage() {
                     </div>
                   </CardContent>
                 </Card>
+                )}
 
+                {activeSection === "timezone" && (
                 <Card className="shadow-sm border-slate-200/80 overflow-hidden h-fit">
                   <CardHeader className="pb-4 bg-white border-b border-slate-100">
                     <CardTitle className="text-[17px] flex items-center gap-2 text-slate-800">
@@ -204,7 +232,9 @@ export default function ServerSettingsPage() {
                     </div>
                   </CardContent>
                 </Card>
+                )}
 
+                {activeSection === "violation" && (
                 <Card className="shadow-sm border-slate-200/80 overflow-hidden h-fit lg:col-span-2">
                   <CardHeader className="pb-4 bg-white border-b border-slate-100">
                     <CardTitle className="text-[17px] flex items-center gap-2 text-rose-800">
@@ -218,96 +248,209 @@ export default function ServerSettingsPage() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-4 p-4 md:p-5 bg-slate-50/50">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                      <div className="flex flex-col gap-2 bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
-                        <span className="text-[13px] font-semibold text-slate-700">{t("serverSettings.majorViolationMinutes", { defaultValue: "Ngưỡng tính vi phạm nặng" })}</span>
-                        <div className="flex items-center gap-2">
-                          <span className="font-bold text-rose-600 bg-rose-50 border border-rose-100 px-3 py-1.5 rounded-lg text-lg tracking-tight">
-                            &gt; {settings.attendanceMajorLateEarlyViolationMinutes}
-                          </span>
-                          <span className="text-xs text-slate-500 font-medium">{t("serverSettings.unitMinutes", { defaultValue: "phút" })}</span>
+                    <div className="flex flex-col gap-4">
+                      {/* Detailed Text Block */}
+                      <div className="bg-rose-50/50 border border-rose-100/60 rounded-xl p-4 flex flex-col gap-3">
+                        <p className="text-[14px] text-slate-700 leading-relaxed">
+                          <strong className="text-rose-700 font-semibold">Trễ hoặc về sớm từ {settings.attendanceMajorLateEarlyViolationMinutes} phút trở lên</strong> được tính là 1 lần vi phạm lớn. 
+                          <strong className="font-semibold"> Cứ mỗi {settings.attendanceMajorLateEarlyViolationFreeTimes + 1} lần vi phạm lớn</strong> sẽ bị <strong className="text-rose-600 font-semibold">trừ {settings.attendanceLeaveDeductionPerMajorLateEarlyViolation} ngày phép/công</strong>. 
+                          Sau khi bị trừ, bộ đếm bắt đầu lại từ đầu.
+                        </p>
+                        <div className="bg-white/80 rounded-lg p-3 text-[13px] text-slate-600 border border-rose-100/50 shadow-sm">
+                          <div className="font-semibold text-slate-700 mb-2 flex items-center gap-1.5">
+                            <ShieldAlert className="w-4 h-4 text-slate-400" /> Ví dụ minh họa:
+                          </div>
+                          <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-2 list-none ml-1">
+                            <li className="flex items-start gap-2">
+                              <span className="text-rose-400 mt-0.5">•</span> 
+                              <span><strong className="font-semibold text-slate-700">{settings.attendanceMajorLateEarlyViolationFreeTimes} lần</strong> vi phạm lớn: <strong className="font-semibold text-emerald-600">chưa trừ</strong>.</span>
+                            </li>
+                            <li className="flex items-start gap-2">
+                              <span className="text-rose-400 mt-0.5">•</span> 
+                              <span><strong className="font-semibold text-slate-700">{settings.attendanceMajorLateEarlyViolationFreeTimes + 1} lần</strong> vi phạm lớn: <strong className="font-semibold text-rose-600">trừ {settings.attendanceLeaveDeductionPerMajorLateEarlyViolation} ngày</strong>.</span>
+                            </li>
+                            <li className="flex items-start gap-2">
+                              <span className="text-rose-400 mt-0.5">•</span> 
+                              <span><strong className="font-semibold text-slate-700">{settings.attendanceMajorLateEarlyViolationFreeTimes + 2} lần</strong> vi phạm lớn: <strong className="font-semibold text-rose-600">vẫn trừ {settings.attendanceLeaveDeductionPerMajorLateEarlyViolation} ngày</strong>, lần thứ {settings.attendanceMajorLateEarlyViolationFreeTimes + 2} bắt đầu chu kỳ mới.</span>
+                            </li>
+                            <li className="flex items-start gap-2">
+                              <span className="text-rose-400 mt-0.5">•</span> 
+                              <span><strong className="font-semibold text-slate-700">{(settings.attendanceMajorLateEarlyViolationFreeTimes + 1) * 2} lần</strong> vi phạm lớn: <strong className="font-semibold text-rose-600">trừ tổng {(settings.attendanceLeaveDeductionPerMajorLateEarlyViolation * 2).toFixed(1)} ngày</strong>.</span>
+                            </li>
+                          </ul>
                         </div>
                       </div>
 
-                      <div className="flex flex-col gap-2 bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
-                        <span className="text-[13px] font-semibold text-slate-700">{t("serverSettings.violationFreeTimes", { defaultValue: "Số lần miễn trừ thứ tự/tháng" })}</span>
-                        <div className="flex items-center gap-2">
-                          <span className="font-bold text-[#2E3192] bg-[#2E3192]/10 border border-[#2E3192]/20 px-3 py-1.5 rounded-lg text-lg tracking-tight">
-                            {settings.attendanceMajorLateEarlyViolationFreeTimes}
-                          </span>
-                          <span className="text-xs text-slate-500 font-medium">{t("serverSettings.unitTimes", { defaultValue: "lần đầu tiên" })}</span>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="flex flex-col gap-2 bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
+                          <span className="text-[13px] font-semibold text-slate-700">{t("serverSettings.majorViolationMinutes", { defaultValue: "Ngưỡng vi phạm lớn" })}</span>
+                          <div className="flex items-center gap-2">
+                            <span className="font-bold text-rose-600 bg-rose-50 border border-rose-100 px-3 py-1.5 rounded-lg text-lg tracking-tight">
+                              &ge; {settings.attendanceMajorLateEarlyViolationMinutes}
+                            </span>
+                            <span className="text-xs text-slate-500 font-medium">{t("serverSettings.unitMinutes", { defaultValue: "phút" })}</span>
+                          </div>
                         </div>
-                      </div>
 
-                      <div className="flex flex-col gap-2 bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
-                        <span className="text-[13px] font-semibold text-slate-700">{t("serverSettings.leaveDeduction", { defaultValue: "Phạt áp dụng những lần sau đó" })}</span>
-                        <div className="flex items-center gap-2">
-                          <span className="font-bold text-amber-600 bg-amber-50 border border-amber-200/60 px-3 py-1.5 rounded-lg text-lg tracking-tight">
-                            - {settings.attendanceLeaveDeductionPerMajorLateEarlyViolation}
-                          </span>
-                          <span className="text-xs text-slate-500 font-medium">{t("serverSettings.unitDays", { defaultValue: "ngày phép / lần vi phạm" })}</span>
+                        <div className="flex flex-col gap-2 bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
+                          <span className="text-[13px] font-semibold text-slate-700">{t("serverSettings.violationCycle", { defaultValue: "Quy tắc trừ phép" })}</span>
+                          <div className="flex items-center gap-2">
+                            <span className="font-bold text-[#2E3192] bg-[#2E3192]/10 border border-[#2E3192]/20 px-3 py-1.5 rounded-lg text-lg tracking-tight">
+                              - {settings.attendanceLeaveDeductionPerMajorLateEarlyViolation}
+                            </span>
+                            <span className="text-xs text-slate-500 font-medium whitespace-nowrap">ngày / mỗi {settings.attendanceMajorLateEarlyViolationFreeTimes + 1} lần</span>
+                          </div>
                         </div>
-                      </div>
 
-                      <div className="flex flex-col gap-2 bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
-                        <span className="text-[13px] font-semibold text-slate-700">{t("serverSettings.wfhLeaveDeduction", { defaultValue: "Trừ phép khi WFH vượt mức" })}</span>
-                        <div className="flex items-center gap-2">
-                          <span className="font-bold text-amber-600 bg-amber-50 border border-amber-200/60 px-3 py-1.5 rounded-lg text-lg tracking-tight">
-                            - {settings.attendanceLeaveDeductionPerExcessWfhDay ?? 0}
-                          </span>
-                          <span className="text-xs text-slate-500 font-medium">{t("serverSettings.unitDaysPerDay", { defaultValue: "ngày phép / ngày WFH" })}</span>
+                        <div className="flex flex-col gap-2 bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
+                          <span className="text-[13px] font-semibold text-slate-700">{t("serverSettings.wfhLeaveDeduction", { defaultValue: "Trừ phép khi WFH vượt mức" })}</span>
+                          <div className="flex items-center gap-2">
+                            <span className="font-bold text-amber-600 bg-amber-50 border border-amber-200/60 px-3 py-1.5 rounded-lg text-lg tracking-tight">
+                              - {settings.attendanceLeaveDeductionPerExcessWfhDay ?? 0}
+                            </span>
+                            <span className="text-xs text-slate-500 font-medium">{t("serverSettings.unitDaysPerDay", { defaultValue: "ngày / ngày WFH" })}</span>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </CardContent>
                 </Card>
+                )}
 
+                {activeSection === "discipline" && (
                 <Card className="shadow-sm border-slate-200/80 overflow-hidden h-fit lg:col-span-2">
                   <CardHeader className="pb-4 bg-white border-b border-slate-100">
                     <CardTitle className="text-[17px] flex items-center gap-2 text-emerald-800">
                       <div className="p-1.5 bg-emerald-50 rounded-md">
                         <Medal className="w-4 h-4 text-emerald-600" />
                       </div>
-                      {t("serverSettings.disciplineAllowanceTitle", { defaultValue: "Phụ cấp Kỷ luật Giờ giấc" })}
+                      Quy định chấm điểm kỷ luật giờ giấc
                     </CardTitle>
                     <CardDescription className="text-slate-500">
-                      {t("serverSettings.disciplineAllowanceDesc", { defaultValue: "Hạn mức phụ cấp được cộng vào lương dựa trên điểm kỷ luật chuyên cần." })}
+                      Tiêu chí đánh giá xếp loại chuyên cần và hạn mức phụ cấp tương ứng được áp dụng hàng tháng.
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-4 p-4 md:p-5 bg-slate-50/50">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      <div className="flex flex-col gap-2 bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
-                        <span className="text-[13px] font-semibold text-slate-700">{t("serverSettings.excellentAllowance", { defaultValue: "Điểm tuyệt đối (5đ)" })}</span>
-                        <div className="flex items-center gap-2">
-                          <span className="font-bold text-emerald-600 bg-emerald-50 border border-emerald-100 px-3 py-1.5 rounded-lg text-lg tracking-tight">
-                            + {(settings.attendanceExcellentDisciplineAllowance ?? 0).toLocaleString('en-US')}
-                          </span>
-                          <span className="text-xs text-slate-500 font-medium">VNĐ</span>
+                    <div className="flex flex-col gap-4">
+                      {/* 5 Points */}
+                      <div className="flex items-start gap-4 bg-white p-4 rounded-xl border border-emerald-200 shadow-xs relative overflow-hidden">
+                        <div className="absolute -top-4 -right-4 p-3 opacity-[0.03]">
+                          <Medal className="w-24 h-24 text-emerald-600" />
+                        </div>
+                        <div className="bg-emerald-50 p-2 rounded-xl shrink-0 border border-emerald-100/50">
+                          <div className="font-black text-emerald-600 text-xl w-8 text-center">5đ</div>
+                        </div>
+                        <div className="flex flex-col gap-2.5 w-full z-10">
+                          <div className="flex flex-wrap md:flex-nowrap justify-between items-start md:items-center gap-2 border-b border-slate-50 pb-2">
+                             <span className="font-bold text-emerald-800 text-[15px]">Xuất sắc</span>
+                             <span className="font-bold text-emerald-600 bg-emerald-50 border border-emerald-100 px-3 py-1 rounded-lg text-sm shrink-0 shadow-sm">
+                               + {(settings.attendanceExcellentDisciplineAllowance ?? 0).toLocaleString('en-US')} VNĐ
+                             </span>
+                          </div>
+                          <ul className="list-none text-[13px] text-slate-600 space-y-1.5">
+                             <li className="flex gap-2 items-start"><span className="text-emerald-400 mt-0.5">•</span> <span>Check-in trước hoặc <strong className="font-semibold">đúng giờ</strong> bắt đầu làm việc.</span></li>
+                             <li className="flex gap-2 items-start"><span className="text-emerald-400 mt-0.5">•</span> <span>Đảm bảo <strong className="font-semibold">đủ công</strong> mỗi ngày.</span></li>
+                          </ul>
                         </div>
                       </div>
 
-                      <div className="flex flex-col gap-2 bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
-                        <span className="text-[13px] font-semibold text-slate-700">{t("serverSettings.goodAllowance", { defaultValue: "Điểm tốt (4đ)" })}</span>
-                        <div className="flex items-center gap-2">
-                          <span className="font-bold text-blue-600 bg-blue-50 border border-blue-100 px-3 py-1.5 rounded-lg text-lg tracking-tight">
-                            + {(settings.attendanceGoodDisciplineAllowance ?? 0).toLocaleString('en-US')}
-                          </span>
-                          <span className="text-xs text-slate-500 font-medium">VNĐ</span>
+                      {/* 4 Points */}
+                      <div className="flex items-start gap-4 bg-white p-4 rounded-xl border border-blue-200 shadow-xs relative overflow-hidden">
+                        <div className="absolute -top-4 -right-4 p-3 opacity-[0.03]">
+                          <Medal className="w-24 h-24 text-blue-600" />
+                        </div>
+                        <div className="bg-blue-50 p-2 rounded-xl shrink-0 border border-blue-100/50">
+                          <div className="font-black text-blue-600 text-xl w-8 text-center">4đ</div>
+                        </div>
+                        <div className="flex flex-col gap-2.5 w-full z-10">
+                          <div className="flex flex-wrap md:flex-nowrap justify-between items-start md:items-center gap-2 border-b border-slate-50 pb-2">
+                             <span className="font-bold text-blue-800 text-[15px]">Tốt</span>
+                             <span className="font-bold text-blue-600 bg-blue-50 border border-blue-100 px-3 py-1 rounded-lg text-sm shrink-0 shadow-sm">
+                               + {(settings.attendanceGoodDisciplineAllowance ?? 0).toLocaleString('en-US')} VNĐ
+                             </span>
+                          </div>
+                          <ul className="list-none text-[13px] text-slate-600 space-y-1.5">
+                             <li className="flex gap-2 items-start"><span className="text-blue-400 mt-0.5">•</span> <span><strong className="font-semibold">Không có ngày trễ</strong> sau thời gian cho phép (grace).</span></li>
+                             <li className="flex gap-2 items-start"><span className="text-blue-400 mt-0.5">•</span> <span>Có check-in trong khoảng thời gian cho phép (grace {settings.attendanceLateGraceMinutes} phút).</span></li>
+                             <li className="flex gap-2 items-start"><span className="text-blue-400 mt-0.5">•</span> <span>Đảm bảo <strong className="font-semibold">đủ công</strong> mỗi ngày.</span></li>
+                          </ul>
                         </div>
                       </div>
 
-                      <div className="flex flex-col gap-2 bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
-                        <span className="text-[13px] font-semibold text-slate-700">{t("serverSettings.acceptableAllowance", { defaultValue: "Điểm khá (3đ)" })}</span>
-                        <div className="flex items-center gap-2">
-                          <span className="font-bold text-indigo-600 bg-indigo-50 border border-indigo-100 px-3 py-1.5 rounded-lg text-lg tracking-tight">
-                            + {(settings.attendanceAcceptableDisciplineAllowance ?? 0).toLocaleString('en-US')}
-                          </span>
-                          <span className="text-xs text-slate-500 font-medium">VNĐ</span>
+                      {/* 3 Points */}
+                      <div className="flex items-start gap-4 bg-white p-4 rounded-xl border border-indigo-200 shadow-xs relative overflow-hidden">
+                        <div className="absolute -top-4 -right-4 p-3 opacity-[0.03]">
+                          <Medal className="w-24 h-24 text-indigo-600" />
+                        </div>
+                        <div className="bg-indigo-50 p-2 rounded-xl shrink-0 border border-indigo-100/50">
+                          <div className="font-black text-indigo-600 text-xl w-8 text-center">3đ</div>
+                        </div>
+                        <div className="flex flex-col gap-2.5 w-full z-10">
+                          <div className="flex flex-wrap md:flex-nowrap justify-between items-start md:items-center gap-2 border-b border-slate-50 pb-2">
+                             <span className="font-bold text-indigo-800 text-[15px]">Đạt yêu cầu</span>
+                             <span className="font-bold text-indigo-600 bg-indigo-50 border border-indigo-100 px-3 py-1 rounded-lg text-sm shrink-0 shadow-sm">
+                               + {(settings.attendanceAcceptableDisciplineAllowance ?? 0).toLocaleString('en-US')} VNĐ
+                             </span>
+                          </div>
+                          <ul className="list-none text-[13px] text-slate-600 space-y-1.5">
+                             <li className="flex gap-2 items-start"><span className="text-indigo-400 mt-0.5">•</span> <span>Số lần trễ sau grace <strong className="font-semibold text-rose-500">tối đa {settings.attendanceAcceptableDisciplineLateTimes ?? 3} lần</strong>.</span></li>
+                             <li className="flex gap-2 items-start"><span className="text-indigo-400 mt-0.5">•</span> <span>Không có lần trễ nào <strong className="font-semibold">quá {settings.attendanceDisciplineLightLateLimitMinutes ?? 60} phút</strong>.</span></li>
+                             <li className="flex gap-2 items-start"><span className="text-indigo-400 mt-0.5">•</span> <span>Đảm bảo <strong className="font-semibold">đủ công</strong> mỗi ngày.</span></li>
+                          </ul>
                         </div>
                       </div>
+
+                      {/* 2 Points */}
+                      <div className="flex items-start gap-4 bg-white p-4 rounded-xl border border-amber-200 shadow-xs relative overflow-hidden">
+                        <div className="absolute -top-4 -right-4 p-3 opacity-[0.03]">
+                          <AlertTriangle className="w-24 h-24 text-amber-600" />
+                        </div>
+                        <div className="bg-amber-50 p-2 rounded-xl shrink-0 border border-amber-100/50">
+                          <div className="font-black text-amber-600 text-xl w-8 text-center">2đ</div>
+                        </div>
+                        <div className="flex flex-col gap-2.5 w-full z-10">
+                          <div className="flex flex-wrap md:flex-nowrap justify-between items-start md:items-center gap-2 border-b border-slate-50 pb-2">
+                             <span className="font-bold text-amber-800 text-[15px]">Vi phạm nhẹ</span>
+                             <span className="font-medium text-slate-400 bg-slate-50 border border-slate-200 px-3 py-1 rounded-lg text-sm shrink-0">
+                               Không có phụ cấp
+                             </span>
+                          </div>
+                          <ul className="list-none text-[13px] text-slate-600 space-y-1.5">
+                             <li className="flex gap-2 items-start"><span className="text-amber-400 mt-0.5">•</span> <span>Số lần trễ sau grace từ <strong className="font-semibold text-rose-500">{(settings.attendanceAcceptableDisciplineLateTimes ?? 3) + 1} đến {settings.attendanceLightViolationDisciplineLateMaxTimes ?? 7} lần</strong>.</span></li>
+                             <li className="flex gap-2 items-start"><span className="text-amber-400 mt-0.5">•</span> <span>Không có lần trễ nào <strong className="font-semibold">quá {settings.attendanceDisciplineLightLateLimitMinutes ?? 60} phút</strong>.</span></li>
+                          </ul>
+                        </div>
+                      </div>
+
+                      {/* 1 Point */}
+                      <div className="flex items-start gap-4 bg-rose-50/50 p-4 rounded-xl border border-rose-200 shadow-xs relative overflow-hidden">
+                        <div className="absolute -top-4 -right-4 p-3 opacity-[0.03]">
+                          <AlertTriangle className="w-24 h-24 text-rose-600" />
+                        </div>
+                        <div className="bg-rose-100/50 p-2 rounded-xl shrink-0 border border-rose-200/50">
+                          <div className="font-black text-rose-600 text-xl w-8 text-center">1đ</div>
+                        </div>
+                        <div className="flex flex-col gap-2.5 w-full z-10">
+                          <div className="flex flex-wrap md:flex-nowrap justify-between items-start md:items-center gap-2 border-b border-rose-100/50 pb-2">
+                             <span className="font-bold text-rose-800 text-[15px]">Vi phạm nặng</span>
+                             <span className="font-medium text-slate-400 bg-slate-50 border border-slate-200 px-3 py-1 rounded-lg text-sm shrink-0">
+                               Không có phụ cấp
+                             </span>
+                          </div>
+                          <ul className="list-none text-[13px] text-rose-900/80 space-y-1.5">
+                             <li className="flex gap-2 items-start"><span className="text-rose-400 mt-0.5">•</span> <span>Số lần trễ sau grace <strong className="font-semibold text-rose-600">trên {settings.attendanceLightViolationDisciplineLateMaxTimes ?? 7} lần</strong>.</span></li>
+                             <li className="flex gap-2 items-start"><span className="text-rose-400 mt-0.5">•</span> <span>Hoặc có lần trễ <strong className="font-semibold text-rose-600">quá {settings.attendanceDisciplineLightLateLimitMinutes ?? 60} phút</strong>.</span></li>
+                             <li className="flex gap-2 items-start"><span className="text-rose-400 mt-0.5">•</span> <span>Hoặc <strong className="font-semibold text-rose-600">không đủ công</strong>, vắng không phép.</span></li>
+                          </ul>
+                        </div>
+                      </div>
+
                     </div>
                   </CardContent>
                 </Card>
+                )}
+
+                {activeSection === "summary" && (
                 <Card className="shadow-sm border-slate-200/80 overflow-hidden h-fit lg:col-span-2">
                   <CardHeader className="pb-4 bg-white border-b border-slate-100">
                     <CardTitle className="text-[17px] flex items-center gap-2 text-slate-800">
@@ -351,7 +494,9 @@ export default function ServerSettingsPage() {
                     </div>
                   </CardContent>
                 </Card>
+                )}
 
+                {activeSection === "defaults" && (
                 <Card className="shadow-sm border-slate-200/80 overflow-hidden h-fit lg:col-span-2">
                   <CardHeader className="pb-4 bg-white border-b border-slate-100">
                     <CardTitle className="text-[17px] flex items-center gap-2 text-slate-800">
@@ -393,6 +538,8 @@ export default function ServerSettingsPage() {
                     </div>
                   </CardContent>
                 </Card>
+                )}
+                 </div>
               </div>
            </TabsContent>
 

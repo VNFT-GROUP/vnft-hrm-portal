@@ -814,9 +814,7 @@ export default function MyAttendancePage() {
           </DialogHeader>
           <div className="overflow-y-auto custom-scrollbar flex flex-col pr-2 pb-2">
             <div className="bg-white rounded-xl flex flex-col gap-6">
-                <div className="flex flex-col gap-1.5 hidden">
-                   {/* Dành cho margin top */}
-                </div>
+
                 <div className="flex flex-col gap-2">
                   <span className="font-bold text-slate-800 text-[14px] flex items-center gap-1.5">Công ghi nhận</span>
                   <ul className="list-none text-[13px] text-slate-600 pl-2 space-y-1.5">

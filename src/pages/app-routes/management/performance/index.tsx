@@ -1,15 +1,15 @@
 import { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { performanceService } from "@/services/performance";
-import type { PerformanceReviewResponse } from "@/types/performance/PerformanceReviewResponse";
+import type { PerformanceEmployeeResponse } from "@/types/performance/PerformanceEmployeeResponse";
 import { m } from "framer-motion";
-import { Star, Plus, Loader2, Calendar } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Star, Plus, Loader2, Search } from "lucide-react";
+import { Input } from "@/components/ui/input";
 import CustomPagination from "@/components/custom/CustomPagination";
-import { format } from "date-fns";
 import PerformanceReviewFormModal from "./components/PerformanceReviewFormModal";
 import PerformanceReviewDetailModal from "./components/PerformanceReviewDetailModal";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { cn } from "@/lib/utils";
 
 const SCORE_COLORS: Record<number, string> = {
   1: "bg-rose-50 text-rose-700 border-rose-200",
@@ -23,30 +23,36 @@ export default function PerformanceReviewsPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   
-  const [reviewYear, setReviewYear] = useState<string>(new Date().getFullYear().toString());
-  const [reviewMonth, setReviewMonth] = useState<string>("all");
+  const [reviewYear, setReviewYear] = useState<number>(new Date().getFullYear());
+  const [reviewMonth, setReviewMonth] = useState<number>(new Date().getMonth() + 1);
+  const [search, setSearch] = useState("");
   
+  // Passed to Detail/Form Modal (we pass userId and period to load review or create new)
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
-  const [editingId, setEditingId] = useState<string | null>(null);
+  const [activeUserId, setActiveUserId] = useState<string | null>(null);
   
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [selectedReviewId, setSelectedReviewId] = useState<string | null>(null);
 
   const { data: response, isLoading } = useQuery({
-    queryKey: ['performance-reviews', reviewYear, reviewMonth],
-    queryFn: () => performanceService.getPerformanceReviews({
-      reviewYear: reviewYear && reviewYear !== "all" ? parseInt(reviewYear) : undefined,
-      reviewMonth: reviewMonth && reviewMonth !== "all" ? parseInt(reviewMonth) : undefined
-    })
+    queryKey: ['performance-employees', reviewYear, reviewMonth],
+    queryFn: () => performanceService.getPerformanceReviewEmployees(reviewYear, reviewMonth)
   });
 
-  const allReviews = response?.data || [];
+  const employees = useMemo(() => {
+    let arr = response?.data || [];
+    if (search.trim()) {
+      const s = search.toLowerCase();
+      arr = arr.filter(e => (e.fullName || "").toLowerCase().includes(s) || (e.employeeCode || "").toLowerCase().includes(s));
+    }
+    return arr;
+  }, [response?.data, search]);
   
-  const totalPages = Math.max(1, Math.ceil(allReviews.length / pageSize));
+  const totalPages = Math.max(1, Math.ceil(employees.length / pageSize));
   
-  const paginatedReviews = useMemo(() => {
+  const paginatedEmployees = useMemo(() => {
     const startIndex = (currentPage - 1) * pageSize;
-    return allReviews.slice(startIndex, startIndex + pageSize);
-  }, [allReviews, currentPage, pageSize]);
+    return employees.slice(startIndex, startIndex + pageSize);
+  }, [employees, currentPage, pageSize]);
 
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 5 }, (_, i) => currentYear - 2 + i);
@@ -70,23 +76,6 @@ export default function PerformanceReviewsPage() {
             Quản lý và thực hiện đánh giá hiệu suất hàng tháng cho nhân sự trong phòng ban.
           </p>
         </m.div>
-
-        <m.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          className="flex flex-wrap items-center gap-3"
-        >
-          <Button
-            onClick={() => {
-              setEditingId(null);
-              setIsFormModalOpen(true);
-            }}
-            className="bg-[#2E3192] hover:bg-[#1E2062] active:bg-[#1E2062] text-white shadow-md hover:shadow-lg transition-all px-4 h-11 rounded-lg font-medium gap-2 flex"
-          >
-            <Plus size={18} strokeWidth={2.5} /> Tạo kỳ đánh giá
-          </Button>
-        </m.div>
       </div>
 
       <m.div
@@ -98,27 +87,34 @@ export default function PerformanceReviewsPage() {
         <div className="p-4 md:p-5 border-b border-slate-100 flex flex-col sm:flex-row gap-4 justify-between bg-white z-10 sticky top-0">
           <div className="flex items-center gap-3 flex-wrap">
              <div className="flex items-center gap-2">
-                <Select value={reviewYear} onValueChange={(v) => { if (v) { setReviewYear(v); setCurrentPage(1); }}}>
+                <Select value={reviewYear.toString()} onValueChange={(v) => { setReviewYear(parseInt(v as string)); setCurrentPage(1); }}>
                   <SelectTrigger className="w-[120px] h-10 border-slate-200 bg-slate-50/50">
                     <SelectValue placeholder="Năm" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">Tất cả năm</SelectItem>
                     {years.map(y => <SelectItem key={y} value={y.toString()}>Năm {y}</SelectItem>)}
                   </SelectContent>
                 </Select>
-                <Select value={reviewMonth} onValueChange={(v) => { if (v) { setReviewMonth(v); setCurrentPage(1); }}}>
+                <Select value={reviewMonth.toString()} onValueChange={(v) => { setReviewMonth(parseInt(v as string)); setCurrentPage(1); }}>
                   <SelectTrigger className="w-[120px] h-10 border-slate-200 bg-slate-50/50">
                     <SelectValue placeholder="Tháng" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">Tất cả tháng</SelectItem>
                     {Array.from({ length: 12 }, (_, i) => i + 1).map(m => (
                       <SelectItem key={m} value={m.toString()}>Tháng {m}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
              </div>
+          </div>
+          <div className="relative w-full sm:w-[250px] lg:w-[300px]">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" />
+            <Input
+              value={search}
+              onChange={(e) => { setSearch(e.target.value); setCurrentPage(1); }}
+              placeholder="Tìm kiếm nhân sự..."
+              className="pl-9 h-10 border-slate-200 focus-visible:ring-indigo-500/20"
+            />
           </div>
         </div>
 
@@ -128,96 +124,99 @@ export default function PerformanceReviewsPage() {
               <tr>
                 <th className="px-5 py-4 font-semibold tracking-wider">Nhân sự</th>
                 <th className="px-5 py-4 font-semibold tracking-wider">Phòng ban / Chức vụ</th>
-                <th className="px-5 py-4 font-semibold tracking-wider text-center">Kỳ đánh giá</th>
-                <th className="px-5 py-4 font-semibold tracking-wider text-center">Điểm & Xếp loại</th>
-                <th className="px-5 py-4 font-semibold tracking-wider text-center">Mức thưởng</th>
-                <th className="px-5 py-4 font-semibold tracking-wider">Người đánh giá</th>
-                <th className="px-5 py-4 font-semibold tracking-wider text-center">Ngày đánh giá</th>
+                <th className="px-5 py-4 font-semibold tracking-wider text-center">Trạng thái</th>
+                <th className="px-5 py-4 font-semibold tracking-wider text-center">Kết quả</th>
                 <th className="px-5 py-4 font-semibold tracking-wider text-center">Thao tác</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
               {isLoading ? (
                 <tr>
-                  <td colSpan={8} className="px-5 py-12 text-center text-slate-400">
-                    <Loader2 className="w-6 h-6 animate-spin mx-auto mb-2 text-indigo-500" />
-                    Đang tải dữ liệu...
+                  <td colSpan={5} className="px-5 py-12 text-center text-slate-400">
+                    <Loader2 className="w-6 h-6 animate-spin mx-auto mb-2 text-[#2E3192]" />
+                    Đang tải danh sách nhân sự...
                   </td>
                 </tr>
-              ) : paginatedReviews.length === 0 ? (
+              ) : paginatedEmployees.length === 0 ? (
                 <tr>
-                  <td colSpan={8} className="px-5 py-16 text-center text-slate-400 bg-slate-50/30">
+                  <td colSpan={5} className="px-5 py-16 text-center text-slate-400 bg-slate-50/30">
                     <Star className="w-10 h-10 mx-auto text-slate-300 mb-3" strokeWidth={1} />
-                    <p className="text-base text-slate-600 font-medium">Chưa có đánh giá hiệu suất nào</p>
-                    <p className="text-sm mt-1">Sử dụng nút "Tạo kỳ đánh giá" để bắt đầu.</p>
+                    <p className="text-base text-slate-600 font-medium">Không tìm thấy nhân sự phù hợp</p>
                   </td>
                 </tr>
               ) : (
-                paginatedReviews.map((row: PerformanceReviewResponse) => (
-                  <tr key={row.id} className={`hover:bg-indigo-50/30 transition-colors ${row.active === false ? "opacity-50 grayscale" : ""}`}>
+                paginatedEmployees.map((row: PerformanceEmployeeResponse) => (
+                  <tr key={row.userId} className={cn("hover:bg-indigo-50/30 transition-colors", !row.canReview && "opacity-60 bg-slate-50/50")}>
                     <td className="px-5 py-3">
                       <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold text-xs shrink-0 ring-2 ring-white shadow-sm">
-                          {row.revieweeFullName?.charAt(0) || "U"}
+                        <div className="w-9 h-9 rounded-full bg-indigo-100 flex items-center justify-center text-[#2E3192] font-bold text-xs shrink-0 ring-2 ring-white shadow-sm">
+                          {row.fullName?.charAt(0) || "U"}
                         </div>
                         <div className="flex flex-col">
-                          <span className="font-semibold text-slate-800 text-[13px]">{row.revieweeFullName}</span>
+                          <span className="font-semibold text-slate-800 text-[13px]">{row.fullName}</span>
                           <span className="text-[11.5px] text-slate-500 flex items-center gap-1">
-                             <span className="bg-slate-100 border border-slate-200 px-1 rounded text-[10px] font-mono">{row.revieweeEmployeeCode || "N/A"}</span>
+                             <span className="bg-slate-100 border border-slate-200 px-1 rounded text-[10px] font-mono">{row.employeeCode || "N/A"}</span>
                           </span>
                         </div>
                       </div>
                     </td>
                     <td className="px-5 py-3">
                       <div className="flex flex-col">
-                         <span className="text-[13px] text-slate-700 font-medium">{row.revieweeDepartmentName || "—"}</span>
-                         <span className="text-[11.5px] text-slate-500">{row.revieweeJobTitleName || "—"}</span>
+                         <span className="text-[13px] text-slate-700 font-medium">{row.departmentName || "—"}</span>
+                         <span className="text-[11.5px] text-slate-500">{row.jobTitleName || "—"}</span>
                       </div>
                     </td>
                     <td className="px-5 py-3 text-center">
-                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-slate-100 text-slate-700 text-xs font-semibold border border-slate-200">
-                        <Calendar size={13} className="text-slate-500" />
-                        {row.reviewMonth}/{row.reviewYear}
-                      </span>
+                       {row.hasReview ? (
+                          <span className="inline-flex items-center px-2 py-1 bg-emerald-50 text-emerald-700 text-xs font-semibold rounded-md border border-emerald-200/60">
+                             Đã đánh giá
+                          </span>
+                       ) : (
+                          <span className="inline-flex items-center px-2 py-1 bg-slate-100 text-slate-600 text-xs font-semibold rounded-md border border-slate-200">
+                             Chưa đánh giá
+                          </span>
+                       )}
                     </td>
                     <td className="px-5 py-3 text-center">
-                      <div className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-md font-bold shadow-sm border ${SCORE_COLORS[row.overallScore] || SCORE_COLORS[3]}`}>
-                         {row.overallScore} <Star className="fill-current" size={12} />
-                         {row.overallScoreName && <span className="ml-1 text-[11px] uppercase tracking-wide opacity-90">• {row.overallScoreName}</span>}
-                      </div>
-                    </td>
-                    <td className="px-5 py-3 text-center">
-                        <span className="font-semibold text-emerald-600">
-                          {row.performanceAllowance != null 
-                              ? new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(row.performanceAllowance)
-                              : "—"}
-                        </span>
-                    </td>
-                    <td className="px-5 py-3">
-                      <span className="text-[13px] text-slate-700 font-medium">
-                        {row.reviewerUsername || "—"}
-                      </span>
-                    </td>
-                    <td className="px-5 py-3 text-center text-slate-500 text-[13px]">
-                      {row.reviewedAt ? format(new Date(row.reviewedAt), "dd/MM/yyyy") : "-"}
+                      {row.hasReview && row.overallScore ? (
+                        <div className={`inline-flex items-center gap-1 px-2.5 py-1.5 rounded-md font-bold shadow-sm border ${SCORE_COLORS[row.overallScore] || SCORE_COLORS[3]}`}>
+                           {row.overallScore} <Star className="fill-current" size={12} />
+                           {row.overallScoreName && <span className="ml-1 text-[11px] uppercase tracking-wide opacity-90">• {row.overallScoreName}</span>}
+                        </div>
+                      ) : (
+                        <span className="text-slate-400">—</span>
+                      )}
                     </td>
                     <td className="px-5 py-3 text-center">
                       <div className="flex items-center justify-center gap-2">
-                        <button
-                          onClick={() => setSelectedId(row.id)}
-                          className="px-3 py-1.5 bg-white border border-slate-200 hover:border-indigo-300 hover:bg-indigo-50 hover:text-indigo-700 text-slate-600 rounded-lg text-xs font-medium transition-colors shadow-sm"
-                        >
-                          Chi tiết
-                        </button>
-                        {row.active !== false && (
+                        {row.hasReview ? (
+                          <>
+                            <button
+                              onClick={() => setSelectedReviewId(row.reviewId!)}
+                              className="px-3 py-1.5 bg-white border border-slate-200 hover:border-[#2E3192]/40 hover:bg-slate-50 hover:text-[#2E3192] text-slate-600 rounded-lg text-xs font-medium transition-colors shadow-sm"
+                            >
+                              Chi tiết
+                            </button>
+                            <button
+                              onClick={() => {
+                                setActiveUserId(row.userId);
+                                setIsFormModalOpen(true);
+                              }}
+                              className="px-3 py-1.5 bg-emerald-50 border border-emerald-200 text-emerald-700 hover:bg-emerald-100 rounded-lg text-xs font-medium transition-colors shadow-sm"
+                            >
+                              Cập nhật
+                            </button>
+                          </>
+                        ) : (
                           <button
                             onClick={() => {
-                              setEditingId(row.id);
+                              setActiveUserId(row.userId);
                               setIsFormModalOpen(true);
                             }}
-                            className="px-3 py-1.5 bg-white border border-slate-200 hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-700 text-slate-600 rounded-lg text-xs font-medium transition-colors shadow-sm"
+                            disabled={!row.canReview}
+                            className="px-4 py-1.5 bg-[#2E3192] hover:bg-[#1E2062] disabled:bg-slate-300 disabled:text-slate-500 disabled:cursor-not-allowed border-transparent text-white rounded-lg text-xs font-medium transition-colors shadow-sm gap-1 flex items-center"
                           >
-                            Cập nhật
+                            <Plus size={14} /> Chấm điểm
                           </button>
                         )}
                       </div>
@@ -244,17 +243,19 @@ export default function PerformanceReviewsPage() {
           </div>
         )}
       </m.div>
-      
+
       <PerformanceReviewFormModal
         isOpen={isFormModalOpen}
-        onOpenChange={setIsFormModalOpen}
-        initialId={editingId}
+        onOpenChange={(v) => { setIsFormModalOpen(v); if(!v) setActiveUserId(null); }}
+        userId={activeUserId}
+        reviewYear={reviewYear}
+        reviewMonth={reviewMonth}
       />
       
       <PerformanceReviewDetailModal
-        isOpen={!!selectedId}
-        onOpenChange={(v) => !v && setSelectedId(null)}
-        id={selectedId}
+        isOpen={!!selectedReviewId}
+        onOpenChange={(v) => !v && setSelectedReviewId(null)}
+        id={selectedReviewId}
       />
     </div>
   );

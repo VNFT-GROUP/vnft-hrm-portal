@@ -126,11 +126,21 @@ export default function PerformanceReviewDetailModal({ isOpen, onOpenChange, id 
                    </div>
                  </div>
                  {review.scoreCriteria && review.scoreCriteria.length > 0 && (
-                     <div className="mt-2 pt-2 border-t border-white/20">
-                         <span className="text-indigo-200 text-[11px] uppercase mb-1 block">Tiêu chí đạt được</span>
-                         <ul className="list-disc pl-4 text-xs text-indigo-50 space-y-1 opacity-90">
+                     <div className="mt-4 pt-4 border-t border-white/20">
+                         <span className="text-indigo-200 text-[11px] uppercase mb-1 block">Tiêu chí đạt được (Lý do chọn)</span>
+                         <ul className="list-disc pl-4 text-xs text-indigo-50 space-y-1.5 opacity-95">
                             {review.scoreCriteria.map((c, i) => <li key={i}>{c}</li>)}
                          </ul>
+                     </div>
+                 )}
+                 {review.overallScore === 5 && review.performanceImprovementNote && (
+                     <div className="mt-4 pt-4 border-t border-white/20">
+                         <span className="text-amber-200 text-[11px] font-bold uppercase mb-1 flex items-center gap-1">
+                             Ghi chú cải tiến/đổi mới
+                         </span>
+                         <div className="text-amber-50 text-[13px] bg-white/10 p-3 rounded-lg border border-white/10">
+                            {review.performanceImprovementNote}
+                         </div>
                      </div>
                  )}
               </div>

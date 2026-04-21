@@ -1,36 +1,33 @@
 import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { performanceService } from "@/services/performance";
-import { userService } from "@/services/user/userService";
-import type { UserResponse } from "@/types/user/UserResponse";
 import type { PerformanceReviewLevelResponse } from "@/types/performance/PerformanceReviewLevelResponse";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RichTextEditor } from "@/components/custom/RichTextEditor";
 import { toast } from "sonner";
 import { getErrorMessage } from "@/lib/utils";
-import { Loader2, CalendarIcon, Star, ClipboardCopy, CheckCircle2 } from "lucide-react";
+import { Loader2, CalendarIcon, Star, ClipboardCopy, CheckCircle2, AlertCircle } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { vi } from "date-fns/locale";
 import { cn } from "@/lib/utils";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Textarea } from "@/components/ui/textarea";
 
 interface PerformanceReviewFormModalProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
-  initialId?: string | null;
+  userId: string | null;
+  reviewYear: number;
+  reviewMonth: number;
 }
 
-export default function PerformanceReviewFormModal({ isOpen, onOpenChange, initialId }: PerformanceReviewFormModalProps) {
+export default function PerformanceReviewFormModal({ isOpen, onOpenChange, userId, reviewYear, reviewMonth }: PerformanceReviewFormModalProps) {
   const queryClient = useQueryClient();
-  const isEdit = !!initialId;
 
-  const [revieweeUserId, setRevieweeUserId] = useState<string>("");
-  const [reviewYear, setReviewYear] = useState<string>(new Date().getFullYear().toString());
-  const [reviewMonth, setReviewMonth] = useState<string>((new Date().getMonth() + 1).toString());
   const [overallScore, setOverallScore] = useState<number>(3);
   const [reviewedAt, setReviewedAt] = useState<Date | undefined>(new Date());
   
@@ -39,14 +36,10 @@ export default function PerformanceReviewFormModal({ isOpen, onOpenChange, initi
   const [improvementAreas, setImprovementAreas] = useState("");
   const [developmentPlan, setDevelopmentPlan] = useState("");
   
-  const [isCopied, setIsCopied] = useState(false);
+  const [performanceDescriptions, setPerformanceDescriptions] = useState<Record<string, number[]>>({});
+  const [performanceImprovementNote, setPerformanceImprovementNote] = useState("");
 
-  // Users data
-  const { data: usersResponse } = useQuery({
-    queryKey: ['users', 1, 1000],
-    queryFn: () => userService.getUsers(1, 1000),
-    enabled: isOpen
-  });
+  const [isCopied, setIsCopied] = useState(false);
 
   // Levels data
   const { data: levelsResponse } = useQuery({
@@ -57,65 +50,68 @@ export default function PerformanceReviewFormModal({ isOpen, onOpenChange, initi
 
   const levels = levelsResponse?.data || [];
 
-  const { data: initialResponse, isLoading: isLoadingInitial } = useQuery({
-    queryKey: ['performance-review', initialId],
-    queryFn: () => performanceService.getPerformanceReviewById(initialId!),
-    enabled: isEdit && isOpen,
+  // Review Response
+  const { data: reviewResponse, isLoading: isLoadingInitial } = useQuery({
+    queryKey: ['performance-review', userId, reviewYear, reviewMonth],
+    queryFn: () => performanceService.getPerformanceReviewByUserAndPeriod(userId!, reviewYear, reviewMonth),
+    enabled: !!userId && isOpen,
   });
+
+  const existingReview = reviewResponse?.data;
+  const isEdit = !!existingReview;
 
   useEffect(() => {
     if (isOpen) {
-      if (isEdit && initialResponse?.data) {
-        const data = initialResponse.data;
+      if (existingReview) {
         setTimeout(() => {
-          setRevieweeUserId(data.revieweeUserId || "");
-          setReviewYear(data.reviewYear.toString());
-          setReviewMonth(data.reviewMonth.toString());
-          setOverallScore(data.overallScore);
-          setReviewedAt(data.reviewedAt ? new Date(data.reviewedAt) : new Date());
-          setSummary(data.summary || "");
-          setStrengths(data.strengths || "");
-          setImprovementAreas(data.improvementAreas || "");
-          setDevelopmentPlan(data.developmentPlan || "");
+          setOverallScore(existingReview.overallScore);
+          setReviewedAt(existingReview.reviewedAt ? new Date(existingReview.reviewedAt) : new Date());
+          setSummary(existingReview.summary || "");
+          setStrengths(existingReview.strengths || "");
+          setImprovementAreas(existingReview.improvementAreas || "");
+          setDevelopmentPlan(existingReview.developmentPlan || "");
+          setPerformanceDescriptions(existingReview.performanceDescriptions || {});
+          setPerformanceImprovementNote(existingReview.performanceImprovementNote || "");
         }, 0);
-      } else if (!isEdit) {
+      } else {
         setTimeout(() => {
-          setRevieweeUserId("");
-          setReviewYear(new Date().getFullYear().toString());
-          setReviewMonth((new Date().getMonth() + 1).toString());
           setOverallScore(3);
           setReviewedAt(new Date());
           setSummary("");
           setStrengths("");
           setImprovementAreas("");
           setDevelopmentPlan("");
+          setPerformanceDescriptions({});
+          setPerformanceImprovementNote("");
         }, 0);
       }
     }
-  }, [isOpen, initialResponse, isEdit]);
+  }, [isOpen, existingReview]);
 
   const mutation = useMutation({
     mutationFn: () => {
       const payload = {
-        revieweeUserId,
-        reviewYear: parseInt(reviewYear),
-        reviewMonth: parseInt(reviewMonth),
+        revieweeUserId: userId!,
+        reviewYear,
+        reviewMonth,
         overallScore,
         reviewedAt: reviewedAt ? format(reviewedAt, "yyyy-MM-dd") : format(new Date(), "yyyy-MM-dd"),
         summary,
         strengths,
         improvementAreas,
-        developmentPlan
+        developmentPlan,
+        performanceDescriptions,
+        performanceImprovementNote: overallScore === 5 ? performanceImprovementNote : undefined
       };
       
       if (isEdit) {
-        return performanceService.updatePerformanceReview(initialId!, payload);
+        return performanceService.updatePerformanceReview(existingReview.id, payload);
       }
       return performanceService.createPerformanceReview(payload);
     },
     onSuccess: () => {
       toast.success(isEdit ? "Cập nhật đánh giá thành công" : "Tạo đánh giá thành công");
-      queryClient.invalidateQueries({ queryKey: ["performance-reviews"] });
+      queryClient.invalidateQueries({ queryKey: ["performance-employees"] });
       onOpenChange(false);
     },
     onError: (error) => {
@@ -124,19 +120,25 @@ export default function PerformanceReviewFormModal({ isOpen, onOpenChange, initi
   });
 
   const onSubmit = () => {
-    if (!revieweeUserId) return toast.error("Vui lòng chọn nhân sự");
-    if (!reviewYear || !reviewMonth) return toast.error("Vui lòng chọn kỳ đánh giá");
     if (!reviewedAt) return toast.error("Vui lòng chọn ngày đánh giá");
     if (!overallScore) return toast.error("Vui lòng chọn điểm đánh giá");
+    if (overallScore === 5 && !performanceImprovementNote.trim()) {
+      return toast.error("Vui lòng nhập ghi chú cải tiến/đổi mới khi xếp loại xuất sắc (Điểm 5).");
+    }
     
     mutation.mutate();
   };
 
-  const users = usersResponse?.data?.content || [];
-  const currentYear = new Date().getFullYear();
-  const years = Array.from({ length: 5 }, (_, i) => currentYear - 2 + i);
-
   const selectedLevel = levels.find(l => l.score === overallScore);
+
+  const handleDescriptionChange = (index: number, checked: boolean) => {
+    const key = overallScore.toString();
+    setPerformanceDescriptions(prev => {
+      const arr = prev[key] || [];
+      if (checked) return { ...prev, [key]: [...arr, index] };
+      return { ...prev, [key]: arr.filter(x => x !== index) };
+    });
+  };
 
   const copyPromptHelper = () => {
      const promptText = `Chấm điểm hiệu suất cho nhân viên dựa trên thang điểm 1-5 đã định nghĩa. Dựa trên nội dung đánh giá sau, hãy đưa ra: Điểm & Xếp loại, Mức thưởng, Lý do chi tiết và Lời khuyên cải thiện. Nội dung đánh giá: \n`;
@@ -155,11 +157,11 @@ export default function PerformanceReviewFormModal({ isOpen, onOpenChange, initi
              {isEdit ? "Cập nhật đánh giá hiệu suất" : "Tạo đánh giá hiệu suất mới"}
           </DialogTitle>
           <DialogDescription className="text-sm mt-1">
-             Vui lòng cung cấp chi tiết minh bạch các dẫn chứng để người lao động nắm bắt, đồng thời AI có thêm cơ sở dữ liệu huấn luyện.
+             Đánh giá cho kỳ {reviewMonth}/{reviewYear}. Vui lòng cung cấp chi tiết minh bạch các dẫn chứng.
           </DialogDescription>
         </DialogHeader>
 
-        {isLoadingInitial && isEdit ? (
+        {isLoadingInitial && !!userId ? (
           <div className="flex-1 flex items-center justify-center p-12">
             <Loader2 className="w-8 h-8 animate-spin text-[#2E3192]" />
           </div>
@@ -179,52 +181,7 @@ export default function PerformanceReviewFormModal({ isOpen, onOpenChange, initi
             </div>
 
             {/* Base Info */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 p-5 bg-white border border-slate-200 rounded-xl shadow-sm">
-              <div className="space-y-1.5 md:col-span-2">
-                <Label className="text-[13px] font-semibold text-slate-700">Nhân sự được đánh giá <span className="text-rose-500">*</span></Label>
-                <Select value={revieweeUserId} onValueChange={(v) => v && setRevieweeUserId(v)} disabled={isEdit}>
-                  <SelectTrigger className="w-full bg-slate-50/50 min-h-[44px]">
-                    <SelectValue placeholder="Chọn nhân sự..." />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {users.map((u: UserResponse) => (
-                      <SelectItem key={u.id} value={u.id}>
-                        <div className="flex flex-col text-left py-1">
-                          <span className="font-semibold text-slate-800">{u.fullName || u.englishName || u.username} ({u.employeeCode})</span>
-                          {(u.departmentName || u.jobTitleName) && (
-                            <span className="text-xs text-slate-500 mt-0.5">{u.departmentName} - {u.jobTitleName}</span>
-                          )}
-                        </div>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-1.5">
-                <Label className="text-[13px] font-semibold text-slate-700">Kỳ đánh giá <span className="text-rose-500">*</span></Label>
-                <div className="flex gap-2">
-                    <Select value={reviewMonth} onValueChange={(v) => v && setReviewMonth(v)}>
-                        <SelectTrigger className="flex-1 bg-slate-50/50">
-                            <SelectValue placeholder="Tháng" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {Array.from({ length: 12 }, (_, i) => i + 1).map(m => (
-                                <SelectItem key={m} value={m.toString()}>Tháng {m}</SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-                    <Select value={reviewYear} onValueChange={(v) => v && setReviewYear(v)}>
-                        <SelectTrigger className="flex-1 bg-slate-50/50">
-                            <SelectValue placeholder="Năm" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {years.map(y => <SelectItem key={y} value={y.toString()}>Năm {y}</SelectItem>)}
-                        </SelectContent>
-                    </Select>
-                </div>
-              </div>
-
+            <div className="grid grid-cols-1 gap-5 p-5 bg-white border border-slate-200 rounded-xl shadow-sm">
               <div className="space-y-1.5">
                 <Label className="text-[13px] font-semibold text-slate-700">Ngày đánh giá <span className="text-rose-500">*</span></Label>
                 <Popover>
@@ -240,7 +197,7 @@ export default function PerformanceReviewFormModal({ isOpen, onOpenChange, initi
             </div>
 
             {/* Score Selector */}
-            <div className="space-y-2">
+            <div className="space-y-3">
                <Label className="text-[14px] font-bold text-[#1E2062] flex gap-2"><Star size={16} /> Chọn thang điểm xếp loại <span className="text-rose-500">*</span></Label>
                {levels.length === 0 ? (
                   <div className="text-sm text-slate-500 italic p-4 bg-slate-100 rounded-lg border border-slate-200 border-dashed text-center">
@@ -278,25 +235,54 @@ export default function PerformanceReviewFormModal({ isOpen, onOpenChange, initi
 
                {/* Score Info Panel */}
                {selectedLevel && (
-                  <div className="mt-3 bg-[#2E3192]/5 border border-[#2E3192]/20 p-4 rounded-xl flex flex-col gap-2 animate-in fade-in slide-in-from-top-2">
-                     <div className="flex justify-between items-start flex-wrap gap-4 border-b border-indigo-500/10 pb-3">
+                  <div className="mt-3 bg-white border border-[#2E3192]/20 shadow-sm p-5 rounded-xl flex flex-col gap-4 animate-in fade-in slide-in-from-top-2">
+                     <div className="flex justify-between items-start flex-wrap gap-4 border-b border-indigo-500/10 pb-4">
                         <div className="flex flex-col">
                            <span className="text-xs font-semibold text-indigo-500 uppercase tracking-widest">Xếp loại dự kiến</span>
-                           <span className="font-bold text-[#1E2062] text-lg mt-0.5">{selectedLevel.name}</span>
+                           <span className="font-bold text-[#1E2062] text-xl mt-0.5">{selectedLevel.name}</span>
                         </div>
                         <div className="flex flex-col text-right">
                            <span className="text-xs font-semibold text-emerald-600/70 uppercase tracking-widest">Mức thưởng công</span>
-                           <span className="font-bold text-emerald-600 text-lg mt-0.5">
+                           <span className="font-bold text-emerald-600 text-xl mt-0.5">
                               {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(selectedLevel.allowance)}
                            </span>
                         </div>
                      </div>
                      <div className="pt-1">
-                        <span className="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-2 block">Tiêu chí (Criteria)</span>
-                        <ul className="list-disc pl-5 text-[13px] text-slate-700 space-y-1">
-                           {selectedLevel.criteria?.map((c, i) => <li key={i}>{c}</li>)}
-                        </ul>
+                        <span className="text-xs font-semibold text-slate-700 uppercase tracking-widest mb-3 block">Đánh giá tiêu chí (Chọn các mục đạt được)</span>
+                        <div className="flex flex-col space-y-3 pl-1">
+                           {selectedLevel.criteria?.map((c, i) => (
+                             <div key={i} className="flex items-start space-x-3 group">
+                               <Checkbox 
+                                  id={`criteria-${selectedLevel.score}-${i}`}
+                                  checked={(performanceDescriptions[overallScore.toString()] || []).includes(i)}
+                                  onCheckedChange={(v) => handleDescriptionChange(i, !!v)}
+                                  className="mt-0.5 data-[state=checked]:bg-[#2E3192] data-[state=checked]:border-[#2E3192]"
+                               />
+                               <label 
+                                  htmlFor={`criteria-${selectedLevel.score}-${i}`}
+                                  className="text-[13.5px] leading-relaxed text-slate-700 cursor-pointer select-none group-hover:text-indigo-900 transition-colors"
+                               >
+                                  {c}
+                               </label>
+                             </div>
+                           ))}
+                        </div>
                      </div>
+
+                     {overallScore === 5 && (
+                       <div className="mt-4 pt-4 border-t border-amber-200">
+                          <Label className="text-[14px] font-bold text-amber-900 flex items-center gap-1.5 mb-2">
+                            <AlertCircle size={16} /> Ghi chú cải tiến/đổi mới (Bắt buộc cho Điểm 5) <span className="text-rose-500">*</span>
+                          </Label>
+                          <Textarea 
+                            value={performanceImprovementNote} 
+                            onChange={(e) => setPerformanceImprovementNote(e.target.value)}
+                            placeholder="Nhập ghi chú hoặc mô tả giải pháp cải tiến quy trình hiệu quả rõ rệt mà nhân sự đã thực hiện..."
+                            className="bg-amber-50/50 border-amber-200 focus-visible:ring-amber-500/30 text-sm h-20"
+                          />
+                       </div>
+                     )}
                   </div>
                )}
             </div>

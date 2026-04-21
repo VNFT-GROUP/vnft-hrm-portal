@@ -8,4 +8,6 @@ export interface CreatePerformanceReviewRequest {
   strengths?: string;
   improvementAreas?: string;
   developmentPlan?: string;
+  performanceDescriptions?: Record<string, number[]>;
+  performanceImprovementNote?: string;
 }

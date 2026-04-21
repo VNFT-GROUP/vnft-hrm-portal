@@ -18,6 +18,8 @@ export interface PerformanceReviewResponse {
   overallScoreName?: string;
   performanceAllowance?: number;
   scoreCriteria?: string[];
+  performanceDescriptions?: Record<string, number[]>;
+  performanceImprovementNote?: string;
   reviewedAt: string;
   summary?: string;
   strengths?: string;

@@ -8,5 +8,7 @@ export interface UpdatePerformanceReviewRequest {
   strengths?: string;
   improvementAreas?: string;
   developmentPlan?: string;
+  performanceDescriptions?: Record<string, number[]>;
+  performanceImprovementNote?: string;
   active?: boolean;
 }

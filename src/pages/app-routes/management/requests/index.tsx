@@ -129,12 +129,43 @@ export default function ManagementRequestsPage() {
     switch (type) {
       case "LEAVE": return "Nghỉ phép";
       case "ABSENCE": return "Vắng mặt";
-      case "ATTENDANCE_ADJUSTMENT": return "Chấm công";
+      case "ATTENDANCE_ADJUSTMENT": return "Điều chỉnh chấm công";
       case "BUSINESS_TRIP": return "Công tác";
-      case "WFH": return "Làm từ xa";
-      case "RESIGNATION": return "Thôi việc";
+      case "WFH": return "Làm việc tại nhà";
+      case "RESIGNATION": return "Nghỉ việc";
       default: return type;
     }
+  };
+
+  const formatRequestApplyDate = (req: RequestFormResponse) => {
+    try {
+      if (req.type === "ATTENDANCE_ADJUSTMENT") {
+        const tType = req.timeType === "CHECK_IN" ? "check-in" : "check-out";
+        return `Điều chỉnh ${tType} ngày ${format(new Date(req.attendanceDate), "dd/MM/yyyy")} thành ${req.requestedTime?.substring(0, 5)}`;
+      } else if (req.type === "ABSENCE") {
+        return `Vắng mặt ngày ${format(new Date(req.absenceDate), "dd/MM/yyyy")}, từ ${req.fromTime?.substring(0, 5)} đến ${req.toTime?.substring(0, 5)}`;
+      } else if (req.type === "LEAVE") {
+        const s1 = req.startSession === "FULL_DAY" ? "Cả ngày" : req.startSession === "MORNING" ? "Sáng" : "Chiều";
+        const s2 = req.endSession === "FULL_DAY" ? "Cả ngày" : req.endSession === "MORNING" ? "Sáng" : "Chiều";
+        const d1 = format(new Date(req.startDate), "dd/MM/yyyy");
+        const d2 = format(new Date(req.endDate), "dd/MM/yyyy");
+        if (d1 === d2) {
+          return `Nghỉ phép ngày ${d1} ${s1 === s2 ? `(${s1})` : `(${s1} - ${s2})`}`;
+        }
+        return `Nghỉ phép từ ${d1} (${s1}) đến ${d2} (${s2})`;
+      } else if (req.type === "WFH") {
+        const d1 = format(new Date(req.startDate), "dd/MM/yyyy");
+        const d2 = format(new Date(req.endDate), "dd/MM/yyyy");
+        return d1 === d2 ? `WFH ngày ${d1}` : `WFH từ ${d1} đến ${d2}`;
+      } else if (req.type === "BUSINESS_TRIP") {
+        const d1 = format(new Date(req.startDate), "dd/MM/yyyy");
+        const d2 = format(new Date(req.endDate), "dd/MM/yyyy");
+        return d1 === d2 ? `Công tác ngày ${d1}` : `Công tác từ ${d1} đến ${d2}`;
+      }
+    } catch {
+      return "Không xác định";
+    }
+    return "Không xác định";
   };
 
   return (
@@ -319,13 +350,13 @@ export default function ManagementRequestsPage() {
                       <span className="text-xs text-slate-500">{req.requesterEmployeeCode || req.requesterId}</span>
                     </div>
                   </td>
-                  <td className="px-4 py-3 border-x border-slate-200 whitespace-nowrap text-left">{req.type}</td>
+                  <td className="px-4 py-3 border-x border-slate-200 whitespace-nowrap text-left">{getRequestTypeLabel(req.type)}</td>
                   <td className="px-4 py-3 border-x border-slate-200 whitespace-nowrap text-center">
-                    {req.startDate ? format(new Date(req.startDate), "dd/MM/yyyy") : ""}
+                    {formatRequestApplyDate(req)}
                   </td>
                   <td className="px-4 py-3 text-slate-700 border-x border-slate-200 max-w-[300px]">
-                    <div className="line-clamp-2 whitespace-normal" title={req.description || ""}>
-                      {req.description ? req.description.replace(/<[^>]*>?/gm, "").substring(0, 100) : "Không có lý do"}
+                    <div className="line-clamp-2 overflow-hidden text-ellipsis **:m-0! **:p-0! **:leading-tight! pointer-events-none" title={req.description?.replace(/<[^>]*>?/gm, "").substring(0, 200) || ""}>
+                      {req.description ? <RichTextViewer htmlContent={req.description} /> : "Không có lý do"}
                     </div>
                   </td>
                         <td className="px-4 py-3 border-x border-slate-200 whitespace-nowrap text-center">{getStatusBadge(req.status)}</td>
@@ -406,8 +437,7 @@ export default function ManagementRequestsPage() {
                 <div className="col-span-2">
                   <span className="text-muted-foreground block mb-1">Thời gian áp dụng:</span>
                   <span className="font-medium text-slate-800">
-                    {selectedRequest.startDate ? format(new Date(selectedRequest.startDate), "dd/MM/yyyy HH:mm") : ""}
-                    {selectedRequest.endDate ? ` - ${format(new Date(selectedRequest.endDate), "dd/MM/yyyy HH:mm")}` : ""}
+                    {formatRequestApplyDate(selectedRequest)}
                   </span>
                 </div>
                 <div className="col-span-2">

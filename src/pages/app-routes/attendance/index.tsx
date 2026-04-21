@@ -5,9 +5,9 @@ import { vi } from "date-fns/locale";
 import { attendanceService } from "@/services/attendance";
 import type { AttendanceDailySummaryResponse } from "@/types/attendance/AttendanceDailySummaryResponse";
 import type { RequestFormResponse } from "@/types/requestform/RequestFormResponse";
-import { Loader2, Calendar as CalendarIcon, ChevronLeft, ChevronRight, X, CalendarCheck, Target, TrendingDown, Medal, AlertOctagon, FileText } from "lucide-react";
+import { Loader2, Calendar as CalendarIcon, ChevronLeft, ChevronRight, X, CalendarCheck, Target, Medal, AlertOctagon, FileText } from "lucide-react";
 import { m  } from 'framer-motion';
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { RichTextViewer } from "@/components/custom/RichTextViewer";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
@@ -17,6 +17,7 @@ export default function MyAttendancePage() {
   const [year, setYear] = useState<number>(() => new Date().getFullYear());
   const [month, setMonth] = useState<number>(() => new Date().getMonth() + 1);
   const [selectedRecord, setSelectedRecord] = useState<(AttendanceDailySummaryResponse & { dateObj: Date }) | null>(null);
+  const [showDisciplineRules, setShowDisciplineRules] = useState(false);
 
   const { data: responseData, isLoading: loading } = useQuery({
     queryKey: ["my-attendance", year, month],
@@ -144,7 +145,7 @@ export default function MyAttendancePage() {
             <m.div 
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="grid grid-cols-1 md:grid-cols-3 gap-4"
+              className="grid grid-cols-1 md:grid-cols-2 gap-4"
             >
               {/* WORK UNITS */}
               <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs flex flex-col justify-between">
@@ -159,7 +160,7 @@ export default function MyAttendancePage() {
                 </div>
               </div>
 
-              {/* DISCIPLINE SCORE */}
+              {/* MERGED DISCIPLINE SCORE AND ALLOWANCE */}
               {(() => {
                 const score = data.summary?.disciplineScore ?? 0;
                 let textColor = "text-slate-800";
@@ -174,34 +175,40 @@ export default function MyAttendancePage() {
 
                 return (
                   <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs flex flex-col justify-between">
-                    <div className="flex items-center justify-between mb-3">
-                      <div className="flex items-center gap-2 text-slate-500">
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex items-center gap-2 text-slate-500 mt-1">
                         <Medal size={18} strokeWidth={2} />
-                        <span className="text-[11px] font-semibold uppercase tracking-wider">{t("myAttendance.summary.disciplineScore", { defaultValue: "Điểm kỷ luật" })}</span>
+                        <span className="text-[11px] font-semibold uppercase tracking-wider">Kỷ luật giờ giấc</span>
                       </div>
+                      <button 
+                        onClick={() => setShowDisciplineRules(true)}
+                        className="text-[10px] uppercase font-bold text-indigo-600 hover:text-indigo-700 bg-indigo-50 hover:bg-indigo-100 px-2 py-1.5 rounded transition-colors"
+                      >
+                        Bảng điểm
+                      </button>
                     </div>
-                    <div className="flex items-baseline gap-1">
-                      <div className={`text-3xl font-bold ${textColor}`}>{score}</div>
-                      <div className="text-sm font-semibold text-slate-400">/5</div>
+                    
+                    <div className="flex items-center gap-6 mt-1">
+                      <div className="flex flex-col">
+                        <span className="text-[10px] font-medium text-slate-400 mb-0.5">ĐIỂM SỐ</span>
+                        <div className="flex items-baseline gap-1">
+                          <div className={`text-3xl font-bold ${textColor}`}>{score}</div>
+                          <div className="text-sm font-semibold text-slate-400">/5</div>
+                        </div>
+                      </div>
+                      <div className="w-px h-10 bg-slate-200"></div>
+                      <div className="flex flex-col">
+                        <span className="text-[10px] font-medium text-slate-400 mb-0.5">PHỤ CẤP / THƯỞNG</span>
+                        <div className="flex items-baseline gap-1">
+                          {(data.summary?.punctualityDisciplineAllowance ?? 0) > 0 && <span className="text-xl font-medium text-emerald-600">+</span>}
+                          <div className="text-2xl font-bold text-slate-800 shrink-0">{(data.summary?.punctualityDisciplineAllowance ?? 0).toLocaleString('en-US')}</div>
+                          <div className="text-xs font-semibold text-slate-400 ml-1">VNĐ</div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 );
               })()}
-
-              {/* ALLOWANCE */}
-              <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs flex flex-col justify-between">
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-2 text-slate-500">
-                    <TrendingDown size={18} strokeWidth={2} className="rotate-180" />
-                    <span className="text-[11px] font-semibold uppercase tracking-wider">{t("myAttendance.summary.allowance", { defaultValue: "Phụ cấp" })}</span>
-                  </div>
-                </div>
-                <div className="flex items-baseline gap-1">
-                  {(data.summary?.punctualityDisciplineAllowance ?? 0) > 0 && <span className="text-xl font-medium text-emerald-600">+</span>}
-                  <div className="text-3xl font-bold text-slate-800 shrink-0">{(data.summary?.punctualityDisciplineAllowance ?? 0).toLocaleString('en-US')}</div>
-                  <div className="text-xs font-semibold text-slate-400 ml-1">VNĐ</div>
-                </div>
-              </div>
             </m.div>
 
             {/* LOWER GRIDS */}
@@ -407,10 +414,10 @@ export default function MyAttendancePage() {
         </div>
       </div>
 
-      <Sheet open={!!selectedRecord} onOpenChange={(open) => !open && setSelectedRecord(null)}>
-        <SheetContent side="left" showCloseButton={false} className="border-0 shadow-2xl p-0 overflow-hidden bg-transparent flex flex-col h-full !max-w-[75vw] w-[75vw]">
+      <Dialog open={!!selectedRecord} onOpenChange={(open) => !open && setSelectedRecord(null)}>
+        <DialogContent showCloseButton={false} className="border-0 shadow-2xl p-0 overflow-hidden bg-transparent flex flex-col h-[90vh] max-w-[85vw]! md:max-w-[75vw]! w-full mx-auto my-auto">
           {selectedRecord && (
-            <div className="bg-white flex flex-col relative w-full h-full">
+            <div className="bg-white flex flex-col relative w-full h-full rounded-2xl overflow-hidden">
               {/* Header section with gradient */}
               <div className="bg-linear-to-b from-indigo-500 to-indigo-600 p-6 pb-20 text-white relative shrink-0">
                 <button 
@@ -419,14 +426,14 @@ export default function MyAttendancePage() {
                 >
                   <X size={20} />
                 </button>
-                <SheetHeader className="space-y-1">
-                  <SheetTitle className="text-xl font-bold flex flex-col text-white">
+                <DialogHeader className="space-y-1">
+                  <DialogTitle className="text-xl font-bold flex flex-col text-white">
                     {t("myAttendance.modalTitle")}
-                  </SheetTitle>
-                  <SheetDescription className="text-indigo-100 font-medium opacity-90">
+                  </DialogTitle>
+                  <DialogDescription className="text-indigo-100 font-medium opacity-90">
                     {format(selectedRecord.dateObj, "EEEE, dd/MM/yyyy", { locale: vi })}
-                  </SheetDescription>
-                </SheetHeader>
+                  </DialogDescription>
+                </DialogHeader>
               </div>
 
               {/* Body */}
@@ -563,8 +570,50 @@ export default function MyAttendancePage() {
               </div>
             </div>
           )}
-        </SheetContent>
-      </Sheet>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={showDisciplineRules} onOpenChange={setShowDisciplineRules}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Bảng điểm kỷ luật giờ giấc</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 pt-2 pb-4">
+            <p className="text-sm text-slate-600">
+              Cứ mỗi lần đi trễ hoặc về sớm thiếu phép, bạn sẽ bị trừ đi 1 điểm kỷ luật. Khi đến kỳ chốt công, điểm số còn lại sẽ quyết định mức phụ cấp chuyên cần bạn nhận được:
+            </p>
+            <div className="flex flex-col gap-2">
+              <div className="flex justify-between items-center bg-emerald-50 rounded-lg p-3 border border-emerald-100">
+                <span className="font-bold text-emerald-700">5 điểm</span>
+                <span className="text-sm font-bold text-emerald-600">+ 500,000 VNĐ</span>
+              </div>
+              <div className="flex justify-between items-center bg-emerald-50/50 rounded-lg p-3 border border-emerald-100/50">
+                <span className="font-bold text-emerald-600">4 điểm</span>
+                <span className="text-sm font-bold text-emerald-600">+ 400,000 VNĐ</span>
+              </div>
+              <div className="flex justify-between items-center bg-amber-50 rounded-lg p-3 border border-amber-100">
+                <span className="font-bold text-amber-600">3 điểm</span>
+                <span className="text-sm font-bold text-amber-600">+ 300,000 VNĐ</span>
+              </div>
+              <div className="flex justify-between items-center bg-rose-50/50 rounded-lg p-3 border border-rose-100/50">
+                <span className="font-bold text-rose-500">2 điểm</span>
+                <span className="text-sm font-bold text-rose-500">+ 200,000 VNĐ</span>
+              </div>
+              <div className="flex justify-between items-center bg-rose-50/50 rounded-lg p-3 border border-rose-100/50">
+                <span className="font-bold text-rose-500">1 điểm</span>
+                <span className="text-sm font-bold text-rose-500">+ 100,000 VNĐ</span>
+              </div>
+              <div className="flex justify-between items-center bg-slate-50 rounded-lg p-3 border border-slate-200">
+                <span className="font-bold text-slate-500">0 điểm</span>
+                <span className="text-sm font-bold text-slate-500">0 VNĐ</span>
+              </div>
+            </div>
+            <p className="text-xs text-slate-400 mt-2 italic text-center">
+              *Mức phụ cấp có thể bị điều chỉnh hoặc thay đổi tùy theo quy định của ban quản lý ở từng thời điểm.
+            </p>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

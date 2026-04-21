@@ -15,21 +15,34 @@ import { RichTextViewer } from "@/components/custom/RichTextViewer";
 import { getErrorMessage } from "@/lib/utils";
 import RequestFormModal from "./components/RequestFormModal";
 const ApplicableDate = ({ req }: { req: RequestFormResponse }) => {
-  let displayDate = "N/A";
   try {
-    if (req.startDate && req.endDate) {
-      displayDate = `${format(new Date(req.startDate), 'dd/MM/yyyy')} - ${format(new Date(req.endDate), 'dd/MM/yyyy')}`;
-    } else if (req.absenceDate) {
-      displayDate = format(new Date(req.absenceDate), 'dd/MM/yyyy');
-    } else if (req.attendanceDate) {
-      displayDate = format(new Date(req.attendanceDate), 'dd/MM/yyyy');
-    } else if (req.submissionDate) {
-      displayDate = format(new Date(req.submissionDate), 'dd/MM/yyyy');
+    if (req.type === "ATTENDANCE_ADJUSTMENT") {
+      const tType = req.timeType === "CHECK_IN" ? "check-in" : "check-out";
+      return <>{`Điều chỉnh ${tType} ngày ${format(new Date(req.attendanceDate!), "dd/MM/yyyy")} thành ${req.requestedTime?.substring(0, 5)}`}</>;
+    } else if (req.type === "ABSENCE") {
+      return <>{`Vắng mặt ngày ${format(new Date(req.absenceDate!), "dd/MM/yyyy")}, từ ${req.fromTime?.substring(0, 5)} đến ${req.toTime?.substring(0, 5)}`}</>;
+    } else if (req.type === "LEAVE") {
+      const s1 = req.startSession === "FULL_DAY" ? "Cả ngày" : req.startSession === "MORNING" ? "Sáng" : "Chiều";
+      const s2 = req.endSession === "FULL_DAY" ? "Cả ngày" : req.endSession === "MORNING" ? "Sáng" : "Chiều";
+      const d1 = format(new Date(req.startDate!), "dd/MM/yyyy");
+      const d2 = format(new Date(req.endDate!), "dd/MM/yyyy");
+      if (d1 === d2) {
+        return <>{`Nghỉ phép ngày ${d1} ${s1 === s2 ? `(${s1})` : `(${s1} - ${s2})`}`}</>;
+      }
+      return <>{`Nghỉ phép từ ${d1} (${s1}) đến ${d2} (${s2})`}</>;
+    } else if (req.type === "WFH") {
+      const d1 = format(new Date(req.startDate!), "dd/MM/yyyy");
+      const d2 = format(new Date(req.endDate!), "dd/MM/yyyy");
+      return <>{d1 === d2 ? `WFH ngày ${d1}` : `WFH từ ${d1} đến ${d2}`}</>;
+    } else if (req.type === "BUSINESS_TRIP") {
+      const d1 = format(new Date(req.startDate!), "dd/MM/yyyy");
+      const d2 = format(new Date(req.endDate!), "dd/MM/yyyy");
+      return <>{d1 === d2 ? `Công tác ngày ${d1}` : `Công tác từ ${d1} đến ${d2}`}</>;
     }
   } catch {
-    displayDate = "Không xác định";
+    return <>Không xác định</>;
   }
-  return <>{displayDate}</>;
+  return <>Không xác định</>;
 };
 
 export default function RequestsPage() {
@@ -86,11 +99,11 @@ export default function RequestsPage() {
   const getTypeName = (type: string) => {
     switch(type) {
       case "LEAVE": return "Nghỉ phép";
-      case "WFH": return "Làm tại nhà";
+      case "WFH": return "Làm việc tại nhà";
       case "ABSENCE": return "Vắng mặt";
       case "BUSINESS_TRIP": return "Công tác";
       case "ATTENDANCE_ADJUSTMENT": return "Điều chỉnh chấm công";
-      case "RESIGNATION": return "Thôi việc";
+      case "RESIGNATION": return "Nghỉ việc";
       default: return type;
     }
   };

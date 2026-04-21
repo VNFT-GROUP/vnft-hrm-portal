@@ -46,7 +46,7 @@ type RequestType =
   | "wfh";
 
 const typeLabels: Record<RequestType, string> = {
-  leave: "Đơn xin nghỉ",
+  leave: "Đơn xin nghỉ phép",
   absent: "Đơn vắng mặt",
   checkInOut: "Đơn checkin/out",
   business: "Đơn công tác",
@@ -57,56 +57,62 @@ const typeLabels: Record<RequestType, string> = {
 const requestCards = [
   {
     id: "leave",
-    label: "Đơn xin nghỉ",
+    label: "Đơn xin nghỉ phép",
     description:
-      "Đơn xin nghỉ phát sinh khi bạn muốn nghỉ nhiều ngày làm việc.",
+      "Sử dụng để xin nghỉ phép, nghỉ ốm hoặc công việc cá nhân. Thời gian nghỉ sẽ được đối trừ trực tiếp vào quỹ phép hiện tại của bạn.",
     icon: Umbrella,
     color: "text-indigo-500",
     bg: "bg-indigo-50 ring-1 ring-indigo-100",
+    isPaid: true,
   },
   {
     id: "wfh",
     label: "Đơn WFH",
     description:
-      "Đơn WFH phát sinh khi bạn được công ty cho phép làm việc tại nhà.",
+      "Đăng ký hình thức làm việc từ xa. Phù hợp khi bạn không có mặt tại văn phòng nhưng vẫn đảm bảo được hiệu suất và công việc trong ngày.",
     icon: Home,
     color: "text-purple-500",
     bg: "bg-purple-50 ring-1 ring-purple-100",
+    isPaid: true,
   },
   {
     id: "checkInOut",
     label: "Đơn checkin/out",
     description:
-      "Đơn checkin/out phát sinh khi bạn quên chấm công lúc đến hoặc lúc về.",
+      "Điều chỉnh bổ sung dữ liệu chấm công khi bạn quên quẹt thẻ, hệ thống lỗi, hoặc có lịch trình đột xuất không thể check-in/out đúng giờ.",
     icon: CheckCircle2,
     color: "text-rose-500",
     bg: "bg-rose-50 ring-1 ring-rose-100",
+    isPaid: true,
   },
   {
     id: "absent",
     label: "Đơn vắng mặt",
     description:
-      "Đơn vắng mặt phát sinh khi bạn có nhu cầu vắng mặt 1 khoảng thời gian trong ca làm việc. Đơn làm bằng chứng vắng mặt, phải về công ty checkout mới được công nhận.",
+      "Đăng ký vắng mặt tạm thời trong ca làm (ra ngoài gặp khách, sự vụ cá nhân). Khung giờ này vẫn sẽ được tính là khung giờ làm việc hợp lệ.",
     icon: User,
     color: "text-cyan-500",
     bg: "bg-cyan-50 ring-1 ring-cyan-100",
+    isPaid: true,
   },
   {
     id: "business",
     label: "Đơn công tác",
     description:
-      "Đơn công tác phát sinh khi bạn được yêu cầu đi công tác và không thể chấm công trên công ty.",
+      "Cập nhật hình thức đi công tác. Toàn bộ thời gian xử lý công việc ngoài văn phòng sẽ được hệ thống tính công đầy đủ.",
     icon: Truck,
     color: "text-lime-600",
     bg: "bg-lime-50 ring-1 ring-lime-100",
+    isPaid: true,
   },
   {
     id: "resign",
     label: "Đơn thôi việc",
-    description: "Đơn thôi việc phát sinh khi bạn nghỉ việc.",
+    description: "Đề xuất xin nghỉ việc chính thức. Phân vùng chấm công và xử lý lương sẽ được đóng sau 'Ngày làm việc cuối' của bạn.",
     icon: UserMinus,
     color: "text-red-500",
     bg: "bg-red-50 ring-1 ring-red-100",
+    isPaid: false,
   },
 ] as const;
 
@@ -135,6 +141,17 @@ export default function CreateRequestPage() {
   const [endSession, setEndSession] = useState<"morning" | "afternoon" | "all">(
     "all",
   );
+
+  const [reasonType, setReasonType] = useState<"PERSONAL" | "COMPANY" | "">("");
+
+  const durationPreview = useMemo(() => {
+    if (!startTime || !endTime) return 0;
+    const [startH, startM] = startTime.split(":").map(Number);
+    const [endH, endM] = endTime.split(":").map(Number);
+    const startMinutes = startH * 60 + startM;
+    const endMinutes = endH * 60 + endM;
+    return Math.max(0, endMinutes - startMinutes);
+  }, [startTime, endTime]);
 
   const calculatedDays = useMemo(() => {
     if (!startDate || !endDate) return 0;
@@ -186,6 +203,7 @@ export default function CreateRequestPage() {
             absenceDate: format(date!, "yyyy-MM-dd"),
             fromTime: startTime,
             toTime: endTime,
+            reasonType: reasonType as "PERSONAL" | "COMPANY",
             description: description,
           });
         case "resign":
@@ -240,7 +258,11 @@ export default function CreateRequestPage() {
         if (!checkInOutType || !date || !startTime) isValid = false;
         break;
       case "absent":
-        if (!date || !startTime || !endTime) isValid = false;
+        if (!date || !startTime || !endTime || !reasonType) isValid = false;
+        if (startTime && endTime && startTime >= endTime) {
+           toast.error("Giờ kết thúc vắng mặt phải lớn hơn giờ bắt đầu.");
+           return;
+        }
         break;
       case "resign":
         if (!date || !endDate) isValid = false; // endDate is Ngày làm cuối
@@ -322,9 +344,14 @@ export default function CreateRequestPage() {
                       />
                     </div>
                     <div className="flex flex-col gap-1.5 pr-6 items-start">
-                      <span className="text-[14px] md:text-[15px] font-semibold text-slate-800 tracking-tight">
-                        {card.label}
-                      </span>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="text-[14px] md:text-[15px] font-semibold text-slate-800 tracking-tight">
+                          {card.label}
+                        </span>
+                        {card.isPaid && (
+                          <span className="bg-emerald-50 text-emerald-600 border border-emerald-200 px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider">Có tính công</span>
+                        )}
+                      </div>
                       <span className="text-[12.5px] text-slate-500 leading-snug">
                         {card.description}
                       </span>
@@ -436,7 +463,23 @@ export default function CreateRequestPage() {
                 </>
               ) : type === "absent" ? (
                 <>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                    <div className="space-y-1.5 flex flex-col justify-start">
+                      <Label className="text-[13px] font-semibold text-slate-700">
+                         Lý do <span className="text-rose-500">*</span>
+                      </Label>
+                      <Select value={reasonType} onValueChange={(val) => setReasonType(val as "PERSONAL" | "COMPANY")}>
+                        <SelectTrigger className="w-full text-[14px] bg-slate-50/50 h-10 border-slate-200">
+                          <span className={reasonType === "" ? "text-slate-500" : ""}>
+                            {reasonType === "" ? "-- Chọn loại lý do --" : reasonType === "PERSONAL" ? "Việc cá nhân" : "Việc công ty"}
+                          </span>
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="PERSONAL">Việc cá nhân (Tối đa 90p)</SelectItem>
+                          <SelectItem value="COMPANY">Việc công ty (Tối đa 8h)</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
                     <div className="space-y-1.5">
                       <Label className="text-[13px] font-semibold text-slate-700">
                         Ngày vắng mặt <span className="text-rose-500">*</span>
@@ -481,6 +524,28 @@ export default function CreateRequestPage() {
                       <TimeSelect value={endTime} onChange={setEndTime} />
                     </div>
                   </div>
+
+                  {/* Duration Alert */}
+                  {durationPreview > 0 && reasonType && (
+                    <div className="mt-4 p-3 bg-amber-50/80 border border-amber-200/60 rounded-xl text-sm flex gap-3 text-amber-800 shadow-sm animate-in fade-in slide-in-from-top-2 duration-300">
+                       <span className="shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-amber-100 text-amber-600">
+                          <CalendarIcon size={14} />
+                       </span>
+                       <div className="flex flex-col">
+                          <span className="font-semibold text-amber-900">
+                             Thời gian vắng: {(durationPreview / 60).toFixed(1).replace(/\.0$/, '')} giờ ({durationPreview} phút)
+                          </span>
+                          <span className="text-amber-700/80 mt-0.5">
+                             {reasonType === "PERSONAL" && durationPreview > 90 && (
+                                "Lưu ý: Bạn chọn Việc cá nhân. Chỉ 90 phút được ghi nhận tính công, phần còn lại sẽ coi như vắng mặt không lương."
+                             )}
+                             {reasonType === "COMPANY" && durationPreview > 480 && (
+                                "Lưu ý: Bạn chọn Việc công ty. Thời gian được tính cộng vào công trong ngày thay vì vắng mặt (tối đa 480 phút/ngày)."
+                             )}
+                          </span>
+                       </div>
+                    </div>
+                  )}
                 </>
               ) : type === "resign" ? (
                 <>
@@ -774,6 +839,65 @@ export default function CreateRequestPage() {
                   </div>
                 </>
               )}
+              
+              {/* Type-Specific Helper Text */}
+              <div className="mt-2 mb-1">
+                {type === "checkInOut" && (
+                   <div className="p-3.5 bg-indigo-50/60 border border-indigo-100 rounded-lg text-indigo-900 relative overflow-hidden mb-2">
+                       <div className="absolute left-0 top-0 bottom-0 w-1 bg-indigo-500/80"></div>
+                       <div className="pl-1.5">
+                          <p className="font-semibold text-[13.5px] uppercase tracking-wide">Lưu ý đồng bộ chấm công</p>
+                          <ul className="list-disc list-inside text-[13px] ml-1 space-y-1 opacity-90 mt-1">
+                             <li><strong>Check-in:</strong> Chỉ điều chỉnh giờ vào làm. <strong>Check-out:</strong> Chỉ điều chỉnh giờ tan làm.</li>
+                             <li>Hệ thống sẽ tự động tính lại công của bạn ngay sau khi đơn được duyệt.</li>
+                             <li><strong>Lưu ý:</strong> Nếu máy chấm công tiếp tục ghi nhận dữ liệu mới của bạn sau đó, kết quả tính công cuối cùng có thể sẽ thay đổi dựa theo dữ liệu thực tế nhất.</li>
+                          </ul>
+                       </div>
+                   </div>
+                )}
+                {type === "absent" && (
+                   <div className="p-3.5 bg-indigo-50/60 border border-indigo-100 rounded-lg text-indigo-900 relative overflow-hidden mb-2">
+                       <div className="absolute left-0 top-0 bottom-0 w-1 bg-indigo-500/80"></div>
+                       <div className="pl-1.5">
+                          <p className="font-semibold text-[13.5px] uppercase tracking-wide">Lưu ý đới với đơn vắng mặt</p>
+                          <p className="text-[13px] opacity-90 leading-relaxed mt-1">Đơn này <strong>được tính công</strong>. Hệ thống sẽ sử dụng khung giờ bạn đăng ký làm dữ liệu check-in/out và tính lại báo cáo Summary sau khi duyệt.</p>
+                       </div>
+                   </div>
+                )}
+                {type === "resign" && (
+                   <div className="p-3.5 bg-indigo-50/60 border border-indigo-100 rounded-lg text-indigo-900 relative overflow-hidden mb-2">
+                       <div className="absolute left-0 top-0 bottom-0 w-1 bg-indigo-500/80"></div>
+                       <div className="pl-1.5">
+                          <p className="font-semibold text-[13.5px] uppercase tracking-wide">Cảnh báo đóng dữ liệu sau nghỉ việc</p>
+                          <p className="text-[13px] opacity-90 leading-relaxed mt-1">Vui lòng làm việc đến hết <strong>Ngày làm việc cuối</strong>. Sau mốc thời gian này, phân vùng chấm công của bạn sẽ được đóng lại và không tiếp tục ghi nhận thêm bất kỳ dữ liệu nào.</p>
+                       </div>
+                   </div>
+                )}
+                {type === "leave" && (
+                   <div className="p-3.5 bg-indigo-50/60 border border-indigo-100 rounded-lg text-indigo-900 relative overflow-hidden mb-2">
+                       <div className="absolute left-0 top-0 bottom-0 w-1 bg-indigo-500/80"></div>
+                       <div className="pl-1.5">
+                          <p className="text-[13px] leading-relaxed"><strong>Đơn có trừ phép:</strong> Số ngày xin nghỉ sẽ bị trừ lập tức vào quỹ phép hiện tại khi đơn được phê duyệt. Hệ thống ghi nhận đây là những ngày có chấm công (có tính công).</p>
+                       </div>
+                   </div>
+                )}
+                {type === "wfh" && (
+                   <div className="p-3.5 bg-indigo-50/60 border border-indigo-100 rounded-lg text-indigo-900 relative overflow-hidden mb-2">
+                       <div className="absolute left-0 top-0 bottom-0 w-1 bg-indigo-500/80"></div>
+                       <div className="pl-1.5">
+                          <p className="text-[13px] leading-relaxed"><strong>Đơn có tính công:</strong> Ngày tương ứng sẽ được tự động tính là ngày đi làm hợp lệ trong tháng mà không yêu cầu bạn phải có dữ liệu quẹt thẻ.</p>
+                       </div>
+                   </div>
+                )}
+                {type === "business" && (
+                   <div className="p-3.5 bg-indigo-50/60 border border-indigo-100 rounded-lg text-indigo-900 relative overflow-hidden mb-2">
+                       <div className="absolute left-0 top-0 bottom-0 w-1 bg-indigo-500/80"></div>
+                       <div className="pl-1.5">
+                          <p className="text-[13px] leading-relaxed"><strong>Đơn có tính công:</strong> Thời gian đi công tác sẽ được tự động tính vào tổng số ngày làm việc trong tháng mà không cần dữ liệu điểm danh tại văn phòng.</p>
+                       </div>
+                   </div>
+                )}
+              </div>
 
               <div className="space-y-1.5">
                 <Label className="text-[13px] font-semibold text-slate-700 flex items-center justify-between">

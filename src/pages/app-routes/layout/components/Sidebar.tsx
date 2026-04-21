@@ -9,7 +9,6 @@ import {
   User,
   ShieldCheck,
 } from "lucide-react";
-import { useAuthStore } from "@/store/useAuthStore";
 import { useNavigate } from "react-router-dom";
 import { ScrollArea } from "../../../../components/ui/scroll-area";
 import { useLayoutStore } from "../../../../store/useLayoutStore";
@@ -32,7 +31,6 @@ export default function Sidebar() {
   const hiddenSidebarItems = useLayoutStore((state) => state.hiddenSidebarItems) || [];
   const sidebarMode = useLayoutStore((state) => state.sidebarMode);
   const setSidebarMode = useLayoutStore((state) => state.setSidebarMode);
-  const { session } = useAuthStore();
 
   // State for sub-menus
   const [expandedMenus, setExpandedMenus] = useState<Record<string, boolean>>(
@@ -109,7 +107,7 @@ export default function Sidebar() {
   };
 
   const { t } = useTranslation();
-  const { sidebarData: menuData } = useNavigationData();
+  const { sidebarData: menuData, hasManagementAccess } = useNavigationData();
 
   return (
     <aside
@@ -196,7 +194,7 @@ export default function Sidebar() {
                           handleMouseEnter(e, item.label, item.subItems)
                         }
                         onMouseLeave={handleMouseLeave}
-                        jobTitle="button"
+                        role="button"
                         tabIndex={0}
                         onKeyDown={(e) => {
                           if (e.key === "Enter" || e.key === " ")
@@ -242,7 +240,7 @@ export default function Sidebar() {
                                   e.stopPropagation();
                                   navigate(sub.path);
                                 }}
-                                jobTitle="button"
+                                role="button"
                                 tabIndex={0}
                                 onKeyDown={(e) => {
                                   if (e.key === "Enter" || e.key === " ") {
@@ -342,7 +340,7 @@ export default function Sidebar() {
 
       {/* Footer Navigation */}
       <div className="sidebar-footer">
-        {session?.groupName === "ADMIN" && (
+        {hasManagementAccess && (
           <button 
             onClick={() => setSidebarMode(sidebarMode === "admin" ? "user" : "admin")} 
             className={`btn-shimmer flex items-center ${isCollapsed ? "justify-center" : "justify-start px-3"} w-full gap-3 p-2.5 mb-3 rounded-xl border border-white/20 transition-all duration-300 shadow-[0_0_15px_rgba(255,255,255,0.05)] hover:shadow-[0_0_20px_rgba(247,148,29,0.2)] bg-linear-to-r from-white/5 to-white/10 hover:from-white/10 hover:to-white/20 text-white/90 hover:text-white group relative overflow-hidden`}

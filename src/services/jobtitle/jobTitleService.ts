@@ -1,7 +1,7 @@
 import { apiClient } from "@/lib/apiClient";
 import type { ApiResponse } from '@/types/base/ApiResponse';
-import type { JobTitleResponse } from '@/types/jobTitle/JobTitleResponse';
-import type { UpsertJobTitleRequest } from '@/types/jobTitle/UpsertJobTitleRequest';
+import type { JobTitleResponse } from '@/types/jobtitle/JobTitleResponse';
+import type { UpsertJobTitleRequest } from '@/types/jobtitle/UpsertJobTitleRequest';
 
 const ENDPOINT = '/job-titles';
 

@@ -9,7 +9,7 @@ import { departmentService } from "@/services/department";
 import { positionService } from "@/services/position";
 import { groupService } from "@/services/group/groupService";
 import { employeeCodeService } from "@/services/employeeCode";
-import { jobTitleService } from "@/services/jobTitle/jobTitleService";
+import { jobTitleService } from "@/services/jobtitle/jobTitleService";
 import { SearchableSelect } from "@/components/custom/SearchableSelect";
 
 
@@ -60,7 +60,7 @@ export default function EmployeeFormSheet({ isOpen, onOpenChange, formData, setF
   const positions = positionsResponse?.data?.map(p => ({ value: p.id, label: p.name })) || [];
   const groups = groupsResponse?.data?.map(g => ({ value: g.id, label: g.name })) || [];
   const employeeCodes = employeeCodesResponse?.data?.filter(c => c.active).map(c => ({ value: c.id, label: c.prefix })) || [];
-  const jobTitles = jobTitlesResponse?.data?.filter(r => r.active !== false).map(r => ({ value: r.id, label: r.name })) || [];
+  const jobTitles = jobTitlesResponse?.data?.filter((r: any) => r.active !== false).map((r: any) => ({ value: r.id, label: r.name })) || [];
 
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>

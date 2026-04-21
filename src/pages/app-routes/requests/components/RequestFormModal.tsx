@@ -45,7 +45,7 @@ type RequestType =
   | "wfh";
 
 const typeLabels: Record<RequestType, string> = {
-  leave: "Đơn xin nghỉ",
+  leave: "Đơn xin nghỉ phép",
   absent: "Đơn vắng mặt",
   checkInOut: "Đơn checkin/out",
   business: "Đơn công tác",
@@ -56,12 +56,13 @@ const typeLabels: Record<RequestType, string> = {
 const requestCards = [
   {
     id: "leave",
-    label: "Đơn xin nghỉ",
+    label: "Đơn xin nghỉ phép",
     description:
-      "Đơn xin nghỉ phát sinh khi bạn muốn nghỉ nhiều ngày làm việc.",
+      "Đơn xin nghỉ phép phát sinh khi bạn muốn nghỉ nhiều ngày làm việc.",
     icon: Umbrella,
     color: "text-indigo-500",
     bg: "bg-indigo-50 ring-1 ring-indigo-100",
+    isPaid: true,
   },
   {
     id: "wfh",
@@ -71,6 +72,7 @@ const requestCards = [
     icon: Home,
     color: "text-purple-500",
     bg: "bg-purple-50 ring-1 ring-purple-100",
+    isPaid: true,
   },
   {
     id: "checkInOut",
@@ -80,15 +82,17 @@ const requestCards = [
     icon: CheckCircle2,
     color: "text-rose-500",
     bg: "bg-rose-50 ring-1 ring-rose-100",
+    isPaid: true,
   },
   {
     id: "absent",
     label: "Đơn vắng mặt",
     description:
-      "Đơn vắng mặt phát sinh khi bạn có nhu cầu vắng mặt 1 khoảng thời gian trong ca làm việc. Đơn làm bằng chứng vắng mặt, phải về công ty checkout mới được công nhận.",
+      "Đơn đăng ký vắng mặt có phép. Thời gian vắng mặt sẽ được cộng trực tiếp vào công ngày tùy theo lý do cá nhân hoặc lý do công ty.",
     icon: User,
     color: "text-cyan-500",
     bg: "bg-cyan-50 ring-1 ring-cyan-100",
+    isPaid: true,
   },
   {
     id: "business",
@@ -98,6 +102,7 @@ const requestCards = [
     icon: Truck,
     color: "text-lime-600",
     bg: "bg-lime-50 ring-1 ring-lime-100",
+    isPaid: true,
   },
   {
     id: "resign",
@@ -106,6 +111,7 @@ const requestCards = [
     icon: UserMinus,
     color: "text-red-500",
     bg: "bg-red-50 ring-1 ring-red-100",
+    isPaid: false,
   },
 ] as const;
 
@@ -135,6 +141,7 @@ export default function RequestFormModal({ isOpen, onOpenChange, initialData }: 
   const [startTime, setStartTime] = useState("");
   const [checkInOutType, setCheckInOutType] = useState<"checkin" | "checkout" | "">("");
   const [endTime, setEndTime] = useState("");
+  const [reasonType, setReasonType] = useState<"PERSONAL" | "COMPANY" | "">("");
 
   const [startSession, setStartSession] = useState<"morning" | "afternoon" | "all">("all");
   const [endSession, setEndSession] = useState<"morning" | "afternoon" | "all">("all");
@@ -156,7 +163,7 @@ export default function RequestFormModal({ isOpen, onOpenChange, initialData }: 
         
         if (initialData.startDate) setStartDate(new Date(initialData.startDate));
         if (initialData.endDate) setEndDate(new Date(initialData.endDate));
-        if (initialData.absenceDate) { setDate(new Date(initialData.absenceDate)); setStartTime(initialData.fromTime || ""); setEndTime(initialData.toTime || ""); }
+        if (initialData.absenceDate) { setDate(new Date(initialData.absenceDate)); setStartTime(initialData.fromTime || ""); setEndTime(initialData.toTime || ""); setReasonType(initialData.absenceReasonType || ""); }
         if (initialData.attendanceDate) { setDate(new Date(initialData.attendanceDate)); setStartTime(initialData.requestedTime || ""); setCheckInOutType(initialData.timeType === "CHECK_IN" ? "checkin" : "checkout"); }
         if (initialData.submissionDate) { setDate(new Date(initialData.submissionDate)); setEndDate(new Date(initialData.lastWorkingDate!)); }
         
@@ -170,6 +177,7 @@ export default function RequestFormModal({ isOpen, onOpenChange, initialData }: 
         setEndDate(undefined);
         setStartTime("");
         setEndTime("");
+        setReasonType("");
         setCheckInOutType("");
         setStartSession("all");
         setEndSession("all");
@@ -195,6 +203,28 @@ export default function RequestFormModal({ isOpen, onOpenChange, initialData }: 
 
     return Math.max(0, totalDays);
   }, [startDate, endDate, startSession, endSession]);
+
+  const durationPreview = useMemo(() => {
+    if (!startTime || !endTime || !reasonType) return null;
+    const parseTime = (t: string) => { const [h,m] = t.split(':'); return parseInt(h)*60 + parseInt(m); };
+    const from = parseTime(startTime);
+    const to = parseTime(endTime);
+    if (to <= from) return null;
+    const duration = to - from;
+    let credited = 0;
+    if (reasonType === "PERSONAL") credited = Math.min(duration, 90);
+    else if (reasonType === "COMPANY") credited = Math.min(duration, 480);
+    
+    const formatMins = (m: number) => {
+       const h = Math.floor(m / 60);
+       const rem = m % 60;
+       if (h > 0 && rem > 0) return `${h}h ${rem}p`;
+       if (h > 0) return `${h}h`;
+       return `${rem}p`;
+    };
+    
+    return { duration: formatMins(duration), credited: formatMins(credited), over: duration > credited };
+  }, [startTime, endTime, reasonType]);
 
   const formRef = useRef<HTMLDivElement>(null);
 
@@ -231,6 +261,7 @@ export default function RequestFormModal({ isOpen, onOpenChange, initialData }: 
             absenceDate: format(date!, "yyyy-MM-dd"),
             fromTime: startTime,
             toTime: endTime,
+            reasonType: reasonType as "PERSONAL" | "COMPANY",
             description: description,
           };
           return isEdit ? requestFormMeService.updateCurrentUserAbsenceForm(initialData.id, absentPayload) : requestFormMeService.createCurrentUserAbsenceForm(absentPayload);
@@ -295,7 +326,11 @@ export default function RequestFormModal({ isOpen, onOpenChange, initialData }: 
         if (!checkInOutType || !date || !startTime) isValid = false;
         break;
       case "absent":
-        if (!date || !startTime || !endTime) isValid = false;
+        if (!date || !startTime || !endTime || !reasonType) isValid = false;
+        if (startTime && endTime && startTime >= endTime) {
+           toast.error("Giờ kết thúc vắng mặt phải lớn hơn giờ bắt đầu.");
+           return;
+        }
         break;
       case "resign":
         if (!date || !endDate) isValid = false; // endDate is Ngày làm cuối
@@ -368,13 +403,18 @@ export default function RequestFormModal({ isOpen, onOpenChange, initialData }: 
                         />
                       </div>
                       <div className="flex flex-col gap-1.5 pr-6 items-start">
-                        <span className="text-[14px] md:text-[15px] font-semibold text-slate-800 tracking-tight">
-                          {card.label}
-                        </span>
-                        <span className="text-[12.5px] text-slate-500 leading-snug">
-                          {card.description}
-                        </span>
-                      </div>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="text-[14px] md:text-[15px] font-semibold text-slate-800 tracking-tight">
+                        {card.label}
+                      </span>
+                      {card.isPaid && (
+                        <span className="bg-emerald-50 text-emerald-600 border border-emerald-200 px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider">Có tính công</span>
+                      )}
+                    </div>
+                    <span className="text-[12.5px] text-slate-500 leading-snug">
+                      {card.description}
+                    </span>
+                  </div>
                       {isSelected && (
                         <div className="absolute top-4 right-4 bg-[#2E3192] text-white rounded-full flex items-center justify-center w-5 h-5 shadow-sm">
                           <Check className="w-3.5 h-3.5" strokeWidth={3} />
@@ -503,14 +543,30 @@ export default function RequestFormModal({ isOpen, onOpenChange, initialData }: 
                 </>
               ) : type === "absent" ? (
                 <>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-                    <div className="col-span-1 sm:col-span-3">
-                      <div className="p-3 bg-slate-50 border border-slate-200/60 rounded-lg text-[13px] text-slate-600 leading-relaxed shadow-sm">
-                        <span className="font-semibold block mb-1">ℹ️ Lưu ý:</span>
-                        Đơn vắng mặt <strong>không tính công</strong>. Đơn này chỉ xác nhận khoảng thời gian vắng mặt có phép.
-                      </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <div className="space-y-1.5 sm:col-span-2">
+                       <Label className="text-[13px] font-semibold text-slate-700">
+                         Lý do vắng mặt <span className="text-rose-500">*</span>
+                       </Label>
+                       <Select
+                         value={reasonType}
+                         onValueChange={(val) => setReasonType(val as "PERSONAL" | "COMPANY")}
+                       >
+                         <SelectTrigger className="w-full text-[14px] bg-slate-50/50 h-10 border-slate-200 focus:ring-indigo-500/20">
+                           <span className={reasonType === "" ? "text-slate-500" : ""}>
+                             {reasonType === "" ? "-- Chọn lý do --" : reasonType === "PERSONAL" ? "Việc cá nhân" : "Việc công ty"}
+                           </span>
+                         </SelectTrigger>
+                         <SelectContent>
+                           <SelectItem value="PERSONAL">Việc cá nhân</SelectItem>
+                           <SelectItem value="COMPANY">Việc công ty</SelectItem>
+                         </SelectContent>
+                       </Select>
+                       {reasonType === "PERSONAL" && <p className="text-[12.5px] text-slate-500 mt-1">Được tính công tối đa 1 giờ 30 phút.</p>}
+                       {reasonType === "COMPANY" && <p className="text-[12.5px] text-slate-500 mt-1">Được tính công tối đa 8 giờ.</p>}
                     </div>
-                    <div className="space-y-1.5">
+
+                    <div className="space-y-1.5 sm:col-span-2">
                       <Label className="text-[13px] font-semibold text-slate-700">
                         Ngày vắng mặt <span className="text-rose-500">*</span>
                       </Label>
@@ -522,37 +578,45 @@ export default function RequestFormModal({ isOpen, onOpenChange, initialData }: 
                           )}
                         >
                           <CalendarIcon className="mr-2 h-4 w-4 text-slate-400" />
-                          {date ? (
-                            format(date, "dd/MM/yyyy")
-                          ) : (
-                            <span>Chọn ngày</span>
-                          )}
+                          {date ? format(date, "dd/MM/yyyy") : <span>Chọn ngày</span>}
                         </PopoverTrigger>
                         <PopoverContent className="w-auto p-0" align="start">
-                          <Calendar
-                            mode="single"
-                            selected={date}
-                            onSelect={setDate}
-                            initialFocus
-                            locale={vi}
-                          />
+                          <Calendar mode="single" selected={date} onSelect={setDate} initialFocus locale={vi} />
                         </PopoverContent>
                       </Popover>
                     </div>
 
                     <div className="space-y-1.5">
                       <Label className="text-[13px] font-semibold text-slate-700">
-                        Vắng mặt từ <span className="text-rose-500">*</span>
+                        Từ giờ <span className="text-rose-500">*</span>
                       </Label>
                       <TimeSelect value={startTime} onChange={setStartTime} />
                     </div>
 
                     <div className="space-y-1.5">
                       <Label className="text-[13px] font-semibold text-slate-700">
-                        Vắng mặt đến <span className="text-rose-500">*</span>
+                        Đến giờ <span className="text-rose-500">*</span>
                       </Label>
                       <TimeSelect value={endTime} onChange={setEndTime} />
                     </div>
+
+                    {durationPreview && (
+                      <div className="sm:col-span-2 p-3 bg-slate-50 border border-slate-200/60 rounded-lg text-[13px] text-slate-600 shadow-sm flex flex-col gap-1">
+                         <div className="flex justify-between items-center text-sm font-medium">
+                           <span>Tổng thời gian đăng ký:</span>
+                           <span>{durationPreview.duration}</span>
+                         </div>
+                         <div className="flex justify-between items-center text-sm font-bold text-indigo-600">
+                           <span>Thời gian được tính công:</span>
+                           <span>{durationPreview.credited}</span>
+                         </div>
+                         {durationPreview.over && (
+                           <div className="text-[12px] text-amber-600 font-medium italic mt-1 bg-amber-50 rounded px-2 py-1 border border-amber-100/50">
+                             Chỉ {durationPreview.credited} được tính công, phần còn lại không được cộng công.
+                           </div>
+                         )}
+                      </div>
+                    )}
                   </div>
                 </>
               ) : type === "resign" ? (
@@ -902,6 +966,65 @@ export default function RequestFormModal({ isOpen, onOpenChange, initialData }: 
                   ) : null}
                 </>
               )}
+              
+              {/* Type-Specific Helper Text */}
+              <div className="mt-2 mb-1">
+                {type === "checkInOut" && (
+                   <div className="p-3.5 bg-indigo-50/60 border border-indigo-100 rounded-lg text-indigo-900 relative overflow-hidden mb-2">
+                       <div className="absolute left-0 top-0 bottom-0 w-1 bg-indigo-500/80"></div>
+                       <div className="pl-1.5">
+                          <p className="font-semibold text-[13.5px] uppercase tracking-wide">Lưu ý đồng bộ chấm công</p>
+                          <ul className="list-disc list-inside text-[13px] ml-1 space-y-1 opacity-90 mt-1">
+                             <li><strong>Check-in:</strong> Chỉ điều chỉnh giờ vào làm. <strong>Check-out:</strong> Chỉ điều chỉnh giờ tan làm.</li>
+                             <li>Hệ thống sẽ tự động tính lại công của bạn ngay sau khi đơn được duyệt.</li>
+                             <li><strong>Lưu ý:</strong> Nếu máy chấm công tiếp tục ghi nhận dữ liệu mới của bạn sau đó, kết quả tính công cuối cùng có thể sẽ thay đổi dựa theo dữ liệu thực tế nhất.</li>
+                          </ul>
+                       </div>
+                   </div>
+                )}
+                {type === "absent" && (
+                   <div className="p-3.5 bg-indigo-50/60 border border-indigo-100 rounded-lg text-indigo-900 relative overflow-hidden mb-2">
+                       <div className="absolute left-0 top-0 bottom-0 w-1 bg-indigo-500/80"></div>
+                       <div className="pl-1.5">
+                          <p className="font-semibold text-[13.5px] uppercase tracking-wide">Lưu ý đới với đơn vắng mặt</p>
+                          <p className="text-[13px] opacity-90 leading-relaxed mt-1">Đơn này <strong>được tính công</strong>. Hệ thống sẽ sử dụng khung giờ bạn đăng ký làm dữ liệu check-in/out và tính lại báo cáo Summary sau khi duyệt.</p>
+                       </div>
+                   </div>
+                )}
+                {type === "resign" && (
+                   <div className="p-3.5 bg-indigo-50/60 border border-indigo-100 rounded-lg text-indigo-900 relative overflow-hidden mb-2">
+                       <div className="absolute left-0 top-0 bottom-0 w-1 bg-indigo-500/80"></div>
+                       <div className="pl-1.5">
+                          <p className="font-semibold text-[13.5px] uppercase tracking-wide">Cảnh báo đóng dữ liệu sau nghỉ việc</p>
+                          <p className="text-[13px] opacity-90 leading-relaxed mt-1">Vui lòng làm việc đến hết <strong>Ngày làm việc cuối</strong>. Sau mốc thời gian này, phân vùng chấm công của bạn sẽ được đóng lại và không tiếp tục ghi nhận thêm bất kỳ dữ liệu nào.</p>
+                       </div>
+                   </div>
+                )}
+                {type === "leave" && (
+                   <div className="p-3.5 bg-indigo-50/60 border border-indigo-100 rounded-lg text-indigo-900 relative overflow-hidden mb-2">
+                       <div className="absolute left-0 top-0 bottom-0 w-1 bg-indigo-500/80"></div>
+                       <div className="pl-1.5">
+                          <p className="text-[13px] leading-relaxed"><strong>Đơn có trừ phép:</strong> Số ngày xin nghỉ sẽ bị trừ lập tức vào quỹ phép hiện tại khi đơn được phê duyệt. Hệ thống ghi nhận đây là những ngày có chấm công (có tính công).</p>
+                       </div>
+                   </div>
+                )}
+                {type === "wfh" && (
+                   <div className="p-3.5 bg-indigo-50/60 border border-indigo-100 rounded-lg text-indigo-900 relative overflow-hidden mb-2">
+                       <div className="absolute left-0 top-0 bottom-0 w-1 bg-indigo-500/80"></div>
+                       <div className="pl-1.5">
+                          <p className="text-[13px] leading-relaxed"><strong>Đơn có tính công:</strong> Ngày tương ứng sẽ được tự động tính là ngày đi làm hợp lệ trong tháng mà không yêu cầu bạn phải có dữ liệu quẹt thẻ.</p>
+                       </div>
+                   </div>
+                )}
+                {type === "business" && (
+                   <div className="p-3.5 bg-indigo-50/60 border border-indigo-100 rounded-lg text-indigo-900 relative overflow-hidden mb-2">
+                       <div className="absolute left-0 top-0 bottom-0 w-1 bg-indigo-500/80"></div>
+                       <div className="pl-1.5">
+                          <p className="text-[13px] leading-relaxed"><strong>Đơn có tính công:</strong> Thời gian đi công tác sẽ được tự động tính vào tổng số ngày làm việc trong tháng mà không cần dữ liệu điểm danh tại văn phòng.</p>
+                       </div>
+                   </div>
+                )}
+              </div>
 
               <div className="space-y-1.5">
                 <Label className="text-[13px] font-semibold text-slate-700 flex items-center justify-between">

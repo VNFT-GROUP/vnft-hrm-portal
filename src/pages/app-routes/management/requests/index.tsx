@@ -71,6 +71,16 @@ export default function ManagementRequestsPage() {
       const request = requests.find(r => r.id === id);
       if (request?.type === "ATTENDANCE_ADJUSTMENT" && request.attendanceDate && request.timeType) {
         toast.success(`Đã duyệt điều chỉnh ${request.timeType === 'CHECK_IN' ? 'check-in' : 'check-out'} ngày ${format(new Date(request.attendanceDate), "dd/MM/yyyy")}. Công ngày và tổng hợp tháng đã được cập nhật.`);
+      } else if (request?.type === "ABSENCE") {
+        toast.success(`Đã duyệt đơn vắng mặt. Hệ thống đã ghi nhận thời gian làm việc gốc và tính lại tổng hợp báo cáo chấm công.`);
+      } else if (request?.type === "LEAVE") {
+        toast.success(`Đã duyệt đơn nghỉ phép. Hệ thống đã trừ tự động quota phép năm của nhân sự.`);
+      } else if (request?.type === "WFH") {
+        toast.success(`Đã duyệt đơn WFH. Ngày công đã được cập nhật trên báo cáo tháng.`);
+      } else if (request?.type === "BUSINESS_TRIP") {
+        toast.success(`Đã duyệt đơn công tác. Hệ thống đã tính công cho lịch trình này.`);
+      } else if (request?.type === "RESIGNATION") {
+        toast.success(`Đã duyệt đơn thôi việc. Ngày làm việc cuối cùng đã được xác nhận để khóa dữ liệu chấm công.`);
       } else {
         toast.success(`Đã DUYỆT đơn ${id} thành công!`);
       }
@@ -143,7 +153,16 @@ export default function ManagementRequestsPage() {
         const tType = req.timeType === "CHECK_IN" ? "check-in" : "check-out";
         return `Điều chỉnh ${tType} ngày ${format(new Date(req.attendanceDate), "dd/MM/yyyy")} thành ${req.requestedTime?.substring(0, 5)}`;
       } else if (req.type === "ABSENCE") {
-        return `Vắng mặt ngày ${format(new Date(req.absenceDate), "dd/MM/yyyy")}, từ ${req.fromTime?.substring(0, 5)} đến ${req.toTime?.substring(0, 5)}`;
+        return (
+           <div className="flex flex-col gap-1 sm:flex-row sm:items-center">
+              <span>{`Vắng mặt ngày ${format(new Date(req.absenceDate), "dd/MM/yyyy")}, từ ${req.fromTime?.substring(0, 5)} đến ${req.toTime?.substring(0, 5)}`}</span>
+              {req.absenceReasonType && (
+                 <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold uppercase shrink-0 w-fit ${req.absenceReasonType === 'PERSONAL' ? 'bg-amber-100 text-amber-700' : 'bg-blue-100 text-blue-700'}`}>
+                   {req.absenceReasonType === 'PERSONAL' ? 'Việc cá nhân' : 'Việc công ty'}
+                 </span>
+              )}
+           </div>
+        );
       } else if (req.type === "LEAVE") {
         const s1 = req.startSession === "FULL_DAY" ? "Cả ngày" : req.startSession === "MORNING" ? "Sáng" : "Chiều";
         const s2 = req.endSession === "FULL_DAY" ? "Cả ngày" : req.endSession === "MORNING" ? "Sáng" : "Chiều";
@@ -457,6 +476,47 @@ export default function ManagementRequestsPage() {
                       Hệ thống sẽ cập nhật lại giờ {selectedRequest.timeType === "CHECK_IN" ? "vào ca" : "ra ca"} ngày {format(new Date(selectedRequest.attendanceDate), "dd/MM/yyyy")} thành <strong>{selectedRequest.requestedTime?.substring(0, 5)}</strong>. 
                       Quá trình này sẽ tự động tính lại <strong>Công ngày (Daily Summary)</strong> và <strong>Công tháng (Monthly Summary)</strong> của nhân viên.
                       <p className="mt-1 text-indigo-600/80 italic text-[12px]">Lưu ý: Thao tác này ghi đè logic hiện tại nhưng không khóa cứng dữ liệu. Lần đồng bộ máy chấm công tiếp theo có thể làm thay đổi kết quả.</p>
+                    </div>
+                  </div>
+                )}
+                {selectedRequest.type === "ABSENCE" && (
+                  <div className="col-span-2 mt-2">
+                    <div className="p-3 bg-indigo-50 border border-indigo-100/50 rounded-lg text-[13px] text-indigo-700 leading-relaxed shadow-sm">
+                      <span className="font-semibold block mb-1">ℹ️ Tác động chấm công:</span>
+                      Đơn này sẽ cộng thời gian hợp lệ vào ngày chấm công tương ứng mà không tạo check-in/out ảo. 
+                      Giới hạn công nhận diện tự động dựa theo loại ({selectedRequest.absenceReasonType === 'PERSONAL' ? 'Việc cá nhân - 90 phút' : selectedRequest.absenceReasonType === 'COMPANY' ? 'Việc công ty - 8 giờ' : 'Theo quy định'}).
+                    </div>
+                  </div>
+                )}
+                {selectedRequest.type === "LEAVE" && (
+                  <div className="col-span-2 mt-2">
+                    <div className="p-3 bg-indigo-50 border border-indigo-100/50 rounded-lg text-[13px] text-indigo-700 leading-relaxed shadow-sm">
+                      <span className="font-semibold block mb-1">ℹ️ Tác động sau khi duyệt:</span>
+                      Số ngày nghỉ tương ứng sẽ được trừ trực tiếp vào quota ngày phép năm của nhân viên. Hệ thống tự động ghi nhận đây là ngày có chấm công trên Monthly Summary.
+                    </div>
+                  </div>
+                )}
+                {selectedRequest.type === "WFH" && (
+                  <div className="col-span-2 mt-2">
+                    <div className="p-3 bg-indigo-50 border border-indigo-100/50 rounded-lg text-[13px] text-indigo-700 leading-relaxed shadow-sm">
+                      <span className="font-semibold block mb-1">ℹ️ Tác động sau khi duyệt:</span>
+                      Hệ thống sẽ cộng thêm giá trị công cho ngày này và ghi nhận thêm vào chỉ số tổng ngày WFH (Approved WFH Days) trong kỳ lương của nhân sự.
+                    </div>
+                  </div>
+                )}
+                {selectedRequest.type === "BUSINESS_TRIP" && (
+                  <div className="col-span-2 mt-2">
+                    <div className="p-3 bg-indigo-50 border border-indigo-100/50 rounded-lg text-[13px] text-indigo-700 leading-relaxed shadow-sm">
+                      <span className="font-semibold block mb-1">ℹ️ Tác động sau khi duyệt:</span>
+                      Hệ thống sẽ ghi nhận ngày này là ngày đã đi làm hợp lệ trên báo cáo Summary tháng mà không yêu cầu dữ liệu check-in/out.
+                    </div>
+                  </div>
+                )}
+                {selectedRequest.type === "RESIGNATION" && (
+                  <div className="col-span-2 mt-2">
+                    <div className="p-3 bg-indigo-50 border border-indigo-100/50 rounded-lg text-[13px] text-indigo-700 leading-relaxed shadow-sm">
+                      <span className="font-semibold block mb-1">ℹ️ Tác động sau khi duyệt:</span>
+                      Profiles Attendance của nhân viên sẽ bị khóa từ ngày hôm sau tính từ <strong>Ngày làm việc cuối</strong>. Dữ liệu các ngày sau đó sẽ bị loại khỏi bảng tổng hợp hàng tháng.
                     </div>
                   </div>
                 )}

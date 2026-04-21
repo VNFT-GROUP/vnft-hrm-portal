@@ -3,4 +3,5 @@ export interface CreateAbsenceRequest {
   absenceDate: string;
   fromTime: string;
   toTime: string;
+  reasonType: import("./RequestFormEnums").AbsenceReasonType;
 }

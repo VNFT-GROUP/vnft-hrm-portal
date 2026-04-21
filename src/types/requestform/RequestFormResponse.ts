@@ -1,4 +1,5 @@
 import type {
+  AbsenceReasonType,
   AttendanceAdjustmentTimeType,
   LeaveSessionType,
   RequestFormStatus,
@@ -21,6 +22,7 @@ export interface RequestFormResponse {
   absenceDate: string;
   fromTime: string;
   toTime: string;
+  absenceReasonType?: AbsenceReasonType;
   timeType: AttendanceAdjustmentTimeType;
   attendanceDate: string;
   requestedTime: string;

@@ -1,5 +1,7 @@
 export type AttendanceAdjustmentTimeType = "CHECK_IN" | "CHECK_OUT";
 
+export type AbsenceReasonType = "PERSONAL" | "COMPANY";
+
 export type LeaveSessionType = 
   | "MORNING"
   | "AFTERNOON"

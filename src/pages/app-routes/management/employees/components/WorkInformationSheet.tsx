@@ -7,7 +7,7 @@ import { Switch } from "@/components/ui/switch";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { departmentService } from "@/services/department";
 import { positionService } from "@/services/position";
-import { jobTitleService } from "@/services/jobTitle/jobTitleService";
+import { jobTitleService } from "@/services/jobtitle/jobTitleService";
 import { userService } from "@/services/user/userService";
 import { SearchableSelect } from "@/components/custom/SearchableSelect";
 import { toast } from "sonner";
@@ -61,7 +61,7 @@ export default function WorkInformationSheet({ isOpen, onOpenChange, userId }: W
 
   const departments = deptsData?.data?.map(d => ({ value: d.id, label: d.name })) || [];
   const positions = posData?.data?.map(p => ({ value: p.id, label: p.name })) || [];
-  const jobTitles = jobTitlesData?.data?.filter(r => r.active !== false).map(r => ({ value: r.id, label: r.name })) || [];
+  const jobTitles = jobTitlesData?.data?.filter((r: any) => r.active !== false).map((r: any) => ({ value: r.id, label: r.name })) || [];
 
   // Mutation: Update Work Information
   const updateWorkInfoMutation = useMutation({

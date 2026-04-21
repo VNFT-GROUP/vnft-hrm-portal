@@ -14,13 +14,20 @@ interface TimeSelectProps {
   className?: string;
 }
 
-const TIME_OPTIONS = Array.from({ length: 96 }).map((_, i) => {
-  const hours = Math.floor(i / 4)
-    .toString()
-    .padStart(2, "0");
-  const minutes = ((i % 4) * 15).toString().padStart(2, "0");
-  return `${hours}:${minutes}`;
-});
+const generateTimeOptions = (startHour = 8, endHour = 20, stepMinutes = 15) => {
+  const options = [];
+  for (let h = startHour; h <= endHour; h++) {
+    for (let m = 0; m < 60; m += stepMinutes) {
+      if (h === endHour && m > 0) break; // Only include up to endHour:00
+      const hs = h.toString().padStart(2, "0");
+      const ms = m.toString().padStart(2, "0");
+      options.push(`${hs}:${ms}`);
+    }
+  }
+  return options;
+};
+
+const TIME_OPTIONS = generateTimeOptions();
 
 export function TimeSelect({ value, onChange, className }: TimeSelectProps) {
   return (

@@ -20,7 +20,16 @@ const ApplicableDate = ({ req }: { req: RequestFormResponse }) => {
       const tType = req.timeType === "CHECK_IN" ? "check-in" : "check-out";
       return <>{`Điều chỉnh ${tType} ngày ${format(new Date(req.attendanceDate!), "dd/MM/yyyy")} thành ${req.requestedTime?.substring(0, 5)}`}</>;
     } else if (req.type === "ABSENCE") {
-      return <>{`Vắng mặt ngày ${format(new Date(req.absenceDate!), "dd/MM/yyyy")}, từ ${req.fromTime?.substring(0, 5)} đến ${req.toTime?.substring(0, 5)}`}</>;
+      return (
+         <div className="flex flex-col gap-1 sm:flex-row sm:items-center justify-center">
+            <span>{`Vắng mặt ngày ${format(new Date(req.absenceDate!), "dd/MM/yyyy")}, từ ${req.fromTime?.substring(0, 5)} đến ${req.toTime?.substring(0, 5)}`}</span>
+            {req.absenceReasonType && (
+               <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold uppercase shrink-0 w-fit mx-auto sm:mx-0 ${req.absenceReasonType === 'PERSONAL' ? 'bg-amber-100 text-amber-700' : 'bg-blue-100 text-blue-700'}`}>
+                 {req.absenceReasonType === 'PERSONAL' ? 'Việc cá nhân' : 'Việc công ty'}
+               </span>
+            )}
+         </div>
+      );
     } else if (req.type === "LEAVE") {
       const s1 = req.startSession === "FULL_DAY" ? "Cả ngày" : req.startSession === "MORNING" ? "Sáng" : "Chiều";
       const s2 = req.endSession === "FULL_DAY" ? "Cả ngày" : req.endSession === "MORNING" ? "Sáng" : "Chiều";

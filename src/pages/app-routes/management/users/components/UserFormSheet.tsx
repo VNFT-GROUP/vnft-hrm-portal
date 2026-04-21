@@ -20,7 +20,7 @@ import {
 import { toast } from "sonner";
 import { useQuery } from "@tanstack/react-query";
 import { employeeCodeService } from "@/services/employeeCode";
-import { jobTitleService } from "@/services/jobTitle/jobTitleService";
+import { jobTitleService } from "@/services/jobtitle/jobTitleService";
 import { groupService } from "@/services/group/groupService";
 import type { CreateUserRequest } from '@/types/user/CreateUserRequest';
 
@@ -89,7 +89,7 @@ export default function UserFormSheet({
   const activeCodes = employeeCodes.filter((c) => c.active);
 
   const jobTitles = jobTitlesData?.data || [];
-  const activeJobTitles = jobTitles.filter((r) => r.active !== false);
+  const activeJobTitles = jobTitles.filter((r: any) => r.active !== false);
 
   const groups = groupsData?.data || [];
 
@@ -320,7 +320,7 @@ export default function UserFormSheet({
                     <SelectValue placeholder="-- Chọn một chức vụ --" />
                   </SelectTrigger>
                   <SelectContent>
-                    {activeJobTitles.map((jobTitle) => (
+                    {activeJobTitles.map((jobTitle: any) => (
                       <SelectItem key={jobTitle.id} value={jobTitle.id}>
                         <div className="flex items-center gap-2">
                           <span className="font-semibold text-[#1E2062]">

@@ -8,10 +8,10 @@ import { useLayoutStore } from "@/store/useLayoutStore";
 
 import JobTitleTable from "./components/JobTitleTable";
 import JobTitleFormSheet from "./components/JobTitleFormSheet";
-import type { JobTitleResponse } from '@/types/jobTitle/JobTitleResponse';
-import type { UpsertJobTitleRequest } from '@/types/jobTitle/UpsertJobTitleRequest';
+import type { JobTitleResponse } from '@/types/jobtitle/JobTitleResponse';
+import type { UpsertJobTitleRequest } from '@/types/jobtitle/UpsertJobTitleRequest';
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { jobTitleService } from "@/services/jobTitle/jobTitleService";
+import { jobTitleService } from "@/services/jobtitle/jobTitleService";
 import { toast } from "sonner";
 import CustomPagination from "@/components/custom/CustomPagination";
 import { useDebounce } from "@/hooks/useDebounce";

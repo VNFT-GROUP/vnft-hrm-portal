@@ -21,6 +21,7 @@ export default function MyAttendancePage() {
   const [selectedRecord, setSelectedRecord] = useState<(AttendanceDailySummaryResponse & { dateObj: Date }) | null>(null);
   const [showDisciplineRules, setShowDisciplineRules] = useState(false);
   const [showStatsRules, setShowStatsRules] = useState(false);
+  const [expandedRequests, setExpandedRequests] = useState<Set<string>>(new Set());
 
   const { data: responseData, isLoading: loading } = useQuery({
     queryKey: ["my-attendance", year, month],
@@ -57,12 +58,28 @@ export default function MyAttendancePage() {
       return "";
     };
 
+    let calculatedDays = 0;
+    if (form.startDate && form.endDate) {
+       try {
+          const start = new Date(form.startDate);
+          start.setHours(0,0,0,0);
+          const end = new Date(form.endDate);
+          end.setHours(0,0,0,0);
+          calculatedDays = (end.getTime() - start.getTime()) / (1000 * 3600 * 24) + 1;
+          if (form.startSession === "AFTERNOON") calculatedDays -= 0.5;
+          if (form.endSession === "MORNING") calculatedDays -= 0.5;
+          calculatedDays = Math.max(0, calculatedDays);
+       } catch (e) {
+          console.debug("Date parsing error:", e);
+       }
+    }
+
     switch (form.type) {
-      case "LEAVE": return { title: "Đơn nghỉ phép", lines: [`Thời gian nghỉ: ${formatDate(form.startDate)} ${sessionStr(form.startSession)} → ${formatDate(form.endDate)} ${sessionStr(form.endSession)}`] };
-      case "WFH": return { title: "Đơn làm việc tại nhà", lines: [`Thời gian WFH: ${formatDate(form.startDate)} → ${formatDate(form.endDate)}`] };
-      case "ABSENCE": return { title: "Đơn vắng mặt theo giờ", lines: [`Ngày vắng: ${formatDate(form.absenceDate)}`, `Khung giờ: ${formatTime(form.fromTime)} → ${formatTime(form.toTime)}`] };
+      case "LEAVE": return { title: "Đơn nghỉ phép", lines: [`Thời gian nghỉ: ${formatDate(form.startDate)} ${sessionStr(form.startSession)} → ${formatDate(form.endDate)} ${sessionStr(form.endSession)}`, `Số ngày công: ${calculatedDays} ngày`] };
+      case "WFH": return { title: "Đơn làm việc tại nhà", lines: [`Thời gian WFH: ${formatDate(form.startDate)} → ${formatDate(form.endDate)}`, `Số ngày công: ${calculatedDays || 1} ngày`] };
+      case "ABSENCE": return { title: "Đơn vắng mặt", reasonTypeStr: form.absenceReasonType === "PERSONAL" ? "Việc cá nhân" : form.absenceReasonType === "COMPANY" ? "Việc công ty" : null, reasonTypeKind: form.absenceReasonType, lines: [`Ngày vắng: ${formatDate(form.absenceDate)}`, `Khung giờ: ${formatTime(form.fromTime)} → ${formatTime(form.toTime)}`] };
       case "ATTENDANCE_ADJUSTMENT": return { title: "Đơn điều chỉnh chấm công", lines: [`Ngày chấm công: ${formatDate(form.attendanceDate)}`, `Loại điều chỉnh: ${form.timeType === "CHECK_IN" ? "Giờ vào" : "Giờ ra"}`, `Giờ đề xuất: ${formatTime(form.requestedTime)}`] };
-      case "BUSINESS_TRIP": return { title: "Đơn công tác", lines: [`Thời gian công tác: ${formatDate(form.startDate)} → ${formatDate(form.endDate)}`] };
+      case "BUSINESS_TRIP": return { title: "Đơn công tác", lines: [`Thời gian công tác: ${formatDate(form.startDate)} → ${formatDate(form.endDate)}`, `Số ngày công: ${calculatedDays || 1} ngày`] };
       case "RESIGNATION": return { title: "Đơn nghỉ việc", lines: [`Ngày nộp đơn: ${formatDate(form.submissionDate)}`, `Ngày làm việc cuối: ${formatDate(form.lastWorkingDate)}`, `Ngày nghỉ việc: ${formatDate(form.resignationDate)}`] };
       default: return { title: "Đơn yêu cầu", lines: [] };
     }
@@ -352,13 +369,11 @@ export default function MyAttendancePage() {
                         const approvedWfhs = record?.requestForms?.filter(f => f.type === "WFH" && f.status === "APPROVED") || [];
                         const approvedTrips = record?.requestForms?.filter(f => f.type === "BUSINESS_TRIP" && f.status === "APPROVED") || [];
                         const approvedAbsences = record?.requestForms?.filter(f => f.type === "ABSENCE" && f.status === "APPROVED") || [];
-                        const approvedAdjustments = record?.requestForms?.filter(f => f.type === "ATTENDANCE_ADJUSTMENT" && f.status === "APPROVED") || [];
                         
                         const hasLeave = approvedLeaves.length > 0;
                         const hasWfh = approvedWfhs.length > 0;
                         const hasTrip = approvedTrips.length > 0;
                         const hasAbsence = approvedAbsences.length > 0;
-                        const hasAdjustment = approvedAdjustments.length > 0;
                         const isInteractive = hasData || hasLeave || hasWfh || hasTrip || hasAbsence || (record?.requestForms && record.requestForms.length > 0);
 
                         return (
@@ -370,88 +385,82 @@ export default function MyAttendancePage() {
                             onClick={() => {
                               if (isInteractive) setSelectedRecord({ ...record!, dateObj });
                             }}
-                            className={`min-h-[130px] p-2 md:p-3 flex flex-col gap-1.5 transition-colors group relative bg-white ${
+                            className={`min-h-[140px] p-2 md:p-3 flex flex-col gap-1.5 transition-colors group relative bg-white ${
                               isInteractive ? "cursor-pointer hover:shadow-inner hover:bg-slate-50/80 hover:z-10 ring-1 ring-transparent hover:ring-indigo-100" : ""
                             }`}
                           >
-                            <div className="flex justify-between items-start w-full">
-                              {hasData && record?.workUnit !== undefined && record.workUnit > 0 ? (
-                                <span className="bg-amber-100/80 text-amber-700 font-bold text-[11px] px-1.5 py-0.5 rounded border border-amber-200">
-                                  {Number(record.workUnit.toFixed(2))} {t("myAttendance.workUnitSign")}
-                                </span>
-                              ) : <span />}
-                              <span className="text-[13px] font-bold w-auto min-w-[28px] h-7 px-2 flex items-center justify-center rounded-md transition-colors text-slate-600 group-hover:bg-indigo-50 group-hover:text-indigo-600">
+                            <div className="absolute top-2 right-2 z-10 w-full flex justify-end px-2 pointer-events-none">
+                              <span className="text-[13px] font-bold text-slate-500 group-hover:text-indigo-600 transition-colors">
                                 {format(dateObj, "d/M")}
                               </span>
                             </div>
+
+                            {(() => {
+                              let bigNumberContent: React.ReactNode = null;
+                              let bigNumberColor = "text-emerald-500";
+
+                              if (hasData && record?.workUnit !== undefined && record.workUnit > 0) {
+                                  const wu = Number(record.workUnit.toFixed(2));
+                                  bigNumberContent = wu;
+                                  bigNumberColor = wu >= 1 ? "text-emerald-500" : "text-amber-500";
+                              } else if (hasLeave || hasWfh || hasTrip) {
+                                  // Fallback display if they have paid forms
+                                  bigNumberContent = "1";
+                                  bigNumberColor = "text-emerald-500";
+                              }
+
+                              if (!bigNumberContent) return null;
+
+                              return (
+                                <div className="absolute top-[40%] w-full left-0 flex flex-col items-center justify-center select-none pointer-events-none -translate-y-[50%]">
+                                  <span className={`text-[46px] leading-none font-bold tracking-tighter ${bigNumberColor}`}>
+                                    {bigNumberContent}
+                                  </span>
+                                </div>
+                              );
+                            })()}
                             
-                            <div className="flex flex-col gap-1.5 mt-1 grow">
-                              {hasData ? (
-                                <>
-                                  {record?.actualCheckIn && (
-                                    <div className={`flex items-center justify-between rounded px-2 py-1 border ${
-                                      record.checkInValid === false ? 'bg-rose-50/80 border-rose-200' : 'bg-emerald-50/80 border-emerald-100'
-                                    }`}>
-                                      <span className={`text-[11px] font-medium ${record.checkInValid === false ? 'text-rose-500' : 'text-slate-500'}`}>{t("myAttendance.checkIn")}</span>
-                                      <div className="flex items-center gap-1">
-                                        <span className={`text-[12px] font-bold ${record.checkInValid === false ? 'text-rose-600' : 'text-emerald-700'}`}>
-                                          {record.actualCheckIn.substring(0, 5)}
-                                        </span>
-                                      </div>
-                                    </div>
-                                  )}
-                                  {record?.actualCheckOut && (
-                                    <div className={`flex items-center justify-between rounded px-2 py-1 border ${
-                                      record.checkOutValid === false ? 'bg-rose-50/80 border-rose-200' : 'bg-emerald-50/80 border-emerald-100'
-                                    }`}>
-                                      <span className={`text-[11px] font-medium ${record.checkOutValid === false ? 'text-rose-500' : 'text-slate-500'}`}>{t("myAttendance.checkOut")}</span>
-                                      <div className="flex items-center gap-1">
-                                        <span className={`text-[12px] font-bold ${record.checkOutValid === false ? 'text-rose-600' : 'text-emerald-700'}`}>
-                                          {record.actualCheckOut.substring(0, 5)}
-                                        </span>
-                                      </div>
-                                    </div>
-                                  )}
-                                  {(hasLeave || hasWfh || hasTrip) && (
-                                    <div className="flex items-center justify-center grow pt-1">
-                                      <span className="text-[10px] uppercase font-bold text-indigo-500 bg-indigo-50 px-2.5 py-0.5 rounded border border-indigo-100 w-full text-center truncate">
-                                        {hasLeave ? "Có đơn nghỉ phép" : hasWfh ? "Có đơn WFH" : "Đi công tác"}
-                                      </span>
-                                    </div>
-                                  )}
-                                  {hasAbsence && (
-                                    <div className="flex items-center justify-center grow mt-1">
-                                      <span className="text-[9px] uppercase font-bold text-slate-500 bg-slate-50 px-2 py-0.5 rounded border border-slate-200 w-full text-center truncate">
-                                        Vắng (Có phép)
-                                      </span>
-                                    </div>
-                                  )}
-                                </>
-                              ) : (hasLeave || hasWfh || hasTrip || hasAbsence) ? (
-                                <div className="flex items-center justify-center grow pb-4 flex-col gap-1.5 w-full">
-                                  {(hasLeave || hasWfh || hasTrip) && (
-                                    <span className="text-[10px] uppercase font-bold text-indigo-500 bg-indigo-50 px-2.5 py-0.5 rounded border border-indigo-100 w-full text-center truncate">
-                                      {hasLeave ? "Nghỉ phép" : hasWfh ? "WFH" : "Công tác"}
-                                    </span>
-                                  )}
-                                  {hasAbsence && (
-                                    <span className="text-[9px] uppercase font-bold text-slate-500 bg-slate-50 px-2 py-0.5 rounded border border-slate-200 w-full text-center truncate">
-                                      Vắng có phép
-                                    </span>
-                                  )}
-                                </div>
-                              ) : record?.absent ? (
-                                <div className="flex items-center justify-center grow pb-4">
-                                  <span className="text-[10px] uppercase font-bold text-rose-400 bg-rose-50 px-2.5 py-0.5 rounded border border-rose-100 w-full text-center">{t("myAttendance.absent")}</span>
-                                </div>
-                              ) : (
-                                <div className="flex items-center justify-center grow pb-4">
-                                  <span className="text-[11px] font-medium text-slate-300 italic">--</span>
+                            <div className="absolute bottom-2 left-0 w-full px-2 flex flex-col gap-1 z-10 pointer-events-none">
+                              {hasData && (record?.actualCheckIn || record?.actualCheckOut) && (
+                                <div className="flex justify-center items-center gap-1.5 text-[11px] font-bold tracking-tight bg-white/70 backdrop-blur-xs py-0.5 rounded">
+                                  {record?.actualCheckIn && <span className={record.checkInValid === false ? 'text-rose-500' : 'text-slate-400'}>{record.actualCheckIn.substring(0, 5)}</span>}
+                                  {(record?.actualCheckIn || record?.actualCheckOut) && <span className="text-slate-300 font-medium">-</span>}
+                                  {record?.actualCheckOut && <span className={record.checkOutValid === false ? 'text-rose-500' : 'text-slate-400'}>{record.actualCheckOut.substring(0, 5)}</span>}
                                 </div>
                               )}
-                              {hasAdjustment && (
-                                <div title="Dữ liệu này đã được điều chỉnh" className="absolute bottom-1 right-2 w-1.5 h-1.5 bg-amber-400 rounded-full animate-pulse shadow-sm shadow-amber-200"></div>
-                              )}
+
+                              {(() => {
+                                const activeBadges: { label: string, type: 'indigo' | 'slate' | 'rose' }[] = [];
+                                if (hasLeave) activeBadges.push({ label: "NGHỈ PHÉP", type: 'indigo' });
+                                if (hasWfh) activeBadges.push({ label: "WFH", type: 'indigo' });
+                                if (hasTrip) activeBadges.push({ label: "CÔNG TÁC", type: 'indigo' });
+                                if (hasAbsence) activeBadges.push({ label: "VẮNG", type: 'slate' });
+                                if (!hasData && !hasLeave && !hasWfh && !hasTrip && !hasAbsence && record?.absent) {
+                                  activeBadges.push({ label: "VẮNG MẶT", type: 'rose' });
+                                }
+
+                                const primaryBadge = activeBadges.length > 0 ? activeBadges[0] : null;
+                                const extraCount = activeBadges.length > 1 ? activeBadges.length - 1 : 0;
+
+                                if (!primaryBadge) return null;
+
+                                return (
+                                  <div className="flex items-center justify-center gap-1 w-full mt-1">
+                                    <span className={`text-[10px] uppercase font-bold px-1.5 py-1 rounded text-center truncate min-w-0 shadow-sm ${
+                                      primaryBadge.type === 'indigo' ? 'text-indigo-600 bg-indigo-50 border border-indigo-100/50' :
+                                      primaryBadge.type === 'rose' ? 'text-rose-500 bg-rose-50 border border-rose-100/50' :
+                                      'text-slate-500 bg-slate-50 border border-slate-200'
+                                    } ${extraCount > 0 ? 'flex-1' : 'w-full'}`}>
+                                      {primaryBadge.label}
+                                    </span>
+                                    {extraCount > 0 && (
+                                      <span className="text-[10px] uppercase font-bold text-slate-500 bg-slate-50 border border-slate-200 px-1.5 py-1 rounded shrink-0 shadow-sm">
+                                        +{extraCount}
+                                      </span>
+                                    )}
+                                  </div>
+                                );
+                              })()}
                             </div>
                           </m.div>
                         );
@@ -465,7 +474,12 @@ export default function MyAttendancePage() {
         </div>
       </div>
 
-      <Dialog open={!!selectedRecord} onOpenChange={(open) => !open && setSelectedRecord(null)}>
+      <Dialog open={!!selectedRecord} onOpenChange={(open) => {
+        if (!open) {
+          setSelectedRecord(null);
+          setExpandedRequests(new Set());
+        }
+      }}>
         <DialogContent showCloseButton={false} className="border-0 shadow-2xl p-0 overflow-hidden bg-transparent flex flex-col h-[90vh] max-w-[85vw]! md:max-w-[75vw]! w-full mx-auto my-auto">
           {selectedRecord && (
             <div className="bg-white flex flex-col relative w-full h-full rounded-2xl overflow-hidden">
@@ -573,62 +587,68 @@ export default function MyAttendancePage() {
                       {selectedRecord.requestForms.map((req, idx) => {
                         const display = getRequestFormDisplay(req);
                         return (
-                          <div key={idx} className="bg-slate-50 border border-slate-200 rounded-lg p-3 flex flex-col gap-2 relative">
-                            <div className="flex items-center justify-between mb-1">
-                              <div className="flex items-center gap-2">
-                                <span className="font-bold text-indigo-700 text-sm flex items-center gap-1.5"><FileText className="w-4 h-4 text-indigo-400"/> {display.title}</span>
+                          <div key={idx} className="flex flex-col bg-white border border-slate-200 rounded-xl p-4 shadow-xs relative">
+                            <div className="flex items-start justify-between mb-1">
+                              <div className="flex flex-col">
+                                <span className="font-bold text-slate-800 text-[15px] flex flex-wrap items-center gap-2">
+                                  <FileText className="w-4 h-4 text-slate-400"/> {display.title}
+                                  {display.reasonTypeStr && (
+                                     <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold uppercase shrink-0 w-fit ${display.reasonTypeKind === 'PERSONAL' ? 'bg-amber-100 text-amber-700' : 'bg-blue-100 text-blue-700'}`}>
+                                       {display.reasonTypeStr}
+                                     </span>
+                                  )}
+                                </span>
+                                {req.status === "APPROVED" && (
+                                  <span className="text-[13px] text-emerald-600 font-medium mt-1">
+                                    {req.type === "LEAVE" && ((selectedRecord.actualCheckIn || selectedRecord.actualCheckOut) ? "Đã tính công bổ sung theo Summary" : "Được tính công theo phép")}
+                                    {req.type === "WFH" && "Được tính công theo hình thức làm từ xa"}
+                                    {req.type === "BUSINESS_TRIP" && "Được tính công theo chuyến công tác"}
+                                    {req.type === "ABSENCE" && "Thời gian vắng hợp lệ được cộng trực tiếp vào công ngày"}
+                                    {req.type === "ATTENDANCE_ADJUSTMENT" && "Đã cộng và đồng bộ vào báo cáo chấm công"}
+                                  </span>
+                                )}
                               </div>
                               {getRequestStatusBadge(req.status)}
                             </div>
-                            
-                            {req.status === "APPROVED" && (
-                              <div className="mt-1 mb-1 p-2 bg-indigo-50 border border-indigo-100/50 rounded-lg text-[12px] text-indigo-700 leading-relaxed shadow-sm">
-                                <span className="font-semibold block mb-0.5">ℹ️ Ghi chú:</span>
-                                {req.type === "LEAVE" && (
-                                  (selectedRecord.actualCheckIn || selectedRecord.actualCheckOut) 
-                                    ? "Ngày này có chấm công thực tế và đồng thời có đơn nghỉ phép đã duyệt; hệ thống tính công theo summary."
-                                    : "Ngày này được tính công theo đơn nghỉ phép đã duyệt."
-                                )}
-                                {req.type === "WFH" && "Ngày này được tính công theo đơn làm việc tại nhà đã duyệt."}
-                                {req.type === "BUSINESS_TRIP" && "Ngày này được tính công theo đơn công tác đã duyệt."}
-                                {req.type === "ABSENCE" && "Ngày này có đơn vắng mặt đã duyệt và không được tính công."}
-                                {req.type === "ATTENDANCE_ADJUSTMENT" && "Điều chỉnh giờ vào/ra. Sau khi duyệt, hệ thống sẽ tính lại công của ngày này. Nếu dữ liệu máy chấm công được đồng bộ lại sau đó, kết quả cuối cùng có thể tiếp tục thay đổi."}
-                                {req.type === "RESIGNATION" && "Nhân sự làm việc đến hết ngày làm việc cuối. Sau ngày này attendance sẽ không còn được xử lý như nhân sự đang làm việc."}
-                              </div>
-                            )}
 
-                            <div className="flex flex-col gap-1.5 text-[12.5px] items-start text-slate-600 bg-white p-2 rounded border border-slate-100 shadow-xs">
+                            <div className="flex flex-col mt-4">
                               {display.lines.map((l, i) => {
                                 const splitIdx = l.indexOf(": ");
                                 const label = splitIdx !== -1 ? l.substring(0, splitIdx) : "";
                                 const value = splitIdx !== -1 ? l.substring(splitIdx + 2) : l;
                                 return (
-                                  <div key={i} className="flex gap-1.5 items-start">
-                                    {label && <span className="font-semibold text-slate-600">{label}:</span>}
-                                    <span className="text-slate-700">{value}</span>
+                                  <div key={i} className="grid grid-cols-[120px_1fr] sm:grid-cols-[140px_1fr] items-center gap-4 py-2.5 border-b border-slate-100 border-dashed last:border-0 hover:bg-slate-50/50 transition-colors -mx-4 px-4">
+                                    {label && <span className="text-[13px] font-medium text-slate-400">{label}</span>}
+                                    <span className="text-[14px] font-bold text-slate-800 tracking-tight">{value}</span>
                                   </div>
                                 );
                               })}
                             </div>
-                            
-                            <div className="flex flex-col gap-1 mt-1 text-[12.5px]">
-                              <span className="text-slate-500 font-semibold mb-0.5">Lý do/Mô tả:</span>
-                              <div className="bg-white p-2 border border-slate-100 rounded text-slate-600 shadow-xs">
-                                {req.description ? (
-                                  <RichTextViewer htmlContent={req.description} />
-                                ) : (
-                                  <span className="italic text-slate-400">Không có lý do</span>
-                                )}
-                              </div>
-                            </div>
 
-                            <div className="flex items-center justify-between text-[11px] font-medium text-slate-400 mt-2 pt-2 border-t border-slate-100">
-                                <div className="flex flex-col">
-                                  <span>Người gửi: <span className="text-slate-600">{req.requesterName}</span></span>
+                            {expandedRequests.has(req.id) && req.description && (
+                              <div className="flex flex-col gap-2 pt-4 pb-2 border-t border-slate-100 border-dashed mt-2">
+                                <span className="text-slate-400 text-[12px] uppercase font-bold tracking-widest">Lý do / Mô tả</span>
+                                <div className="text-[13.5px] text-slate-700 leading-relaxed bg-slate-50/50 p-3 rounded-lg border border-slate-100">
+                                  <RichTextViewer htmlContent={req.description} />
                                 </div>
-                                <div className="flex flex-col text-right">
-                                  <span>Gửi lúc: <span className="text-slate-600">{req.submittedAt ? format(new Date(req.submittedAt), "dd/MM/yyyy") : "--"}</span></span>
-                                </div>
+                              </div>
+                            )}
+
+                            <div className="flex items-center justify-between text-[12.5px] font-medium text-slate-500 mt-5 pt-4 border-t border-slate-100">
+                                <span>Ngày tạo: {req.submittedAt ? format(new Date(req.submittedAt), "dd/MM/yyyy HH:mm") : "--"}</span>
+                                {req.description && (
+                                  <button 
+                                    onClick={() => setExpandedRequests(prev => {
+                                      const next = new Set(prev);
+                                      if (next.has(req.id)) next.delete(req.id);
+                                      else next.add(req.id);
+                                      return next;
+                                    })}
+                                    className="text-indigo-600 hover:text-indigo-700 font-bold px-3 py-1.5 rounded-lg bg-indigo-50/50 hover:bg-indigo-100 transition-colors"
+                                  >
+                                    {expandedRequests.has(req.id) ? "Ẩn chi tiết" : "Xem chi tiết"}
+                                  </button>
+                                )}
                             </div>
                           </div>
                         );
@@ -733,7 +753,6 @@ export default function MyAttendancePage() {
                   <ul className="list-none text-[12.5px] text-slate-700 pl-5 space-y-1.5">
                     <li className="flex gap-2.5 items-start"><span className="text-rose-400 mt-0.5 font-bold">-</span> <span className="leading-relaxed">Nếu ngày công bị thiếu và không có dữ liệu chấm công hợp lệ, ngày đó được tính là vắng.</span></li>
                     <li className="flex gap-2.5 items-start"><span className="text-rose-400 mt-0.5 font-bold">-</span> <span className="leading-relaxed">Nếu trong tháng có ngày vắng hoặc ngày không đủ công, điểm kỷ luật tháng là <strong className="text-rose-600">1 điểm</strong>.</span></li>
-                    <li className="flex gap-2.5 items-start"><span className="text-rose-400 mt-0.5 font-bold">-</span> <span className="leading-relaxed">Việc trừ lương/không lương từ ngày vắng hiện chưa tự động tính vào payroll ở backend.</span></li>
                   </ul>
                 </div>
               </div>
@@ -856,10 +875,6 @@ export default function MyAttendancePage() {
 
               </div>
             </div>
-
-            <p className="text-[11px] text-slate-400 italic text-center pb-2 mt-2">
-              *Mức phụ cấp và giới hạn quy định có thể được tự động cập nhật bởi Quản trị viên hệ thống.
-            </p>
           </div>
         </DialogContent>
       </Dialog>

@@ -1,0 +1,31 @@
+export interface PerformanceReviewResponse {
+  id: string;
+  reviewerUserId?: string;
+  reviewerUsername?: string;
+  revieweeUserId?: string;
+  revieweeProfileId?: string;
+  revieweeEmployeeCode?: string;
+  revieweeFullName?: string;
+  revieweeDepartmentId?: string;
+  revieweeDepartmentName?: string;
+  revieweePositionId?: string;
+  revieweePositionName?: string;
+  revieweeJobTitleId?: string;
+  revieweeJobTitleName?: string;
+  reviewYear: number;
+  reviewMonth: number;
+  overallScore: number;
+  overallScoreName?: string;
+  performanceAllowance?: number;
+  scoreCriteria?: string[];
+  reviewedAt: string;
+  summary?: string;
+  strengths?: string;
+  improvementAreas?: string;
+  developmentPlan?: string;
+  active?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+  createdBy?: string;
+  updatedBy?: string;
+}

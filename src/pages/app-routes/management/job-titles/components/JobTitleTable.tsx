@@ -12,7 +12,7 @@ import {
   ContextMenuSeparator,
 } from "@/components/ui/context-menu";
 
-import type { JobTitleResponse } from '@/types/jobTitle/JobTitleResponse';
+import type { JobTitleResponse } from '@/types/jobtitle/JobTitleResponse';
 
 interface JobTitleTableProps {
   jobTitles: JobTitleResponse[];

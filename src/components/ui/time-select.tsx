@@ -1,5 +1,12 @@
-import { cn } from "@/lib/utils"
-import { Clock } from "lucide-react"
+import { cn } from "@/lib/utils";
+import { Clock } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface TimeSelectProps {
   value: string;
@@ -7,20 +14,37 @@ interface TimeSelectProps {
   className?: string;
 }
 
+const TIME_OPTIONS = Array.from({ length: 96 }).map((_, i) => {
+  const hours = Math.floor(i / 4)
+    .toString()
+    .padStart(2, "0");
+  const minutes = ((i % 4) * 15).toString().padStart(2, "0");
+  return `${hours}:${minutes}`;
+});
+
 export function TimeSelect({ value, onChange, className }: TimeSelectProps) {
   return (
-    <div className={cn("relative w-full flex items-center", className)}>
-      <input
-        type="time"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className={cn(
-          "w-full flex items-center justify-between font-normal h-10 px-3 bg-white border border-slate-200 rounded-md hover:bg-slate-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/20 text-[14px]",
-          !value && "text-slate-500",
-          "[&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-0 [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:cursor-pointer z-10 bg-transparent"
-        )}
-      />
-      <Clock className="w-4 h-4 text-slate-400 absolute right-3 pointer-events-none z-0" />
+    <div className={cn("relative w-full", className)}>
+      <Select value={value} onValueChange={(val) => val && onChange(val)}>
+        <SelectTrigger
+          className={cn(
+            "w-full flex items-center justify-between font-normal h-10 px-3 bg-white border border-slate-200 rounded-md hover:bg-slate-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/20 text-[14px]",
+            !value && "text-slate-500 text-[13px]"
+          )}
+        >
+          <div className="flex items-center gap-2.5">
+            <Clock className="w-4 h-4 text-slate-400 truncate shrink-0" />
+            <SelectValue placeholder="-- Chọn --" />
+          </div>
+        </SelectTrigger>
+        <SelectContent className="max-h-[300px]">
+          {TIME_OPTIONS.map((time) => (
+            <SelectItem key={time} value={time}>
+              {time}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
     </div>
   );
 }

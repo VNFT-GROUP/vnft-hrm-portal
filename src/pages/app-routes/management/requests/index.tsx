@@ -48,13 +48,22 @@ export default function ManagementRequestsPage() {
   const requests = response?.data || [];
   const stats = statsResponse?.data;
 
+  const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
   
   const [selectedRequest, setSelectedRequest] = useState<RequestFormResponse | null>(null);
 
-  const totalPages = Math.ceil(requests.length / pageSize) || 1;
-  const paginatedData = requests.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+  const filteredRequests = requests.filter(req => {
+    if (!searchQuery) return true;
+    const q = searchQuery.toLowerCase();
+    return req.id.toLowerCase().includes(q) || 
+           (req.requesterName || "").toLowerCase().includes(q) || 
+           (req.requesterEmployeeCode || "").toLowerCase().includes(q);
+  });
+
+  const totalPages = Math.ceil(filteredRequests.length / pageSize) || 1;
+  const paginatedData = filteredRequests.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
   const approveMutation = useMutation({
     mutationFn: (id: string) => requestFormApprovalService.approveRequestForm(id),
@@ -269,6 +278,11 @@ export default function ManagementRequestsPage() {
             <input 
               type="text" 
               placeholder="Tìm kiếm mã đơn, nhân viên..." 
+              value={searchQuery}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                setCurrentPage(1);
+              }}
               className="pl-9 pr-4 py-2 w-full text-sm rounded-md border border-input bg-background focus:ring-2 focus:ring-[#2E3192] outline-none transition-all"
             />
           </div>
@@ -296,7 +310,9 @@ export default function ManagementRequestsPage() {
             <tbody className="divide-y divide-slate-200">
               {paginatedData.map(req => (
                 <tr key={req.id} className="hover:bg-slate-50 transition-colors">
-                  <td className="px-4 py-3 font-medium text-[#2E3192] border-x border-slate-200 whitespace-nowrap text-center">{req.id}</td>
+                  <td className="px-4 py-3 font-medium text-[#2E3192] border-x border-slate-200 whitespace-nowrap text-center" title={req.id}>
+                    {req.id.length > 6 ? `${req.id.substring(0, 3)}...${req.id.substring(req.id.length - 3)}` : req.id}
+                  </td>
                   <td className="px-4 py-3 font-medium border-x border-slate-200 whitespace-nowrap text-left">
                     <div className="flex flex-col">
                       <span className="font-semibold text-slate-800">{req.requesterName || "N/A"}</span>

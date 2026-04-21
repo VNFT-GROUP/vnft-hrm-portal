@@ -1,3 +1,5 @@
+import type { RequestFormResponse } from "@/types/requestform/RequestFormResponse";
+
 export interface AttendanceDailySummaryResponse {
   id: string;
   userId: string;
@@ -28,4 +30,5 @@ export interface AttendanceDailySummaryResponse {
   updatedAt?: string;
   createdBy?: string;
   updatedBy?: string;
+  requestForms?: RequestFormResponse[];
 }

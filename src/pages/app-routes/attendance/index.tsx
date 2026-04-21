@@ -4,9 +4,11 @@ import { vi } from "date-fns/locale";
 
 import { attendanceService } from "@/services/attendance";
 import type { AttendanceDailySummaryResponse } from "@/types/attendance/AttendanceDailySummaryResponse";
-import { Loader2, Calendar as CalendarIcon, ChevronLeft, ChevronRight, X, CalendarCheck, Target, TrendingDown, Medal, AlertOctagon } from "lucide-react";
+import type { RequestFormResponse } from "@/types/requestform/RequestFormResponse";
+import { Loader2, Calendar as CalendarIcon, ChevronLeft, ChevronRight, X, CalendarCheck, Target, TrendingDown, Medal, AlertOctagon, FileText } from "lucide-react";
 import { m  } from 'framer-motion';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { RichTextViewer } from "@/components/custom/RichTextViewer";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
 
@@ -22,6 +24,59 @@ export default function MyAttendancePage() {
   });
 
   const data = responseData?.data;
+
+  const getRequestStatusBadge = (status: string) => {
+    switch (status) {
+      case "PENDING": return <span className="px-2 py-0.5 bg-amber-500/10 text-amber-600 border border-amber-500/20 rounded text-[10px] font-semibold uppercase">Chờ duyệt</span>;
+      case "APPROVED": return <span className="px-2 py-0.5 bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 rounded text-[10px] font-semibold uppercase">Đã duyệt</span>;
+      case "REJECTED": return <span className="px-2 py-0.5 bg-red-500/10 text-red-600 border border-red-500/20 rounded text-[10px] font-semibold uppercase">Từ chối</span>;
+      case "CANCELED": return <span className="px-2 py-0.5 bg-slate-500/10 text-slate-600 border border-slate-500/20 rounded text-[10px] font-semibold uppercase">Đã hủy</span>;
+      default: return <span className="px-2 py-0.5 bg-slate-100 text-slate-600 border border-slate-200 rounded text-[10px] font-semibold uppercase">{status}</span>;
+    }
+  };
+
+  const getRequestTypeLabel = (type: string) => {
+    switch (type) {
+      case "LEAVE": return "Nghỉ phép";
+      case "ABSENCE": return "Vắng mặt";
+      case "ATTENDANCE_ADJUSTMENT": return "Điều chỉnh chấm công";
+      case "BUSINESS_TRIP": return "Công tác";
+      case "WFH": return "Làm việc tại nhà";
+      case "RESIGNATION": return "Nghỉ việc";
+      default: return type;
+    }
+  };
+
+  const formatRequestApplyDate = (req: RequestFormResponse) => {
+    try {
+      if (req.type === "ATTENDANCE_ADJUSTMENT") {
+        const tType = req.timeType === "CHECK_IN" ? "check-in" : "check-out";
+        return `Điều chỉnh ${tType} ngày ${format(new Date(req.attendanceDate), "dd/MM/yyyy")} thành ${req.requestedTime?.substring(0, 5)}`;
+      } else if (req.type === "ABSENCE") {
+        return `Vắng mặt ngày ${format(new Date(req.absenceDate), "dd/MM/yyyy")}, từ ${req.fromTime?.substring(0, 5)} đến ${req.toTime?.substring(0, 5)}`;
+      } else if (req.type === "LEAVE") {
+        const s1 = req.startSession === "FULL_DAY" ? "Cả ngày" : req.startSession === "MORNING" ? "Sáng" : "Chiều";
+        const s2 = req.endSession === "FULL_DAY" ? "Cả ngày" : req.endSession === "MORNING" ? "Sáng" : "Chiều";
+        const d1 = format(new Date(req.startDate), "dd/MM/yyyy");
+        const d2 = format(new Date(req.endDate), "dd/MM/yyyy");
+        if (d1 === d2) {
+          return `Nghỉ phép ngày ${d1} ${s1 === s2 ? `(${s1})` : `(${s1} - ${s2})`}`;
+        }
+        return `Nghỉ phép từ ${d1} (${s1}) đến ${d2} (${s2})`;
+      } else if (req.type === "WFH") {
+        const d1 = format(new Date(req.startDate), "dd/MM/yyyy");
+        const d2 = format(new Date(req.endDate), "dd/MM/yyyy");
+        return d1 === d2 ? `WFH ngày ${d1}` : `WFH từ ${d1} đến ${d2}`;
+      } else if (req.type === "BUSINESS_TRIP") {
+        const d1 = format(new Date(req.startDate), "dd/MM/yyyy");
+        const d2 = format(new Date(req.endDate), "dd/MM/yyyy");
+        return d1 === d2 ? `Công tác ngày ${d1}` : `Công tác từ ${d1} đến ${d2}`;
+      }
+    } catch {
+      return "Không xác định";
+    }
+    return "Không xác định";
+  };
 
   const handlePrevMonth = () => {
     if (month === 1) {
@@ -445,6 +500,58 @@ export default function MyAttendancePage() {
                     <span className="text-slate-500 font-medium">{t("myAttendance.shiftSchedule")}</span>
                     <span className="text-slate-700 font-medium bg-slate-50 px-2 py-0.5 rounded border border-slate-200 text-xs">{selectedRecord.scheduledCheckIn?.substring(0,5) || '--'} - {selectedRecord.scheduledCheckOut?.substring(0,5) || '--'}</span>
                   </div>
+                  
+                  <div className="text-[11px] uppercase tracking-widest text-slate-400 font-bold mb-1 mt-4 border-b border-slate-100 pb-2">Đơn liên quan trong ngày</div>
+                  {(!selectedRecord.requestForms || selectedRecord.requestForms.length === 0) ? (
+                    <div className="text-sm text-slate-500 italic py-2">Không có đơn liên quan trong ngày này.</div>
+                  ) : (
+                    <div className="flex flex-col gap-3 mt-2">
+                      {selectedRecord.requestForms.map((req, idx) => (
+                        <div key={idx} className="bg-slate-50 border border-slate-200 rounded-lg p-3 flex flex-col gap-2">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              <span className="font-semibold text-slate-800 text-sm flex items-center gap-1.5"><FileText className="w-4 h-4 text-slate-400"/> {getRequestTypeLabel(req.type)}</span>
+                              {getRequestStatusBadge(req.status)}
+                            </div>
+                          </div>
+                          
+                          <div className="grid grid-cols-1 gap-1.5 text-[13px]">
+                            <div className="flex items-start gap-2">
+                              <span className="text-slate-500 shrink-0 w-20">Áp dụng:</span>
+                              <span className="text-slate-700 font-medium">{formatRequestApplyDate(req)}</span>
+                            </div>
+                            <div className="flex items-start gap-2">
+                              <span className="text-slate-500 shrink-0 w-20">Người tạo:</span>
+                              <span className="text-slate-700 font-medium">{req.requesterName}</span>
+                            </div>
+                            <div className="flex items-start gap-2">
+                              <span className="text-slate-500 shrink-0 w-20">Thời điểm gửi:</span>
+                              <span className="text-slate-700">{req.submittedAt ? format(new Date(req.submittedAt), "dd/MM/yyyy HH:mm") : "--"}</span>
+                            </div>
+                            {(req.approvedAt || req.rejectedAt || req.canceledAt) && (
+                              <div className="flex items-start gap-2">
+                                <span className="text-slate-500 shrink-0 w-20">Xử lý lúc:</span>
+                                <span className="text-slate-700">
+                                  {(req.approvedAt || req.rejectedAt || req.canceledAt) ? format(new Date((req.approvedAt || req.rejectedAt || req.canceledAt)!), "dd/MM/yyyy HH:mm") : "--"}
+                                </span>
+                              </div>
+                            )}
+                            
+                            <div className="flex flex-col gap-1 mt-1">
+                              <span className="text-slate-500 shrink-0">Lý do/Mô tả:</span>
+                              <div className="bg-white p-2 border border-slate-100 rounded text-slate-600">
+                                {req.description ? (
+                                  <RichTextViewer htmlContent={req.description} />
+                                ) : (
+                                  <span className="italic">Không có mô tả</span>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
               </div>

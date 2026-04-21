@@ -34,6 +34,7 @@ import { vi } from "date-fns/locale";
 import { cn, getErrorMessage } from "@/lib/utils";
 
 import { RichTextEditor } from "@/components/custom/RichTextEditor";
+import { useAuthStore } from "@/store/useAuthStore";
 
 type RequestType =
   | "leave"
@@ -123,6 +124,7 @@ interface RequestFormModalProps {
 
 export default function RequestFormModal({ isOpen, onOpenChange, initialData }: RequestFormModalProps) {
   const [type, setType] = useState<RequestType | "">("");
+  const { session } = useAuthStore();
   const [description, setDescription] = useState("");
 
 
@@ -411,6 +413,26 @@ export default function RequestFormModal({ isOpen, onOpenChange, initialData }: 
               {type === "checkInOut" ? (
                 <>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                    <div className="col-span-1 border-b pb-4 sm:border-0 sm:pb-0 sm:col-span-3 space-y-1.5">
+                      {checkInOutType === "checkin" && (
+                        <div className="p-3 bg-indigo-50 border border-indigo-100/50 rounded-lg text-[13px] text-indigo-700 leading-relaxed shadow-sm">
+                          <span className="font-semibold block mb-1">ℹ️ Lưu ý quan trọng:</span>
+                          Đơn này chỉ đề nghị sửa <strong>giờ vào ca</strong>. Sau khi duyệt, hệ thống sẽ tính lại công của ngày này. Nếu dữ liệu máy chấm công được đồng bộ lại sau đó, kết quả cuối cùng có thể tiếp tục thay đổi theo dữ liệu mới.
+                        </div>
+                      )}
+                      {checkInOutType === "checkout" && (
+                        <div className="p-3 bg-indigo-50 border border-indigo-100/50 rounded-lg text-[13px] text-indigo-700 leading-relaxed shadow-sm">
+                          <span className="font-semibold block mb-1">ℹ️ Lưu ý quan trọng:</span>
+                          Đơn này chỉ đề nghị sửa <strong>giờ ra ca</strong>. Sau khi duyệt, hệ thống sẽ tính lại công của ngày này. Nếu dữ liệu máy chấm công được đồng bộ lại sau đó, kết quả cuối cùng có thể tiếp tục thay đổi theo dữ liệu mới.
+                        </div>
+                      )}
+                      {!checkInOutType && (
+                        <div className="p-3 bg-slate-50 border border-slate-200/60 rounded-lg text-[13px] text-slate-500 leading-relaxed shadow-sm">
+                          Vui lòng chọn loại thời gian để xem các lưu ý tương ứng về đơn điều chỉnh chấm công.
+                        </div>
+                      )}
+                    </div>
+                    
                     <div className="space-y-1.5">
                       <Label className="text-[13px] font-semibold text-slate-700">
                         Loại thời gian <span className="text-rose-500">*</span>
@@ -482,6 +504,12 @@ export default function RequestFormModal({ isOpen, onOpenChange, initialData }: 
               ) : type === "absent" ? (
                 <>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                    <div className="col-span-1 sm:col-span-3">
+                      <div className="p-3 bg-slate-50 border border-slate-200/60 rounded-lg text-[13px] text-slate-600 leading-relaxed shadow-sm">
+                        <span className="font-semibold block mb-1">ℹ️ Lưu ý:</span>
+                        Đơn vắng mặt <strong>không tính công</strong>. Đơn này chỉ xác nhận khoảng thời gian vắng mặt có phép.
+                      </div>
+                    </div>
                     <div className="space-y-1.5">
                       <Label className="text-[13px] font-semibold text-slate-700">
                         Ngày vắng mặt <span className="text-rose-500">*</span>
@@ -530,6 +558,12 @@ export default function RequestFormModal({ isOpen, onOpenChange, initialData }: 
               ) : type === "resign" ? (
                 <>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                    <div className="col-span-1 sm:col-span-3">
+                      <div className="p-3 bg-rose-50 border border-rose-100/50 rounded-lg text-[13px] text-rose-700 leading-relaxed shadow-sm">
+                        <span className="font-semibold block mb-1">ℹ️ Lưu ý quan trọng:</span>
+                        Nhân sự làm việc đến hết <strong>Ngày làm việc cuối</strong>. Sau ngày này, dữ liệu attendance sẽ bị khóa và ngừng xử lý theo quy định thôi việc.
+                      </div>
+                    </div>
                     <div className="space-y-1.5">
                       <Label className="text-[13px] font-semibold text-slate-700">
                         Ngày nộp đơn <span className="text-rose-500">*</span>
@@ -738,13 +772,43 @@ export default function RequestFormModal({ isOpen, onOpenChange, initialData }: 
                   </div>
 
                   {calculatedDays > 0 ? (
-                    <div className="p-3 bg-indigo-50/80 border border-indigo-100 rounded-md text-sm text-indigo-700 flex items-center justify-between">
-                      <span className="font-medium">
-                        Tổng số ngày nghỉ dự kiến
-                      </span>
-                      <span className="text-base font-bold">
-                        {calculatedDays} ngày
-                      </span>
+                    <div className="flex flex-col gap-2">
+                       <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                          <div className="p-3 bg-slate-50 border border-slate-200 rounded-md text-sm text-slate-700 flex flex-col justify-center items-center gap-1">
+                            <span className="font-medium text-[12px] text-slate-500 uppercase tracking-tight">
+                              Số phép còn lại
+                            </span>
+                            <span className="text-base font-bold text-slate-800">
+                              {session?.remainingLeaveDays || 0} ngày
+                            </span>
+                          </div>
+                          <div className="p-3 bg-indigo-50 border border-indigo-100 rounded-md text-sm text-indigo-700 flex flex-col justify-center items-center gap-1">
+                            <span className="font-medium text-[12px] text-indigo-600/70 uppercase tracking-tight">
+                              Nghỉ dự kiến
+                            </span>
+                            <span className="text-base font-bold">
+                              {calculatedDays} ngày
+                            </span>
+                          </div>
+                          <div className="p-3 bg-slate-50 border border-slate-200 rounded-md text-sm flex flex-col justify-center items-center gap-1">
+                            <span className="font-medium text-[12px] text-slate-500 uppercase tracking-tight">
+                              Sau khi duyệt còn
+                            </span>
+                            <span className={cn("text-base font-bold", 
+                              ((session?.remainingLeaveDays || 0) - calculatedDays) < 0 ? "text-rose-600" : "text-emerald-600"
+                            )}>
+                              {((session?.remainingLeaveDays || 0) - calculatedDays)} ngày
+                            </span>
+                          </div>
+                       </div>
+                       {((session?.remainingLeaveDays || 0) - calculatedDays) < 0 && (
+                          <div className="p-2.5 bg-amber-50 border border-amber-200 text-amber-800 rounded-md text-sm flex items-start gap-2">
+                            <div className="mt-0.5">⚠️</div>
+                            <span className="font-medium">
+                              Cảnh báo: Bạn đang yêu cầu số ngày nghỉ nhiều hơn số phép còn lại của bạn. Quản lý có thể sẽ từ chối đơn này trừ khi có lý do đặc biệt.
+                            </span>
+                          </div>
+                       )}
                     </div>
                   ) : startDate && endDate ? (
                     <div className="p-3 bg-rose-50 border border-rose-100 rounded-md text-sm text-rose-600 flex items-center justify-between">
@@ -817,6 +881,25 @@ export default function RequestFormModal({ isOpen, onOpenChange, initialData }: 
                       </Popover>
                     </div>
                   </div>
+                  {calculatedDays > 0 ? (
+                    <div className="mt-4 flex flex-col gap-2">
+                       <div className="p-3 bg-indigo-50 border border-indigo-100 rounded-md text-[13px] text-indigo-700 flex flex-col justify-center gap-1">
+                          <span className="font-semibold">
+                            {type === "wfh" ? "Số ngày WFH dự kiến" : "Số ngày công tác dự kiến"}: {calculatedDays} ngày
+                          </span>
+                          <span className="text-[12px] opacity-90 italic">
+                            {type === "wfh" ? "Đơn WFH được tính công khi đơn được duyệt." : "Đơn công tác được tính công khi đơn được duyệt."}
+                          </span>
+                       </div>
+                    </div>
+                  ) : startDate && endDate ? (
+                    <div className="mt-4 p-3 bg-rose-50 border border-rose-100 rounded-md text-sm text-rose-600 flex items-center justify-between">
+                      <span className="font-medium">
+                        Khoảng thời gian không hợp lệ
+                      </span>
+                      <span className="text-base font-bold">0 ngày</span>
+                    </div>
+                  ) : null}
                 </>
               )}
 

@@ -7,7 +7,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { useMemo } from "react";
-import { Checkbox } from "@/components/ui/checkbox";
 import type { GroupPermissionResponse } from "@/types/group/GroupPermissionResponse";
 import { useTranslation } from "react-i18next";
 
@@ -99,8 +98,16 @@ export default function GroupFormSheet({ isOpen, onOpenChange, formData, setForm
                     <h4 className="text-sm font-bold text-[#1E2062] bg-[#2E3192]/5 px-3 py-1.5 rounded-md border-l-2 border-[#2E3192] uppercase">{category}</h4>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pl-1">
                       {perms.map(p => (
-                        <Label key={p.id} htmlFor={`perm-${p.id}`} className="flex items-start gap-3 p-3 hover:bg-card rounded-lg transition-colors border border-border/60 shadow-sm hover:border-[#2E3192]/50 hover:shadow-md cursor-pointer font-normal group/item bg-background">
-                          <Checkbox 
+                        <Label key={p.id} htmlFor={`perm-${p.id}`} className="flex items-center gap-3 p-3 hover:bg-card rounded-lg transition-colors border border-border/60 shadow-sm hover:border-[#2E3192]/50 hover:shadow-md cursor-pointer font-normal group/item bg-background">
+                          <div className="grid gap-1.5 leading-none flex-1 min-w-0">
+                            <span className="text-[14px] font-bold text-[#1E2062] group-hover/item:text-[#2E3192] line-clamp-2" title={p.description || p.code}>
+                              {p.description || p.code}
+                            </span>
+                            <span className="text-xs text-muted-foreground font-medium truncate" title={p.code}>
+                              {p.code}
+                            </span>
+                          </div>
+                          <Switch 
                             id={`perm-${p.id}`} 
                             checked={formData.groupPermissionIds.includes(p.id)}
                             onCheckedChange={(checked) => {
@@ -109,16 +116,8 @@ export default function GroupFormSheet({ isOpen, onOpenChange, formData, setForm
                               else current.delete(p.id);
                               setFormData({ ...formData, groupPermissionIds: Array.from(current) });
                             }}
-                            className="mt-0.5 data-[state=checked]:bg-[#2E3192] data-[state=checked]:border-[#2E3192] data-[state=unchecked]:border-muted-foreground/30"
+                            className="data-[state=checked]:bg-[#2E3192]"
                           />
-                          <div className="grid gap-1.5 leading-none mt-0.5 flex-1 min-w-0">
-                            <span className="text-[14px] font-bold whitespace-nowrap text-[#1E2062] group-data-[state=checked]/item:text-[#2E3192] truncate">
-                              {p.code}
-                            </span>
-                            <span className="text-xs text-muted-foreground leading-relaxed line-clamp-2" title={p.description}>
-                              {p.description || "—"}
-                            </span>
-                          </div>
                         </Label>
                       ))}
                     </div>

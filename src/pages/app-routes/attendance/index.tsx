@@ -347,7 +347,19 @@ export default function MyAttendancePage() {
                       {workingDaysList.map((dateObj, index) => {
                         const dateStr = format(dateObj, "yyyy-MM-dd");
                         const record = data?.records?.find(r => r.attendanceDate === dateStr);
-                        const hasData = record?.actualCheckIn || record?.actualCheckOut;
+                        const hasData = !!(record?.actualCheckIn || record?.actualCheckOut);
+                        const approvedLeaves = record?.requestForms?.filter(f => f.type === "LEAVE" && f.status === "APPROVED") || [];
+                        const approvedWfhs = record?.requestForms?.filter(f => f.type === "WFH" && f.status === "APPROVED") || [];
+                        const approvedTrips = record?.requestForms?.filter(f => f.type === "BUSINESS_TRIP" && f.status === "APPROVED") || [];
+                        const approvedAbsences = record?.requestForms?.filter(f => f.type === "ABSENCE" && f.status === "APPROVED") || [];
+                        const approvedAdjustments = record?.requestForms?.filter(f => f.type === "ATTENDANCE_ADJUSTMENT" && f.status === "APPROVED") || [];
+                        
+                        const hasLeave = approvedLeaves.length > 0;
+                        const hasWfh = approvedWfhs.length > 0;
+                        const hasTrip = approvedTrips.length > 0;
+                        const hasAbsence = approvedAbsences.length > 0;
+                        const hasAdjustment = approvedAdjustments.length > 0;
+                        const isInteractive = hasData || hasLeave || hasWfh || hasTrip || hasAbsence || (record?.requestForms && record.requestForms.length > 0);
 
                         return (
                           <m.div
@@ -356,10 +368,10 @@ export default function MyAttendancePage() {
                             transition={{ duration: 0.2, delay: index * 0.015 }}
                             key={dateStr}
                             onClick={() => {
-                              if (hasData) setSelectedRecord({ ...record, dateObj });
+                              if (isInteractive) setSelectedRecord({ ...record!, dateObj });
                             }}
                             className={`min-h-[130px] p-2 md:p-3 flex flex-col gap-1.5 transition-colors group relative bg-white ${
-                              hasData ? "cursor-pointer hover:shadow-inner hover:bg-slate-50/80 hover:z-10 ring-1 ring-transparent hover:ring-indigo-100" : ""
+                              isInteractive ? "cursor-pointer hover:shadow-inner hover:bg-slate-50/80 hover:z-10 ring-1 ring-transparent hover:ring-indigo-100" : ""
                             }`}
                           >
                             <div className="flex justify-between items-start w-full">
@@ -381,9 +393,11 @@ export default function MyAttendancePage() {
                                       record.checkInValid === false ? 'bg-rose-50/80 border-rose-200' : 'bg-emerald-50/80 border-emerald-100'
                                     }`}>
                                       <span className={`text-[11px] font-medium ${record.checkInValid === false ? 'text-rose-500' : 'text-slate-500'}`}>{t("myAttendance.checkIn")}</span>
-                                      <span className={`text-[12px] font-bold ${record.checkInValid === false ? 'text-rose-600' : 'text-emerald-700'}`}>
-                                        {record.actualCheckIn.substring(0, 5)}
-                                      </span>
+                                      <div className="flex items-center gap-1">
+                                        <span className={`text-[12px] font-bold ${record.checkInValid === false ? 'text-rose-600' : 'text-emerald-700'}`}>
+                                          {record.actualCheckIn.substring(0, 5)}
+                                        </span>
+                                      </div>
                                     </div>
                                   )}
                                   {record?.actualCheckOut && (
@@ -391,20 +405,52 @@ export default function MyAttendancePage() {
                                       record.checkOutValid === false ? 'bg-rose-50/80 border-rose-200' : 'bg-emerald-50/80 border-emerald-100'
                                     }`}>
                                       <span className={`text-[11px] font-medium ${record.checkOutValid === false ? 'text-rose-500' : 'text-slate-500'}`}>{t("myAttendance.checkOut")}</span>
-                                      <span className={`text-[12px] font-bold ${record.checkOutValid === false ? 'text-rose-600' : 'text-emerald-700'}`}>
-                                        {record.actualCheckOut.substring(0, 5)}
+                                      <div className="flex items-center gap-1">
+                                        <span className={`text-[12px] font-bold ${record.checkOutValid === false ? 'text-rose-600' : 'text-emerald-700'}`}>
+                                          {record.actualCheckOut.substring(0, 5)}
+                                        </span>
+                                      </div>
+                                    </div>
+                                  )}
+                                  {(hasLeave || hasWfh || hasTrip) && (
+                                    <div className="flex items-center justify-center grow pt-1">
+                                      <span className="text-[10px] uppercase font-bold text-indigo-500 bg-indigo-50 px-2.5 py-0.5 rounded border border-indigo-100 w-full text-center truncate">
+                                        {hasLeave ? "Có đơn nghỉ phép" : hasWfh ? "Có đơn WFH" : "Đi công tác"}
+                                      </span>
+                                    </div>
+                                  )}
+                                  {hasAbsence && (
+                                    <div className="flex items-center justify-center grow mt-1">
+                                      <span className="text-[9px] uppercase font-bold text-slate-500 bg-slate-50 px-2 py-0.5 rounded border border-slate-200 w-full text-center truncate">
+                                        Vắng (Có phép)
                                       </span>
                                     </div>
                                   )}
                                 </>
+                              ) : (hasLeave || hasWfh || hasTrip || hasAbsence) ? (
+                                <div className="flex items-center justify-center grow pb-4 flex-col gap-1.5 w-full">
+                                  {(hasLeave || hasWfh || hasTrip) && (
+                                    <span className="text-[10px] uppercase font-bold text-indigo-500 bg-indigo-50 px-2.5 py-0.5 rounded border border-indigo-100 w-full text-center truncate">
+                                      {hasLeave ? "Nghỉ phép" : hasWfh ? "WFH" : "Công tác"}
+                                    </span>
+                                  )}
+                                  {hasAbsence && (
+                                    <span className="text-[9px] uppercase font-bold text-slate-500 bg-slate-50 px-2 py-0.5 rounded border border-slate-200 w-full text-center truncate">
+                                      Vắng có phép
+                                    </span>
+                                  )}
+                                </div>
                               ) : record?.absent ? (
                                 <div className="flex items-center justify-center grow pb-4">
-                                  <span className="text-[10px] uppercase font-bold text-rose-400 bg-rose-50 px-2.5 py-0.5 rounded border border-rose-100">{t("myAttendance.absent")}</span>
+                                  <span className="text-[10px] uppercase font-bold text-rose-400 bg-rose-50 px-2.5 py-0.5 rounded border border-rose-100 w-full text-center">{t("myAttendance.absent")}</span>
                                 </div>
                               ) : (
                                 <div className="flex items-center justify-center grow pb-4">
                                   <span className="text-[11px] font-medium text-slate-300 italic">--</span>
                                 </div>
+                              )}
+                              {hasAdjustment && (
+                                <div title="Dữ liệu này đã được điều chỉnh" className="absolute bottom-1 right-2 w-1.5 h-1.5 bg-amber-400 rounded-full animate-pulse shadow-sm shadow-amber-200"></div>
                               )}
                             </div>
                           </m.div>
@@ -535,6 +581,22 @@ export default function MyAttendancePage() {
                               {getRequestStatusBadge(req.status)}
                             </div>
                             
+                            {req.status === "APPROVED" && (
+                              <div className="mt-1 mb-1 p-2 bg-indigo-50 border border-indigo-100/50 rounded-lg text-[12px] text-indigo-700 leading-relaxed shadow-sm">
+                                <span className="font-semibold block mb-0.5">ℹ️ Ghi chú:</span>
+                                {req.type === "LEAVE" && (
+                                  (selectedRecord.actualCheckIn || selectedRecord.actualCheckOut) 
+                                    ? "Ngày này có chấm công thực tế và đồng thời có đơn nghỉ phép đã duyệt; hệ thống tính công theo summary."
+                                    : "Ngày này được tính công theo đơn nghỉ phép đã duyệt."
+                                )}
+                                {req.type === "WFH" && "Ngày này được tính công theo đơn làm việc tại nhà đã duyệt."}
+                                {req.type === "BUSINESS_TRIP" && "Ngày này được tính công theo đơn công tác đã duyệt."}
+                                {req.type === "ABSENCE" && "Ngày này có đơn vắng mặt đã duyệt và không được tính công."}
+                                {req.type === "ATTENDANCE_ADJUSTMENT" && "Điều chỉnh giờ vào/ra. Sau khi duyệt, hệ thống sẽ tính lại công của ngày này. Nếu dữ liệu máy chấm công được đồng bộ lại sau đó, kết quả cuối cùng có thể tiếp tục thay đổi."}
+                                {req.type === "RESIGNATION" && "Nhân sự làm việc đến hết ngày làm việc cuối. Sau ngày này attendance sẽ không còn được xử lý như nhân sự đang làm việc."}
+                              </div>
+                            )}
+
                             <div className="flex flex-col gap-1.5 text-[12.5px] items-start text-slate-600 bg-white p-2 rounded border border-slate-100 shadow-xs">
                               {display.lines.map((l, i) => {
                                 const splitIdx = l.indexOf(": ");

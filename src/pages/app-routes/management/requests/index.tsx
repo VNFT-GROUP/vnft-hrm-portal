@@ -450,6 +450,16 @@ export default function ManagementRequestsPage() {
                     )}
                   </div>
                 </div>
+                {selectedRequest.type === "ATTENDANCE_ADJUSTMENT" && (
+                  <div className="col-span-2 mt-2">
+                    <div className="p-3 bg-indigo-50 border border-indigo-100/50 rounded-lg text-[13px] text-indigo-700 leading-relaxed shadow-sm">
+                      <span className="font-semibold block mb-1">ℹ️ Tác động sau khi duyệt:</span>
+                      Hệ thống sẽ cập nhật lại giờ {selectedRequest.timeType === "CHECK_IN" ? "vào ca" : "ra ca"} ngày {format(new Date(selectedRequest.attendanceDate), "dd/MM/yyyy")} thành <strong>{selectedRequest.requestedTime?.substring(0, 5)}</strong>. 
+                      Quá trình này sẽ tự động tính lại <strong>Công ngày (Daily Summary)</strong> và <strong>Công tháng (Monthly Summary)</strong> của nhân viên.
+                      <p className="mt-1 text-indigo-600/80 italic text-[12px]">Lưu ý: Thao tác này ghi đè logic hiện tại nhưng không khóa cứng dữ liệu. Lần đồng bộ máy chấm công tiếp theo có thể làm thay đổi kết quả.</p>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           )}

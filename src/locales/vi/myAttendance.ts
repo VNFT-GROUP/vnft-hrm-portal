@@ -42,12 +42,12 @@ export default {
     workUnits: "Công ghi nhận",
     lateDays: "Số ngày đi muộn",
     absentDays: "Số ngày vắng",
-    majorViolations: "Số lần vi phạm lớn",
-    deductedViolations: "Số lần bị trừ",
-    deductedDays: "Số ngày bị trừ",
+    majorViolations: "Trễ/về sớm ≥120 phút",
+    deductedViolations: "Số lần bị trừ do trễ/về sớm",
+    deductedDays: "Phép/công trừ do trễ/về sớm",
     approvedWfh: "Ngày WFH đã duyệt",
-    wfhOverLimit: "Ngày WFH vượt quota",
-    wfhLeaveDeduction: "Phép trừ do WFH vượt",
+    wfhOverLimit: "Số ngày WFH vượt quota",
+    wfhLeaveDeduction: "Phép/công trừ do WFH vượt",
     disciplineScore: "Điểm kỷ luật giờ giấc",
     allowance: "Phụ cấp kỷ luật"
   }

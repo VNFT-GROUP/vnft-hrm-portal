@@ -832,7 +832,7 @@ export default function MyAttendancePage() {
                 <div className="flex flex-col gap-2">
                   <span className="font-bold text-slate-800 text-[14px] flex items-center gap-1.5">Ngày đi làm</span>
                   <ul className="list-none text-[13px] text-slate-600 pl-2 space-y-1.5">
-                    <li className="flex gap-2.5 items-start"><span className="text-blue-400 mt-0.5">•</span> <span>Số ngày có lịch làm việc trong tháng được backend xét tổng kết.</span></li>
+                    <li className="flex gap-2.5 items-start"><span className="text-blue-400 mt-0.5">•</span> <span>Số ngày có lịch làm việc trong tháng được hệ thống xét tổng kết.</span></li>
                     <li className="flex gap-2.5 items-start"><span className="text-blue-400 mt-0.5">•</span> <span>Thường là Thứ 2 - Thứ 6, không phải số công thực tế đạt được.</span></li>
                   </ul>
                 </div>

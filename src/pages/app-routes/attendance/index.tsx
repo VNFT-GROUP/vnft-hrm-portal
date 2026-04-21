@@ -43,48 +43,30 @@ export default function MyAttendancePage() {
     }
   };
 
-  const getRequestTypeLabel = (type: string) => {
-    switch (type) {
-      case "LEAVE": return "Nghỉ phép";
-      case "ABSENCE": return "Vắng mặt";
-      case "ATTENDANCE_ADJUSTMENT": return "Điều chỉnh chấm công";
-      case "BUSINESS_TRIP": return "Công tác";
-      case "WFH": return "Làm việc tại nhà";
-      case "RESIGNATION": return "Nghỉ việc";
-      default: return type;
+  const getRequestFormDisplay = (form: RequestFormResponse) => {
+    const formatDate = (val?: string) => {
+      if (!val) return "";
+      try { return format(new Date(val), "dd/MM/yyyy"); } catch { return val; }
+    };
+    const formatTime = (val?: string) => { return val ? val.substring(0, 5) : ""; };
+    const sessionStr = (val?: string) => {
+      if (val === "MORNING") return "(Sáng)";
+      if (val === "AFTERNOON") return "(Chiều)";
+      if (val === "FULL_DAY") return "(Cả ngày)";
+      return "";
+    };
+
+    switch (form.type) {
+      case "LEAVE": return { title: "Đơn nghỉ phép", lines: [`Thời gian nghỉ: ${formatDate(form.startDate)} ${sessionStr(form.startSession)} → ${formatDate(form.endDate)} ${sessionStr(form.endSession)}`] };
+      case "WFH": return { title: "Đơn làm việc tại nhà", lines: [`Thời gian WFH: ${formatDate(form.startDate)} → ${formatDate(form.endDate)}`] };
+      case "ABSENCE": return { title: "Đơn vắng mặt theo giờ", lines: [`Ngày vắng: ${formatDate(form.absenceDate)}`, `Khung giờ: ${formatTime(form.fromTime)} → ${formatTime(form.toTime)}`] };
+      case "ATTENDANCE_ADJUSTMENT": return { title: "Đơn điều chỉnh chấm công", lines: [`Ngày chấm công: ${formatDate(form.attendanceDate)}`, `Loại điều chỉnh: ${form.timeType === "CHECK_IN" ? "Giờ vào" : "Giờ ra"}`, `Giờ đề xuất: ${formatTime(form.requestedTime)}`] };
+      case "BUSINESS_TRIP": return { title: "Đơn công tác", lines: [`Thời gian công tác: ${formatDate(form.startDate)} → ${formatDate(form.endDate)}`] };
+      case "RESIGNATION": return { title: "Đơn nghỉ việc", lines: [`Ngày nộp đơn: ${formatDate(form.submissionDate)}`, `Ngày làm việc cuối: ${formatDate(form.lastWorkingDate)}`, `Ngày nghỉ việc: ${formatDate(form.resignationDate)}`] };
+      default: return { title: "Đơn yêu cầu", lines: [] };
     }
   };
 
-  const formatRequestApplyDate = (req: RequestFormResponse) => {
-    try {
-      if (req.type === "ATTENDANCE_ADJUSTMENT") {
-        const tType = req.timeType === "CHECK_IN" ? "check-in" : "check-out";
-        return `Điều chỉnh ${tType} ngày ${format(new Date(req.attendanceDate), "dd/MM/yyyy")} thành ${req.requestedTime?.substring(0, 5)}`;
-      } else if (req.type === "ABSENCE") {
-        return `Vắng mặt ngày ${format(new Date(req.absenceDate), "dd/MM/yyyy")}, từ ${req.fromTime?.substring(0, 5)} đến ${req.toTime?.substring(0, 5)}`;
-      } else if (req.type === "LEAVE") {
-        const s1 = req.startSession === "FULL_DAY" ? "Cả ngày" : req.startSession === "MORNING" ? "Sáng" : "Chiều";
-        const s2 = req.endSession === "FULL_DAY" ? "Cả ngày" : req.endSession === "MORNING" ? "Sáng" : "Chiều";
-        const d1 = format(new Date(req.startDate), "dd/MM/yyyy");
-        const d2 = format(new Date(req.endDate), "dd/MM/yyyy");
-        if (d1 === d2) {
-          return `Nghỉ phép ngày ${d1} ${s1 === s2 ? `(${s1})` : `(${s1} - ${s2})`}`;
-        }
-        return `Nghỉ phép từ ${d1} (${s1}) đến ${d2} (${s2})`;
-      } else if (req.type === "WFH") {
-        const d1 = format(new Date(req.startDate), "dd/MM/yyyy");
-        const d2 = format(new Date(req.endDate), "dd/MM/yyyy");
-        return d1 === d2 ? `WFH ngày ${d1}` : `WFH từ ${d1} đến ${d2}`;
-      } else if (req.type === "BUSINESS_TRIP") {
-        const d1 = format(new Date(req.startDate), "dd/MM/yyyy");
-        const d2 = format(new Date(req.endDate), "dd/MM/yyyy");
-        return d1 === d2 ? `Công tác ngày ${d1}` : `Công tác từ ${d1} đến ${d2}`;
-      }
-    } catch {
-      return "Không xác định";
-    }
-    return "Không xác định";
-  };
 
   const handlePrevMonth = () => {
     if (month === 1) {
@@ -335,25 +317,33 @@ export default function MyAttendancePage() {
                 {(() => {
                   const startInterval = new Date(year, month - 2, 25);
                   const endInterval = new Date(year, month - 1, 24);
-                  const days = eachDayOfInterval({ start: startInterval, end: endInterval });
-                  // Calculate padding for Monday-first calendar (Mon = 0, Sun = 6)
-                  let startDayOfWeek = getDay(startInterval) - 1;
-                  if (startDayOfWeek === -1) startDayOfWeek = 6; 
+                  const allDays = eachDayOfInterval({ start: startInterval, end: endInterval });
+                  
+                  // Lọc bỏ Thứ 7 và Chủ Nhật khỏi mảng render
+                  const workingDaysList = allDays.filter(d => {
+                    const dayOfWeek = getDay(d);
+                    return dayOfWeek !== 0 && dayOfWeek !== 6;
+                  });
+
+                  // Tính padding dựa trên ngày làm việc đầu tiên của kỳ
+                  let paddingLength = 0;
+                  if (workingDaysList.length > 0) {
+                     paddingLength = getDay(workingDaysList[0]) - 1;
+                     if (paddingLength < 0) paddingLength = 0;
+                  }
 
                   return (
                     <>
                       {/* Padding cells */}
-                      {Array.from({ length: startDayOfWeek }).map((_, i) => (
+                      {Array.from({ length: paddingLength }).map((_, i) => (
                         <div key={`empty-${i}`} className="bg-slate-50/30 min-h-[130px] p-2" />
                       ))}
 
                       {/* Day cells */}
-                      {days.map((dateObj, index) => {
+                      {workingDaysList.map((dateObj, index) => {
                         const dateStr = format(dateObj, "yyyy-MM-dd");
                         const record = data?.records?.find(r => r.attendanceDate === dateStr);
                         const hasData = record?.actualCheckIn || record?.actualCheckOut;
-                        const isSunday = getDay(dateObj) === 0;
-                        const isSaturday = getDay(dateObj) === 6;
 
                         return (
                           <m.div
@@ -364,9 +354,9 @@ export default function MyAttendancePage() {
                             onClick={() => {
                               if (hasData) setSelectedRecord({ ...record, dateObj });
                             }}
-                            className={`min-h-[130px] p-2 md:p-3 flex flex-col gap-1.5 transition-colors group relative ${
-                              isSunday ? 'bg-rose-50/40' : isSaturday ? 'bg-slate-100/60' : 'bg-white'
-                            } ${hasData ? 'cursor-pointer hover:shadow-inner hover:bg-slate-50/80 hover:z-10 ring-1 ring-transparent hover:ring-indigo-100' : ''}`}
+                            className={`min-h-[130px] p-2 md:p-3 flex flex-col gap-1.5 transition-colors group relative bg-white ${
+                              hasData ? "cursor-pointer hover:shadow-inner hover:bg-slate-50/80 hover:z-10 ring-1 ring-transparent hover:ring-indigo-100" : ""
+                            }`}
                           >
                             <div className="flex justify-between items-start w-full">
                               {hasData && record?.workUnit !== undefined && record.workUnit > 0 ? (
@@ -374,9 +364,7 @@ export default function MyAttendancePage() {
                                   {Number(record.workUnit.toFixed(2))} {t("myAttendance.workUnitSign")}
                                 </span>
                               ) : <span />}
-                              <span className={`text-[13px] font-bold w-auto min-w-[28px] h-7 px-2 flex items-center justify-center rounded-md transition-colors ${
-                                isSunday ? 'text-rose-500' : isSaturday ? 'text-slate-500 hover:bg-slate-200/50' : 'text-slate-600 group-hover:bg-indigo-50 group-hover:text-indigo-600'
-                              }`}>
+                              <span className="text-[13px] font-bold w-auto min-w-[28px] h-7 px-2 flex items-center justify-center rounded-md transition-colors text-slate-600 group-hover:bg-indigo-50 group-hover:text-indigo-600">
                                 {format(dateObj, "d/M")}
                               </span>
                             </div>
@@ -532,50 +520,53 @@ export default function MyAttendancePage() {
                     <div className="text-sm text-slate-500 italic py-2">Không có đơn liên quan trong ngày này.</div>
                   ) : (
                     <div className="flex flex-col gap-3 mt-2 pr-2 overflow-y-auto w-full custom-scrollbar">
-                      {selectedRecord.requestForms.map((req, idx) => (
-                        <div key={idx} className="bg-slate-50 border border-slate-200 rounded-lg p-3 flex flex-col gap-2">
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-2">
-                              <span className="font-semibold text-slate-800 text-sm flex items-center gap-1.5"><FileText className="w-4 h-4 text-slate-400"/> {getRequestTypeLabel(req.type)}</span>
+                      {selectedRecord.requestForms.map((req, idx) => {
+                        const display = getRequestFormDisplay(req);
+                        return (
+                          <div key={idx} className="bg-slate-50 border border-slate-200 rounded-lg p-3 flex flex-col gap-2 relative">
+                            <div className="flex items-center justify-between mb-1">
+                              <div className="flex items-center gap-2">
+                                <span className="font-bold text-indigo-700 text-sm flex items-center gap-1.5"><FileText className="w-4 h-4 text-indigo-400"/> {display.title}</span>
+                              </div>
                               {getRequestStatusBadge(req.status)}
                             </div>
-                          </div>
-                          
-                          <div className="grid grid-cols-1 gap-1.5 text-[13px]">
-                            <div className="flex items-start gap-2">
-                              <span className="text-slate-500 shrink-0 w-20">Áp dụng:</span>
-                              <span className="text-slate-700 font-medium">{formatRequestApplyDate(req)}</span>
-                            </div>
-                            <div className="flex items-start gap-2">
-                              <span className="text-slate-500 shrink-0 w-20">Người tạo:</span>
-                              <span className="text-slate-700 font-medium">{req.requesterName}</span>
-                            </div>
-                            <div className="flex items-start gap-2">
-                              <span className="text-slate-500 shrink-0 w-20">Thời điểm gửi:</span>
-                              <span className="text-slate-700">{req.submittedAt ? format(new Date(req.submittedAt), "dd/MM/yyyy HH:mm") : "--"}</span>
-                            </div>
-                            {(req.approvedAt || req.rejectedAt || req.canceledAt) && (
-                              <div className="flex items-start gap-2">
-                                <span className="text-slate-500 shrink-0 w-20">Xử lý lúc:</span>
-                                <span className="text-slate-700">
-                                  {(req.approvedAt || req.rejectedAt || req.canceledAt) ? format(new Date((req.approvedAt || req.rejectedAt || req.canceledAt)!), "dd/MM/yyyy HH:mm") : "--"}
-                                </span>
-                              </div>
-                            )}
                             
-                            <div className="flex flex-col gap-1 mt-1">
-                              <span className="text-slate-500 shrink-0">Lý do/Mô tả:</span>
-                              <div className="bg-white p-2 border border-slate-100 rounded text-slate-600">
+                            <div className="flex flex-col gap-1.5 text-[12.5px] items-start text-slate-600 bg-white p-2 rounded border border-slate-100 shadow-xs">
+                              {display.lines.map((l, i) => {
+                                const splitIdx = l.indexOf(": ");
+                                const label = splitIdx !== -1 ? l.substring(0, splitIdx) : "";
+                                const value = splitIdx !== -1 ? l.substring(splitIdx + 2) : l;
+                                return (
+                                  <div key={i} className="flex gap-1.5 items-start">
+                                    {label && <span className="font-semibold text-slate-600">{label}:</span>}
+                                    <span className="text-slate-700">{value}</span>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                            
+                            <div className="flex flex-col gap-1 mt-1 text-[12.5px]">
+                              <span className="text-slate-500 font-semibold mb-0.5">Lý do/Mô tả:</span>
+                              <div className="bg-white p-2 border border-slate-100 rounded text-slate-600 shadow-xs">
                                 {req.description ? (
                                   <RichTextViewer htmlContent={req.description} />
                                 ) : (
-                                  <span className="italic">Không có mô tả</span>
+                                  <span className="italic text-slate-400">Không có lý do</span>
                                 )}
                               </div>
                             </div>
+
+                            <div className="flex items-center justify-between text-[11px] font-medium text-slate-400 mt-2 pt-2 border-t border-slate-100">
+                                <div className="flex flex-col">
+                                  <span>Người gửi: <span className="text-slate-600">{req.requesterName}</span></span>
+                                </div>
+                                <div className="flex flex-col text-right">
+                                  <span>Gửi lúc: <span className="text-slate-600">{req.submittedAt ? format(new Date(req.submittedAt), "dd/MM/yyyy") : "--"}</span></span>
+                                </div>
+                            </div>
                           </div>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   )}
                 </div>

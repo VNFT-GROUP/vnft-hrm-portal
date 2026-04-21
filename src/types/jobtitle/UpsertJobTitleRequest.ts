@@ -1,4 +1,4 @@
-export interface UpsertRoleRequest {
+export interface UpsertJobTitleRequest {
   name: string;
   description?: string;
   active?: boolean;

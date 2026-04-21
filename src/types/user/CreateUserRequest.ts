@@ -8,5 +8,5 @@ export interface CreateUserRequest {
   departmentId?: string;
   groupId: string;
   positionId?: string;
-  roleId?: string;
+  jobTitleId?: string;
 }

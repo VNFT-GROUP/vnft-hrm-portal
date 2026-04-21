@@ -17,7 +17,7 @@ import { useDebounce } from "@/hooks/useDebounce";
 import type { EmployeeCodeResponse } from '@/types/user/EmployeeCodeResponse';
 export default function EmployeeCodesPage() {
   const { t } = useTranslation();
-  const showRoleLegend = useLayoutStore((state) => state.showRoleLegend);
+  const showJobTitleLegend = useLayoutStore((state) => state.showJobTitleLegend);
   const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState('');
   const [isOpen, setIsOpen] = useState(false);
@@ -119,7 +119,7 @@ export default function EmployeeCodesPage() {
         </p>
       </m.div>
 
-      {showRoleLegend && (
+      {showJobTitleLegend && (
         <m.div 
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}

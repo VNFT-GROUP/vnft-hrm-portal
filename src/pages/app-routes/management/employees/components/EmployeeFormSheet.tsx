@@ -9,7 +9,7 @@ import { departmentService } from "@/services/department";
 import { positionService } from "@/services/position";
 import { groupService } from "@/services/group/groupService";
 import { employeeCodeService } from "@/services/employeeCode";
-import { roleService } from "@/services/role/roleService";
+import { jobTitleService } from "@/services/jobTitle/jobTitleService";
 import { SearchableSelect } from "@/components/custom/SearchableSelect";
 
 
@@ -50,9 +50,9 @@ export default function EmployeeFormSheet({ isOpen, onOpenChange, formData, setF
     enabled: isOpen,
   });
 
-  const { data: rolesResponse, refetch: refetchRoles, isFetching: isFetchingRoles } = useQuery({
-    queryKey: ['roles'],
-    queryFn: () => roleService.getRoles(),
+  const { data: jobTitlesResponse, refetch: refetchJobTitles, isFetching: isFetchingJobTitles } = useQuery({
+    queryKey: ['jobTitles'],
+    queryFn: () => jobTitleService.getJobTitles(),
     enabled: isOpen,
   });
 
@@ -60,7 +60,7 @@ export default function EmployeeFormSheet({ isOpen, onOpenChange, formData, setF
   const positions = positionsResponse?.data?.map(p => ({ value: p.id, label: p.name })) || [];
   const groups = groupsResponse?.data?.map(g => ({ value: g.id, label: g.name })) || [];
   const employeeCodes = employeeCodesResponse?.data?.filter(c => c.active).map(c => ({ value: c.id, label: c.prefix })) || [];
-  const roles = rolesResponse?.data?.filter(r => r.active !== false).map(r => ({ value: r.id, label: r.name })) || [];
+  const jobTitles = jobTitlesResponse?.data?.filter(r => r.active !== false).map(r => ({ value: r.id, label: r.name })) || [];
 
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
@@ -192,12 +192,12 @@ export default function EmployeeFormSheet({ isOpen, onOpenChange, formData, setF
             <div className="space-y-2">
               <Label className="text-sm font-semibold text-foreground flex items-center gap-1.5"><Layers size={14} className="text-muted-foreground"/> Chức vụ</Label>
               <SearchableSelect 
-                options={roles}
-                value={formData.sysRole || ""}
-                onChange={(val) => setFormData({...formData, sysRole: val})}
+                options={jobTitles}
+                value={formData.sysJobTitle || ""}
+                onChange={(val) => setFormData({...formData, sysJobTitle: val})}
                 placeholder="-- Chọn chức vụ --"
-                onRefresh={() => refetchRoles()}
-                isLoading={isFetchingRoles}
+                onRefresh={() => refetchJobTitles()}
+                isLoading={isFetchingJobTitles}
               />
             </div>
 

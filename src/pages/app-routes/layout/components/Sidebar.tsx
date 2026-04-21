@@ -196,7 +196,7 @@ export default function Sidebar() {
                           handleMouseEnter(e, item.label, item.subItems)
                         }
                         onMouseLeave={handleMouseLeave}
-                        role="button"
+                        jobTitle="button"
                         tabIndex={0}
                         onKeyDown={(e) => {
                           if (e.key === "Enter" || e.key === " ")
@@ -242,7 +242,7 @@ export default function Sidebar() {
                                   e.stopPropagation();
                                   navigate(sub.path);
                                 }}
-                                role="button"
+                                jobTitle="button"
                                 tabIndex={0}
                                 onKeyDown={(e) => {
                                   if (e.key === "Enter" || e.key === " ") {

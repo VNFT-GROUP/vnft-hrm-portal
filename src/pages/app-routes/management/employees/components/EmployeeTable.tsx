@@ -23,7 +23,7 @@ export interface Employee {
   position: string;
   func: string;
   status: string;
-  sysRole: string;
+  sysJobTitle: string;
   avatarUrl?: string;
 }
 

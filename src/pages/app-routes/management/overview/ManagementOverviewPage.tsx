@@ -9,11 +9,11 @@ const MOCK_STATS = [
 ];
 
 const MOCK_EMPLOYEES = [
-  { id: "VN8829", name: "Trần Thị B", role: "Trưởng phòng IT", department: "Khối Công Nghệ", status: "Hoạt động" },
-  { id: "VN8830", name: "Lê Văn C", role: "Chuyên viên Logistics", department: "Khối Vận Hành", status: "Hoạt động" },
-  { id: "VN8831", name: "Phạm Dương D", role: "Tài xế xe tải", department: "Đội Xe Miền Nam", status: "Đang nghỉ phép" },
-  { id: "VN8832", name: "Hoàng Thanh E", role: "Kế toán trưởng", department: "Phòng Tài Chính", status: "Hoạt động" },
-  { id: "VN8833", name: "Nguyễn Văn F", role: "Nhân sự", department: "Phòng Hành Chính", status: "Thử việc" },
+  { id: "VN8829", name: "Trần Thị B", jobTitle: "Trưởng phòng IT", department: "Khối Công Nghệ", status: "Hoạt động" },
+  { id: "VN8830", name: "Lê Văn C", jobTitle: "Chuyên viên Logistics", department: "Khối Vận Hành", status: "Hoạt động" },
+  { id: "VN8831", name: "Phạm Dương D", jobTitle: "Tài xế xe tải", department: "Đội Xe Miền Nam", status: "Đang nghỉ phép" },
+  { id: "VN8832", name: "Hoàng Thanh E", jobTitle: "Kế toán trưởng", department: "Phòng Tài Chính", status: "Hoạt động" },
+  { id: "VN8833", name: "Nguyễn Văn F", jobTitle: "Nhân sự", department: "Phòng Hành Chính", status: "Thử việc" },
 ];
 
 export default function ManagementOverviewPage() {
@@ -81,9 +81,9 @@ export default function ManagementOverviewPage() {
                       </div>
                     </td>
                     <td>
-                      <div className="emp-role-cell">
+                      <div className="emp-jobTitle-cell">
                         <span className="emp-department">{emp.department}</span>
-                        <span className="emp-role">{emp.role}</span>
+                        <span className="emp-jobTitle">{emp.jobTitle}</span>
                       </div>
                     </td>
                     <td>

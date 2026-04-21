@@ -65,7 +65,7 @@ export default function EmployeesPage() {
     func: "",
     status: "Đang làm",
 
-    sysRole: "",
+    sysJobTitle: "",
     password: "",
     confirmPassword: "",
   });
@@ -98,7 +98,7 @@ export default function EmployeesPage() {
       func: user.groupName || "-",
       status: user.active ? "Đang làm" : "Đã nghỉ việc",
 
-      sysRole: user.roleName || "-",
+      sysJobTitle: user.jobTitleName || "-",
       avatarUrl: user.avatarUrl,
     })) || [];
 
@@ -153,7 +153,7 @@ export default function EmployeesPage() {
         func: "",
         status: "Đang làm",
 
-        sysRole: "",
+        sysJobTitle: "",
         password: "",
         confirmPassword: "",
       });
@@ -177,7 +177,7 @@ export default function EmployeesPage() {
       englishName: formData.englishName,
       departmentId: formData.department,
       groupId: formData.func,
-      roleId: formData.sysRole,
+      jobTitleId: formData.sysJobTitle,
       positionId: formData.position,
     };
 

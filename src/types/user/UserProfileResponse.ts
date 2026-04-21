@@ -19,8 +19,8 @@ export interface UserProfileResponse {
   groupName?: string;
   positionId?: string;
   positionName?: string;
-  roleId?: string;
-  roleName?: string;
+  jobTitleId?: string;
+  jobTitleName?: string;
   phoneNumber?: string;
   avatarKey?: string;
   avatarUrl?: string;

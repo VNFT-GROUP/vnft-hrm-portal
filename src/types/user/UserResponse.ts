@@ -13,8 +13,8 @@ export interface UserResponse {
   groupName?: string;
   positionId?: string;
   positionName?: string;
-  roleId?: string;
-  roleName?: string;
+  jobTitleId?: string;
+  jobTitleName?: string;
   passwordChangedAt?: string;
   active?: boolean;
   createdAt?: string;

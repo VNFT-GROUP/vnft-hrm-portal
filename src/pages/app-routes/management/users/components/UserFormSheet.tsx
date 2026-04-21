@@ -20,7 +20,7 @@ import {
 import { toast } from "sonner";
 import { useQuery } from "@tanstack/react-query";
 import { employeeCodeService } from "@/services/employeeCode";
-import { roleService } from "@/services/role/roleService";
+import { jobTitleService } from "@/services/jobTitle/jobTitleService";
 import { groupService } from "@/services/group/groupService";
 import type { CreateUserRequest } from '@/types/user/CreateUserRequest';
 
@@ -70,10 +70,10 @@ export default function UserFormSheet({
     enabled: isOpen, // Chỉ fetch khi form được mở
   });
 
-  // Lấy danh sách Roles từ server
-  const { data: rolesData, isLoading: isLoadingRoles } = useQuery({
-    queryKey: ["roles"],
-    queryFn: () => roleService.getRoles(),
+  // Lấy danh sách JobTitles từ server
+  const { data: jobTitlesData, isLoading: isLoadingJobTitles } = useQuery({
+    queryKey: ["jobTitles"],
+    queryFn: () => jobTitleService.getJobTitles(),
     enabled: isOpen,
   });
 
@@ -88,8 +88,8 @@ export default function UserFormSheet({
   // Lọc ra các mã đang active (nếu cần)
   const activeCodes = employeeCodes.filter((c) => c.active);
 
-  const roles = rolesData?.data || [];
-  const activeRoles = roles.filter((r) => r.active !== false);
+  const jobTitles = jobTitlesData?.data || [];
+  const activeJobTitles = jobTitles.filter((r) => r.active !== false);
 
   const groups = groupsData?.data || [];
 
@@ -303,33 +303,33 @@ export default function UserFormSheet({
                   <span>
                     Chức vụ
                   </span>
-                  {isLoadingRoles && (
+                  {isLoadingJobTitles && (
                     <span className="text-xs text-muted-foreground animate-pulse">
                       Đang tải...
                     </span>
                   )}
                 </Label>
                 <Select
-                  value={formData.roleId || ""}
+                  value={formData.jobTitleId || ""}
                   onValueChange={(val) =>
-                    setFormData({ ...formData, roleId: val || undefined })
+                    setFormData({ ...formData, jobTitleId: val || undefined })
                   }
-                  disabled={isLoadingRoles}
+                  disabled={isLoadingJobTitles}
                 >
                   <SelectTrigger className="rounded-xl border-border focus:ring-[#2E3192]">
                     <SelectValue placeholder="-- Chọn một chức vụ --" />
                   </SelectTrigger>
                   <SelectContent>
-                    {activeRoles.map((role) => (
-                      <SelectItem key={role.id} value={role.id}>
+                    {activeJobTitles.map((jobTitle) => (
+                      <SelectItem key={jobTitle.id} value={jobTitle.id}>
                         <div className="flex items-center gap-2">
                           <span className="font-semibold text-[#1E2062]">
-                            {role.name}
+                            {jobTitle.name}
                           </span>
                         </div>
                       </SelectItem>
                     ))}
-                    {activeRoles.length === 0 && !isLoadingRoles && (
+                    {activeJobTitles.length === 0 && !isLoadingJobTitles && (
                       <div className="p-2 text-sm text-center text-muted-foreground">
                         Không có chức vụ nào
                       </div>

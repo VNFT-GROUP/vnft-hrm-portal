@@ -17,7 +17,7 @@ export default {
   departmentsShort: "部门",
   positions: "职位",
   positionsShort: "职位",
-  roles: "职务",
+  jobTitles: "职务",
   rolesShort: "职务",
   systemManagement: "系统管理",
   systemManagementShort: "系统",

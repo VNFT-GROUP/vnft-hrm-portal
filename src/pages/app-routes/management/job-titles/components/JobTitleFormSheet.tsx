@@ -8,7 +8,7 @@ import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 
-interface RoleFormSheetProps {
+interface JobTitleFormSheetProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
   formData: { name: string; description: string; active: boolean };
@@ -17,7 +17,7 @@ interface RoleFormSheetProps {
   onSave: () => void;
 }
 
-export default function RoleFormSheet({ isOpen, onOpenChange, formData, setFormData, isEditing, onSave }: RoleFormSheetProps) {
+export default function JobTitleFormSheet({ isOpen, onOpenChange, formData, setFormData, isEditing, onSave }: JobTitleFormSheetProps) {
   const { t } = useTranslation();
 
   return (
@@ -29,7 +29,7 @@ export default function RoleFormSheet({ isOpen, onOpenChange, formData, setFormD
               <span className="p-1.5 bg-[#2E3192]/10 text-[#2E3192] rounded-md">
                 <Layers size={18} />
               </span>
-              {isEditing ? t('management.editRole', { defaultValue: 'Cập nhật Chức Vụ' }) : t('management.addNewRole', { defaultValue: 'Thêm Mới Chức Vụ' })}
+              {isEditing ? t('management.editJobTitle', { defaultValue: 'Cập nhật Chức Vụ' }) : t('management.addNewJobTitle', { defaultValue: 'Thêm Mới Chức Vụ' })}
             </SheetTitle>
             <SheetDescription className="text-muted-foreground">
               {isEditing 

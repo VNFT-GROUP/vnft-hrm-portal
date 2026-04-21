@@ -27,7 +27,7 @@ export default {
     nameLabel: "Department Name",
     namePlaceholder: "e.g., Human Resources",
     descLabel: "Description",
-    descPlaceholder: "Role and responsibilities of the department...",
+    descPlaceholder: "Job Title and responsibilities of the department...",
     statusLabel: "Active status?",
     statusDesc: "Enable to allow assigning personnel to this department",
     cancel: "Cancel",

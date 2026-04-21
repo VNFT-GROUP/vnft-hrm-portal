@@ -1,14 +1,29 @@
 import { useState, useEffect } from "react";
-import { m  } from 'framer-motion';
-import { ChevronLeft, ChevronRight, CheckCircle2, Clock, CalendarDays, FileText, Umbrella, Home, Activity } from "lucide-react";
+import { m } from "framer-motion";
+import {
+  ChevronLeft,
+  ChevronRight,
+  CheckCircle2,
+  Clock,
+  CalendarDays,
+  FileText,
+  Umbrella,
+  Home,
+  Activity,
+} from "lucide-react";
 import { useAuthStore } from "@/store/useAuthStore";
 import { format, parseISO, addDays } from "date-fns";
 import { vi } from "date-fns/locale";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { attendanceService } from "@/services/attendance";
 import type { AttendanceDailySummaryResponse } from "@/types/attendance/AttendanceDailySummaryResponse";
 import { useTranslation } from "react-i18next";
+import { getWorkingDaysInMonth } from "@/lib/utils";
 
 /*
 const mockTopSales = [
@@ -129,13 +144,16 @@ const TopSalesTable = () => {
 
 const IntegratedTaskCard = () => {
   const { t } = useTranslation();
-  const [activeTab, setActiveTab] = useState<'requests' | 'assets' | 'reminders'>('requests');
+  const [activeTab, setActiveTab] = useState<
+    "requests" | "assets" | "reminders"
+  >("requests");
 
-  const emptyText = activeTab === 'requests'
-    ? t("dashboard.emptyStates.requests")
-    : activeTab === 'assets'
-      ? t("dashboard.emptyStates.assets")
-      : t("dashboard.emptyStates.reminders");
+  const emptyText =
+    activeTab === "requests"
+      ? t("dashboard.emptyStates.requests")
+      : activeTab === "assets"
+        ? t("dashboard.emptyStates.assets")
+        : t("dashboard.emptyStates.reminders");
 
   return (
     <m.div
@@ -148,20 +166,20 @@ const IntegratedTaskCard = () => {
         {/* Tabs */}
         <div className="flex items-center gap-1 sm:gap-6 px-3">
           <button
-            onClick={() => setActiveTab('requests')}
-            className={`pb-3 pt-2 text-[13px] sm:text-[14px] transition-colors whitespace-nowrap ${activeTab === 'requests' ? 'font-semibold text-primary border-b-2 border-primary' : 'font-medium text-muted-foreground hover:text-foreground'}`}
+            onClick={() => setActiveTab("requests")}
+            className={`pb-3 pt-2 text-[13px] sm:text-[14px] transition-colors whitespace-nowrap ${activeTab === "requests" ? "font-semibold text-primary border-b-2 border-primary" : "font-medium text-muted-foreground hover:text-foreground"}`}
           >
             {t("dashboard.tasks.requests")}
           </button>
           <button
-            onClick={() => setActiveTab('assets')}
-            className={`pb-3 pt-2 text-[13px] sm:text-[14px] transition-colors whitespace-nowrap ${activeTab === 'assets' ? 'font-semibold text-primary border-b-2 border-primary' : 'font-medium text-muted-foreground hover:text-foreground'}`}
+            onClick={() => setActiveTab("assets")}
+            className={`pb-3 pt-2 text-[13px] sm:text-[14px] transition-colors whitespace-nowrap ${activeTab === "assets" ? "font-semibold text-primary border-b-2 border-primary" : "font-medium text-muted-foreground hover:text-foreground"}`}
           >
             {t("dashboard.tasks.assets")}
           </button>
           <button
-            onClick={() => setActiveTab('reminders')}
-            className={`pb-3 pt-2 text-[13px] sm:text-[14px] transition-colors whitespace-nowrap ${activeTab === 'reminders' ? 'font-semibold text-primary border-b-2 border-primary' : 'font-medium text-muted-foreground hover:text-foreground'}`}
+            onClick={() => setActiveTab("reminders")}
+            className={`pb-3 pt-2 text-[13px] sm:text-[14px] transition-colors whitespace-nowrap ${activeTab === "reminders" ? "font-semibold text-primary border-b-2 border-primary" : "font-medium text-muted-foreground hover:text-foreground"}`}
           >
             {t("dashboard.tasks.reminders")}
           </button>
@@ -174,12 +192,22 @@ const IntegratedTaskCard = () => {
           <div className="relative text-muted-foreground flex items-center justify-center">
             <div className="absolute w-[40px] h-[3px] bg-border rounded-full top-[30%] -left-[10px]"></div>
             <div className="absolute w-[20px] h-[3px] bg-border rounded-full bottom-[30%] -left-[5px]"></div>
-            <FileText size={38} strokeWidth={1.2} className="relative z-10 text-muted-foreground/60" />
+            <FileText
+              size={38}
+              strokeWidth={1.2}
+              className="relative z-10 text-muted-foreground/60"
+            />
             <div className="absolute right-[-2px] bottom-[2px] bg-card rounded-full p-0.5 z-20">
-              <CheckCircle2 size={12} strokeWidth={2} className="text-muted-foreground/60" />
+              <CheckCircle2
+                size={12}
+                strokeWidth={2}
+                className="text-muted-foreground/60"
+              />
             </div>
           </div>
-          <p className="text-[14px] text-muted-foreground font-medium">{emptyText}</p>
+          <p className="text-[14px] text-muted-foreground font-medium">
+            {emptyText}
+          </p>
         </div>
       </div>
     </m.div>
@@ -188,15 +216,18 @@ const IntegratedTaskCard = () => {
 
 export default function HomePage() {
   const { t } = useTranslation();
-  const session = useAuthStore(state => state.session);
+  const session = useAuthStore((state) => state.session);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-  const [attendanceData, setAttendanceData] = useState<AttendanceDailySummaryResponse | undefined>(session?.todayAttendance);
+  const [attendanceData, setAttendanceData] = useState<
+    AttendanceDailySummaryResponse | undefined
+  >(session?.todayAttendance);
   useEffect(() => {
     let active = true;
     const fetchAttendance = async () => {
       try {
         const dateString = format(selectedDate, "yyyy-MM-dd");
-        const res = await attendanceService.getCurrentUserAttendanceByDate(dateString);
+        const res =
+          await attendanceService.getCurrentUserAttendanceByDate(dateString);
         if (active) {
           setAttendanceData(res.data);
         }
@@ -208,47 +239,92 @@ export default function HomePage() {
       }
     };
     fetchAttendance();
-    return () => { active = false; };
+    return () => {
+      active = false;
+    };
   }, [selectedDate]);
 
   const todayAttendance = attendanceData;
-  
+
   // Format current date
-  const dateStr = todayAttendance?.attendanceDate 
-    ? format(parseISO(todayAttendance.attendanceDate), "EEEE, dd/MM/yyyy", { locale: vi })
+  const dateStr = todayAttendance?.attendanceDate
+    ? format(parseISO(todayAttendance.attendanceDate), "EEEE, dd/MM/yyyy", {
+        locale: vi,
+      })
     : format(selectedDate, "EEEE, dd/MM/yyyy", { locale: vi });
   const displayDate = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
-  
+
   // Format Check-in time
-  const checkInVal = todayAttendance?.checkInTime || todayAttendance?.actualCheckIn;
-  const checkInDisplay = checkInVal 
-    ? checkInVal.substring(0, 5) 
-    : "--";
+  const checkInVal =
+    todayAttendance?.checkInTime || todayAttendance?.actualCheckIn;
+  const checkInDisplay = checkInVal ? checkInVal.substring(0, 5) : "--";
   const checkInAmPm = "";
 
   // Format Check-out time
-  const checkOutVal = todayAttendance?.checkOutTime || todayAttendance?.actualCheckOut;
-  const checkOutDisplay = checkOutVal 
-    ? checkOutVal.substring(0, 5) 
-    : "--";
+  const checkOutVal =
+    todayAttendance?.checkOutTime || todayAttendance?.actualCheckOut;
+  const checkOutDisplay = checkOutVal ? checkOutVal.substring(0, 5) : "--";
   const checkOutAmPm = "";
 
   const hasCheckIn = !!checkInVal;
   const hasCheckOut = !!checkOutVal;
 
   const getCheckInStatus = () => {
-    if (!hasCheckIn) return { text: t("dashboard.attendanceCard.unrecorded"), color: "text-[#64748b]", bg: "bg-[#cbd5e1]", cardBg: "bg-[#f1f5f9]" };
-    if (todayAttendance?.checkInValid) return { text: t("dashboard.attendanceCard.onTime"), color: "text-[#22c55e]", bg: "bg-[#22c55e]", cardBg: "bg-[#eaf8f1]" };
-    return { text: t("dashboard.attendanceCard.late", { mins: todayAttendance?.lateMinutes || 0 }), color: "text-[#ef4444]", bg: "bg-[#ef4444]", cardBg: "bg-[#fef2f2]" };
+    if (!hasCheckIn)
+      return {
+        text: t("dashboard.attendanceCard.unrecorded"),
+        color: "text-[#64748b]",
+        bg: "bg-[#cbd5e1]",
+        cardBg: "bg-[#f1f5f9]",
+      };
+    if (todayAttendance?.checkInValid)
+      return {
+        text: t("dashboard.attendanceCard.onTime"),
+        color: "text-[#22c55e]",
+        bg: "bg-[#22c55e]",
+        cardBg: "bg-[#eaf8f1]",
+      };
+    return {
+      text: t("dashboard.attendanceCard.late", {
+        mins: todayAttendance?.lateMinutes || 0,
+      }),
+      color: "text-[#ef4444]",
+      bg: "bg-[#ef4444]",
+      cardBg: "bg-[#fef2f2]",
+    };
   };
 
   const getCheckOutStatus = () => {
     if (!hasCheckOut) {
-      if (hasCheckIn) return { text: t("dashboard.attendanceCard.unrecorded"), color: "text-[#f59e0b]", bg: "bg-[#f59e0b]", cardBg: "bg-[#fff7ed]" };
-      return { text: t("dashboard.attendanceCard.empty"), color: "text-[#64748b]", bg: "bg-[#cbd5e1]", cardBg: "bg-[#f1f5f9]" };
+      if (hasCheckIn)
+        return {
+          text: t("dashboard.attendanceCard.unrecorded"),
+          color: "text-[#f59e0b]",
+          bg: "bg-[#f59e0b]",
+          cardBg: "bg-[#fff7ed]",
+        };
+      return {
+        text: t("dashboard.attendanceCard.empty"),
+        color: "text-[#64748b]",
+        bg: "bg-[#cbd5e1]",
+        cardBg: "bg-[#f1f5f9]",
+      };
     }
-    if (todayAttendance?.checkOutValid) return { text: t("dashboard.attendanceCard.onTime"), color: "text-[#22c55e]", bg: "bg-[#22c55e]", cardBg: "bg-[#eaf8f1]" };
-    return { text: t("dashboard.attendanceCard.early", { mins: todayAttendance?.earlyLeaveMinutes || 0 }), color: "text-[#ef4444]", bg: "bg-[#ef4444]", cardBg: "bg-[#fef2f2]" };
+    if (todayAttendance?.checkOutValid)
+      return {
+        text: t("dashboard.attendanceCard.onTime"),
+        color: "text-[#22c55e]",
+        bg: "bg-[#22c55e]",
+        cardBg: "bg-[#eaf8f1]",
+      };
+    return {
+      text: t("dashboard.attendanceCard.early", {
+        mins: todayAttendance?.earlyLeaveMinutes || 0,
+      }),
+      color: "text-[#ef4444]",
+      bg: "bg-[#ef4444]",
+      cardBg: "bg-[#fef2f2]",
+    };
   };
 
   const inStatus = getCheckInStatus();
@@ -256,17 +332,19 @@ export default function HomePage() {
 
   const workTimeHours = Math.floor((todayAttendance?.workMinutes || 0) / 60);
   const workTimeMins = (todayAttendance?.workMinutes || 0) % 60;
-  const workTimeStr = `${workTimeHours.toString().padStart(2, '0')}h ${workTimeMins.toString().padStart(2, '0')}p`;
+  const workTimeStr = `${workTimeHours.toString().padStart(2, "0")}h ${workTimeMins.toString().padStart(2, "0")}p`;
+
+  const statMonth = session?.currentMonthAttendance?.summaryMonth || new Date().getMonth() + 1;
+  const statYear = session?.currentMonthAttendance?.summaryYear || new Date().getFullYear();
+  const maxWorkingDays = getWorkingDaysInMonth(statMonth, statYear);
 
   return (
     <div className="p-4 md:p-6 w-full h-full min-h-screen bg-transparent">
       <div className="w-full">
         {/* Main Grid container */}
         <div className="grid grid-cols-1 md:grid-cols-12 lg:grid-cols-12 gap-6 items-start">
-
           {/* Left Column - Takes 7/12 on large */}
           <div className="md:col-span-7 xl:col-span-8 flex flex-col gap-6 h-full">
-            
             {/* Unified Stats Card */}
             <m.div
               initial={{ opacity: 0, scale: 0.98 }}
@@ -279,36 +357,50 @@ export default function HomePage() {
                   <Activity className="w-32 h-32 -mt-10 -mr-10 text-white" />
                 </div>
                 <Activity className="w-5 h-5 text-white relative z-10" />
-                <h3 className="text-[15px] font-semibold text-white relative z-10 tracking-wide">{t("dashboard.personalOverview")}</h3>
+                <h3 className="text-[15px] font-semibold text-white relative z-10 tracking-wide">
+                  {t("dashboard.personalOverview")}
+                </h3>
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-border">
                 {/* Left Panel: Quotas */}
                 <div className="p-5 flex flex-col bg-white/40 dark:bg-card">
                   <h4 className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider mb-3">
                     {t("dashboard.annualLimits")}
                   </h4>
-                  
+
                   <div className="flex flex-col">
                     <div className="flex items-center justify-between py-3 border-b border-border/50">
                       <div className="flex items-center gap-3">
                         <Umbrella className="w-4 h-4 text-indigo-500" />
-                        <span className="text-[13px] font-medium text-slate-700">{t("dashboard.leaveDays")}</span>
+                        <span className="text-[13px] font-medium text-slate-700">
+                          {t("dashboard.leaveDays")}
+                        </span>
                       </div>
                       <div className="flex items-baseline gap-1">
-                        <span className="text-[15px] font-semibold text-foreground">{session?.remainingLeaveDays ?? 0}</span>
-                        <span className="text-[12px] text-muted-foreground">/ {session?.maxLeaveDays ?? 0} {t("dashboard.days")}</span>
+                        <span className="text-[15px] font-semibold text-foreground">
+                          {session?.remainingLeaveDays ?? 0}
+                        </span>
+                        <span className="text-[12px] text-muted-foreground">
+                          / {session?.maxLeaveDays ?? 0} {t("dashboard.days")}
+                        </span>
                       </div>
                     </div>
 
                     <div className="flex items-center justify-between py-3">
                       <div className="flex items-center gap-3">
                         <Home className="w-4 h-4 text-purple-500" />
-                        <span className="text-[13px] font-medium text-slate-700">{t("dashboard.wfhDays")}</span>
+                        <span className="text-[13px] font-medium text-slate-700">
+                          {t("dashboard.wfhDays")}
+                        </span>
                       </div>
                       <div className="flex items-baseline gap-1">
-                        <span className="text-[15px] font-semibold text-foreground">{session?.remainingWfhDays ?? 0}</span>
-                        <span className="text-[12px] text-muted-foreground">/ {session?.maxWfhDays ?? 0} {t("dashboard.days")}</span>
+                        <span className="text-[15px] font-semibold text-foreground">
+                          {session?.remainingWfhDays ?? 0}
+                        </span>
+                        <span className="text-[12px] text-muted-foreground">
+                          / {session?.maxWfhDays ?? 0} {t("dashboard.days")}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -319,40 +411,104 @@ export default function HomePage() {
                   <h4 className="text-[12px] font-bold text-muted-foreground uppercase tracking-wider mb-3 flex items-center justify-between">
                     <span>
                       {t("dashboard.monthStats", {
-                        month: session?.currentMonthAttendance?.summaryMonth || new Date().getMonth() + 1,
-                        year: session?.currentMonthAttendance?.summaryYear || new Date().getFullYear()
+                        month:
+                          session?.currentMonthAttendance?.summaryMonth ||
+                          new Date().getMonth() + 1,
+                        year:
+                          session?.currentMonthAttendance?.summaryYear ||
+                          new Date().getFullYear(),
                       })}
                     </span>
                   </h4>
-                  
+
                   <div className="flex flex-col">
                     <div className="flex items-center justify-between py-2 border-b border-border/50">
-                      <span className="text-[13px] font-medium text-slate-600">{t("dashboard.workUnits")}</span>
-                      <span className="text-[15px] font-semibold text-emerald-600">{session?.currentMonthAttendance?.workUnits ?? 0}</span>
+                      <span className="text-[13px] font-medium text-slate-600">
+                        {t("dashboard.workUnits")}
+                      </span>
+                      <div className="flex items-baseline gap-1">
+                        <span className="text-[15px] font-semibold text-emerald-600">
+                          {session?.currentMonthAttendance?.workUnits ?? 0}
+                        </span>
+                        <span className="text-[12px] text-muted-foreground">
+                          / {maxWorkingDays} {t("dashboard.days")}
+                        </span>
+                      </div>
                     </div>
                     <div className="flex items-center justify-between py-2 border-b border-border/50">
-                      <span className="text-[13px] font-medium text-slate-600">{t("dashboard.absentDays")}</span>
-                      <span className="text-[15px] font-semibold text-sky-600">{session?.currentMonthAttendance?.absentDays ?? 0}</span>
+                      <span className="text-[13px] font-medium text-slate-600">
+                        {t("dashboard.absentDays")}
+                      </span>
+                      <span className="text-[15px] font-semibold text-sky-600">
+                        {session?.currentMonthAttendance?.absentDays ?? 0}
+                      </span>
                     </div>
                     <div className="flex items-center justify-between py-2 border-b border-border/50">
-                      <span className="text-[13px] font-medium text-slate-600 cursor-help" title={t("dashboard.lateEarlyTooltip")}>{t("dashboard.lateEarlyDays")}</span>
-                      <span className="text-[15px] font-semibold text-amber-600">{session?.currentMonthAttendance?.lateDays ?? 0}</span>
+                      <span
+                        className="text-[13px] font-medium text-slate-600 cursor-help"
+                        title={t("dashboard.lateEarlyTooltip")}
+                      >
+                        {t("dashboard.lateEarlyDays")}
+                      </span>
+                      <span className="text-[15px] font-semibold text-amber-600">
+                        {session?.currentMonthAttendance?.lateDays ?? 0}
+                      </span>
                     </div>
                     <div className="flex items-center justify-between py-2 border-b border-border/50">
-                      <span className="text-[13px] font-medium text-slate-600">{t("dashboard.workingDays")}</span>
-                      <span className="text-[15px] font-semibold text-slate-700">{session?.currentMonthAttendance?.workingDays ?? 0}</span>
+                      <span className="text-[13px] font-medium text-slate-600">
+                        {t("dashboard.workingDays")}
+                      </span>
+                      <span className="text-[15px] font-semibold text-slate-700">
+                        {session?.currentMonthAttendance?.workingDays ?? 0}
+                      </span>
                     </div>
                     <div className="flex items-center justify-between py-2 border-b border-border/50">
-                      <span className="text-[13px] font-medium text-slate-600 cursor-help" title={t("dashboard.majorLateEarlyViolationTooltip")}>{t("dashboard.majorLateEarlyViolationTimes", { defaultValue: "Số lần đi trễ/về sớm từ 120 phút trở lên" })}</span>
-                      <span className="text-[15px] font-semibold text-rose-500">{session?.currentMonthAttendance?.majorLateEarlyViolationTimes ?? 0} <span className="text-[11px] font-normal text-muted-foreground">{t("dashboard.times", { defaultValue: "lần" })}</span></span>
+                      <span
+                        className="text-[13px] font-medium text-slate-600 cursor-help"
+                        title={t("dashboard.majorLateEarlyViolationTooltip")}
+                      >
+                        {t("dashboard.majorLateEarlyViolationTimes", {
+                          defaultValue:
+                            "Số lần đi trễ/về sớm từ 120 phút trở lên",
+                        })}
+                      </span>
+                      <span className="text-[15px] font-semibold text-rose-500">
+                        {session?.currentMonthAttendance
+                          ?.majorLateEarlyViolationTimes ?? 0}{" "}
+                        <span className="text-[11px] font-normal text-muted-foreground">
+                          {t("dashboard.times", { defaultValue: "lần" })}
+                        </span>
+                      </span>
                     </div>
                     <div className="flex items-center justify-between py-2 border-b border-border/50">
-                      <span className="text-[13px] font-medium text-slate-600">{t("dashboard.leaveDeductionViolationTimes", { defaultValue: "Số lần bị trừ do trễ/về sớm" })}</span>
-                      <span className="text-[15px] font-semibold text-rose-600">{session?.currentMonthAttendance?.leaveDeductionViolationTimes ?? 0} <span className="text-[11px] font-normal text-muted-foreground">{t("dashboard.times", { defaultValue: "lần" })}</span></span>
+                      <span className="text-[13px] font-medium text-slate-600">
+                        {t("dashboard.leaveDeductionViolationTimes", {
+                          defaultValue: "Số lần bị trừ do trễ/về sớm",
+                        })}
+                      </span>
+                      <span className="text-[15px] font-semibold text-rose-600">
+                        {session?.currentMonthAttendance
+                          ?.leaveDeductionViolationTimes ?? 0}{" "}
+                        <span className="text-[11px] font-normal text-muted-foreground">
+                          {t("dashboard.times", { defaultValue: "lần" })}
+                        </span>
+                      </span>
                     </div>
                     <div className="flex items-center justify-between py-2">
-                      <span className="text-[13px] font-medium text-rose-600">{t("dashboard.leaveDeductionDays", { defaultValue: "Số ngày phép/công bị trừ do trễ/về sớm" })}</span>
-                      <span className="text-[15px] font-bold text-rose-600">-{session?.currentMonthAttendance?.leaveDeductionDays ?? 0} <span className="text-[11px] font-normal text-rose-500/80">{t("dashboard.days")}</span></span>
+                      <span className="text-[13px] font-medium text-rose-600">
+                        {t("dashboard.leaveDeductionDays", {
+                          defaultValue:
+                            "Số ngày phép/công bị trừ do trễ/về sớm",
+                        })}
+                      </span>
+                      <span className="text-[15px] font-bold text-rose-600">
+                        -
+                        {session?.currentMonthAttendance?.leaveDeductionDays ??
+                          0}{" "}
+                        <span className="text-[11px] font-normal text-rose-500/80">
+                          {t("dashboard.days")}
+                        </span>
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -365,7 +521,6 @@ export default function HomePage() {
 
           {/* Right Column - Takes 5/12 on large */}
           <div className="md:col-span-5 xl:col-span-4 flex flex-col gap-6">
-
             {/* Attendance Card */}
             <m.div
               initial={{ opacity: 0, scale: 0.98 }}
@@ -377,22 +532,35 @@ export default function HomePage() {
               <div className="flex items-center justify-between p-5 border-b border-border shrink-0">
                 <div className="flex flex-col gap-1">
                   <div className="flex items-center gap-2">
-                    <h2 className="text-xl font-medium text-foreground">{displayDate}</h2>
+                    <h2 className="text-xl font-medium text-foreground">
+                      {displayDate}
+                    </h2>
                   </div>
                   <div className="text-[13px] text-muted-foreground font-medium flex items-center gap-1.5">
-                    {todayAttendance?.scheduledCheckIn && todayAttendance?.scheduledCheckOut && (
-                      <span className="text-gray-500 font-normal flex items-center gap-1">
-                        <Clock size={12} />
-                        {todayAttendance.scheduledCheckIn.substring(0, 5)} - {todayAttendance.scheduledCheckOut.substring(0, 5)}
-                      </span>
-                    )}
+                    {todayAttendance?.scheduledCheckIn &&
+                      todayAttendance?.scheduledCheckOut && (
+                        <span className="text-gray-500 font-normal flex items-center gap-1">
+                          <Clock size={12} />
+                          {todayAttendance.scheduledCheckIn.substring(
+                            0,
+                            5,
+                          )} -{" "}
+                          {todayAttendance.scheduledCheckOut.substring(0, 5)}
+                        </span>
+                      )}
                   </div>
                 </div>
                 <div className="flex items-center gap-4 text-muted-foreground">
-                  <button onClick={() => setSelectedDate(prev => addDays(prev, -1))} className="hover:text-foreground transition-colors p-1 flex items-center justify-center">
+                  <button
+                    onClick={() => setSelectedDate((prev) => addDays(prev, -1))}
+                    className="hover:text-foreground transition-colors p-1 flex items-center justify-center"
+                  >
                     <ChevronLeft size={20} strokeWidth={1.5} />
                   </button>
-                  <button onClick={() => setSelectedDate(prev => addDays(prev, 1))} className="hover:text-foreground transition-colors p-1 flex items-center justify-center">
+                  <button
+                    onClick={() => setSelectedDate((prev) => addDays(prev, 1))}
+                    className="hover:text-foreground transition-colors p-1 flex items-center justify-center"
+                  >
                     <ChevronRight size={20} strokeWidth={1.5} />
                   </button>
                   <Popover>
@@ -416,22 +584,32 @@ export default function HomePage() {
 
               {/* Content (3 blocks) */}
               <div className="p-3 sm:p-4 flex flex-col justify-center gap-4 w-full grow">
-
                 {/* Check in */}
-                <div className={`rounded-xl p-4 flex items-center justify-between relative overflow-hidden ${inStatus.cardBg}`}>
+                <div
+                  className={`rounded-xl p-4 flex items-center justify-between relative overflow-hidden ${inStatus.cardBg}`}
+                >
                   <div className="flex flex-col">
                     <div className="flex items-center gap-2">
-                      <span className="text-[#1f2937] font-medium text-[13px]">{t("dashboard.attendanceCard.checkInTime")}</span>
+                      <span className="text-[#1f2937] font-medium text-[13px]">
+                        {t("dashboard.attendanceCard.checkInTime")}
+                      </span>
                     </div>
-                    <div className={`text-[24px] font-bold tracking-tight mt-1 flex items-baseline gap-1 ${hasCheckIn ? inStatus.color : 'text-[#94a3b8]'}`}>
-                      {checkInDisplay}<span className="text-[12px] ml-0.5">{checkInAmPm}</span>
+                    <div
+                      className={`text-[24px] font-bold tracking-tight mt-1 flex items-baseline gap-1 ${hasCheckIn ? inStatus.color : "text-[#94a3b8]"}`}
+                    >
+                      {checkInDisplay}
+                      <span className="text-[12px] ml-0.5">{checkInAmPm}</span>
                     </div>
                   </div>
                   <div className="flex flex-col items-end gap-2">
-                    <div className={`${inStatus.bg} text-white rounded-full p-1 shrink-0`}>
+                    <div
+                      className={`${inStatus.bg} text-white rounded-full p-1 shrink-0`}
+                    >
                       <CheckCircle2 size={16} strokeWidth={2.5} />
                     </div>
-                    <div className={`flex items-center gap-1 text-[12px] font-medium ${inStatus.color}`}>
+                    <div
+                      className={`flex items-center gap-1 text-[12px] font-medium ${inStatus.color}`}
+                    >
                       <Clock size={12} strokeWidth={2.5} />
                       <span>{inStatus.text}</span>
                     </div>
@@ -439,20 +617,31 @@ export default function HomePage() {
                 </div>
 
                 {/* Check out */}
-                <div className={`rounded-xl p-4 flex items-center justify-between relative overflow-hidden ${outStatus.cardBg}`}>
+                <div
+                  className={`rounded-xl p-4 flex items-center justify-between relative overflow-hidden ${outStatus.cardBg}`}
+                >
                   <div className="flex flex-col">
                     <div className="flex items-center gap-2">
-                      <span className="text-[#1f2937] font-medium text-[13px]">{t("dashboard.attendanceCard.checkOutTime")}</span>
+                      <span className="text-[#1f2937] font-medium text-[13px]">
+                        {t("dashboard.attendanceCard.checkOutTime")}
+                      </span>
                     </div>
-                    <div className={`text-[24px] font-bold tracking-tight mt-1 flex items-baseline gap-1 ${hasCheckOut ? outStatus.color : hasCheckIn ? 'text-[#f59e0b]' : 'text-[#94a3b8]'}`}>
-                      {checkOutDisplay}<span className="text-[12px] ml-0.5">{checkOutAmPm}</span>
+                    <div
+                      className={`text-[24px] font-bold tracking-tight mt-1 flex items-baseline gap-1 ${hasCheckOut ? outStatus.color : hasCheckIn ? "text-[#f59e0b]" : "text-[#94a3b8]"}`}
+                    >
+                      {checkOutDisplay}
+                      <span className="text-[12px] ml-0.5">{checkOutAmPm}</span>
                     </div>
                   </div>
                   <div className="flex flex-col items-end gap-2">
-                    <div className={`${outStatus.bg} text-white rounded-full p-1 flex items-center justify-center shrink-0`}>
+                    <div
+                      className={`${outStatus.bg} text-white rounded-full p-1 flex items-center justify-center shrink-0`}
+                    >
                       <Clock size={16} strokeWidth={2.5} className="p-0.5" />
                     </div>
-                    <div className={`flex items-center gap-1 text-[12px] font-medium ${outStatus.color}`}>
+                    <div
+                      className={`flex items-center gap-1 text-[12px] font-medium ${outStatus.color}`}
+                    >
                       <Clock size={12} strokeWidth={2.5} />
                       <span>{outStatus.text}</span>
                     </div>
@@ -464,28 +653,32 @@ export default function HomePage() {
                   <div className="bg-[#eff6ff] rounded-xl p-4 flex flex-col justify-center relative overflow-hidden">
                     <div className="flex items-center gap-2 mb-1 text-[#3b82f6]">
                       <Clock size={16} strokeWidth={2} />
-                      <span className="text-[#1f2937] font-medium text-[13px]">{t("dashboard.attendanceCard.workingTime")}</span>
+                      <span className="text-[#1f2937] font-medium text-[13px]">
+                        {t("dashboard.attendanceCard.workingTime")}
+                      </span>
                     </div>
                     <div className="text-[24px] font-bold text-[#3b82f6] tracking-tight">
                       {workTimeStr}
                     </div>
                   </div>
-                  
+
                   <div className="bg-emerald-50 rounded-xl p-4 flex flex-col justify-center relative overflow-hidden">
                     <div className="flex items-center gap-2 mb-1 text-emerald-600">
                       <CheckCircle2 size={16} strokeWidth={2} />
-                      <span className="text-[#1f2937] font-medium text-[13px]">{t("dashboard.attendanceCard.workUnit")}</span>
+                      <span className="text-[#1f2937] font-medium text-[13px]">
+                        {t("dashboard.attendanceCard.workUnit")}
+                      </span>
                     </div>
                     <div className="text-[24px] font-bold text-emerald-600 tracking-tight flex items-baseline gap-1">
-                      {todayAttendance?.workUnit || 0} <span className="text-[14px] font-medium text-emerald-600/70">{t("dashboard.attendanceCard.workUnitSuffix")}</span>
+                      {todayAttendance?.workUnit || 0}{" "}
+                      <span className="text-[14px] font-medium text-emerald-600/70">
+                        {t("dashboard.attendanceCard.workUnitSuffix")}
+                      </span>
                     </div>
                   </div>
                 </div>
               </div>
-
             </m.div>
-
-
 
             {/* Events/Calendar Card */}
             {/*
@@ -498,7 +691,6 @@ export default function HomePage() {
               // ...
             </m.div>
             */}
-
           </div>
         </div>
       </div>

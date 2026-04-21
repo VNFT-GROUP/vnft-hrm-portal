@@ -9,7 +9,7 @@ import GroupPermissionsTabContent from "./components/GroupPermissionsTabContent"
 
 export default function GroupsPage() {
   const { t } = useTranslation();
-  const showRoleLegend = useLayoutStore((state) => state.showRoleLegend);
+  const showJobTitleLegend = useLayoutStore((state) => state.showJobTitleLegend);
 
   return (
     <div className="p-4 md:p-8 w-full min-h-full flex flex-col gap-6 md:gap-8">
@@ -32,7 +32,7 @@ export default function GroupsPage() {
       </m.div>
 
       {/* 1.5 Legend Section */}
-      {showRoleLegend && (
+      {showJobTitleLegend && (
         <m.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}

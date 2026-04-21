@@ -31,7 +31,7 @@ export default function CustomCursor() {
         cursor: url('${svg}') 5 3, auto !important;
       }
       
-      a, button, [role="button"], label, .cursor-pointer,
+      a, button, [jobTitle="button"], label, .cursor-pointer,
       select, summary, input[type="submit"], input[type="button"],
       input[type="checkbox"], input[type="radio"] {
         cursor: url('${pointerSvg}') 10 3, pointer !important;

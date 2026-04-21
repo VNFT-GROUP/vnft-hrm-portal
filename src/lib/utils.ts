@@ -85,3 +85,16 @@ export function getErrorMessage(error: unknown, defaultMessage?: string): string
   const err = error as Error & { response?: { data?: { message?: string } } };
   return err?.response?.data?.message || err?.message || defaultMessage || "Lỗi không xác định";
 }
+
+export const getWorkingDaysInMonth = (month: number, year: number): number => {
+  const start = new Date(year, month - 2, 25);
+  const end = new Date(year, month - 1, 24);
+  let count = 0;
+  const cur = new Date(start);
+  while (cur <= end) {
+    const day = cur.getDay();
+    if (day !== 0 && day !== 6) count++;
+    cur.setDate(cur.getDate() + 1);
+  }
+  return count;
+};

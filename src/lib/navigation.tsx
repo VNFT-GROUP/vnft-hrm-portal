@@ -103,9 +103,9 @@ export const useNavigationData = () => {
                     icon: <Briefcase size={16} />,
                   },
                   {
-                    label: t("sidebar.roles", { defaultValue: "Chức vụ" }),
+                    label: t("sidebar.jobTitles", { defaultValue: "Chức vụ" }),
                     shortName: t("sidebar.rolesShort", { defaultValue: "Chức vụ" }),
-                    path: "/app/management/roles",
+                    path: "/app/management/job-titles",
                     icon: <Layers size={16} />,
                   },
                 ],

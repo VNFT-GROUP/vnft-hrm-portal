@@ -152,7 +152,7 @@ export default function Topbar() {
           <div className="user-profile" onClick={() => setIsProfileOpen(!isProfileOpen)}>
             <div className="user-info">
                <span className="user-name">{session?.username || t('profile.defaultUser')}</span>
-               <span className="user-role">{t('profile.roleAdmin')}</span>
+               <span className="user-jobTitle">{t('profile.roleAdmin')}</span>
             </div>
             <AvatarPlaceholder name={session?.username} src={session?.avatarUrl} className="user-avatar-circle" />
           </div>
@@ -164,8 +164,8 @@ export default function Topbar() {
               <AvatarPlaceholder name={session?.username} src={session?.avatarUrl} className="pd-avatar-large" />
               <div className="pd-info">
                 <h3 className="pd-name">{session?.username || t('profile.defaultUser', { defaultValue: 'Người Dùng' })}</h3>
-                <div className="pd-role-item"><Briefcase size={15}/> {t('profile.department', { defaultValue: 'HR & ADM' })}</div>
-                <div className="pd-role-item"><BadgeCheck size={15}/> {t('profile.roleStaff', { defaultValue: 'Nhân viên' })}</div>
+                <div className="pd-jobTitle-item"><Briefcase size={15}/> {t('profile.department', { defaultValue: 'HR & ADM' })}</div>
+                <div className="pd-jobTitle-item"><BadgeCheck size={15}/> {t('profile.roleStaff', { defaultValue: 'Nhân viên' })}</div>
               </div>
             </div>
             

@@ -113,7 +113,7 @@ export default {
     phoneNumber: "Reference Phone Number",
     phoneNumberPlaceholder: "Ex: 0912345678",
     jobDesc: "Job Description",
-    jobDescPlaceholder: "Briefly list the roles and professional tasks you undertook at this unit...",
+    jobDescPlaceholder: "Briefly list the Job Titles and professional tasks you undertook at this unit...",
     addBtn: "Add Experience"
   },
   dependents: {

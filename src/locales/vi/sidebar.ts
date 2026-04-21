@@ -17,7 +17,7 @@ export default {
   departmentsShort: "Phòng ban",
   positions: "Vị trí",
   positionsShort: "Vị trí",
-  roles: "Chức vụ",
+  jobTitles: "Chức vụ",
   rolesShort: "Chức vụ",
   systemManagement: "Quản lý Hệ Thống",
   systemManagementShort: "Hệ thống",

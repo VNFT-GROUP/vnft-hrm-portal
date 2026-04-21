@@ -18,7 +18,7 @@ import { useDebounce } from "@/hooks/useDebounce";
 
 export default function PositionsPage() {
   const { t } = useTranslation();
-  const showPositionLegend = useLayoutStore((state) => state.showRoleLegend);
+  const showPositionLegend = useLayoutStore((state) => state.showJobTitleLegend);
   const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -46,14 +46,14 @@ export default function PositionsPage() {
   const totalPages = Math.ceil(positions.length / pageSize) || 1;
   const paginatedData = positions.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
-  const handleOpenForm = (role?: PositionResponse) => {
-    if (role) {
-      setEditingPosition(role);
+  const handleOpenForm = (jobTitle?: PositionResponse) => {
+    if (jobTitle) {
+      setEditingPosition(jobTitle);
       setFormData({
-        name: role.name,
-        description: role.description || "",
-        active: role.active ?? false,
-        manager: role.manager ?? false,
+        name: jobTitle.name,
+        description: jobTitle.description || "",
+        active: jobTitle.active ?? false,
+        manager: jobTitle.manager ?? false,
       });
     } else {
       setEditingPosition(null);

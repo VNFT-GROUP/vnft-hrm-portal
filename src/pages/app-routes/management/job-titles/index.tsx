@@ -6,23 +6,23 @@ import { Input } from "@/components/ui/input";
 import { m  } from 'framer-motion';
 import { useLayoutStore } from "@/store/useLayoutStore";
 
-import RoleTable from "./components/RoleTable";
-import RoleFormSheet from "./components/RoleFormSheet";
-import type { RoleResponse } from '@/types/role/RoleResponse';
-import type { UpsertRoleRequest } from '@/types/role/UpsertRoleRequest';
+import JobTitleTable from "./components/JobTitleTable";
+import JobTitleFormSheet from "./components/JobTitleFormSheet";
+import type { JobTitleResponse } from '@/types/jobTitle/JobTitleResponse';
+import type { UpsertJobTitleRequest } from '@/types/jobTitle/UpsertJobTitleRequest';
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { roleService } from "@/services/role/roleService";
+import { jobTitleService } from "@/services/jobTitle/jobTitleService";
 import { toast } from "sonner";
 import CustomPagination from "@/components/custom/CustomPagination";
 import { useDebounce } from "@/hooks/useDebounce";
 
-export default function RolesPage() {
+export default function JobTitlesPage() {
   const { t } = useTranslation();
-  const showRoleLegend = useLayoutStore((state) => state.showRoleLegend);
+  const showJobTitleLegend = useLayoutStore((state) => state.showJobTitleLegend);
   const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-  const [editingRole, setEditingRole] = useState<RoleResponse | null>(null);
+  const [editingJobTitle, setEditingJobTitle] = useState<JobTitleResponse | null>(null);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -32,82 +32,82 @@ export default function RolesPage() {
 
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
-  const { data: rolesData, isLoading } = useQuery({
-    queryKey: ["roles", debouncedSearchTerm],
-    queryFn: () => roleService.getRoles(debouncedSearchTerm || undefined),
+  const { data: jobTitlesData, isLoading } = useQuery({
+    queryKey: ["jobTitles", debouncedSearchTerm],
+    queryFn: () => jobTitleService.getJobTitles(debouncedSearchTerm || undefined),
   });
 
-  const roles = rolesData?.data || [];
+  const jobTitles = jobTitlesData?.data || [];
   
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
 
-  const totalPages = Math.ceil(roles.length / pageSize) || 1;
-  const paginatedData = roles.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+  const totalPages = Math.ceil(jobTitles.length / pageSize) || 1;
+  const paginatedData = jobTitles.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
-  const handleOpenForm = (role?: RoleResponse) => {
-    if (role) {
-      setEditingRole(role);
+  const handleOpenForm = (jobTitle?: JobTitleResponse) => {
+    if (jobTitle) {
+      setEditingJobTitle(jobTitle);
       setFormData({
-        name: role.name,
-        description: role.description || "",
-        active: role.active ?? true,
+        name: jobTitle.name,
+        description: jobTitle.description || "",
+        active: jobTitle.active ?? true,
       });
     } else {
-      setEditingRole(null);
+      setEditingJobTitle(null);
       setFormData({ name: "", description: "", active: true });
     }
     setIsOpen(true);
   };
 
   const createMutation = useMutation({
-    mutationFn: (data: UpsertRoleRequest) =>
-      roleService.createRole(data),
+    mutationFn: (data: UpsertJobTitleRequest) =>
+      jobTitleService.createJobTitle(data),
     onSuccess: () => {
-      toast.success(t('management.createRoleSuccess', { defaultValue: 'Thêm chức vụ thành công!' }));
-      queryClient.invalidateQueries({ queryKey: ["roles"] });
+      toast.success(t('management.createJobTitleSuccess', { defaultValue: 'Thêm chức vụ thành công!' }));
+      queryClient.invalidateQueries({ queryKey: ["jobTitles"] });
       setIsOpen(false);
     },
     onError: () => {
-      toast.error(t('management.createRoleError', { defaultValue: 'Thêm chức vụ thất bại!' }));
+      toast.error(t('management.createJobTitleError', { defaultValue: 'Thêm chức vụ thất bại!' }));
     }
   });
 
   const updateMutation = useMutation({
-    mutationFn: ({ id, data }: { id: string; data: UpsertRoleRequest }) =>
-      roleService.updateRole(id, data),
+    mutationFn: ({ id, data }: { id: string; data: UpsertJobTitleRequest }) =>
+      jobTitleService.updateJobTitle(id, data),
     onSuccess: () => {
-      toast.success(t('management.updateRoleSuccess', { defaultValue: 'Cập nhật chức vụ thành công!' }));
-      queryClient.invalidateQueries({ queryKey: ["roles"] });
+      toast.success(t('management.updateJobTitleSuccess', { defaultValue: 'Cập nhật chức vụ thành công!' }));
+      queryClient.invalidateQueries({ queryKey: ["jobTitles"] });
       setIsOpen(false);
     },
     onError: () => {
-      toast.error(t('management.updateRoleError', { defaultValue: 'Cập nhật chức vụ thất bại!' }));
+      toast.error(t('management.updateJobTitleError', { defaultValue: 'Cập nhật chức vụ thất bại!' }));
     }
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id: string) => roleService.deleteRole(id),
+    mutationFn: (id: string) => jobTitleService.deleteJobTitle(id),
     onSuccess: () => {
-      toast.success(t('management.deleteRoleSuccess', { defaultValue: 'Xóa/Tạm ngưng chức vụ thành công!' }));
-      queryClient.invalidateQueries({ queryKey: ["roles"] });
+      toast.success(t('management.deleteJobTitleSuccess', { defaultValue: 'Xóa/Tạm ngưng chức vụ thành công!' }));
+      queryClient.invalidateQueries({ queryKey: ["jobTitles"] });
     },
     onError: () => {
-      toast.error(t('management.deleteRoleError', { defaultValue: 'Xóa chức vụ thất bại!' }));
+      toast.error(t('management.deleteJobTitleError', { defaultValue: 'Xóa chức vụ thất bại!' }));
     }
   });
 
   const handleSave = () => {
     if (!formData.name.trim()) return;
 
-    const payload: UpsertRoleRequest = {
+    const payload: UpsertJobTitleRequest = {
       name: formData.name,
       description: formData.description || undefined,
       active: formData.active,
     };
 
-    if (editingRole) {
-      updateMutation.mutate({ id: editingRole.id, data: payload });
+    if (editingJobTitle) {
+      updateMutation.mutate({ id: editingJobTitle.id, data: payload });
     } else {
       createMutation.mutate(payload);
     }
@@ -130,15 +130,15 @@ export default function RolesPage() {
           <span className="p-2.5 bg-[#2E3192]/10 text-[#2E3192] rounded-xl">
             <Layers size={28} />
           </span>
-          {t('management.rolesTitle', { defaultValue: 'Danh Sách Chức Vụ' })}
+          {t('management.jobTitlesTitle', { defaultValue: 'Danh Sách Chức Vụ' })}
         </h1>
         <p className="text-muted-foreground text-base md:text-lg ml-1">
-          {t('management.rolesDesc', { defaultValue: 'Quản lý danh sách master data các chức vụ trong hệ thống.' })}
+          {t('management.jobTitlesDesc', { defaultValue: 'Quản lý danh sách master data các chức vụ trong hệ thống.' })}
         </p>
       </m.div>
 
       {/* 1.5 Legend Section */}
-      {showRoleLegend && (
+      {showJobTitleLegend && (
         <m.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -174,7 +174,7 @@ export default function RolesPage() {
             size={20}
           />
           <Input
-            placeholder={t('management.searchRolePlaceholder', { defaultValue: 'Tìm kiếm chức vụ theo tên...' })}
+            placeholder={t('management.searchJobTitlePlaceholder', { defaultValue: 'Tìm kiếm chức vụ theo tên...' })}
             className="pl-12 h-12 rounded-xl bg-muted border-border focus-visible:ring-[#2E3192] text-base hover:bg-card transition-colors"
             value={searchTerm}
             onChange={(e) => {
@@ -187,7 +187,7 @@ export default function RolesPage() {
           onClick={() => handleOpenForm()}
           className="w-full md:w-auto h-12 px-6 rounded-xl bg-[#2E3192] hover:bg-[#1E2062] text-white shadow-md shadow-[#2E3192]/20 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 text-base font-semibold"
         >
-          <Plus size={20} className="mr-2" /> {t('management.addRole', { defaultValue: 'Thêm Chức Vụ' })}
+          <Plus size={20} className="mr-2" /> {t('management.addJobTitle', { defaultValue: 'Thêm Chức Vụ' })}
         </Button>
       </m.div>
 
@@ -205,12 +205,12 @@ export default function RolesPage() {
           </div>
         ) : (
           <>
-            <RoleTable
-              roles={paginatedData}
+            <JobTitleTable
+              jobTitles={paginatedData}
               onEdit={handleOpenForm}
               onDelete={handleDelete}
             />
-            {roles.length > 0 && (
+            {jobTitles.length > 0 && (
               <CustomPagination
                 currentPage={currentPage}
                 totalPages={totalPages}
@@ -228,12 +228,12 @@ export default function RolesPage() {
       </m.div>
 
       {/* Side Form (Sheet) */}
-      <RoleFormSheet
+      <JobTitleFormSheet
         isOpen={isOpen}
         onOpenChange={setIsOpen}
         formData={formData}
         setFormData={setFormData}
-        isEditing={!!editingRole}
+        isEditing={!!editingJobTitle}
         onSave={handleSave}
       />
     </div>

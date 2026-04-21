@@ -11,8 +11,8 @@ export default function SettingsPage() {
   const setShowEmployeeLegend = useLayoutStore((state) => state.setShowEmployeeLegend);
   const showDepartmentLegend = useLayoutStore((state) => state.showDepartmentLegend);
   const setShowDepartmentLegend = useLayoutStore((state) => state.setShowDepartmentLegend);
-  const showRoleLegend = useLayoutStore((state) => state.showRoleLegend);
-  const setShowRoleLegend = useLayoutStore((state) => state.setShowRoleLegend);
+  const showJobTitleLegend = useLayoutStore((state) => state.showJobTitleLegend);
+  const setShowJobTitleLegend = useLayoutStore((state) => state.setShowJobTitleLegend);
   const sidebarTheme = useLayoutStore((state) => state.sidebarTheme);
   const setSidebarTheme = useLayoutStore((state) => state.setSidebarTheme);
   const appFont = useLayoutStore((state) => state.appFont);
@@ -457,10 +457,10 @@ export default function SettingsPage() {
               </div>
             </div>
 
-            {/* Setting Item 3: Role Legend */}
+            {/* Setting Item 3: JobTitle Legend */}
             <div className="flex items-start justify-between gap-4">
               <div className="flex flex-col gap-1.5">
-                <Label htmlFor="role-legend-toggle" className="text-base font-semibold cursor-pointer">
+                <Label htmlFor="jobTitle-legend-toggle" className="text-base font-semibold cursor-pointer">
                   {t("settings.displaySection.roleLabel")}
                 </Label>
                 <p className="text-sm text-muted-foreground max-w-xl">
@@ -469,9 +469,9 @@ export default function SettingsPage() {
               </div>
               <div className="mt-1">
                 <Switch 
-                  id="role-legend-toggle"
-                  checked={showRoleLegend}
-                  onCheckedChange={setShowRoleLegend}
+                  id="jobTitle-legend-toggle"
+                  checked={showJobTitleLegend}
+                  onCheckedChange={setShowJobTitleLegend}
                   className="data-[state=checked]:bg-[#2E3192]"
                 />
               </div>

@@ -7,7 +7,7 @@ import { Switch } from "@/components/ui/switch";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { departmentService } from "@/services/department";
 import { positionService } from "@/services/position";
-import { roleService } from "@/services/role/roleService";
+import { jobTitleService } from "@/services/jobTitle/jobTitleService";
 import { userService } from "@/services/user/userService";
 import { SearchableSelect } from "@/components/custom/SearchableSelect";
 import { toast } from "sonner";
@@ -53,15 +53,15 @@ export default function WorkInformationSheet({ isOpen, onOpenChange, userId }: W
     enabled: isOpen,
   });
 
-  const { data: rolesData, refetch: refetchRoles, isFetching: isFetchingRoles } = useQuery({
-    queryKey: ['roles'],
-    queryFn: () => roleService.getRoles(),
+  const { data: jobTitlesData, refetch: refetchJobTitles, isFetching: isFetchingJobTitles } = useQuery({
+    queryKey: ['jobTitles'],
+    queryFn: () => jobTitleService.getJobTitles(),
     enabled: isOpen,
   });
 
   const departments = deptsData?.data?.map(d => ({ value: d.id, label: d.name })) || [];
   const positions = posData?.data?.map(p => ({ value: p.id, label: p.name })) || [];
-  const roles = rolesData?.data?.filter(r => r.active !== false).map(r => ({ value: r.id, label: r.name })) || [];
+  const jobTitles = jobTitlesData?.data?.filter(r => r.active !== false).map(r => ({ value: r.id, label: r.name })) || [];
 
   // Mutation: Update Work Information
   const updateWorkInfoMutation = useMutation({
@@ -83,7 +83,7 @@ export default function WorkInformationSheet({ isOpen, onOpenChange, userId }: W
     updateWorkInfoMutation.mutate({
       departmentId: formData.departmentId ?? workInfo.data.departmentId ?? undefined,
       positionId: formData.positionId ?? workInfo.data.positionId ?? undefined,
-      roleId: formData.roleId ?? workInfo.data.roleId ?? undefined,
+      jobTitleId: formData.jobTitleId ?? workInfo.data.jobTitleId ?? undefined,
     });
   };
 
@@ -166,16 +166,16 @@ export default function WorkInformationSheet({ isOpen, onOpenChange, userId }: W
                 <Label className="text-sm font-semibold text-foreground flex items-center gap-1.5"><Layers size={14} className="text-muted-foreground"/> Chức vụ</Label>
                 {isEditingMode ? (
                   <SearchableSelect 
-                    options={roles}
-                    value={formData.roleId ?? workInfo?.data?.roleId ?? ""}
-                    onChange={(val) => setFormData({...formData, roleId: val})}
-                    placeholder="-- Chọn chức vụ (role) --"
-                    onRefresh={() => refetchRoles()}
-                    isLoading={isFetchingRoles}
+                    options={jobTitles}
+                    value={formData.jobTitleId ?? workInfo?.data?.jobTitleId ?? ""}
+                    onChange={(val) => setFormData({...formData, jobTitleId: val})}
+                    placeholder="-- Chọn chức vụ --"
+                    onRefresh={() => refetchJobTitles()}
+                    isLoading={isFetchingJobTitles}
                   />
                 ) : (
                   <div className="p-3 bg-muted/40 rounded-xl border border-border text-sm font-medium text-foreground min-h-[44px] flex items-center">
-                     {workInfo?.data?.roleName || <span className="text-muted-foreground italic">Chưa phân quyền</span>}
+                     {workInfo?.data?.jobTitleName || <span className="text-muted-foreground italic">Chưa phân quyền</span>}
                   </div>
                 )}
               </div>

@@ -12,6 +12,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { RichTextViewer } from "@/components/custom/RichTextViewer";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
+import { getWorkingDaysInMonth } from "@/lib/utils";
 
 export default function MyAttendancePage() {
   const { t } = useTranslation();
@@ -86,6 +87,8 @@ export default function MyAttendancePage() {
     }
   };
 
+  const maxWorkingDays = getWorkingDaysInMonth(month, year);
+
   return (
     <div className="w-full p-4 md:p-8 flex flex-col gap-6 md:gap-8">
       <div className="w-full space-y-6">
@@ -156,6 +159,7 @@ export default function MyAttendancePage() {
                     <span className="text-[10px] font-medium text-slate-400 uppercase mb-0.5">Tổng số công</span>
                     <div className="flex items-baseline gap-1">
                       <div className="text-3xl font-bold text-slate-800">{data.summary?.workUnits ?? 0}</div>
+                      <div className="text-sm font-semibold text-slate-400">/ {maxWorkingDays} ngày</div>
                     </div>
                   </div>
                 </div>

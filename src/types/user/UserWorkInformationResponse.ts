@@ -4,6 +4,6 @@ export interface UserWorkInformationResponse {
   departmentName?: string;
   positionId?: string;
   positionName?: string;
-  roleId?: string;
-  roleName?: string;
+  jobTitleId?: string;
+  jobTitleName?: string;
 }

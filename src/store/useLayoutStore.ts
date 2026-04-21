@@ -8,8 +8,8 @@ interface LayoutState {
   setShowEmployeeLegend: (show: boolean) => void;
   showDepartmentLegend: boolean;
   setShowDepartmentLegend: (show: boolean) => void;
-  showRoleLegend: boolean;
-  setShowRoleLegend: (show: boolean) => void;
+  showJobTitleLegend: boolean;
+  setShowJobTitleLegend: (show: boolean) => void;
   sidebarTheme: string;
   setSidebarTheme: (theme: string) => void;
   appFont: string;
@@ -33,8 +33,8 @@ export const useLayoutStore = create<LayoutState>()(
       setShowEmployeeLegend: (show) => set({ showEmployeeLegend: show }),
       showDepartmentLegend: true,
       setShowDepartmentLegend: (show) => set({ showDepartmentLegend: show }),
-      showRoleLegend: true,
-      setShowRoleLegend: (show) => set({ showRoleLegend: show }),
+      showJobTitleLegend: true,
+      setShowJobTitleLegend: (show) => set({ showJobTitleLegend: show }),
       sidebarTheme: 'theme-midnight',
       setSidebarTheme: (theme) => set({ sidebarTheme: theme }),
       appFont: 'font-roboto',

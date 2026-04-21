@@ -59,9 +59,22 @@ export default function ManagementRequestsPage() {
   const approveMutation = useMutation({
     mutationFn: (id: string) => requestFormApprovalService.approveRequestForm(id),
     onSuccess: (_, id) => {
-      toast.success(`Đã DUYỆT đơn ${id} thành công!`);
+      const request = requests.find(r => r.id === id);
+      if (request?.type === "ATTENDANCE_ADJUSTMENT" && request.attendanceDate && request.timeType) {
+        toast.success(`Đã duyệt điều chỉnh ${request.timeType === 'CHECK_IN' ? 'check-in' : 'check-out'} ngày ${format(new Date(request.attendanceDate), "dd/MM/yyyy")}. Công ngày và tổng hợp tháng đã được cập nhật.`);
+      } else {
+        toast.success(`Đã DUYỆT đơn ${id} thành công!`);
+      }
+      
       queryClient.invalidateQueries({ queryKey: ["approvalRequests"] });
       queryClient.invalidateQueries({ queryKey: ["approvalRequestsStatistics"] });
+      // Invalidate attendance query broad match
+      queryClient.invalidateQueries({ queryKey: ["my-attendance"] });
+      queryClient.invalidateQueries({ queryKey: ["attendance"] });
+
+      if (selectedRequest?.id === id) {
+        setSelectedRequest(request ? { ...request, status: "APPROVED" } : null);
+      }
     },
     onError: (error) => {
       toast.error(getErrorMessage(error, "Duyệt thất bại."));
@@ -74,6 +87,11 @@ export default function ManagementRequestsPage() {
       toast.success(`Đã TỪ CHỐI đơn ${id}.`);
       queryClient.invalidateQueries({ queryKey: ["approvalRequests"] });
       queryClient.invalidateQueries({ queryKey: ["approvalRequestsStatistics"] });
+
+      if (selectedRequest?.id === id) {
+        const request = requests.find(r => r.id === id);
+        setSelectedRequest(request ? { ...request, status: "REJECTED" } : null);
+      }
     },
     onError: (error) => {
       toast.error(getErrorMessage(error, "Từ chối thất bại."));

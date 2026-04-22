@@ -1,6 +1,7 @@
 export interface UpsertGroupPermissionRequest {
   code: string;
-  category?: string;
+  name: string;
+  featureGroup?: string;
   description?: string;
   active?: boolean;
 }

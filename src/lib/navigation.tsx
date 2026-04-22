@@ -27,7 +27,7 @@ export const useNavigationData = () => {
   const perms = session?.groupPermissions?.map(p => p.code) || [];
   const isAdmin = session?.groupName === "ADMIN";
 
-  const hasManagementAccess = session?.isManager === true || perms.some(p => [
+  const hasManagementAccess = session?.isManager === true || perms.some(p => ([
     PERMISSIONS.USER_MANAGE, 
     PERMISSIONS.MASTER_DATA_MANAGE, 
     PERMISSIONS.REQUEST_FORM_APPROVE_ALL, 
@@ -35,7 +35,8 @@ export const useNavigationData = () => {
     PERMISSIONS.PERFORMANCE_REVIEW_ALL, 
     PERMISSIONS.PERFORMANCE_REVIEW_DEPARTMENT, 
     PERMISSIONS.ATTENDANCE_MANAGE, 
-    PERMISSIONS.SETTINGS_MANAGE
+    PERMISSIONS.SETTINGS_MANAGE,
+    PERMISSIONS.ALLOWANCE_REPORT_VIEW
   ] as string[]).includes(p)) || isAdmin;
 
   const managementSubItems = [];
@@ -63,7 +64,7 @@ export const useNavigationData = () => {
       icon: <Users size={16} />,
     });
   }
-  if (isAdmin || perms.includes(PERMISSIONS.USER_MANAGE) || perms.includes(PERMISSIONS.MASTER_DATA_MANAGE)) {
+  if (isAdmin || perms.includes(PERMISSIONS.ALLOWANCE_REPORT_VIEW)) {
     managementSubItems.push({
       label: t("sidebar.reports", { defaultValue: "Báo cáo nội bộ" }),
       shortName: t("sidebar.reportsShort", { defaultValue: "Báo cáo" }),

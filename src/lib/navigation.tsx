@@ -189,10 +189,10 @@ export const useNavigationData = () => {
                 subItems: opsSubItems,
               }] : []),
               ...(masterDataSubItems.length > 0 ? [{
-                id: "masterData",
-                label: t("sidebar.masterData", { defaultValue: "Dữ liệu Danh mục" }),
-                shortName: t("sidebar.masterDataShort", { defaultValue: "Danh mục" }),
-                icon: <Layers size={20} />,
+                id: "organization",
+                label: t("sidebar.organization", { defaultValue: "Tổ chức & Nhân sự" }),
+                shortName: t("sidebar.orgShort", { defaultValue: "Tổ chức" }),
+                icon: <Users size={20} />,
                 subItems: masterDataSubItems,
               }] : []),
               ...(adminSubItems.length > 0 ? [{

@@ -1,6 +1,5 @@
 import { useTranslation } from "react-i18next";
 import { useAuthStore } from "@/store/useAuthStore";
-import { useLayoutStore } from "@/store/useLayoutStore";
 import {
   Home,
   UserCircle,

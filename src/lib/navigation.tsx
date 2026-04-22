@@ -39,41 +39,35 @@ export const useNavigationData = () => {
     PERMISSIONS.ALLOWANCE_REPORT_VIEW
   ] as string[]).includes(p)) || isAdmin;
 
-  const managementSubItems = [];
+  const opsSubItems = [];
   if (isAdmin || perms.includes(PERMISSIONS.REQUEST_FORM_APPROVE_ALL) || (session?.isManager && perms.includes(PERMISSIONS.REQUEST_FORM_APPROVE_DEPARTMENT))) {
-    managementSubItems.push({
-      label: t("sidebar.requests", { defaultValue: "Đơn từ" }),
+    opsSubItems.push({
+      label: t("sidebar.requests", { defaultValue: "Duyệt Đơn từ" }),
       shortName: t("sidebar.requestsShort", { defaultValue: "Duyệt đơn" }),
       path: "/app/management/requests",
       icon: <FileEdit size={16} />,
     });
   }
   if (isAdmin || perms.includes(PERMISSIONS.PERFORMANCE_REVIEW_ALL) || (session?.isManager && perms.includes(PERMISSIONS.PERFORMANCE_REVIEW_DEPARTMENT))) {
-    managementSubItems.push({
+    opsSubItems.push({
       label: t("sidebar.performance", { defaultValue: "Đánh giá hiệu suất" }),
       shortName: t("sidebar.performanceShort", { defaultValue: "Đánh giá" }),
       path: "/app/management/performance",
       icon: <CheckSquare size={16} />,
     });
   }
-  if (isAdmin || perms.includes(PERMISSIONS.USER_MANAGE)) {
-    managementSubItems.push({
-      label: t("sidebar.employees", { defaultValue: "Nhân viên" }),
-      shortName: t("sidebar.employeesShort", { defaultValue: "NV" }),
-      path: "/app/management/employees",
-      icon: <Users size={16} />,
-    });
-  }
   if (isAdmin || perms.includes(PERMISSIONS.ALLOWANCE_REPORT_VIEW)) {
-    managementSubItems.push({
+    opsSubItems.push({
       label: t("sidebar.reports", { defaultValue: "Báo cáo nội bộ" }),
       shortName: t("sidebar.reportsShort", { defaultValue: "Báo cáo" }),
       path: "/app/reports",
       icon: <BarChart3 size={16} />,
     });
   }
+
+  const masterDataSubItems = [];
   if (isAdmin || perms.includes(PERMISSIONS.MASTER_DATA_MANAGE)) {
-    managementSubItems.push(
+    masterDataSubItems.push(
       {
         label: t("sidebar.employeeCodes", { defaultValue: "Mã nhân viên" }),
         shortName: t("sidebar.employeeCodesShort", { defaultValue: "Mã NV" }),
@@ -101,9 +95,17 @@ export const useNavigationData = () => {
     );
   }
 
-  const systemSubItems = [];
+  const adminSubItems = [];
+  if (isAdmin || perms.includes(PERMISSIONS.USER_MANAGE)) {
+    adminSubItems.push({
+      label: t("sidebar.employees", { defaultValue: "Hồ sơ Nhân viên" }),
+      shortName: t("sidebar.employeesShort", { defaultValue: "Nhân viên" }),
+      path: "/app/management/employees",
+      icon: <Users size={16} />,
+    });
+  }
   if (isAdmin || perms.includes(PERMISSIONS.SETTINGS_MANAGE)) {
-    systemSubItems.push(
+    adminSubItems.push(
       {
         label: t("sidebar.groups", { defaultValue: "Nhóm quyền / Mã quyền" }),
         shortName: t("sidebar.groupsShort", { defaultValue: "Phân quyền" }),
@@ -119,9 +121,9 @@ export const useNavigationData = () => {
     );
   }
   if (isAdmin || perms.includes(PERMISSIONS.ATTENDANCE_MANAGE)) {
-    systemSubItems.push({
+    adminSubItems.push({
       label: t("sidebar.attendanceHistory", { defaultValue: "Hikvision - Bản ghi" }),
-      shortName: t("sidebar.attendanceHistoryShort", { defaultValue: "Hikvision Data" }),
+      shortName: t("sidebar.attendanceHistoryShort", { defaultValue: "Hikvision" }),
       path: "/app/management/attendance",
       icon: <Calendar size={16} />,
     });
@@ -169,21 +171,28 @@ export const useNavigationData = () => {
           path: "/app/requests",
           icon: <FileEdit size={20} />,
         },
-        ...(hasManagementAccess && sidebarMode === "admin"
+        ...(hasManagementAccess
           ? [
-              ...(managementSubItems.length > 0 ? [{
-                id: "management",
-                label: t("sidebar.management", { defaultValue: "Quản lý nhân sự" }),
-                shortName: t("sidebar.managementShort", { defaultValue: "Nhân sự" }),
+              ...(opsSubItems.length > 0 ? [{
+                id: "operations",
+                label: t("sidebar.operations", { defaultValue: "Nghiệp vụ" }),
+                shortName: t("sidebar.opsShort", { defaultValue: "Nghiệp vụ" }),
                 icon: <FolderOpen size={20} />,
-                subItems: managementSubItems,
+                subItems: opsSubItems,
               }] : []),
-              ...(systemSubItems.length > 0 ? [{
+              ...(masterDataSubItems.length > 0 ? [{
+                id: "masterData",
+                label: t("sidebar.masterData", { defaultValue: "Dữ liệu Danh mục" }),
+                shortName: t("sidebar.masterDataShort", { defaultValue: "Danh mục" }),
+                icon: <Layers size={20} />,
+                subItems: masterDataSubItems,
+              }] : []),
+              ...(adminSubItems.length > 0 ? [{
                 id: "systemManagement",
-                label: t("sidebar.systemManagement", { defaultValue: "Quản lý Hệ Thống" }),
-                shortName: t("sidebar.systemManagementShort", { defaultValue: "Hệ thống" }),
+                label: t("sidebar.systemManagement", { defaultValue: "Quản trị Hệ thống" }),
+                shortName: t("sidebar.systemShort", { defaultValue: "Quản trị" }),
                 icon: <Settings size={20} />,
-                subItems: systemSubItems,
+                subItems: adminSubItems,
               }] : []),
             ]
           : []),

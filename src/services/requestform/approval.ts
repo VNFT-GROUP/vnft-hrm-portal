@@ -19,10 +19,11 @@ export const requestFormApprovalService = {
   getRequestFormStatistics: async (
     period: RequestFormStatisticPeriod = "THIS_MONTH",
     startDate?: string,
-    endDate?: string
+    endDate?: string,
+    departmentId?: string
   ): Promise<ApiResponse<RequestFormStatisticsResponse>> => {
     const response = await apiClient.get("/request-forms/approval/statistics", {
-      params: { period, startDate, endDate },
+      params: { period, startDate, endDate, departmentId },
     });
     return response.data;
   },

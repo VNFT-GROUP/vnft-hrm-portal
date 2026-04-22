@@ -28,8 +28,7 @@ export function AllowanceReportFilter({
   onExport,
   isExporting,
 }: AllowanceReportFilterProps) {
-  const currentYear = new Date().getFullYear();
-  const years = Array.from({ length: 5 }, (_, i) => currentYear - i);
+  const years = [2024, 2025, 2026, 2027];
 
   return (
     <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-end gap-5">
@@ -115,10 +114,10 @@ export function AllowanceReportFilter({
       <Button
         onClick={onExport}
         disabled={isExporting}
-        className="h-11 px-6 rounded-xl bg-[#2E3192] hover:bg-[#1E2062] text-white shadow-md shadow-[#2E3192]/20 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 font-bold"
+        className="h-11 px-6 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white shadow-md shadow-emerald-600/20 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 font-bold"
       >
         {isExporting ? <Loader2 className="w-5 h-5 mr-2 animate-spin" /> : <Download className="w-5 h-5 mr-2" />}
-        Tra cứu & Xuất Excel
+        Xuất Excel
       </Button>
     </div>
   );

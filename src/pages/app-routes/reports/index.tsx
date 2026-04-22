@@ -1,8 +1,10 @@
 import { AllowanceReportFilter } from "./components/AllowanceReportFilter";
 import { AllowanceReportTable } from "./components/AllowanceReportTable";
-import { useAllowanceReport } from "./hooks/useAllowanceReport";
-import { Loader2, AlertCircle } from "lucide-react";
+import { Loader2, AlertCircle, ShieldAlert } from "lucide-react";
 import { m } from "framer-motion";
+import { useAuthStore } from "@/store/useAuthStore";
+import { PERMISSIONS } from "@/constants/permissions";
+import { useAllowanceReport } from "./hooks/useAllowanceReport";
 
 export default function ReportsPage() {
   const {
@@ -21,6 +23,29 @@ export default function ReportsPage() {
     handleExport,
   } = useAllowanceReport();
 
+  const { session } = useAuthStore();
+  const perms = session?.groupPermissions?.map(p => p.code) || [];
+  const isAdmin = session?.groupName === "ADMIN";
+  const canView = isAdmin || perms.includes(PERMISSIONS.ALLOWANCE_REPORT_VIEW);
+
+  if (!canView) {
+    return (
+      <div className="flex flex-col h-full bg-[#f8f9fa] items-center justify-center p-6">
+        <m.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="flex flex-col items-center justify-center bg-white p-10 rounded-2xl shadow-sm border border-slate-200 text-center max-w-md w-full"
+        >
+          <div className="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mb-6">
+            <ShieldAlert className="w-10 h-10 text-red-500" />
+          </div>
+          <h2 className="text-xl font-bold text-slate-800 mb-2">Không có quyền truy cập</h2>
+          <p className="text-slate-500 mb-6">Bạn không có quyền xem báo cáo phụ cấp nhân viên. Vui lòng liên hệ quản trị viên nếu bạn cần truy cập tính năng này.</p>
+        </m.div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col h-full bg-[#f8f9fa] p-4 sm:p-6 lg:p-8 space-y-6">
       
@@ -32,9 +57,9 @@ export default function ReportsPage() {
       >
         <div className="space-y-1">
           <h1 className="text-2xl font-black text-[#1E2062] tracking-tight">
-            Bảo Cáo
+            Bảng Tính Phụ Cấp Nhân Viên
           </h1>
-          <p className="text-slate-500 font-medium">Bảng Tính Phụ Cấp Nhân Viên</p>
+          <p className="text-slate-500 font-medium text-sm">Theo dõi chi tiết mức phụ cấp hiệu suất và chuyên cần theo từng khoảng thời gian</p>
         </div>
       </m.div>
 

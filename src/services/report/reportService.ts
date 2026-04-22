@@ -33,7 +33,7 @@ export const reportService = {
     
     // Formulate a file name
     const timeFragment = params.periodType === 'MONTH' ? `Thang_${params.month}` : `Quy_${params.quarter}`;
-    link.setAttribute("download", `Bang_Tinh_Phu_Cap_NV_${timeFragment}_${params.year}.xlsx`);
+    link.setAttribute("download", `Bang_Tinh_Phu_Cap_Nhan_Vien_${timeFragment}_${params.year}.xlsx`);
     
     document.body.appendChild(link);
     link.click();

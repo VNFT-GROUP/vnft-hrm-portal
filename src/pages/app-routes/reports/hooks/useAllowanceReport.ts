@@ -5,7 +5,7 @@ import { reportService } from "@/services/report/reportService";
 
 export function useAllowanceReport() {
   const [periodType, setPeriodType] = useState<"MONTH" | "QUARTER">("MONTH");
-  const [year, setYear] = useState<number>(new Date().getFullYear());
+  const [year, setYear] = useState<number>(2026);
   const [month, setMonth] = useState<number>(new Date().getMonth() + 1);
   const [quarter, setQuarter] = useState<number>(Math.floor(new Date().getMonth() / 3) + 1);
   const [isExporting, setIsExporting] = useState(false);

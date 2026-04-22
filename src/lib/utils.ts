@@ -152,7 +152,7 @@ export function formatDate(dateString: string | null | undefined): string {
       month: "2-digit",
       year: "numeric",
     });
-  } catch (_) {
+  } catch {
     return "—";
   }
 }
@@ -170,7 +170,7 @@ export function formatDateTime(dateString: string | null | undefined): string {
       hour: "2-digit",
       minute: "2-digit",
     });
-  } catch (_) {
+  } catch {
     return "—";
   }
 }

@@ -73,8 +73,8 @@ export function AllowanceReportTable({ items }: AllowanceReportTableProps) {
                 <td colSpan={8} className="h-64 text-center">
                   <div className="flex flex-col items-center justify-center text-slate-400">
                     <FolderKanban size={40} className="mb-3 opacity-30" />
-                    <p className="text-base font-medium">Không có dữ liệu báo cáo</p>
-                    <p className="text-sm mt-1">Đổi tiêu chí lọc để xem thêm.</p>
+                    <p className="text-base font-semibold text-slate-800">Không có dữ liệu phụ cấp cho kỳ đã chọn</p>
+                    <p className="text-sm mt-1 text-slate-500">Vui lòng thay đổi tiêu chí lọc hoặc chọn kỳ khác để xem thêm.</p>
                   </div>
                 </td>
               </tr>

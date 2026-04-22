@@ -5,6 +5,9 @@ import type { PerformanceEmployeeResponse } from "@/types/performance/Performanc
 import type { CreatePerformanceReviewRequest } from "@/types/performance/CreatePerformanceReviewRequest";
 import type { UpdatePerformanceReviewRequest } from "@/types/performance/UpdatePerformanceReviewRequest";
 import type { ApiResponse } from "@/types/base/ApiResponse";
+import type { PageResponse } from "@/types/base/PageResponse";
+
+import type { DepartmentResponse } from "@/types/department/DepartmentResponse";
 
 export const performanceService = {
   getPerformanceReviewLevels: async (): Promise<ApiResponse<PerformanceReviewLevelResponse[]>> => {
@@ -12,8 +15,22 @@ export const performanceService = {
     return response.data;
   },
 
-  getPerformanceReviewEmployees: async (year: number, month: number): Promise<ApiResponse<PerformanceEmployeeResponse[]>> => {
-    const response = await apiClient.get<ApiResponse<PerformanceEmployeeResponse[]>>(`/performance-reviews/employees?reviewYear=${year}&reviewMonth=${month}`);
+  getReviewableDepartments: async (): Promise<ApiResponse<DepartmentResponse[]>> => {
+    const response = await apiClient.get<ApiResponse<DepartmentResponse[]>>(`/performance-reviews/departments`);
+    return response.data;
+  },
+
+  getPerformanceReviewEmployees: async (page: number = 1, size: number = 10, year?: number, month?: number, departmentId?: string, status?: string): Promise<ApiResponse<PageResponse<PerformanceEmployeeResponse>>> => {
+    const response = await apiClient.get<ApiResponse<PageResponse<PerformanceEmployeeResponse>>>(`/performance-reviews/employees`, {
+      params: {
+        page,
+        size,
+        reviewYear: year,
+        reviewMonth: month,
+        ...(departmentId && { departmentId }),
+        ...(status && { status }),
+      }
+    });
     return response.data;
   },
 

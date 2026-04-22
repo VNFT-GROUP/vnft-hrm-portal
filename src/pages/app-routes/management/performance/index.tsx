@@ -10,6 +10,7 @@ import PerformanceReviewFormModal from "./components/PerformanceReviewFormModal"
 import PerformanceReviewDetailModal from "./components/PerformanceReviewDetailModal";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import { SearchableSelect } from "@/components/custom/SearchableSelect";
 
 const SCORE_COLORS: Record<number, string> = {
   1: "bg-rose-50 text-rose-700 border-rose-200",
@@ -23,36 +24,51 @@ export default function PerformanceReviewsPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   
-  const [reviewYear, setReviewYear] = useState<number>(new Date().getFullYear());
-  const [reviewMonth, setReviewMonth] = useState<number>(new Date().getMonth() + 1);
+  const [reviewYear, setReviewYear] = useState<number>(() => new Date().getFullYear());
+  const [reviewMonth, setReviewMonth] = useState<number>(() => new Date().getMonth() + 1);
   const [search, setSearch] = useState("");
   
   // Passed to Detail/Form Modal (we pass userId and period to load review or create new)
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [activeUserId, setActiveUserId] = useState<string | null>(null);
   
+  const [filterDepartmentId, setFilterDepartmentId] = useState<string>("");
+  const [filterStatus, setFilterStatus] = useState<string>("ALL");
+
   const [selectedReviewId, setSelectedReviewId] = useState<string | null>(null);
 
+  const { data: departmentsResponse, isFetching: isFetchingDepts } = useQuery({
+    queryKey: ['reviewable-departments'],
+    queryFn: () => performanceService.getReviewableDepartments(),
+  });
+  const departmentsOpts = [
+    { value: "", label: "Tất cả" },
+    ...(departmentsResponse?.data?.map(d => ({ value: d.id, label: d.name })) || [])
+  ];
+
   const { data: response, isLoading } = useQuery({
-    queryKey: ['performance-employees', reviewYear, reviewMonth],
-    queryFn: () => performanceService.getPerformanceReviewEmployees(reviewYear, reviewMonth)
+    queryKey: ['performance-employees', currentPage, pageSize, reviewYear, reviewMonth, filterDepartmentId, filterStatus],
+    queryFn: () => performanceService.getPerformanceReviewEmployees(
+      currentPage,
+      pageSize,
+      reviewYear, 
+      reviewMonth, 
+      filterDepartmentId || undefined, 
+      filterStatus !== "ALL" ? filterStatus : undefined
+    )
   });
 
   const employees = useMemo(() => {
-    let arr = response?.data || [];
+    let arr = response?.data?.content || [];
     if (search.trim()) {
       const s = search.toLowerCase();
       arr = arr.filter(e => (e.fullName || "").toLowerCase().includes(s) || (e.employeeCode || "").toLowerCase().includes(s));
     }
     return arr;
-  }, [response?.data, search]);
+  }, [response?.data?.content, search]);
   
-  const totalPages = Math.max(1, Math.ceil(employees.length / pageSize));
-  
-  const paginatedEmployees = useMemo(() => {
-    const startIndex = (currentPage - 1) * pageSize;
-    return employees.slice(startIndex, startIndex + pageSize);
-  }, [employees, currentPage, pageSize]);
+  const totalPages = Math.max(1, response?.data?.totalPages || 1);
+  const paginatedEmployees = employees;
 
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 5 }, (_, i) => currentYear - 2 + i);
@@ -79,45 +95,91 @@ export default function PerformanceReviewsPage() {
       </div>
 
       <m.div
+        initial={{ opacity: 0, scale: 0.98 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5, delay: 0.15, ease: "easeOut" }}
+        className="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col gap-4"
+      >
+        <div className="relative w-full shrink-0">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground w-5 h-5" />
+          <Input
+            value={search}
+            onChange={(e) => { setSearch(e.target.value); setCurrentPage(1); }}
+            placeholder="Tìm kiếm nhân sự bằng tên hoặc mã nhân viên..."
+            className="pl-12 h-11 rounded-xl bg-slate-50/50 border-slate-200 focus-visible:ring-[#2E3192]/20 hover:bg-slate-50 transition-colors w-full text-base"
+          />
+        </div>
+
+        <div className="flex flex-wrap items-center gap-5 pt-4 border-t border-slate-100">
+           {/* Kỳ Đánh Giá: Tháng + Năm */}
+           <div className="flex items-center gap-2.5">
+             <span className="font-semibold text-slate-700 whitespace-nowrap text-sm">Kỳ đánh giá:</span>
+             <div className="flex items-center gap-2">
+               <Select value={reviewMonth.toString()} onValueChange={(v) => { setReviewMonth(parseInt(v as string)); setCurrentPage(1); }}>
+                 <SelectTrigger className="min-w-[120px] h-11 rounded-xl border-slate-200 hover:bg-slate-50 transition-colors bg-white">
+                   <SelectValue placeholder="Tháng">
+                     {reviewMonth ? `Tháng ${reviewMonth}` : "Tháng"}
+                   </SelectValue>
+                 </SelectTrigger>
+                 <SelectContent>
+                   {Array.from({ length: 12 }, (_, i) => i + 1).map(m => (
+                     <SelectItem key={m} value={m.toString()}>Tháng {m}</SelectItem>
+                   ))}
+                 </SelectContent>
+               </Select>
+
+               <Select value={reviewYear.toString()} onValueChange={(v) => { setReviewYear(parseInt(v as string)); setCurrentPage(1); }}>
+                 <SelectTrigger className="min-w-[120px] h-11 rounded-xl border-slate-200 hover:bg-slate-50 transition-colors bg-white">
+                   <SelectValue placeholder="Năm">
+                     {reviewYear ? `Năm ${reviewYear}` : "Năm"}
+                   </SelectValue>
+                 </SelectTrigger>
+                 <SelectContent>
+                   {years.map(y => <SelectItem key={y} value={y.toString()}>Năm {y}</SelectItem>)}
+                 </SelectContent>
+               </Select>
+             </div>
+           </div>
+
+           {/* Phòng Ban */}
+           <div className="flex items-center gap-2.5">
+             <span className="font-semibold text-slate-700 whitespace-nowrap text-sm">Phòng ban:</span>
+             <div className="w-[200px] sm:w-[220px]">
+               <SearchableSelect 
+                 options={departmentsOpts}
+                 value={filterDepartmentId}
+                 onChange={(val) => { setFilterDepartmentId(val || ""); setCurrentPage(1); }}
+                 placeholder="Tất cả"
+                 isLoading={isFetchingDepts}
+               />
+             </div>
+           </div>
+
+           {/* Trạng thái đánh giá */}
+           <div className="flex items-center gap-2.5">
+             <span className="font-semibold text-slate-700 whitespace-nowrap text-sm">Trạng thái:</span>
+             <Select value={filterStatus} onValueChange={(v) => { setFilterStatus(v as string); setCurrentPage(1); }}>
+               <SelectTrigger className="w-[160px] sm:w-[180px] h-11 rounded-xl border-slate-200 hover:bg-slate-50 transition-colors bg-white">
+                 <SelectValue placeholder="Trạng thái">
+                   {filterStatus === "ALL" ? "Tất cả" : filterStatus === "REVIEWED" ? "Đã đánh giá" : filterStatus === "NOT_REVIEWED" ? "Chưa đánh giá" : "Trạng thái"}
+                 </SelectValue>
+               </SelectTrigger>
+               <SelectContent>
+                 <SelectItem value="ALL">Tất cả</SelectItem>
+                 <SelectItem value="REVIEWED">Đã đánh giá</SelectItem>
+                 <SelectItem value="NOT_REVIEWED">Chưa đánh giá</SelectItem>
+               </SelectContent>
+             </Select>
+           </div>
+        </div>
+      </m.div>
+
+      <m.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
         className="flex flex-col grow bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden"
       >
-        <div className="p-4 md:p-5 border-b border-slate-100 flex flex-col sm:flex-row gap-4 justify-between bg-white z-10 sticky top-0">
-          <div className="flex items-center gap-3 flex-wrap">
-             <div className="flex items-center gap-2">
-                <Select value={reviewYear.toString()} onValueChange={(v) => { setReviewYear(parseInt(v as string)); setCurrentPage(1); }}>
-                  <SelectTrigger className="w-[120px] h-10 border-slate-200 bg-slate-50/50">
-                    <SelectValue placeholder="Năm" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {years.map(y => <SelectItem key={y} value={y.toString()}>Năm {y}</SelectItem>)}
-                  </SelectContent>
-                </Select>
-                <Select value={reviewMonth.toString()} onValueChange={(v) => { setReviewMonth(parseInt(v as string)); setCurrentPage(1); }}>
-                  <SelectTrigger className="w-[120px] h-10 border-slate-200 bg-slate-50/50">
-                    <SelectValue placeholder="Tháng" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {Array.from({ length: 12 }, (_, i) => i + 1).map(m => (
-                      <SelectItem key={m} value={m.toString()}>Tháng {m}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-             </div>
-          </div>
-          <div className="relative w-full sm:w-[250px] lg:w-[300px]">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" />
-            <Input
-              value={search}
-              onChange={(e) => { setSearch(e.target.value); setCurrentPage(1); }}
-              placeholder="Tìm kiếm nhân sự..."
-              className="pl-9 h-10 border-slate-200 focus-visible:ring-indigo-500/20"
-            />
-          </div>
-        </div>
-
         <div className="flex-1 overflow-x-auto">
           <table className="w-full text-sm text-left whitespace-nowrap">
             <thead className="text-xs text-slate-500 uppercase bg-slate-50/80 sticky top-0 z-0">

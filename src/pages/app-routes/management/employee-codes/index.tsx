@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Plus, Search, FileText, Edit2, Power } from 'lucide-react';
+import { Plus, Search, FileText, Edit2, Power, ChevronDown, ChevronUp } from 'lucide-react';
 import { useTranslation } from "react-i18next";
 import { useLayoutStore } from "@/store/useLayoutStore";
 import { Button } from '@/components/ui/button';
@@ -18,6 +18,7 @@ import type { EmployeeCodeResponse } from '@/types/user/EmployeeCodeResponse';
 export default function EmployeeCodesPage() {
   const { t } = useTranslation();
   const showJobTitleLegend = useLayoutStore((state) => state.showJobTitleLegend);
+  const setShowJobTitleLegend = useLayoutStore((state) => state.setShowJobTitleLegend);
   const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState('');
   const [isOpen, setIsOpen] = useState(false);
@@ -119,31 +120,38 @@ export default function EmployeeCodesPage() {
         </p>
       </m.div>
 
-      {showJobTitleLegend && (
-        <m.div 
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1, ease: 'easeOut' }}
-          className='bg-card p-4 rounded-xl border border-border flex flex-col gap-3 text-sm text-muted-foreground w-full shadow-sm'
+      {/* 1.5 Legend Section */}
+      <div className="bg-card rounded-xl border border-border shadow-sm flex flex-col w-full overflow-hidden">
+        <button 
+          onClick={() => setShowJobTitleLegend(!showJobTitleLegend)}
+          className="px-4 py-3 flex items-center justify-between w-full hover:bg-muted/50 transition-colors"
         >
-          <div className="flex flex-wrap items-center gap-x-6 gap-y-3 w-full">
-            <span className="font-semibold text-[#1E2062] mr-2">
-              {t('management.actionLegend', { defaultValue: 'Chú thích thao tác:' })}
-            </span>
-            <div className="flex items-center gap-2">
-              <Edit2 size={16} className="text-[#2E3192]" />
-              <span>{t('management.editLegend', { defaultValue: 'Chỉnh sửa thông tin' })}</span>
+          <span className="font-semibold text-[#1E2062] text-sm md:text-base cursor-pointer">
+            {t('management.actionLegend', { defaultValue: 'Chú thích thao tác:' })}
+          </span>
+          {showJobTitleLegend ? <ChevronUp size={18} className="text-muted-foreground" /> : <ChevronDown size={18} className="text-muted-foreground" />}
+        </button>
+        
+        {showJobTitleLegend && (
+          <m.div 
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            transition={{ duration: 0.3 }}
+            className='px-4 pb-4 pt-1 flex flex-col gap-3 text-sm text-muted-foreground w-full border-t border-border/50'
+          >
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-3 w-full">
+              <div className="flex items-center gap-2">
+                <Edit2 size={16} className="text-[#2E3192]" />
+                <span>{t('management.editLegend', { defaultValue: 'Chỉnh sửa thông tin' })}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Power size={16} className="text-emerald-500" />
+                <span>{t('management.toggleLegend', { defaultValue: 'Bật / Tắt hoạt động' })}</span>
+              </div>
             </div>
-            <div className="flex items-center gap-2">
-              <Power size={16} className="text-emerald-500" />
-              <span>{t('management.toggleLegend', { defaultValue: 'Bật / Tắt hoạt động' })}</span>
-            </div>
-            <div className="ml-auto flex items-center text-xs text-muted-foreground bg-muted/40 px-2 py-1 rounded-md border border-border opacity-70 hover:opacity-100 transition-opacity">
-              {t('management.hideLegendHint', { defaultValue: 'Nhấn Alt + S để bật tắt mục này' })}
-            </div>
-          </div>
-        </m.div>
-      )}
+          </m.div>
+        )}
+      </div>
 
       <m.div className='bg-card p-5 rounded-2xl shadow-sm border border-border flex flex-col md:flex-row justify-between items-center gap-4'>
         <div className='relative w-full md:w-96'>

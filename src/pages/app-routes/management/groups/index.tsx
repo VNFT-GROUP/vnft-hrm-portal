@@ -1,4 +1,4 @@
-import { ShieldCheck, Edit2, Trash2, MousePointerClick, CheckSquare, Shield } from "lucide-react";
+import { ShieldCheck, Edit2, Trash2, MousePointerClick, CheckSquare, Shield, ChevronDown, ChevronUp } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { m  } from 'framer-motion';
 import { useLayoutStore } from "@/store/useLayoutStore";
@@ -10,6 +10,7 @@ import GroupPermissionsTabContent from "./components/GroupPermissionsTabContent"
 export default function GroupsPage() {
   const { t } = useTranslation();
   const showJobTitleLegend = useLayoutStore((state) => state.showJobTitleLegend);
+  const setShowJobTitleLegend = useLayoutStore((state) => state.setShowJobTitleLegend);
 
   return (
     <div className="p-4 md:p-8 w-full min-h-full flex flex-col gap-6 md:gap-8">
@@ -32,36 +33,42 @@ export default function GroupsPage() {
       </m.div>
 
       {/* 1.5 Legend Section */}
-      {showJobTitleLegend && (
-        <m.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
-          className="bg-card p-4 rounded-xl border border-border flex flex-col gap-3 text-sm text-muted-foreground w-full shadow-sm"
+      <div className="bg-card rounded-xl border border-border shadow-sm flex flex-col w-full overflow-hidden">
+        <button 
+          onClick={() => setShowJobTitleLegend(!showJobTitleLegend)}
+          className="px-4 py-3 flex items-center justify-between w-full hover:bg-muted/50 transition-colors"
         >
-          <div className="flex flex-wrap items-center gap-x-6 gap-y-3 w-full">
-            <span className="font-semibold text-[#1E2062] mr-2">
-              {t('management.actionLegend', { defaultValue: 'Chú thích thao tác:' })}
-            </span>
-            <div className="flex items-center gap-2">
-              <Edit2 size={16} className="text-[#2E3192]" />
-              <span>{t('management.editLegend', { defaultValue: 'Chỉnh sửa thông tin' })}</span>
+          <span className="font-semibold text-[#1E2062] text-sm md:text-base cursor-pointer">
+            {t('management.actionLegend', { defaultValue: 'Chú thích thao tác:' })}
+          </span>
+          {showJobTitleLegend ? <ChevronUp size={18} className="text-muted-foreground" /> : <ChevronDown size={18} className="text-muted-foreground" />}
+        </button>
+        
+        {showJobTitleLegend && (
+          <m.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            transition={{ duration: 0.3 }}
+            className="px-4 pb-4 pt-1 flex flex-col gap-3 text-sm text-muted-foreground w-full border-t border-border/50"
+          >
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-3 w-full">
+              <div className="flex items-center gap-2">
+                <Edit2 size={16} className="text-[#2E3192]" />
+                <span>{t('management.editLegend', { defaultValue: 'Chỉnh sửa thông tin' })}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Trash2 size={16} className="text-rose-500" />
+                <span>{t('management.deleteLegend', { defaultValue: 'Xóa / Hủy kích hoạt' })}</span>
+              </div>
             </div>
-            <div className="flex items-center gap-2">
-              <Trash2 size={16} className="text-rose-500" />
-              <span>{t('management.deleteLegend', { defaultValue: 'Xóa / Hủy kích hoạt' })}</span>
+            <div className="w-full h-px bg-border/50 hidden md:block" />
+            <div className="flex items-center gap-1.5 text-[#2E3192]">
+              <MousePointerClick size={16} />
+              <span className="italic">{t('management.actionTooltip', { defaultValue: 'Mẹo: Click chuột phải vào dòng dữ liệu để thao tác nhanh.' })}</span>
             </div>
-            <div className="ml-auto flex items-center text-xs text-muted-foreground bg-muted/40 px-2 py-1 rounded-md border border-border opacity-70 hover:opacity-100 transition-opacity">
-              {t('management.hideLegendHint', { defaultValue: 'Nhấn Alt + S để bật tắt mục này' })}
-            </div>
-          </div>
-          <div className="w-full h-px bg-border/50 hidden md:block" />
-          <div className="flex items-center gap-1.5 text-[#2E3192]">
-            <MousePointerClick size={16} />
-            <span className="italic">{t('management.actionTooltip', { defaultValue: 'Mẹo: Click chuột phải vào dòng dữ liệu để thao tác nhanh.' })}</span>
-          </div>
-        </m.div>
-      )}
+          </m.div>
+        )}
+      </div>
 
       {/* TABS CONTAINER */}
       <Tabs defaultValue="groups" className="flex flex-col gap-6 mt-2">

@@ -20,6 +20,7 @@ export interface UserSessionResponse {
   groupId?: string;
   groupName?: string;
   groupPermissions?: GroupPermissionResponse[];
+  isManager?: boolean;
   requiredProfileCompleted?: boolean;
   todayAttendance?: AttendanceDailySummaryResponse;
   currentMonthAttendance?: AttendanceMonthlySummaryResponse;

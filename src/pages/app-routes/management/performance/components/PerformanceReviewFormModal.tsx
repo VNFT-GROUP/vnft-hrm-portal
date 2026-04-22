@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { RichTextEditor } from "@/components/custom/RichTextEditor";
 import { toast } from "sonner";
 import { getErrorMessage } from "@/lib/utils";
-import { Loader2, CalendarIcon, Star, ClipboardCopy, CheckCircle2, AlertCircle } from "lucide-react";
+import { Loader2, CalendarIcon, Star, CheckCircle2, AlertCircle } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
@@ -38,8 +38,6 @@ export default function PerformanceReviewFormModal({ isOpen, onOpenChange, userI
   
   const [performanceDescriptions, setPerformanceDescriptions] = useState<Record<string, number[]>>({});
   const [performanceImprovementNote, setPerformanceImprovementNote] = useState("");
-
-  const [isCopied, setIsCopied] = useState(false);
 
   // Levels data
   const { data: levelsResponse } = useQuery({
@@ -140,14 +138,6 @@ export default function PerformanceReviewFormModal({ isOpen, onOpenChange, userI
     });
   };
 
-  const copyPromptHelper = () => {
-     const promptText = `Chấm điểm hiệu suất cho nhân viên dựa trên thang điểm 1-5 đã định nghĩa. Dựa trên nội dung đánh giá sau, hãy đưa ra: Điểm & Xếp loại, Mức thưởng, Lý do chi tiết và Lời khuyên cải thiện. Nội dung đánh giá: \n`;
-     navigator.clipboard.writeText(promptText);
-     setIsCopied(true);
-     toast.success("Đã copy Prompt gợi ý");
-     setTimeout(() => setIsCopied(false), 2000);
-  };
-
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[700px] max-w-[95vw] lg:max-w-[850px] max-h-[90vh] flex flex-col p-0 overflow-hidden bg-slate-50 border-none rounded-xl">
@@ -166,19 +156,7 @@ export default function PerformanceReviewFormModal({ isOpen, onOpenChange, userI
             <Loader2 className="w-8 h-8 animate-spin text-[#2E3192]" />
           </div>
         ) : (
-          <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-6 custom-scrollbar">
-            
-            {/* AI Prompter */}
-            <div className="bg-indigo-50/50 border border-indigo-100 p-4 rounded-xl shadow-sm text-sm flex flex-col gap-2">
-               <div className="font-semibold text-indigo-900 flex items-center gap-2">✨ Prompt gợi ý phân tích (AI Assistant)</div>
-               <p className="text-indigo-800/80 italic text-[13px] leading-relaxed">
-                 "Chấm điểm hiệu suất cho nhân viên dựa trên thang điểm 1-5 đã định nghĩa. Dựa trên nội dung đánh giá sau, hãy đưa ra: Điểm & Xếp loại, Mức thưởng, Lý do chi tiết và Lời khuyên cải thiện. Nội dung đánh giá: ..."
-               </p>
-               <Button variant="outline" size="sm" onClick={copyPromptHelper} className="self-start mt-1 bg-white border-indigo-200 text-indigo-700 hover:bg-indigo-50">
-                  {isCopied ? <CheckCircle2 size={14} className="mr-2 text-emerald-500" /> : <ClipboardCopy size={14} className="mr-2" />} 
-                  {isCopied ? "Đã copy" : "Copy Prompt"}
-               </Button>
-            </div>
+          <div className="flex-1 overflow-y-auto p-4 md:p-6 pr-6 pb-10 md:pr-8 md:pb-12 space-y-6 custom-scrollbar">
 
             {/* Base Info */}
             <div className="grid grid-cols-1 gap-5 p-5 bg-white border border-slate-200 rounded-xl shadow-sm">
@@ -209,6 +187,9 @@ export default function PerformanceReviewFormModal({ isOpen, onOpenChange, userI
                       <div 
                         key={lvl.score}
                         onClick={() => setOverallScore(lvl.score)}
+                        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setOverallScore(lvl.score); } }}
+                        role="button"
+                        tabIndex={0}
                         className={cn(
                           "cursor-pointer border rounded-xl p-3 flex flex-col items-center justify-center text-center transition-all bg-white relative overflow-hidden",
                           overallScore === lvl.score ? "border-[#2E3192] ring-1 ring-[#2E3192] shadow-md bg-indigo-50/30" : "border-slate-200 hover:border-indigo-300 hover:shadow-sm"
@@ -252,7 +233,7 @@ export default function PerformanceReviewFormModal({ isOpen, onOpenChange, userI
                         <span className="text-xs font-semibold text-slate-700 uppercase tracking-widest mb-3 block">Đánh giá tiêu chí (Chọn các mục đạt được)</span>
                         <div className="flex flex-col space-y-3 pl-1">
                            {selectedLevel.criteria?.map((c, i) => (
-                             <div key={i} className="flex items-start space-x-3 group">
+                             <div key={`${selectedLevel.score}-${i}-${c.substring(0, 10)}`} className="flex items-start space-x-3 group">
                                <Checkbox 
                                   id={`criteria-${selectedLevel.score}-${i}`}
                                   checked={(performanceDescriptions[overallScore.toString()] || []).includes(i)}
@@ -312,14 +293,14 @@ export default function PerformanceReviewFormModal({ isOpen, onOpenChange, userI
           </div>
         )}
 
-        <DialogFooter className="p-4 bg-white border-t border-slate-100 sm:justify-end shrink-0 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.02)]">
-          <Button variant="outline" onClick={() => onOpenChange(false)} className="px-6 h-10 border-slate-200 text-slate-600 hover:text-slate-800">
+        <DialogFooter className="p-5 md:p-6 bg-white border-t border-slate-100 flex sm:justify-end gap-3 shrink-0 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.02)]">
+          <Button variant="outline" onClick={() => onOpenChange(false)} className="px-6 h-10 border-slate-200 text-slate-600 hover:text-slate-800 m-0">
             Hủy
           </Button>
           <Button 
             onClick={onSubmit} 
             disabled={mutation.isPending || (isEdit && isLoadingInitial)}
-            className="px-8 h-10 bg-[#2E3192] hover:bg-[#1E2062] text-white shadow-md shadow-[#2E3192]/20 font-semibold"
+            className="px-8 h-10 bg-[#2E3192] hover:bg-[#1E2062] text-white shadow-md shadow-[#2E3192]/20 font-semibold m-0"
           >
             {mutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
             {isEdit ? "Lưu thay đổi" : "Lưu đánh giá"}

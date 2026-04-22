@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus, Search, Layers, Edit2, Trash2, Loader2 } from "lucide-react";
+import { Plus, Search, Layers, Edit2, Trash2, Loader2, ChevronDown, ChevronUp } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,6 +19,7 @@ import { useDebounce } from "@/hooks/useDebounce";
 export default function JobTitlesPage() {
   const { t } = useTranslation();
   const showJobTitleLegend = useLayoutStore((state) => state.showJobTitleLegend);
+  const setShowJobTitleLegend = useLayoutStore((state) => state.setShowJobTitleLegend);
   const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -138,28 +139,37 @@ export default function JobTitlesPage() {
       </m.div>
 
       {/* 1.5 Legend Section */}
-      {showJobTitleLegend && (
-        <m.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
-          className="bg-card p-4 rounded-xl border border-border flex flex-col gap-3 text-sm text-muted-foreground w-full shadow-sm"
+      <div className="bg-card rounded-xl border border-border shadow-sm flex flex-col w-full overflow-hidden">
+        <button 
+          onClick={() => setShowJobTitleLegend(!showJobTitleLegend)}
+          className="px-4 py-3 flex items-center justify-between w-full hover:bg-muted/50 transition-colors"
         >
-          <div className="flex flex-wrap items-center gap-x-6 gap-y-3 w-full">
-            <span className="font-semibold text-[#1E2062] mr-2">
-              {t('management.actionLegend', { defaultValue: 'Chú thích thao tác:' })}
-            </span>
-            <div className="flex items-center gap-2">
-              <Edit2 size={16} className="text-[#2E3192]" />
-              <span>{t('management.editLegend', { defaultValue: 'Chỉnh sửa thông tin' })}</span>
+          <span className="font-semibold text-[#1E2062] text-sm md:text-base cursor-pointer">
+            {t('management.actionLegend', { defaultValue: 'Chú thích thao tác:' })}
+          </span>
+          {showJobTitleLegend ? <ChevronUp size={18} className="text-muted-foreground" /> : <ChevronDown size={18} className="text-muted-foreground" />}
+        </button>
+        
+        {showJobTitleLegend && (
+          <m.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            transition={{ duration: 0.3 }}
+            className="px-4 pb-4 pt-1 flex flex-col gap-3 text-sm text-muted-foreground w-full border-t border-border/50"
+          >
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-3 w-full">
+              <div className="flex items-center gap-2">
+                <Edit2 size={16} className="text-[#2E3192]" />
+                <span>{t('management.editLegend', { defaultValue: 'Chỉnh sửa thông tin' })}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Trash2 size={16} className="text-rose-500" />
+                <span>{t('management.deleteLegend', { defaultValue: 'Xóa / Hủy kích hoạt' })}</span>
+              </div>
             </div>
-            <div className="flex items-center gap-2">
-              <Trash2 size={16} className="text-rose-500" />
-              <span>{t('management.deleteLegend', { defaultValue: 'Xóa / Hủy kích hoạt' })}</span>
-            </div>
-          </div>
-        </m.div>
-      )}
+          </m.div>
+        )}
+      </div>
 
       {/* 2 & 3. Toolbar Section */}
       <m.div

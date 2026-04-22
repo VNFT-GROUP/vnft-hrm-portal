@@ -25,7 +25,7 @@ export const useNavigationData = () => {
   const perms = session?.groupPermissions?.map(p => p.code) || [];
   const isAdmin = session?.groupName === "ADMIN";
 
-  const hasManagementAccess = perms.some(p => [
+  const hasManagementAccess = session?.isManager === true || perms.some(p => [
     "USER_MANAGE", 
     "MASTER_DATA_MANAGE", 
     "REQUEST_FORM_APPROVE_ALL", 
@@ -37,7 +37,7 @@ export const useNavigationData = () => {
   ].includes(p)) || isAdmin;
 
   const managementSubItems = [];
-  if (isAdmin || perms.includes("REQUEST_FORM_APPROVE_ALL") || perms.includes("REQUEST_FORM_APPROVE_DEPARTMENT")) {
+  if (session?.isManager === true || isAdmin || perms.includes("REQUEST_FORM_APPROVE_ALL") || perms.includes("REQUEST_FORM_APPROVE_DEPARTMENT")) {
     managementSubItems.push({
       label: t("sidebar.requests", { defaultValue: "Đơn từ" }),
       shortName: t("sidebar.requestsShort", { defaultValue: "Duyệt đơn" }),
@@ -45,7 +45,7 @@ export const useNavigationData = () => {
       icon: <FileEdit size={16} />,
     });
   }
-  if (isAdmin || perms.includes("PERFORMANCE_REVIEW_ALL") || perms.includes("PERFORMANCE_REVIEW_DEPARTMENT")) {
+  if (session?.isManager === true || isAdmin || perms.includes("PERFORMANCE_REVIEW_ALL") || perms.includes("PERFORMANCE_REVIEW_DEPARTMENT")) {
     managementSubItems.push({
       label: t("sidebar.performance", { defaultValue: "Đánh giá hiệu suất" }),
       shortName: t("sidebar.performanceShort", { defaultValue: "Đánh giá" }),

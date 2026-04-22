@@ -12,6 +12,8 @@ import {
   Users,
   Search,
   UserPlus,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -32,6 +34,10 @@ import UserFormSheet from "../users/components/UserFormSheet";
 import CustomPagination from "@/components/custom/CustomPagination";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { userService } from "@/services/user/userService";
+import { departmentService } from "@/services/department";
+import { positionService } from "@/services/position";
+import { SearchableSelect } from "@/components/custom/SearchableSelect";
+
 import { toast } from "sonner";
 import type { CreateUserRequest } from "@/types/user/CreateUserRequest";
 export default function EmployeesPage() {
@@ -41,9 +47,8 @@ export default function EmployeesPage() {
   const [isOpen, setIsOpen] = useState(false);
   const [isUserFormOpen, setIsUserFormOpen] = useState(false);
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
-  const showEmployeeLegend = useLayoutStore(
-    (state) => state.showEmployeeLegend,
-  );
+  const showEmployeeLegend = useLayoutStore((state) => state.showEmployeeLegend);
+  const setShowEmployeeLegend = useLayoutStore((state) => state.setShowEmployeeLegend);
   const [editingEmployee, setEditingEmployee] = useState<Employee | null>(null);
   const [workInfoEmpId, setWorkInfoEmpId] = useState<string | null>(null);
   const [groupInfoEmpId, setGroupInfoEmpId] = useState<string | null>(null);
@@ -74,13 +79,37 @@ export default function EmployeesPage() {
   const [pageSize, setPageSize] = useState(20);
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
+  const [filterDepartmentId, setFilterDepartmentId] = useState<string>("");
+  const [filterPositionId, setFilterPositionId] = useState<string>("");
+
+  const { data: departmentsResponse, isFetching: isFetchingDepts } = useQuery({
+    queryKey: ['departments'],
+    queryFn: () => departmentService.getDepartments(),
+  });
+
+  const { data: positionsResponse, isFetching: isFetchingPositions } = useQuery({
+    queryKey: ['positions'],
+    queryFn: () => positionService.getPositions(),
+  });
+
+  const departmentsOpts = [
+    { value: "", label: "Tất cả" },
+    ...(departmentsResponse?.data?.map(d => ({ value: d.id, label: d.name })) || [])
+  ];
+  const positionsOpts = [
+    { value: "", label: "Tất cả" },
+    ...(positionsResponse?.data?.map(p => ({ value: p.id, label: p.name })) || [])
+  ];
+
   const { data: usersResponse, isLoading } = useQuery({
-    queryKey: ["users", currentPage, pageSize, debouncedSearchTerm],
+    queryKey: ["users", currentPage, pageSize, debouncedSearchTerm, filterDepartmentId, filterPositionId],
     queryFn: () =>
       userService.getUsers(
         currentPage,
         pageSize,
         debouncedSearchTerm || undefined,
+        filterDepartmentId || undefined,
+        filterPositionId || undefined,
       ),
   });
 
@@ -195,36 +224,61 @@ export default function EmployeesPage() {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
-        className="flex flex-col gap-2"
+        className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4"
       >
-        <h1 className="text-2xl md:text-4xl font-bold text-[#1E2062] flex items-center gap-3">
-          <span className="p-2.5 bg-[#2E3192]/10 text-[#2E3192] rounded-xl">
-            <Users size={28} />
-          </span>
-          {t("management.employeesTitle", { defaultValue: "Hồ sơ nhân viên" })}
-        </h1>
-        <p className="text-muted-foreground text-base md:text-lg ml-1">
-          {t("management.employeesDesc", {
-            defaultValue:
-              "Quản lý toàn bộ thông tin nhân sự và cấp phát tài khoản trong hệ thống.",
-          })}
-        </p>
+        <div className="flex flex-col gap-2">
+          <h1 className="text-2xl md:text-4xl font-bold text-[#1E2062] flex items-center gap-3">
+            <span className="p-2.5 bg-[#2E3192]/10 text-[#2E3192] rounded-xl">
+              <Users size={28} />
+            </span>
+            {t("management.employeesTitle", { defaultValue: "Hồ sơ nhân viên" })}
+          </h1>
+          <p className="text-muted-foreground text-base md:text-lg ml-1">
+            {t("management.employeesDesc", {
+              defaultValue:
+                "Quản lý toàn bộ thông tin nhân sự và cấp phát tài khoản trong hệ thống.",
+            })}
+          </p>
+        </div>
+        
+        <div className="flex gap-3 w-full md:w-auto shrink-0 justify-end mt-2 md:mt-0">
+          <Button
+            onClick={() => setIsImportModalOpen(true)}
+            variant="outline"
+            className="w-full md:w-auto h-11 px-5 rounded-xl border-indigo-200 text-indigo-700 hover:bg-indigo-50 hover:text-indigo-800 transition-all font-semibold shadow-sm"
+          >
+            <FileUp size={18} className="mr-2" /> Import
+          </Button>
+          <Button
+            onClick={() => handleOpenForm()}
+            className="w-full md:w-auto h-11 px-6 rounded-xl bg-[#2E3192] hover:bg-[#1E2062] text-white shadow-md shadow-[#2E3192]/20 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 font-semibold"
+          >
+            <UserPlus size={18} className="mr-2" />{" "}
+            <span>{t("management.addEmployee", { defaultValue: "Thêm nhân viên" })}</span>
+          </Button>
+        </div>
       </m.div>
 
       {/* 2. Legend Section */}
-      {showEmployeeLegend && (
-        <m.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
-          className="bg-card p-4 rounded-xl border border-border flex flex-col gap-3 text-sm text-muted-foreground w-full shadow-sm"
+      <div className="bg-card rounded-xl border border-border flex flex-col w-full shadow-sm overflow-hidden">
+        <button 
+          onClick={() => setShowEmployeeLegend(!showEmployeeLegend)}
+          className="px-4 py-3 flex items-center justify-between w-full hover:bg-muted/50 transition-colors"
         >
-          <div className="flex flex-wrap items-center gap-x-6 gap-y-3 w-full">
-            <span className="font-semibold text-[#1E2062] mr-2">
-              {t("management.actionLegend", {
-                defaultValue: "Chú thích thao tác:",
-              })}
-            </span>
+          <span className="font-semibold text-[#1E2062] text-sm md:text-base cursor-pointer">
+            {t("management.actionLegend", { defaultValue: "Chú thích thao tác:" })}
+          </span>
+          {showEmployeeLegend ? <ChevronUp size={18} className="text-muted-foreground" /> : <ChevronDown size={18} className="text-muted-foreground" />}
+        </button>
+        
+        {showEmployeeLegend && (
+          <m.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            transition={{ duration: 0.3 }}
+            className="px-4 pb-4 pt-1 flex flex-col gap-3 text-sm text-muted-foreground border-t border-border/50"
+          >
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-3 w-full">
             <div className="flex items-center gap-2">
               <CircleDollarSign size={16} className="text-emerald-500" />
               <span>
@@ -273,11 +327,7 @@ export default function EmployeesPage() {
                 })}
               </span>
             </div>
-            <div className="ml-auto flex items-center text-xs text-muted-foreground bg-muted/40 px-2 py-1 rounded-md border border-border opacity-70 hover:opacity-100 transition-opacity">
-              {t("management.hideLegendHint", {
-                defaultValue: "Nhấn Alt + S để bật tắt mục này",
-              })}
-            </div>
+
           </div>
           <div className="w-full h-px bg-border/50 hidden md:block" />
           <div className="flex items-center gap-1.5 text-[#2E3192]">
@@ -289,26 +339,27 @@ export default function EmployeesPage() {
               })}
             </span>
           </div>
-        </m.div>
+          </m.div>
       )}
+      </div>
 
       {/* 3. Toolbar Section */}
       <m.div
         initial={{ opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5, delay: 0.15, ease: "easeOut" }}
-        className="bg-card text-card-foreground p-5 rounded-2xl shadow-sm border border-border flex flex-col md:flex-row justify-between items-center gap-4"
+        className="bg-card text-card-foreground p-5 rounded-2xl shadow-sm border border-border flex flex-col gap-4"
       >
-        <div className="relative w-full md:w-96">
+        <div className="relative w-full shrink-0">
           <Search
             className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground"
             size={20}
           />
           <Input
             placeholder={t("management.searchEmployeePlaceholder", {
-              defaultValue: "Tìm kiếm theo Tên hoặc Mã NV...",
+              defaultValue: "Tìm kiếm bằng Tên, Mã NV...",
             })}
-            className="pl-12 h-12 rounded-xl bg-muted border-border focus-visible:ring-[#2E3192] text-base hover:bg-card text-card-foreground transition-colors"
+            className="pl-12 h-11 rounded-xl bg-muted border-border focus-visible:ring-[#2E3192] text-sm hover:bg-card text-card-foreground transition-colors"
             value={searchTerm}
             onChange={(e) => {
               setSearchTerm(e.target.value);
@@ -316,21 +367,50 @@ export default function EmployeesPage() {
             }}
           />
         </div>
-        <div className="flex gap-3 w-full md:w-auto flex-col md:flex-row">
-          <Button
-            onClick={() => setIsImportModalOpen(true)}
-            variant="outline"
-            className="w-full md:w-auto h-12 px-5 rounded-xl border-indigo-200 text-indigo-700 hover:bg-indigo-50 hover:text-indigo-800 transition-all font-semibold shadow-sm"
-          >
-            <FileUp size={20} className="mr-2" /> Import nhân viên
-          </Button>
-          <Button
-            onClick={() => handleOpenForm()}
-            className="w-full md:w-auto h-12 px-6 rounded-xl bg-[#2E3192] hover:bg-[#1E2062] text-white shadow-md shadow-[#2E3192]/20 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 text-base font-semibold"
-          >
-            <UserPlus size={20} className="mr-2" />{" "}
-            {t("management.addEmployee", { defaultValue: "Thêm nhân viên" })}
-          </Button>
+        
+        {/* Advanced Filters */}
+        <div className="flex flex-wrap items-center gap-5 pt-4 border-t border-border">
+          <div className="flex items-center gap-2.5">
+            <span className="font-semibold text-slate-700 whitespace-nowrap text-sm">Phòng ban:</span>
+            <div className="w-[200px] sm:w-[220px]">
+              <SearchableSelect 
+                options={departmentsOpts}
+                value={filterDepartmentId}
+                onChange={(val) => { setFilterDepartmentId(val || ""); setCurrentPage(1); }}
+                placeholder="Tất cả"
+                isLoading={isFetchingDepts}
+              />
+            </div>
+          </div>
+          
+          <div className="flex items-center gap-2.5">
+            <span className="font-semibold text-slate-700 whitespace-nowrap text-sm">Vị trí:</span>
+            <div className="w-[200px] sm:w-[220px]">
+              <SearchableSelect 
+                options={positionsOpts}
+                value={filterPositionId}
+                onChange={(val) => { setFilterPositionId(val || ""); setCurrentPage(1); }}
+                placeholder="Tất cả"
+                isLoading={isFetchingPositions}
+              />
+            </div>
+          </div>
+          
+          {(filterDepartmentId || filterPositionId) && (
+            <div className="flex items-center h-full ml-auto">
+              <Button 
+                variant="ghost" 
+                onClick={() => {
+                  setFilterDepartmentId("");
+                  setFilterPositionId("");
+                  setCurrentPage(1);
+                }}
+                className="h-10 text-muted-foreground hover:text-rose-600 hover:bg-rose-50"
+              >
+                <Trash2 size={16} className="mr-2" /> Xóa bộ lọc
+              </Button>
+            </div>
+          )}
         </div>
       </m.div>
 

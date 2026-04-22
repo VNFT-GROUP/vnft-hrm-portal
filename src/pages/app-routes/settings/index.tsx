@@ -1,18 +1,11 @@
 import { m  } from 'framer-motion';
-import { Monitor, Globe, Palette, Type, Clock, MousePointer2, LayoutDashboard, UserCircle, FileEdit, FolderOpen, Settings as SettingsIcon } from "lucide-react";
+import { Globe, Palette, Type, Clock, MousePointer2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useLayoutStore } from "@/store/useLayoutStore";
-import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 
 export default function SettingsPage() {
-  const showEmployeeLegend = useLayoutStore((state) => state.showEmployeeLegend);
-  const setShowEmployeeLegend = useLayoutStore((state) => state.setShowEmployeeLegend);
-  const showDepartmentLegend = useLayoutStore((state) => state.showDepartmentLegend);
-  const setShowDepartmentLegend = useLayoutStore((state) => state.setShowDepartmentLegend);
-  const showJobTitleLegend = useLayoutStore((state) => state.showJobTitleLegend);
-  const setShowJobTitleLegend = useLayoutStore((state) => state.setShowJobTitleLegend);
   const sidebarTheme = useLayoutStore((state) => state.sidebarTheme);
   const setSidebarTheme = useLayoutStore((state) => state.setSidebarTheme);
   const appFont = useLayoutStore((state) => state.appFont);
@@ -21,8 +14,6 @@ export default function SettingsPage() {
   const setTimezone = useLayoutStore((state) => state.setTimezone);
   const cursorStyle = useLayoutStore((state) => state.cursorStyle);
   const setCursorStyle = useLayoutStore((state) => state.setCursorStyle);
-  const hiddenSidebarItems = useLayoutStore((state) => state.hiddenSidebarItems) || [];
-  const toggleSidebarItemVisibility = useLayoutStore((state) => state.toggleSidebarItemVisibility);
 
   const { t, i18n } = useTranslation();
   const [now, setNow] = useState(new Date());
@@ -46,9 +37,11 @@ export default function SettingsPage() {
     try {
       const timeString = now.toLocaleTimeString('vi-VN', { timeZone: tz, hour: '2-digit', minute: '2-digit' });
       const formatParts = new Intl.DateTimeFormat('en', { timeZone: tz, timeZoneName: 'shortOffset' }).formatToParts(now);
-      const offsetPart = formatParts.find(p => p.type === 'timeZoneName')?.value || '';
+      const tzNamePart = formatParts.find(p => p.type === 'timeZoneName');
+      const offsetPart = tzNamePart ? tzNamePart.value : '';
       
-      let city = tz.split('/').pop()?.replace(/_/g, ' ') || tz;
+      const popPart = tz.split('/').pop();
+      let city = popPart ? popPart.replace(/_/g, ' ') : tz;
       
       // Custom display names based on VNFT office locations
       if (tz === 'Asia/Ho_Chi_Minh') city = t('settings.tzSection.hcm');
@@ -93,14 +86,7 @@ export default function SettingsPage() {
     { id: 'cursor-rose', name: t('settings.cursorSection.rose'), icon: <MousePointer2 fill="#f43f5e" stroke="white" size={24} className="text-[#f43f5e]" /> },
   ];
 
-  const customizableMenus = [
-    { id: "dashboard", label: t("sidebar.dashboard"), icon: <LayoutDashboard size={14} className="text-muted-foreground mr-1.5 shrink-0" /> },
-    { id: "profile", label: t("sidebar.profile"), icon: <UserCircle size={14} className="text-muted-foreground mr-1.5 shrink-0" /> },
-    { id: "myAttendance", label: t("sidebar.myAttendance", { defaultValue: "Bảng công của tôi" }), icon: <Clock size={14} className="text-muted-foreground mr-1.5 shrink-0" /> },
-    { id: "requests", label: t("sidebar.requests"), icon: <FileEdit size={14} className="text-muted-foreground mr-1.5 shrink-0" /> },
-    { id: "management", label: t("sidebar.management"), icon: <FolderOpen size={14} className="text-muted-foreground mr-1.5 shrink-0" /> },
-    { id: "systemManagement", label: t("sidebar.systemManagement", { defaultValue: "Quản lý Hệ Thống" }), icon: <SettingsIcon size={14} className="text-muted-foreground mr-1.5 shrink-0" /> },
-  ];
+
 
 
 
@@ -402,109 +388,7 @@ export default function SettingsPage() {
           </div>
         </m.section>
 
-        {/* Section 4: Display Settings (Moved to bottom) */}
-        <m.section 
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.4, ease: "easeOut" }}
-          className="bg-card text-card-foreground p-6 rounded-2xl border border-border shadow-sm"
-        >
-          <div className="flex items-center gap-3 mb-6 pb-4 border-b border-border">
-            <div className="p-2.5 bg-[#2E3192]/10 text-[#2E3192] rounded-xl">
-              <Monitor size={24} />
-            </div>
-            <h2 className="text-xl font-bold text-[#1E2062]">{t("settings.displaySection.title")}</h2>
-          </div>
 
-          <div className="flex flex-col gap-6">
-            {/* Setting Item 1: Employee Legend */}
-            <div className="flex items-start justify-between gap-4">
-              <div className="flex flex-col gap-1.5">
-                <Label htmlFor="employee-legend-toggle" className="text-base font-semibold cursor-pointer">
-                  {t("settings.displaySection.employeeLabel")}
-                </Label>
-                <p className="text-sm text-muted-foreground max-w-xl">
-                  {t("settings.displaySection.employeeDesc")}
-                </p>
-              </div>
-              <div className="mt-1">
-                <Switch 
-                  id="employee-legend-toggle"
-                  checked={showEmployeeLegend}
-                  onCheckedChange={setShowEmployeeLegend}
-                  className="data-[state=checked]:bg-[#2E3192]"
-                />
-              </div>
-            </div>
-
-            {/* Setting Item 2: Department Legend */}
-            <div className="flex items-start justify-between gap-4">
-              <div className="flex flex-col gap-1.5">
-                <Label htmlFor="department-legend-toggle" className="text-base font-semibold cursor-pointer">
-                  {t("settings.displaySection.departmentLabel")}
-                </Label>
-                <p className="text-sm text-muted-foreground max-w-xl">
-                  {t("settings.displaySection.departmentDesc")}
-                </p>
-              </div>
-              <div className="mt-1">
-                <Switch 
-                  id="department-legend-toggle"
-                  checked={showDepartmentLegend}
-                  onCheckedChange={setShowDepartmentLegend}
-                  className="data-[state=checked]:bg-[#2E3192]"
-                />
-              </div>
-            </div>
-
-            {/* Setting Item 3: JobTitle Legend */}
-            <div className="flex items-start justify-between gap-4">
-              <div className="flex flex-col gap-1.5">
-                <Label htmlFor="jobTitle-legend-toggle" className="text-base font-semibold cursor-pointer">
-                  {t("settings.displaySection.roleLabel")}
-                </Label>
-                <p className="text-sm text-muted-foreground max-w-xl">
-                  {t("settings.displaySection.roleDesc")}
-                </p>
-              </div>
-              <div className="mt-1">
-                <Switch 
-                  id="jobTitle-legend-toggle"
-                  checked={showJobTitleLegend}
-                  onCheckedChange={setShowJobTitleLegend}
-                  className="data-[state=checked]:bg-[#2E3192]"
-                />
-              </div>
-            </div>
-
-            <hr className="my-2 border-border" />
-            
-            <div className="flex flex-col gap-3">
-              <div className="flex flex-col gap-1.5">
-                <Label className="text-base font-semibold">Tùy chỉnh Sidebar Menu</Label>
-                <p className="text-sm text-muted-foreground max-w-xl">Tắt các tính năng bạn không sử dụng thường xuyên để menu gọn gàng hơn.</p>
-              </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-2">
-                {customizableMenus.map((menu) => (
-                  <div key={menu.id} className="flex items-center justify-between p-3 border border-border bg-card rounded-lg hover:border-muted-foreground/30 transition-colors">
-                    <Label htmlFor={`hide-${menu.id}`} className="flex items-center cursor-pointer font-medium flex-1 h-full select-none gap-2">
-                      {menu.icon}
-                      <span className={hiddenSidebarItems.includes(menu.id) ? "text-muted-foreground/70" : "text-foreground"}>{menu.label}</span>
-                    </Label>
-                    <Switch 
-                      id={`hide-${menu.id}`} 
-                      checked={!hiddenSidebarItems.includes(menu.id)} 
-                      onCheckedChange={() => toggleSidebarItemVisibility(menu.id)} 
-                      className="data-[state=checked]:bg-[#2E3192]"
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
-
-          </div>
-        </m.section>
         
       </div>
     </div>

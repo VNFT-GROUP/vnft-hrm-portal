@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus, Search, Building2, Edit2, Trash2 } from "lucide-react";
+import { Plus, Search, Building2, Edit2, Trash2, ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { m  } from 'framer-motion';
@@ -18,6 +18,7 @@ import { useDebounce } from "@/hooks/useDebounce";
 export default function DepartmentsPage() {
   const { t } = useTranslation();
   const showDepartmentLegend = useLayoutStore(state => state.showDepartmentLegend);
+  const setShowDepartmentLegend = useLayoutStore(state => state.setShowDepartmentLegend);
   const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -125,29 +126,37 @@ export default function DepartmentsPage() {
       </m.div>
 
       {/* 1.5 Legend Section */}
-      {showDepartmentLegend && (
-        <m.div 
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
-          className="bg-card p-4 rounded-xl border border-border flex flex-col gap-3 text-sm text-muted-foreground w-full shadow-sm"
+      <div className="bg-card rounded-xl border border-border shadow-sm flex flex-col w-full overflow-hidden">
+        <button 
+          onClick={() => setShowDepartmentLegend(!showDepartmentLegend)}
+          className="px-4 py-3 flex items-center justify-between w-full hover:bg-muted/50 transition-colors"
         >
-          <div className="flex flex-wrap items-center gap-x-6 gap-y-3 w-full">
-            <span className="font-semibold text-[#1E2062] mr-2">{t("department.legendTitle")}</span>
-            <div className="flex items-center gap-2">
-              <Edit2 size={16} className="text-[#2E3192]" />
-              <span>{t("department.legendEdit")}</span>
+          <span className="font-semibold text-[#1E2062] text-sm md:text-base cursor-pointer">
+            {t("department.legendTitle", { defaultValue: "Chú thích thao tác:" })}
+          </span>
+          {showDepartmentLegend ? <ChevronUp size={18} className="text-muted-foreground" /> : <ChevronDown size={18} className="text-muted-foreground" />}
+        </button>
+        
+        {showDepartmentLegend && (
+          <m.div 
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            transition={{ duration: 0.3 }}
+            className="px-4 pb-4 pt-1 flex flex-col gap-3 text-sm text-muted-foreground w-full border-t border-border/50"
+          >
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-3 w-full">
+              <div className="flex items-center gap-2">
+                <Edit2 size={16} className="text-[#2E3192]" />
+                <span>{t("department.legendEdit")}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Trash2 size={16} className="text-rose-500" />
+                <span>{t("department.legendDelete")}</span>
+              </div>
             </div>
-            <div className="flex items-center gap-2">
-              <Trash2 size={16} className="text-rose-500" />
-              <span>{t("department.legendDelete")}</span>
-            </div>
-            <div className="ml-auto flex items-center text-xs text-muted-foreground bg-muted/40 px-2 py-1 rounded-md border border-border opacity-70 hover:opacity-100 transition-opacity">
-              {t("department.legendHidePrefix")}<span className="ml-1 font-mono text-[10px] font-semibold bg-background py-0.5 px-1.5 rounded border border-border shadow-sm">Alt + S</span>{t("department.legendHideSuffix")}
-            </div>
-          </div>
-        </m.div>
-      )}
+          </m.div>
+        )}
+      </div>
 
       {/* 2 & 3. Toolbar Section (Tìm Kiếm + Nút tạo) */}
       <m.div 

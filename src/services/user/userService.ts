@@ -32,9 +32,17 @@ export const userService = {
     page: number = 1,
     size: number = 10,
     keyword?: string,
+    departmentId?: string,
+    positionId?: string,
   ): Promise<ApiResponse<PageResponse<UserResponse>>> => {
     const response = await apiClient.get("/users", {
-      params: { page, size, ...(keyword && { keyword }) },
+      params: { 
+        page, 
+        size, 
+        ...(keyword && { keyword }),
+        ...(departmentId && { departmentId }),
+        ...(positionId && { positionId }),
+      },
     });
     return response.data;
   },

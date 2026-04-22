@@ -88,33 +88,24 @@ export default function ProfileHeader() {
           </div>
           </div>
           
-          <div className="flex flex-col items-end gap-2">
+          <div className="flex flex-col md:items-end gap-3 shrink-0">
             <m.button 
               onClick={() => navigate('/app/profile/edit')}
-              whileHover={{ scale: 1.03 }} 
-              whileTap={{ scale: 0.97 }}
-              className={`group relative overflow-hidden px-5 py-2.5 rounded-full font-semibold text-white shadow-md border transition-all self-start flex items-center justify-center bg-size-[200%_auto] hover:bg-position-[100%_0] duration-500 ease-out z-10 ${
-                session?.requiredProfileCompleted === false
-                ? "bg-linear-to-r from-red-600 via-rose-500 to-red-600 border-red-400 shadow-red-500/50 animate-[pulse_2s_ease-in-out_infinite]"
-                : "bg-linear-to-r from-[#2E3192] via-[#4d51d8] to-[#2E3192] border-white/10 shadow-[#2E3192]/20"
-              }`}
+              whileHover={{ scale: 1.02 }} 
+              whileTap={{ scale: 0.98 }}
+              className="group relative px-4 py-2 rounded-lg font-medium text-white shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 z-10 flex items-center justify-center gap-2 w-full md:w-auto bg-[#2E3192] hover:bg-[#2E3192]/90 focus:ring-[#2E3192]"
             >
-              {/* Gleam Shimmer Effect */}
-              <span className={`absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out ${
-                 session?.requiredProfileCompleted === false ? "bg-linear-to-r from-transparent via-white/50 to-transparent" : "bg-linear-to-r from-transparent via-white/25 to-transparent"
-              }`}></span>
-
-              <span className="relative flex items-center gap-2 text-sm tracking-wide">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"/><path d="M16 4a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L16 4Z"/></svg>
+              {session?.requiredProfileCompleted === false && (
+                <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-destructive opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-destructive border-2 border-background"></span>
+                </span>
+              )}
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0"><path d="M12 20h9"/><path d="M16 4a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L16 4Z"/></svg>
+              <span className="text-sm">
                 {t("profile.editBtn", { defaultValue: "Cập nhật hồ sơ" })}
               </span>
             </m.button>
-            {session?.requiredProfileCompleted === false && (
-              <span className="text-xs font-bold text-red-500 flex items-center gap-1.5 bg-red-500/10 px-2.5 py-1 rounded-full animate-pulse">
-                <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>
-                {t("profile.requiredUpdateHint", { defaultValue: "Bắt buộc điền đầy đủ!" })}
-              </span>
-            )}
           </div>
         </div>
       </div>

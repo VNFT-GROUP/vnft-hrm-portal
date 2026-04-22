@@ -15,7 +15,9 @@ import {
   FileEdit,
   Clock,
   Settings,
+  BarChart3,
 } from "lucide-react";
+import { PERMISSIONS } from "@/constants/permissions";
 
 export const useNavigationData = () => {
   const { session } = useAuthStore();
@@ -26,18 +28,18 @@ export const useNavigationData = () => {
   const isAdmin = session?.groupName === "ADMIN";
 
   const hasManagementAccess = session?.isManager === true || perms.some(p => [
-    "USER_MANAGE", 
-    "MASTER_DATA_MANAGE", 
-    "REQUEST_FORM_APPROVE_ALL", 
-    "REQUEST_FORM_APPROVE_DEPARTMENT",
-    "PERFORMANCE_REVIEW_ALL", 
-    "PERFORMANCE_REVIEW_DEPARTMENT", 
-    "ATTENDANCE_MANAGE", 
-    "SETTINGS_MANAGE"
-  ].includes(p)) || isAdmin;
+    PERMISSIONS.USER_MANAGE, 
+    PERMISSIONS.MASTER_DATA_MANAGE, 
+    PERMISSIONS.REQUEST_FORM_APPROVE_ALL, 
+    PERMISSIONS.REQUEST_FORM_APPROVE_DEPARTMENT,
+    PERMISSIONS.PERFORMANCE_REVIEW_ALL, 
+    PERMISSIONS.PERFORMANCE_REVIEW_DEPARTMENT, 
+    PERMISSIONS.ATTENDANCE_MANAGE, 
+    PERMISSIONS.SETTINGS_MANAGE
+  ] as string[]).includes(p)) || isAdmin;
 
   const managementSubItems = [];
-  if (session?.isManager === true || isAdmin || perms.includes("REQUEST_FORM_APPROVE_ALL") || perms.includes("REQUEST_FORM_APPROVE_DEPARTMENT")) {
+  if (session?.isManager === true || isAdmin || perms.includes(PERMISSIONS.REQUEST_FORM_APPROVE_ALL) || perms.includes(PERMISSIONS.REQUEST_FORM_APPROVE_DEPARTMENT)) {
     managementSubItems.push({
       label: t("sidebar.requests", { defaultValue: "Đơn từ" }),
       shortName: t("sidebar.requestsShort", { defaultValue: "Duyệt đơn" }),
@@ -45,7 +47,7 @@ export const useNavigationData = () => {
       icon: <FileEdit size={16} />,
     });
   }
-  if (session?.isManager === true || isAdmin || perms.includes("PERFORMANCE_REVIEW_ALL") || perms.includes("PERFORMANCE_REVIEW_DEPARTMENT")) {
+  if (session?.isManager === true || isAdmin || perms.includes(PERMISSIONS.PERFORMANCE_REVIEW_ALL) || perms.includes(PERMISSIONS.PERFORMANCE_REVIEW_DEPARTMENT)) {
     managementSubItems.push({
       label: t("sidebar.performance", { defaultValue: "Đánh giá hiệu suất" }),
       shortName: t("sidebar.performanceShort", { defaultValue: "Đánh giá" }),
@@ -53,7 +55,7 @@ export const useNavigationData = () => {
       icon: <CheckSquare size={16} />,
     });
   }
-  if (isAdmin || perms.includes("USER_MANAGE")) {
+  if (isAdmin || perms.includes(PERMISSIONS.USER_MANAGE)) {
     managementSubItems.push({
       label: t("sidebar.employees", { defaultValue: "Nhân viên" }),
       shortName: t("sidebar.employeesShort", { defaultValue: "NV" }),
@@ -61,7 +63,15 @@ export const useNavigationData = () => {
       icon: <Users size={16} />,
     });
   }
-  if (isAdmin || perms.includes("MASTER_DATA_MANAGE")) {
+  if (isAdmin || perms.includes(PERMISSIONS.USER_MANAGE) || perms.includes(PERMISSIONS.MASTER_DATA_MANAGE)) {
+    managementSubItems.push({
+      label: t("sidebar.reports", { defaultValue: "Báo cáo nội bộ" }),
+      shortName: t("sidebar.reportsShort", { defaultValue: "Báo cáo" }),
+      path: "/app/reports",
+      icon: <BarChart3 size={16} />,
+    });
+  }
+  if (isAdmin || perms.includes(PERMISSIONS.MASTER_DATA_MANAGE)) {
     managementSubItems.push(
       {
         label: t("sidebar.employeeCodes", { defaultValue: "Mã nhân viên" }),
@@ -91,7 +101,7 @@ export const useNavigationData = () => {
   }
 
   const systemSubItems = [];
-  if (isAdmin || perms.includes("SETTINGS_MANAGE")) {
+  if (isAdmin || perms.includes(PERMISSIONS.SETTINGS_MANAGE)) {
     systemSubItems.push(
       {
         label: t("sidebar.groups", { defaultValue: "Nhóm quyền / Mã quyền" }),
@@ -107,7 +117,7 @@ export const useNavigationData = () => {
       }
     );
   }
-  if (isAdmin || perms.includes("ATTENDANCE_MANAGE")) {
+  if (isAdmin || perms.includes(PERMISSIONS.ATTENDANCE_MANAGE)) {
     systemSubItems.push({
       label: t("sidebar.attendanceHistory", { defaultValue: "Hikvision - Bản ghi" }),
       shortName: t("sidebar.attendanceHistoryShort", { defaultValue: "Hikvision Data" }),

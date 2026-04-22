@@ -19,7 +19,7 @@ import {
   GLOBAL_ETHNICITIES as PROFILE_GLOBAL_ETHNICITIES,
   getCountryNameForLocale,
   WORLD_RELIGIONS as PROFILE_WORLD_RELIGIONS,
-} from "@/lib/profile-options";
+} from "@/constants/profile-options";
 
 
 type ProfileFormData = Partial<UpdateUserProfileRequest> & {

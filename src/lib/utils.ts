@@ -1,14 +1,14 @@
-import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
 
 export function mapIdToName(
   id: string | null | undefined,
   list: Array<{ id: string; name: string }> | undefined,
-  fallback = "-"
+  fallback = "-",
 ): string {
   if (!id) return fallback;
   if (!list || list.length === 0) return id;
@@ -31,13 +31,17 @@ export function getEmployeeStatusColor(status: string) {
   }
 }
 
-export const rotateImageFile = async (fileOrUrl: File | string, angle: number = 90, defaultName: string = "rotated_image.jpeg"): Promise<File> => {
+export const rotateImageFile = async (
+  fileOrUrl: File | string,
+  angle: number = 90,
+  defaultName: string = "rotated_image.jpeg",
+): Promise<File> => {
   return new Promise((resolve, reject) => {
     try {
       let imageSrc = "";
       let originalType = "image/jpeg";
-      
-      if (typeof fileOrUrl === 'string') {
+
+      if (typeof fileOrUrl === "string") {
         imageSrc = fileOrUrl;
       } else {
         originalType = fileOrUrl.type || originalType;
@@ -64,16 +68,23 @@ export const rotateImageFile = async (fileOrUrl: File | string, angle: number = 
         ctx.rotate((angle * Math.PI) / 180);
         ctx.drawImage(img, -img.width / 2, -img.height / 2);
 
-        canvas.toBlob((blob) => {
-          if (!blob) return reject(new Error("Canvas is empty"));
-          const newFile = new File([blob], defaultName, {
-             type: originalType,
-             lastModified: Date.now(),
-          });
-          resolve(newFile);
-        }, originalType, 0.95);
+        canvas.toBlob(
+          (blob) => {
+            if (!blob) return reject(new Error("Canvas is empty"));
+            const newFile = new File([blob], defaultName, {
+              type: originalType,
+              lastModified: Date.now(),
+            });
+            resolve(newFile);
+          },
+          originalType,
+          0.95,
+        );
       };
-      img.onerror = () => reject(new Error("Lỗi tải ảnh để xoay, có thể do định dạng hoặc lỗi CORS"));
+      img.onerror = () =>
+        reject(
+          new Error("Lỗi tải ảnh để xoay, có thể do định dạng hoặc lỗi CORS"),
+        );
       img.src = imageSrc;
     } catch (err) {
       reject(err);
@@ -81,9 +92,17 @@ export const rotateImageFile = async (fileOrUrl: File | string, angle: number = 
   });
 };
 
-export function getErrorMessage(error: unknown, defaultMessage?: string): string {
+export function getErrorMessage(
+  error: unknown,
+  defaultMessage?: string,
+): string {
   const err = error as Error & { response?: { data?: { message?: string } } };
-  return err?.response?.data?.message || err?.message || defaultMessage || "Lỗi không xác định";
+  return (
+    err?.response?.data?.message ||
+    err?.message ||
+    defaultMessage ||
+    "Lỗi không xác định"
+  );
 }
 
 export const getWorkingDaysInMonth = (month: number, year: number): number => {
@@ -98,3 +117,60 @@ export const getWorkingDaysInMonth = (month: number, year: number): number => {
   }
   return count;
 };
+
+// -- Common Formatting Utilities --
+
+/** Formats a number to Vietnamese standard without currency symbol (e.g. 10.000) */
+export function formatCurrency(
+  amount: number | string | null | undefined,
+): string {
+  if (amount === null || amount === undefined) return "0";
+  const num = typeof amount === "string" ? Number(amount) : amount;
+  if (isNaN(num)) return "0";
+  return new Intl.NumberFormat("vi-VN").format(num);
+}
+
+/** Formats a number to Vietnamese standard with currency symbol (e.g. 10.000 ₫) */
+export function formatVND(amount: number | string | null | undefined): string {
+  if (amount === null || amount === undefined) return "0 ₫";
+  const num = typeof amount === "string" ? Number(amount) : amount;
+  if (isNaN(num)) return "0 ₫";
+  return new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+  }).format(num);
+}
+
+/** Formats a date string to DD/MM/YYYY */
+export function formatDate(dateString: string | null | undefined): string {
+  if (!dateString) return "—";
+  try {
+    const d = new Date(dateString);
+    if (isNaN(d.getTime())) return "—";
+    return d.toLocaleDateString("vi-VN", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
+  } catch (_) {
+    return "—";
+  }
+}
+
+/** Formats a date string to DD/MM/YYYY HH:mm */
+export function formatDateTime(dateString: string | null | undefined): string {
+  if (!dateString) return "—";
+  try {
+    const d = new Date(dateString);
+    if (isNaN(d.getTime())) return "—";
+    return d.toLocaleString("vi-VN", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  } catch (_) {
+    return "—";
+  }
+}

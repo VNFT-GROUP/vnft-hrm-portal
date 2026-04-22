@@ -1,15 +1,12 @@
 import type { AllowanceReportItem } from "@/types/report/AllowanceReportItem";
 import { FolderKanban } from "lucide-react";
+import { formatVND } from "@/lib/utils";
 
 interface AllowanceReportTableProps {
   items: AllowanceReportItem[];
 }
 
 export function AllowanceReportTable({ items }: AllowanceReportTableProps) {
-  const formatMoney = (amount: number) => {
-    return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
-  };
-
   const formatScore = (val: number | undefined | null) => {
     if (val === null || val === undefined) return "—";
     return Number(val).toLocaleString('vi-VN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -58,15 +55,15 @@ export function AllowanceReportTable({ items }: AllowanceReportTableProps) {
 
                 {/* Money Details */}
                 <td className="px-5 py-3.5 text-right font-medium text-slate-700 border-l border-transparent group-hover:border-slate-100">
-                  {formatMoney(item.performanceAllowance || 0)}
+                  {formatVND(item.performanceAllowance || 0)}
                 </td>
                 <td className="px-5 py-3.5 text-right font-medium text-slate-700">
-                  {formatMoney(item.attendanceAllowance || 0)}
+                  {formatVND(item.attendanceAllowance || 0)}
                 </td>
 
                 {/* Total */}
                 <td className="px-5 py-3.5 text-right font-bold text-rose-600 bg-rose-50/30 border-l border-transparent group-hover:border-rose-100/50">
-                  {formatMoney(item.totalAllowance || 0)}
+                  {formatVND(item.totalAllowance || 0)}
                 </td>
               </tr>
             ))}

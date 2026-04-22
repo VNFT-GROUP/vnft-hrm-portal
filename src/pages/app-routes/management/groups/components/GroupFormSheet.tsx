@@ -88,7 +88,7 @@ export default function GroupFormSheet({ isOpen, onOpenChange, formData, setForm
           </div>
           
           <div className="space-y-3 shrink-0">
-            <Label className="text-sm font-semibold text-foreground">{t("management.formAssignPermissions", "Gán Mã Quyền Thiết Lập")}</Label>
+            <Label className="text-sm font-semibold text-foreground">{t("management.formAssignPermissions", "Gán Quyền Thiết Lập")}</Label>
             <div className="border border-border rounded-xl p-4 space-y-5 bg-muted/30">
               {groupedPermissions.length === 0 ? (
                 <p className="text-sm text-muted-foreground text-center py-6">{t("management.formNoPermissions", "Chưa có dữ liệu mã quyền nào.")}</p>
@@ -99,12 +99,9 @@ export default function GroupFormSheet({ isOpen, onOpenChange, formData, setForm
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pl-1">
                       {perms.map(p => (
                         <Label key={p.id} htmlFor={`perm-${p.id}`} className="flex items-center gap-3 p-3 hover:bg-card rounded-lg transition-colors border border-border/60 shadow-sm hover:border-[#2E3192]/50 hover:shadow-md cursor-pointer font-normal group/item bg-background">
-                          <div className="grid gap-1.5 leading-none flex-1 min-w-0">
+                          <div className="flex flex-col justify-center flex-1 min-w-0">
                             <span className="text-[14px] font-bold text-[#1E2062] group-hover/item:text-[#2E3192] line-clamp-2" title={p.description || p.code}>
                               {p.description || p.code}
-                            </span>
-                            <span className="text-xs text-muted-foreground font-medium truncate" title={p.code}>
-                              {p.code}
                             </span>
                           </div>
                           <Switch 

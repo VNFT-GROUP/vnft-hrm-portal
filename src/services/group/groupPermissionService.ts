@@ -4,13 +4,6 @@ import type { GroupPermissionResponse } from "@/types/group/GroupPermissionRespo
 import type { UpsertGroupPermissionRequest } from "@/types/group/UpsertGroupPermissionRequest";
 
 export const groupPermissionService = {
-  createGroupPermission: async (
-    data: UpsertGroupPermissionRequest,
-  ): Promise<ApiResponse<GroupPermissionResponse>> => {
-    const response = await apiClient.post("/group-permissions", data);
-    return response.data;
-  },
-
   getGroupPermissionById: async (
     id: string,
   ): Promise<ApiResponse<GroupPermissionResponse>> => {
@@ -35,8 +28,5 @@ export const groupPermissionService = {
     return response.data;
   },
 
-  deleteGroupPermission: async (id: string): Promise<ApiResponse<void>> => {
-    const response = await apiClient.delete(`/group-permissions/${id}`);
-    return response.data;
-  },
+
 };

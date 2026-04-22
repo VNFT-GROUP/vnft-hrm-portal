@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Plus, Search, Loader2 } from "lucide-react";
+import { Search, Loader2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { Button } from "@/components/ui/button";
+
 import { Input } from "@/components/ui/input";
 import { m  } from 'framer-motion';
 import GroupPermissionTable from "./GroupPermissionTable";
@@ -23,14 +23,14 @@ export default function GroupPermissionsTabContent() {
 
   const [formData, setFormData] = useState<{
     code: string;
-    category?: string;
+    name: string;
+    featureGroup?: string;
     description: string;
-    active: boolean;
   }>({
     code: "",
-    category: "",
+    name: "",
+    featureGroup: "",
     description: "",
-    active: true,
   });
 
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
@@ -53,29 +53,18 @@ export default function GroupPermissionsTabContent() {
       setEditingItem(item);
       setFormData({
         code: item.code,
-        category: item.category || "",
+        name: item.name || "",
+        featureGroup: item.featureGroup || "",
         description: item.description || "",
-        active: item.active ?? true,
       });
     } else {
       setEditingItem(null);
-      setFormData({ code: "", category: "", description: "", active: true });
+      setFormData({ code: "", name: "", featureGroup: "", description: "" });
     }
     setIsOpen(true);
   };
 
-  const createMutation = useMutation({
-    mutationFn: (data: UpsertGroupPermissionRequest) =>
-      groupPermissionService.createGroupPermission(data),
-    onSuccess: () => {
-      toast.success("Thêm mã quyền thành công!");
-      queryClient.invalidateQueries({ queryKey: ["group-permissions"] });
-      setIsOpen(false);
-    },
-    onError: () => {
-      toast.error("Thêm mã quyền thất bại!");
-    }
-  });
+
 
   const updateMutation = useMutation({
     mutationFn: ({ id, data }: { id: string; data: UpsertGroupPermissionRequest }) =>
@@ -90,29 +79,17 @@ export default function GroupPermissionsTabContent() {
     }
   });
 
-  const deleteMutation = useMutation({
-    mutationFn: (id: string) => groupPermissionService.deleteGroupPermission(id),
-    onSuccess: () => {
-      toast.success("Xóa/Tạm ngưng mã quyền thành công!");
-      queryClient.invalidateQueries({ queryKey: ["group-permissions"] });
-    },
-    onError: () => {
-      toast.error("Xóa mã quyền thất bại!");
-    }
-  });
+
 
   const handleSave = () => {
-    if (!formData.code.trim()) return;
+    if (!formData.code.trim() || !formData.name.trim()) return;
     const payload: UpsertGroupPermissionRequest = {
-      code: formData.code,
-      category: formData.category || undefined,
+      name: formData.name,
+      featureGroup: formData.featureGroup || undefined,
       description: formData.description || undefined,
-      active: formData.active,
     };
     if (editingItem) {
       updateMutation.mutate({ id: editingItem.id, data: payload });
-    } else {
-      createMutation.mutate(payload);
     }
   };
 
@@ -136,12 +113,6 @@ export default function GroupPermissionsTabContent() {
             }}
           />
         </div>
-        <Button
-          onClick={() => handleOpenForm()}
-          className="w-full md:w-auto h-12 px-6 rounded-xl bg-[#2E3192] hover:bg-[#1E2062] text-white shadow-md shadow-[#2E3192]/20 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 text-base font-semibold"
-        >
-          <Plus size={20} className="mr-2" /> {t('management.addPerm', { defaultValue: 'Thêm Mã Quyền' })}
-        </Button>
       </m.div>
 
       <m.div
@@ -157,7 +128,7 @@ export default function GroupPermissionsTabContent() {
           </div>
         ) : (
           <>
-            <GroupPermissionTable items={paginatedData} onEdit={handleOpenForm} onDelete={(id) => deleteMutation.mutate(id)} />
+            <GroupPermissionTable items={paginatedData} onEdit={handleOpenForm} />
             {items.length > 0 && (
               <CustomPagination
                 currentPage={currentPage}
@@ -180,7 +151,6 @@ export default function GroupPermissionsTabContent() {
         onOpenChange={setIsOpen}
         formData={formData}
         setFormData={setFormData}
-        isEditing={!!editingItem}
         onSave={handleSave}
       />
     </div>

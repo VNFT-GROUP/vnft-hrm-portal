@@ -4,7 +4,6 @@ export interface GroupPermissionResponse {
   name: string;
   featureGroup?: string;
   description?: string;
-  active: boolean;
   createdAt: string;
   updatedAt: string;
   createdBy: string;

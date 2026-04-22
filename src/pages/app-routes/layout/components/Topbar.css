@@ -218,7 +218,7 @@
   width: 42px;
   height: 42px;
   border-radius: 50%;
-  border: 1px solid #ef4444; /* red border */
+  border: 1px solid #e2e8f0;
 }
 
 .user-info {
@@ -311,9 +311,9 @@
   width: 56px;
   height: 56px;
   border-radius: 50%;
-  border: 1px solid #ef4444; /* red outline */
+  border: 1px solid #e2e8f0;
   outline: 2px solid white;
-  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+  box-shadow: 0 0 0 3px rgba(46, 49, 146, 0.1);
 }
 
 .pd-info {
@@ -323,15 +323,15 @@
 }
 
 .pd-name {
-  color: #ef4444; /* Red color matching image */
-  font-size: 1.15rem;
-  font-weight: 600;
+  color: #1e293b; /* Standard dark slate instead of red */
+  font-size: 1.1rem;
+  font-weight: 700;
   margin: 0;
   /* Giữ chiều dài tối đa và tự động "..." nếu tên/email quá dài */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 180px;
+  max-width: 230px;
 }
 
 .pd-role-item {

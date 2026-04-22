@@ -40,7 +40,7 @@ export const useNavigationData = () => {
   ] as string[]).includes(p)) || isAdmin;
 
   const managementSubItems = [];
-  if (session?.isManager === true || isAdmin || perms.includes(PERMISSIONS.REQUEST_FORM_APPROVE_ALL) || perms.includes(PERMISSIONS.REQUEST_FORM_APPROVE_DEPARTMENT)) {
+  if (isAdmin || perms.includes(PERMISSIONS.REQUEST_FORM_APPROVE_ALL) || perms.includes(PERMISSIONS.REQUEST_FORM_APPROVE_DEPARTMENT)) {
     managementSubItems.push({
       label: t("sidebar.requests", { defaultValue: "Đơn từ" }),
       shortName: t("sidebar.requestsShort", { defaultValue: "Duyệt đơn" }),
@@ -48,7 +48,7 @@ export const useNavigationData = () => {
       icon: <FileEdit size={16} />,
     });
   }
-  if (session?.isManager === true || isAdmin || perms.includes(PERMISSIONS.PERFORMANCE_REVIEW_ALL) || perms.includes(PERMISSIONS.PERFORMANCE_REVIEW_DEPARTMENT)) {
+  if (isAdmin || perms.includes(PERMISSIONS.PERFORMANCE_REVIEW_ALL) || perms.includes(PERMISSIONS.PERFORMANCE_REVIEW_DEPARTMENT)) {
     managementSubItems.push({
       label: t("sidebar.performance", { defaultValue: "Đánh giá hiệu suất" }),
       shortName: t("sidebar.performanceShort", { defaultValue: "Đánh giá" }),

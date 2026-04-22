@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Check, X, Search, Eye, Activity, ShieldAlert, Info, Clock, AlertCircle, Loader2 } from "lucide-react";
 import { m  } from 'framer-motion';
 import { toast } from "sonner";
@@ -15,7 +15,6 @@ import type { RequestFormStatisticPeriod, RequestFormStatus, RequestFormType } f
 import { format, subMonths, setDate } from "date-fns";
 import { getErrorMessage, formatDateTime } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { departmentService } from "@/services/department";
 
 export default function ManagementRequestsPage() {
   const queryClient = useQueryClient();
@@ -32,6 +31,7 @@ export default function ManagementRequestsPage() {
 
   const [filterStatus, setFilterStatus] = useState<string>("ALL");
   const [filterType, setFilterType] = useState<string>("ALL");
+  const [filterDepartmentId, setFilterDepartmentId] = useState<string>("ALL");
   const [searchQuery, setSearchQuery] = useState("");
   
   const [currentPage, setCurrentPage] = useState(1);
@@ -40,10 +40,11 @@ export default function ManagementRequestsPage() {
   const [selectedRequest, setSelectedRequest] = useState<RequestFormResponse | null>(null);
 
   const { data: response, isLoading: isLoadingRequests } = useQuery({
-    queryKey: ["approvalRequests", filterStatus, filterType],
+    queryKey: ["approvalRequests", filterStatus, filterType, filterDepartmentId],
     queryFn: () => requestFormApprovalService.getRequestFormsForApproval(
       filterStatus === "ALL" ? undefined : filterStatus as RequestFormStatus, 
-      filterType === "ALL" ? undefined : filterType as RequestFormType
+      filterType === "ALL" ? undefined : filterType as RequestFormType,
+      filterDepartmentId === "ALL" ? undefined : filterDepartmentId
     ),
     enabled: canApprove
   });
@@ -60,11 +61,21 @@ export default function ManagementRequestsPage() {
   });
 
   const { data: depsData } = useQuery({
-    queryKey: ["departments"],
-    queryFn: () => departmentService.getDepartments(),
+    queryKey: ["approvableDepartments"],
+    queryFn: () => requestFormApprovalService.getApprovableDepartments(),
     enabled: canApprove
   });
-  const departments = depsData?.data || [];
+  const departments = useMemo(() => depsData?.data || [], [depsData?.data]);
+
+  useEffect(() => {
+    if (departments.length === 1 && statsDepartmentId === "ALL") {
+      const id = departments[0].id;
+      setTimeout(() => {
+        setStatsDepartmentId(id);
+        setFilterDepartmentId(id);
+      }, 0);
+    }
+  }, [departments, statsDepartmentId]);
 
   const handlePeriodChange = (val: RequestFormStatisticPeriod) => {
     setStatisticPeriod(val);
@@ -249,8 +260,8 @@ export default function ManagementRequestsPage() {
              <div className="flex items-center justify-between gap-2 flex-wrap">
                 <span className="text-sm font-bold text-slate-500 uppercase tracking-wider shrink-0">Tổng quan</span>
                 <div className="flex flex-wrap items-center gap-2 mt-1 sm:mt-0">
-                  <Select value={statsDepartmentId} onValueChange={(val) => setStatsDepartmentId(val as string)}>
-                    <SelectTrigger className="h-8 text-xs border-slate-200 font-medium w-[150px] focus:ring-[#2E3192] bg-slate-50">
+                  <Select value={statsDepartmentId} onValueChange={(val) => setStatsDepartmentId(val as string)} disabled={departments.length === 1}>
+                    <SelectTrigger className="h-8 text-xs border-slate-200 font-medium w-[150px] focus:ring-[#2E3192] bg-slate-50 disabled:opacity-75 disabled:bg-slate-100">
                       <SelectValue placeholder="Phòng ban">
                         <span className="truncate">
                           {statsDepartmentId === "ALL" ? "Tất cả phòng ban" : departments.find(d => d.id === statsDepartmentId)?.name || "Phòng ban"}
@@ -259,8 +270,13 @@ export default function ManagementRequestsPage() {
                     </SelectTrigger>
                     <SelectContent className="max-h-[250px] rounded-xl">
                       <SelectItem value="ALL">Tất cả phòng ban</SelectItem>
-                      {departments.map((dep) => (
-                        <SelectItem key={dep.id} value={dep.id}>{dep.name}</SelectItem>
+                      {departments.map((dep: { id: string; name: string; level: number }) => (
+                        <SelectItem key={dep.id} value={dep.id}>
+                           <span style={{ paddingLeft: `${(dep.level - 1) * 12}px` }}>
+                             {dep.level > 1 && <span className="text-slate-300 mr-2">└</span>}
+                             {dep.name}
+                           </span>
+                        </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
@@ -332,6 +348,30 @@ export default function ManagementRequestsPage() {
 
           <div className="w-full sm:w-auto sm:ml-auto flex flex-wrap items-center gap-3">
             <div className="space-y-1.5">
+              <label className="text-xs font-bold text-slate-500 uppercase px-1">Phòng ban</label>
+              <Select value={filterDepartmentId} onValueChange={(val) => handleFilterChange(setFilterDepartmentId, val as string)} disabled={departments.length === 1}>
+                <SelectTrigger className="h-10 w-[165px] rounded-xl border-slate-200 text-sm font-medium focus:ring-[#2E3192]/20 bg-white disabled:opacity-75 disabled:bg-slate-50">
+                  <SelectValue placeholder="Phòng ban">
+                    <span className="truncate">
+                      {filterDepartmentId === "ALL" ? "Tất cả phòng" : departments.find((d: { id: string; name: string }) => d.id === filterDepartmentId)?.name || "Phòng ban"}
+                    </span>
+                  </SelectValue>
+                </SelectTrigger>
+                <SelectContent className="max-h-[250px] rounded-xl">
+                  <SelectItem value="ALL">Tất cả phòng</SelectItem>
+                  {departments.map((dep: { id: string; name: string; level: number }) => (
+                    <SelectItem key={dep.id} value={dep.id}>
+                       <span style={{ paddingLeft: `${(dep.level - 1) * 12}px` }}>
+                         {dep.level > 1 && <span className="text-slate-300 mr-2">└</span>}
+                         {dep.name}
+                       </span>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-1.5">
               <label className="text-xs font-bold text-slate-500 uppercase px-1">Trạng thái đơn</label>
               <Select value={filterStatus} onValueChange={(val) => handleFilterChange(setFilterStatus, val as string)}>
                 <SelectTrigger className="h-10 w-[145px] rounded-xl border-slate-200 text-sm font-medium focus:ring-[#2E3192]/20 bg-white">
@@ -381,6 +421,7 @@ export default function ManagementRequestsPage() {
               <tr>
                 <th className="px-5 py-3.5 font-bold tracking-wider text-[#1E2062]">Mã đơn</th>
                 <th className="px-5 py-3.5 font-bold tracking-wider text-[#1E2062]">Nhân viên</th>
+                <th className="px-5 py-3.5 font-bold tracking-wider text-[#1E2062]">Phòng ban</th>
                 <th className="px-5 py-3.5 font-bold tracking-wider text-[#1E2062]">Loại đơn</th>
                 <th className="px-5 py-3.5 font-bold tracking-wider text-[#1E2062]">Áp dụng</th>
                 <th className="px-5 py-3.5 font-bold tracking-wider text-[#1E2062]">Trạng thái</th>
@@ -415,6 +456,11 @@ export default function ManagementRequestsPage() {
                         <span className="font-semibold text-slate-900 group-hover:text-[#2E3192] transition-colors">{req.requesterName}</span>
                         <span className="text-xs text-slate-500">{req.requesterEmployeeCode || "N/A"}</span>
                       </div>
+                    </td>
+                    <td className="px-5 py-3">
+                       <span className="text-[13px] font-medium text-slate-600 truncate max-w-[150px] inline-block" title={req.requesterDepartmentName || ""}>
+                         {req.requesterDepartmentName || "—"}
+                       </span>
                     </td>
                     <td className="px-5 py-3 text-slate-700 font-medium">
                       <div className="flex items-center gap-1.5">
@@ -506,7 +552,14 @@ export default function ManagementRequestsPage() {
                <div className="flex items-start justify-between">
                   <div className="flex flex-col">
                      <span className="text-2xl font-black text-[#1E2062] tracking-tight">{selectedRequest.requesterName}</span>
-                     <span className="text-sm font-medium text-slate-500">Mã NV: {selectedRequest.requesterEmployeeCode || "N/A"}</span>
+                     <div className="flex items-center gap-2 mt-1">
+                        <span className="text-sm font-medium text-slate-500">Mã NV: {selectedRequest.requesterEmployeeCode || "N/A"}</span>
+                        {selectedRequest.requesterDepartmentName && (
+                          <span className="text-xs font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-600">
+                             {selectedRequest.requesterDepartmentName}
+                          </span>
+                        )}
+                     </div>
                   </div>
                   {getStatusBadge(selectedRequest.status)}
                </div>

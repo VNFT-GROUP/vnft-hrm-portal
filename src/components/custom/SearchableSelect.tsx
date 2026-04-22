@@ -23,6 +23,7 @@ interface SearchableSelectProps {
   placeholder: string;
   onRefresh?: () => void;
   isLoading?: boolean;
+  disabled?: boolean;
 }
 
 export function SearchableSelect({
@@ -32,13 +33,14 @@ export function SearchableSelect({
   placeholder,
   onRefresh,
   isLoading,
+  disabled
 }: SearchableSelectProps) {
   const [open, setOpen] = React.useState(false);
 
   return (
     <div className="flex items-center gap-2 w-full">
       <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger type="button" className="w-full justify-between h-11 rounded-xl bg-background shadow-sm border border-border font-normal text-left px-3 hover:bg-muted flex items-center text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2E3192] disabled:pointer-events-none disabled:opacity-50">
+        <PopoverTrigger disabled={disabled} type="button" className="w-full justify-between h-11 rounded-xl bg-background shadow-sm border border-border font-normal text-left px-3 hover:bg-muted flex items-center text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2E3192] disabled:pointer-events-none disabled:opacity-50">
           <span className="truncate">
             {value
               ? options.find((opt) => opt.value === value)?.label || placeholder

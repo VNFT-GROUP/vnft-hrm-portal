@@ -5,14 +5,14 @@ import { Input } from "@/components/ui/input";
 import { m  } from 'framer-motion';
 import { useLayoutStore } from "@/store/useLayoutStore";
 
-import DepartmentTable, { type Department } from "./components/DepartmentTable";
+import DepartmentTable from "./components/DepartmentTable";
 import DepartmentFormSheet from "./components/DepartmentFormSheet";
+import type { DepartmentResponse } from '@/types/department/DepartmentResponse';
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { departmentService } from "@/services/department";
 import { toast } from "sonner";
 import type { UpsertDepartmentRequest } from '@/types/department/UpsertDepartmentRequest';
 import { useTranslation } from "react-i18next";
-import CustomPagination from "@/components/custom/CustomPagination";
 import { useDebounce } from "@/hooks/useDebounce";
 
 export default function DepartmentsPage() {
@@ -22,10 +22,10 @@ export default function DepartmentsPage() {
   const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-  const [editingDept, setEditingDept] = useState<Department | null>(null);
+  const [editingDept, setEditingDept] = useState<DepartmentResponse | null>(null);
 
-  const [formData, setFormData] = useState<{name: string, description: string, active: boolean}>({ 
-    name: "", description: "", active: true
+  const [formData, setFormData] = useState<{name: string, description: string, active: boolean, parentDepartmentId: string | null}>({ 
+    name: "", description: "", active: true, parentDepartmentId: null
   });
 
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
@@ -35,25 +35,20 @@ export default function DepartmentsPage() {
     queryFn: () => departmentService.getDepartments(debouncedSearchTerm || undefined),
   });
 
-  const departments: Department[] = departmentsData?.data || [];
+  const departments: DepartmentResponse[] = departmentsData?.data || [];
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(20);
-
-  const totalPages = Math.ceil(departments.length / pageSize) || 1;
-  const paginatedData = departments.slice((currentPage - 1) * pageSize, currentPage * pageSize);
-
-  const handleOpenForm = (dept?: Department) => {
+  const handleOpenForm = (dept?: DepartmentResponse) => {
     if (dept) {
       setEditingDept(dept);
       setFormData({ 
         name: dept.name, 
         description: dept.description || "", 
-        active: dept.active ?? false
+        active: dept.active ?? false,
+        parentDepartmentId: dept.parentDepartmentId || null
       });
     } else {
       setEditingDept(null);
-      setFormData({ name: "", description: "", active: true });
+      setFormData({ name: "", description: "", active: true, parentDepartmentId: null });
     }
     setIsOpen(true);
   };
@@ -91,6 +86,7 @@ export default function DepartmentsPage() {
     const payload: UpsertDepartmentRequest = {
       name: formData.name,
       description: formData.description,
+      parentDepartmentId: formData.parentDepartmentId,
       active: formData.active,
     };
 
@@ -173,7 +169,6 @@ export default function DepartmentsPage() {
             value={searchTerm}
             onChange={(e) => {
               setSearchTerm(e.target.value);
-              setCurrentPage(1);
             }}
           />
         </div>
@@ -193,23 +188,10 @@ export default function DepartmentsPage() {
         className="bg-card text-card-foreground rounded-2xl shadow-sm border border-border overflow-hidden group hover:shadow-md transition-shadow duration-300 flex-1 flex flex-col"
       >
         <DepartmentTable 
-          departments={paginatedData} 
+          departments={departments} 
           onEdit={handleOpenForm} 
           onDelete={handleDelete} 
         />
-        {departments.length > 0 && (
-          <CustomPagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            pageSize={pageSize}
-            onPageChange={setCurrentPage}
-            onPageSizeChange={(size) => {
-              setPageSize(size);
-              setCurrentPage(1);
-            }}
-            className="p-4 border-t border-border mt-auto"
-          />
-        )}
       </m.div>
 
       {/* Side Form (Sheet) */}
@@ -220,6 +202,8 @@ export default function DepartmentsPage() {
         setFormData={setFormData}
         isEditing={!!editingDept}
         onSave={handleSave}
+        departments={departments}
+        editingDeptId={editingDept?.id || null}
       />
     </div>
   );

@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { performanceService } from "@/services/performance";
 import type { PerformanceEmployeeResponse } from "@/types/performance/PerformanceEmployeeResponse";
@@ -42,8 +42,11 @@ export default function PerformanceReviewsPage() {
     queryFn: () => performanceService.getReviewableDepartments(),
   });
   const departmentsOpts = [
-    { value: "", label: "Tất cả" },
-    ...(departmentsResponse?.data?.map(d => ({ value: d.id, label: d.name })) || [])
+    { value: "", label: "Tất cả phòng ban" },
+    ...(departmentsResponse?.data?.map(d => {
+       const indent = d.level > 1 ? "\u00A0\u00A0\u00A0 ".repeat(d.level - 1) + "└ " : "";
+       return { value: d.id, label: indent + d.name };
+    }) || [])
   ];
 
   const { data: response, isLoading } = useQuery({
@@ -57,6 +60,13 @@ export default function PerformanceReviewsPage() {
       filterStatus !== "ALL" ? filterStatus : undefined
     )
   });
+
+  useEffect(() => {
+    if (departmentsResponse?.data?.length === 1 && !filterDepartmentId) {
+      const id = departmentsResponse.data[0].id;
+      setTimeout(() => setFilterDepartmentId(id), 0);
+    }
+  }, [departmentsResponse, filterDepartmentId]);
 
   const employees = useMemo(() => {
     let arr = response?.data?.content || [];
@@ -151,6 +161,7 @@ export default function PerformanceReviewsPage() {
                  onChange={(val) => { setFilterDepartmentId(val || ""); setCurrentPage(1); }}
                  placeholder="Tất cả"
                  isLoading={isFetchingDepts}
+                 disabled={departmentsResponse?.data?.length === 1}
                />
              </div>
            </div>

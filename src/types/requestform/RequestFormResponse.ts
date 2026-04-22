@@ -12,6 +12,8 @@ export interface RequestFormResponse {
   requesterId: string;
   requesterName: string;
   requesterEmployeeCode: string;
+  requesterDepartmentId?: string | null;
+  requesterDepartmentName?: string | null;
   type: RequestFormType;
   status: RequestFormStatus;
   description: string;

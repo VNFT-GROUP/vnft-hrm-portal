@@ -19,6 +19,12 @@ export interface UserSessionResponse {
   maxWfhDays?: number;
   groupId?: string;
   groupName?: string;
+  departmentId?: string;
+  departmentName?: string;
+  positionId?: string;
+  positionName?: string;
+  jobTitleId?: string;
+  jobTitleName?: string;
   groupPermissions?: GroupPermissionResponse[];
   isManager?: boolean;
   requiredProfileCompleted?: boolean;

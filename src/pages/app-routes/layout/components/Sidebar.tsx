@@ -6,8 +6,6 @@ import {
   ChevronDown,
   ChevronRight as ChevronRightIcon,
   Palette,
-  User,
-  ShieldCheck,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { ScrollArea } from "../../../../components/ui/scroll-area";
@@ -29,8 +27,6 @@ export default function Sidebar() {
   const toggleSidebar = useLayoutStore((state) => state.toggleSidebar);
   const sidebarTheme = useLayoutStore((state) => state.sidebarTheme);
   const hiddenSidebarItems = useLayoutStore((state) => state.hiddenSidebarItems) || [];
-  const sidebarMode = useLayoutStore((state) => state.sidebarMode);
-  const setSidebarMode = useLayoutStore((state) => state.setSidebarMode);
 
   // State for sub-menus
   const [expandedMenus, setExpandedMenus] = useState<Record<string, boolean>>(
@@ -107,7 +103,7 @@ export default function Sidebar() {
   };
 
   const { t } = useTranslation();
-  const { sidebarData: menuData, hasManagementAccess } = useNavigationData();
+  const { sidebarData: menuData } = useNavigationData();
 
   return (
     <aside

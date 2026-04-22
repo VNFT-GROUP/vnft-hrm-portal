@@ -21,7 +21,7 @@ import { PERMISSIONS } from "@/constants/permissions";
 
 export const useNavigationData = () => {
   const { session } = useAuthStore();
-  const sidebarMode = useLayoutStore((state) => state.sidebarMode);
+
   const { t } = useTranslation();
 
   const perms = session?.groupPermissions?.map(p => p.code) || [];

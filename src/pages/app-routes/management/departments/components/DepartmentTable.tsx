@@ -1,6 +1,5 @@
-import { useState, useMemo, Fragment } from "react";
-import { Edit2, Trash2, FolderOpen, Folder, ChevronRight, ChevronDown, CheckSquare, Square } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { useState, useMemo } from "react";
+import { Edit2, Trash2, FolderOpen, ChevronRight, ChevronDown, Square } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 
@@ -156,9 +155,8 @@ export default function DepartmentTreeList({ departments, onEdit, onDelete }: De
                           </span>
                         </td>
 
-                        {/* Description */}
                         <td className="px-4 py-3 align-middle">
-                          <span className="text-slate-500 truncate max-w-[200px] block" title={dept.description}>
+                          <span className="text-slate-500 truncate max-w-[200px] block" title={dept.description || undefined}>
                             {dept.description || "—"}
                           </span>
                         </td>
@@ -216,7 +214,7 @@ export default function DepartmentTreeList({ departments, onEdit, onDelete }: De
 
           {/* Context Menu Content for Right-click */}
           {activeDept && (
-            <ContextMenuContent className="w-48 z-[100] rounded-xl shadow-lg border-slate-200">
+            <ContextMenuContent className="w-48 z-100 rounded-xl shadow-lg border-slate-200">
               <ContextMenuItem className="cursor-pointer font-medium py-2" onClick={() => onEdit(activeDept)}>
                 <Edit2 className="mr-2 h-4 w-4 text-indigo-600" />
                 <span className="text-slate-700">{t("department.legendEdit")}</span>

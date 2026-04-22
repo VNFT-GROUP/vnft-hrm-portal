@@ -34,7 +34,7 @@ export default function GroupFormSheet({ isOpen, onOpenChange, formData, setForm
   }, [availablePermissions]);
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
-      <SheetContent className="sm:max-w-[600px] w-full border-l-slate-200 shadow-2xl flex flex-col h-full p-0">
+      <SheetContent className="sm:max-w-[900px] w-full border-l-slate-200 shadow-2xl flex flex-col h-full p-0">
         <div className="p-6 border-b border-border shrink-0 bg-muted/50">
           <SheetHeader>
             <SheetTitle className="text-xl font-bold text-[#1E2062] flex items-center gap-2">

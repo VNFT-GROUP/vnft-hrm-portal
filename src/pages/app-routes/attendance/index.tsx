@@ -46,12 +46,12 @@ export default function MyAttendancePage() {
   };
 
   const getRequestFormDisplay = (form: RequestFormResponse) => {
-    const formatDate = (val?: string) => {
+    const formatDate = (val?: string | null) => {
       if (!val) return "";
       try { return format(new Date(val), "dd/MM/yyyy"); } catch { return val; }
     };
-    const formatTime = (val?: string) => { return val ? val.substring(0, 5) : ""; };
-    const sessionStr = (val?: string) => {
+    const formatTime = (val?: string | null) => { return val ? val.substring(0, 5) : ""; };
+    const sessionStr = (val?: string | null) => {
       if (val === "MORNING") return "(Sáng)";
       if (val === "AFTERNOON") return "(Chiều)";
       if (val === "FULL_DAY") return "(Cả ngày)";
@@ -277,7 +277,7 @@ export default function MyAttendancePage() {
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-y-5 gap-x-4 flex-1">
                   <div className="flex flex-col gap-1">
-                    <span className="text-[11px] font-medium text-slate-500" title="Số lần đi trễ/về sớm từ 120 phút trở lên">{t("myAttendance.summary.majorViolations", { defaultValue: "Trễ/về sớm ≥120 phút" })}</span>
+                    <span className="text-[11px] font-medium text-slate-500" title="Số lần đi trễ/về sớm mức độ nghiêm trọng">{t("myAttendance.summary.majorViolations", { defaultValue: "Trễ / về sớm nghiêm trọng" })}</span>
                     <span className="text-xl font-bold text-slate-800">{displayNumber(data?.summary?.majorLateEarlyViolationTimes)}</span>
                   </div>
                   <div className="flex flex-col gap-1">
@@ -684,16 +684,16 @@ export default function MyAttendancePage() {
                 <div className="flex flex-col gap-1.5">
                   <span className="font-semibold text-slate-800 text-[13px]">Giờ làm việc:</span>
                   <ul className="list-none text-[13px] text-slate-600 space-y-1">
-                    <li className="flex gap-2 items-start"><span className="text-indigo-400 mt-0.5">•</span> <span>Ca sáng: 08:00 - 12:00</span></li>
-                    <li className="flex gap-2 items-start"><span className="text-indigo-400 mt-0.5">•</span> <span>Ca chiều: 13:30 - 17:30</span></li>
+                    <li className="flex gap-2 items-start"><span className="text-indigo-400 mt-0.5">•</span> <span>Lịch làm việc tuân theo cấu hình ca làm việc của công ty (Ví dụ: Hành chính).</span></li>
+                    <li className="flex gap-2 items-start"><span className="text-indigo-400 mt-0.5">•</span> <span>Thời gian chính xác được hiển thị trong chi tiết từng ngày công.</span></li>
                   </ul>
                 </div>
 
                 <div className="flex flex-col gap-1.5">
                   <span className="font-semibold text-slate-800 text-[13px]">Thời gian ân hạn:</span>
                   <ul className="list-none text-[13px] text-slate-600 space-y-1">
-                    <li className="flex gap-2 items-start"><span className="text-indigo-400 mt-0.5">•</span> <span>Nhân viên có thể check-in muộn nhất lúc <strong className="font-semibold text-indigo-600">08:15</strong> mà không bị tính là trễ sau thời gian ân hạn.</span></li>
-                    <li className="flex gap-2 items-start"><span className="text-indigo-400 mt-0.5">•</span> <span>Check-in sau 08:15 sẽ được tính là trễ.</span></li>
+                    <li className="flex gap-2 items-start"><span className="text-indigo-400 mt-0.5">•</span> <span>Nhân viên có thể được phép check-in trễ trong khoảng thời gian <strong className="font-semibold text-indigo-600">ân hạn</strong> do công ty cấu hình mà không bị tính lỗi.</span></li>
+                    <li className="flex gap-2 items-start"><span className="text-indigo-400 mt-0.5">•</span> <span>Check-in sau khi hết khoảng thời gian ân hạn sẽ bắt đầu được xem là đi muộn.</span></li>
                   </ul>
                 </div>
               </div>
@@ -708,19 +708,17 @@ export default function MyAttendancePage() {
               <div className="bg-rose-50/50 rounded-xl border border-rose-100 p-4 flex flex-col gap-4 shadow-sm">
                 
                 <div className="flex flex-col gap-2 mt-1">
-                  <span className="font-bold text-rose-800 text-[13px] flex items-center gap-1.5"><AlertTriangle size={14}/> 1. Trễ/về sớm từ 120 phút trở lên</span>
+                  <span className="font-bold text-rose-800 text-[13px] flex items-center gap-1.5"><AlertTriangle size={14}/> 1. Trễ/về sớm mức độ nghiêm trọng</span>
                   <ul className="list-none text-[12.5px] text-slate-700 pl-5 space-y-1.5">
-                    <li className="flex gap-2.5 items-start"><span className="text-rose-400 mt-0.5 font-bold">-</span> <span className="leading-relaxed">Mỗi ngày nếu nhân viên đi trễ từ 120 phút trở lên hoặc về sớm từ 120 phút trở lên thì được tính là 1 lần trễ/về sớm nghiêm trọng.</span></li>
-                    <li className="flex gap-2.5 items-start"><span className="text-rose-400 mt-0.5 font-bold">-</span> <span className="leading-relaxed">Cứ mỗi <strong className="text-rose-600">2 lần</strong> trễ/về sớm nghiêm trọng sẽ bị <strong className="text-rose-600 bg-rose-100 px-1 rounded">trừ 0.5 ngày phép/công</strong>.</span></li>
-                    <li className="flex gap-2.5 items-start"><span className="text-rose-400 mt-0.5 font-bold">-</span> <span className="leading-relaxed">Sau mỗi lần bị trừ, bộ đếm bắt đầu lại theo chu kỳ mới.</span></li>
+                    <li className="flex gap-2.5 items-start"><span className="text-rose-400 mt-0.5 font-bold">-</span> <span className="leading-relaxed">Mỗi ngày nếu nhân viên đi trễ/về sớm vượt mốc thời gian quy định sẽ bị tính là 1 lần vi phạm nghiêm trọng.</span></li>
+                    <li className="flex gap-2.5 items-start"><span className="text-rose-400 mt-0.5 font-bold">-</span> <span className="leading-relaxed">Khi đạt tới ngưỡng số lượt vi phạm, hệ thống sẽ tự động <strong className="text-rose-600 bg-rose-100 px-1 rounded">trừ ngày phép/công</strong> tương ứng với chính sách của Sever.</span></li>
+                    <li className="flex gap-2.5 items-start"><span className="text-rose-400 mt-0.5 font-bold">-</span> <span className="leading-relaxed">Sau mỗi lần bị trừ phân bổ, bộ đếm có thể bắt đầu lại theo chu kỳ cấu hình chung.</span></li>
                   </ul>
                   <div className="bg-white/70 p-3 rounded-lg border border-rose-100 mt-1 ml-5 flex flex-col gap-1.5">
-                    <span className="font-semibold text-[12px] text-slate-800">Ví dụ:</span>
+                    <span className="font-semibold text-[12px] text-slate-800">Cơ chế tự động:</span>
                     <ul className="list-none text-[12px] text-slate-600 space-y-1">
-                      <li>• 1 lần trễ/về sớm từ 120 phút trở lên: chưa trừ.</li>
-                      <li>• 2 lần: trừ 0.5 ngày phép/công.</li>
-                      <li>• 3 lần: vẫn trừ 0.5 ngày phép/công.</li>
-                      <li>• 4 lần: trừ tổng 1.0 ngày phép/công.</li>
+                      <li>• Hệ thống liên tục quét theo sự kiện và trigger trừ phép ngay khi điểm danh chạm mốc phạt.</li>
+                      <li>• Kết quả trừ được ghi nhận vào báo cáo tháng.</li>
                     </ul>
                   </div>
 
@@ -736,11 +734,10 @@ export default function MyAttendancePage() {
                     <li className="flex gap-2.5 items-start"><span className="text-rose-400 mt-0.5 font-bold">-</span> <span className="leading-relaxed">Mỗi ngày WFH vượt hạn mức bị <strong className="text-rose-600 bg-rose-100 px-1 rounded">trừ 0.5 ngày phép/công</strong>.</span></li>
                   </ul>
                   <div className="bg-white/70 p-3 rounded-lg border border-rose-100 mt-1 ml-5 flex flex-col gap-1.5">
-                    <span className="font-semibold text-[12px] text-slate-800">Ví dụ (Hạn mức WFH = 6 ngày):</span>
+                    <span className="font-semibold text-[12px] text-slate-800">Cơ chế ghi nhận quota WFH:</span>
                     <ul className="list-none text-[12px] text-slate-600 space-y-1">
-                      <li>• Được duyệt 6 ngày WFH: không vượt, không trừ.</li>
-                      <li>• Được duyệt 7 ngày WFH: vượt 1 ngày, trừ 0.5 ngày phép/công.</li>
-                      <li>• Được duyệt 8 ngày WFH: vượt 2 ngày, trừ 1.0 ngày phép/công.</li>
+                      <li>• Quota tuân theo cấu hình Policy.</li>
+                      <li>• Mức phạt phụ thuộc vào tỷ lệ cấu hình trừ khi vi phạm WFH vượt giới hạn.</li>
                     </ul>
                   </div>
 
@@ -776,13 +773,13 @@ export default function MyAttendancePage() {
                     <div className="flex flex-wrap md:flex-nowrap justify-between items-start md:items-center gap-2 border-b border-slate-50 pb-2">
                        <span className="font-bold text-emerald-800 text-[15px]">Xuất sắc</span>
                        <span className="font-bold text-emerald-600 bg-emerald-50 border border-emerald-100 px-3 py-1 rounded-lg text-[13px] shrink-0 shadow-sm">
-                         Phụ cấp: 200,000 VNĐ
+                         Phụ cấp: Linh hoạt theo Config
                        </span>
                     </div>
                     <ul className="list-none text-[13px] text-slate-600 space-y-1.5">
-                       <li className="flex gap-2 items-start"><span className="text-emerald-400 mt-0.5">•</span> <span>Check-in trước hoặc đúng 08:00.</span></li>
+                       <li className="flex gap-2 items-start"><span className="text-emerald-400 mt-0.5">•</span> <span>Check-in đúng giờ tiêu chuẩn mỗi ngày.</span></li>
                        <li className="flex gap-2 items-start"><span className="text-emerald-400 mt-0.5">•</span> <span>Đảm bảo đủ công mỗi ngày.</span></li>
-                       <li className="flex gap-2 items-start"><span className="text-emerald-400 mt-0.5">•</span> <span>Không có ngày vắng hoặc thiếu công.</span></li>
+                       <li className="flex gap-2 items-start"><span className="text-emerald-400 mt-0.5">•</span> <span>Không có ngày vắng hoặc thiếu công toàn thời gian.</span></li>
                     </ul>
                   </div>
                 </div>
@@ -797,14 +794,14 @@ export default function MyAttendancePage() {
                     <div className="flex flex-wrap md:flex-nowrap justify-between items-start md:items-center gap-2 border-b border-slate-50 pb-2">
                        <span className="font-bold text-blue-800 text-[15px]">Tốt</span>
                        <span className="font-bold text-blue-600 bg-blue-50 border border-blue-100 px-3 py-1 rounded-lg text-[13px] shrink-0 shadow-sm">
-                         Phụ cấp: 150,000 VNĐ
+                         Phụ cấp: Linh hoạt theo Config
                        </span>
                     </div>
                     <ul className="list-none text-[13px] text-slate-600 space-y-1.5">
-                       <li className="flex gap-2 items-start"><span className="text-blue-400 mt-0.5">•</span> <span>Không có ngày trễ sau thời gian ân hạn.</span></li>
-                       <li className="flex gap-2 items-start"><span className="text-blue-400 mt-0.5">•</span> <span>Có thể check-in trong khoảng 08:00 - 08:15.</span></li>
+                       <li className="flex gap-2 items-start"><span className="text-blue-400 mt-0.5">•</span> <span>Không có ngày trễ sau khoảng thời gian ân hạn.</span></li>
+                       <li className="flex gap-2 items-start"><span className="text-blue-400 mt-0.5">•</span> <span>Đảm nhiệm trách nhiệm tuân thủ đúng phần trăm thời gian.</span></li>
                        <li className="flex gap-2 items-start"><span className="text-blue-400 mt-0.5">•</span> <span>Đảm bảo đủ công mỗi ngày.</span></li>
-                       <li className="flex gap-2 items-start"><span className="text-blue-400 mt-0.5">•</span> <span>Không có ngày vắng hoặc thiếu công.</span></li>
+                       <li className="flex gap-2 items-start"><span className="text-blue-400 mt-0.5">•</span> <span>Không có ngày vắng hoặc thiếu công toàn thời gian.</span></li>
                     </ul>
                   </div>
                 </div>
@@ -819,13 +816,13 @@ export default function MyAttendancePage() {
                     <div className="flex flex-wrap md:flex-nowrap justify-between items-start md:items-center gap-2 border-b border-slate-50 pb-2">
                        <span className="font-bold text-indigo-800 text-[15px]">Đạt yêu cầu</span>
                        <span className="font-bold text-indigo-600 bg-indigo-50 border border-indigo-100 px-3 py-1 rounded-lg text-[13px] shrink-0 shadow-sm">
-                         Phụ cấp: 100,000 VNĐ
+                         Phụ cấp: Linh hoạt theo Config
                        </span>
                     </div>
                     <ul className="list-none text-[13px] text-slate-600 space-y-1.5">
-                       <li className="flex gap-2 items-start"><span className="text-indigo-400 mt-0.5">•</span> <span>Số ngày trễ sau thời gian ân hạn từ 1 đến 3 lần/tháng.</span></li>
-                       <li className="flex gap-2 items-start"><span className="text-indigo-400 mt-0.5">•</span> <span>Đảm bảo đủ công mỗi ngày.</span></li>
-                       <li className="flex gap-2 items-start"><span className="text-indigo-400 mt-0.5">•</span> <span>Không có ngày vắng hoặc thiếu công.</span></li>
+                       <li className="flex gap-2 items-start"><span className="text-indigo-400 mt-0.5">•</span> <span>Nằm trong định mức số lần trễ ân hạn thông thường.</span></li>
+                       <li className="flex gap-2 items-start"><span className="text-indigo-400 mt-0.5">•</span> <span>Đảm bảo đủ công phần lớn lịch.</span></li>
+                       <li className="flex gap-2 items-start"><span className="text-indigo-400 mt-0.5">•</span> <span>Tránh các ngày vắng mặt đột xuất.</span></li>
                     </ul>
                   </div>
                 </div>
@@ -840,13 +837,12 @@ export default function MyAttendancePage() {
                     <div className="flex flex-wrap md:flex-nowrap justify-between items-start md:items-center gap-2 border-b border-slate-50 pb-2">
                        <span className="font-bold text-amber-800 text-[15px]">Vi phạm nhẹ</span>
                        <span className="font-medium text-slate-500 bg-slate-50 border border-slate-200 px-3 py-1 rounded-lg text-[13px] shrink-0">
-                         Phụ cấp: 0 VNĐ
+                         Phụ cấp: Không áp dụng
                        </span>
                     </div>
                     <ul className="list-none text-[13px] text-slate-600 space-y-1.5">
-                       <li className="flex gap-2 items-start"><span className="text-amber-400 mt-0.5">•</span> <span>Số ngày trễ sau thời gian ân hạn từ 4 đến 7 lần/tháng.</span></li>
-                       <li className="flex gap-2 items-start"><span className="text-amber-400 mt-0.5">•</span> <span>Đảm bảo đủ công mỗi ngày.</span></li>
-                       <li className="flex gap-2 items-start"><span className="text-amber-400 mt-0.5">•</span> <span>Không có ngày vắng hoặc thiếu công.</span></li>
+                       <li className="flex gap-2 items-start"><span className="text-amber-400 mt-0.5">•</span> <span>Trễ/Về sớm hơn cấu hình tiêu chuẩn chấp nhận.</span></li>
+                       <li className="flex gap-2 items-start"><span className="text-amber-400 mt-0.5">•</span> <span>Không có ngày vắng mặt toàn phần.</span></li>
                     </ul>
                   </div>
                 </div>
@@ -861,13 +857,13 @@ export default function MyAttendancePage() {
                     <div className="flex flex-wrap md:flex-nowrap justify-between items-start md:items-center gap-2 border-b border-rose-100/50 pb-2">
                        <span className="font-bold text-rose-800 text-[15px]">Vi phạm nặng</span>
                        <span className="font-medium text-slate-500 bg-slate-50 border border-slate-200 px-3 py-1 rounded-lg text-[13px] shrink-0">
-                         Phụ cấp: 0 VNĐ
+                         Phụ cấp: Không áp dụng
                        </span>
                     </div>
                     <div className="text-[13px] font-semibold text-rose-800/80 mb-1 mt-1">Rơi vào một trong các trường hợp:</div>
                     <ul className="list-none text-[13px] text-rose-900/80 space-y-1.5">
-                       <li className="flex gap-2 items-start"><span className="text-rose-400 mt-0.5">•</span> <span>Số ngày trễ sau thời gian ân hạn trên 7 lần/tháng.</span></li>
-                       <li className="flex gap-2 items-start"><span className="text-rose-400 mt-0.5">•</span> <span>Có ngày không đủ công.</span></li>
+                       <li className="flex gap-2 items-start"><span className="text-rose-400 mt-0.5">•</span> <span>Số ngày trễ vượt quá ngưỡng dung sai lớn nhất.</span></li>
+                       <li className="flex gap-2 items-start"><span className="text-rose-400 mt-0.5">•</span> <span>Có ngày không đủ công hoặc bỏ trống thẻ công.</span></li>
                        <li className="flex gap-2 items-start"><span className="text-rose-400 mt-0.5">•</span> <span>Có ngày vắng.</span></li>
                     </ul>
                   </div>

@@ -1,27 +1,20 @@
+import { useState } from "react";
 import { AllowanceReportFilter } from "./components/AllowanceReportFilter";
 import { AllowanceReportTable } from "./components/AllowanceReportTable";
+import { AttendanceDisciplineReportFilter } from "./components/AttendanceDisciplineReportFilter";
+import { AttendanceDisciplineReportTable } from "./components/AttendanceDisciplineReportTable";
 import { Loader2, AlertCircle, ShieldAlert } from "lucide-react";
-import { m } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import { useAuthStore } from "@/store/useAuthStore";
 import { PERMISSIONS } from "@/constants/permissions";
 import { useAllowanceReport } from "./hooks/useAllowanceReport";
+import { useAttendanceDisciplineReport } from "./hooks/useAttendanceDisciplineReport";
 
 export default function ReportsPage() {
-  const {
-    periodType,
-    setPeriodType,
-    year,
-    setYear,
-    month,
-    setMonth,
-    quarter,
-    setQuarter,
-    data,
-    isLoading,
-    isError,
-    isExporting,
-    handleExport,
-  } = useAllowanceReport();
+  const [activeTab, setActiveTab] = useState<"allowance" | "attendance">("allowance");
+
+  const allowance = useAllowanceReport();
+  const attendance = useAttendanceDisciplineReport();
 
   const { session } = useAuthStore();
   const perms = session?.groupPermissions?.map(p => p.code) || [];
@@ -30,7 +23,7 @@ export default function ReportsPage() {
 
   if (!canView) {
     return (
-      <div className="flex flex-col h-full bg-[#f8f9fa] items-center justify-center p-6">
+      <div className="w-full min-h-full flex flex-col items-center justify-center p-6 gap-6 md:gap-8">
         <m.div 
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -47,7 +40,7 @@ export default function ReportsPage() {
   }
 
   return (
-    <div className="flex flex-col h-full bg-[#f8f9fa] p-4 sm:p-6 lg:p-8 space-y-6">
+    <div className="p-4 md:p-8 w-full min-h-full flex flex-col gap-6 md:gap-8">
       
       {/* Header section */}
       <m.div 
@@ -57,54 +50,123 @@ export default function ReportsPage() {
       >
         <div className="space-y-1">
           <h1 className="text-2xl font-black text-[#1E2062] tracking-tight">
-            Bảng Tính Phụ Cấp Nhân Viên
+            Báo cáo nội bộ
           </h1>
-          <p className="text-slate-500 font-medium text-sm">Theo dõi chi tiết mức phụ cấp hiệu suất và chuyên cần theo từng khoảng thời gian</p>
+          <p className="text-slate-500 font-medium text-sm">Theo dõi phụ cấp, chuyên cần và các chỉ số vận hành nhân sự theo kỳ.</p>
         </div>
       </m.div>
 
-      {/* Filter Bar */}
-      <m.div
-        initial={{ opacity: 0, y: 10 }} 
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 }}
-      >
-        <AllowanceReportFilter
-          periodType={periodType}
-          setPeriodType={setPeriodType}
-          year={year}
-          setYear={setYear}
-          month={month}
-          setMonth={setMonth}
-          quarter={quarter}
-          setQuarter={setQuarter}
-          onExport={handleExport}
-          isExporting={isExporting}
-        />
+      {/* Tabs UI */}
+      <m.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex border-b border-slate-200">
+        <button
+          onClick={() => setActiveTab("allowance")}
+          className={`pb-3 px-4 text-sm font-bold transition-all relative ${
+            activeTab === "allowance" ? "text-[#2E3192]" : "text-slate-500 hover:text-slate-700"
+          }`}
+        >
+          Bảng Tính Phụ Cấp
+          {activeTab === "allowance" && (
+            <m.div layoutId="activeTabReport" className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#2E3192]" />
+          )}
+        </button>
+        <button
+          onClick={() => setActiveTab("attendance")}
+          className={`pb-3 px-4 text-sm font-bold transition-all relative ${
+            activeTab === "attendance" ? "text-[#2E3192]" : "text-slate-500 hover:text-slate-700"
+          }`}
+        >
+          Báo Cáo Chuyên Cần
+          {activeTab === "attendance" && (
+            <m.div layoutId="activeTabReport" className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#2E3192]" />
+          )}
+        </button>
       </m.div>
 
-      {/* Main Content Area */}
-      <m.div 
-        initial={{ opacity: 0, y: 10 }} 
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
-        className="flex-1 min-h-0 flex flex-col"
-      >
-        {isLoading ? (
-          <div className="flex-1 flex flex-col items-center justify-center bg-white rounded-2xl border border-slate-200 shadow-sm min-h-[400px]">
-            <Loader2 className="w-10 h-10 text-[#2E3192] animate-spin mb-4" />
-            <p className="text-slate-500 font-medium">Đang tải dữ liệu báo cáo...</p>
-          </div>
-        ) : isError ? (
-          <div className="flex-1 flex flex-col items-center justify-center bg-red-50/50 rounded-2xl border border-red-100 min-h-[400px] text-red-600">
-            <AlertCircle className="w-10 h-10 mb-4 opacity-50" />
-            <p className="font-bold">Không thể tải dữ liệu báo cáo.</p>
-            <p className="text-sm opacity-80 mt-1">Vui lòng thử lại sau hoặc liên hệ quản trị viên.</p>
-          </div>
-        ) : (
-          <AllowanceReportTable items={data?.data?.items || []} />
+      <AnimatePresence mode="wait">
+        {activeTab === "allowance" && (
+          <m.div 
+            key="allowance"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.15 }}
+            className="flex-1 flex flex-col space-y-6"
+          >
+            <AllowanceReportFilter
+              periodType={allowance.periodType}
+              setPeriodType={allowance.setPeriodType}
+              year={allowance.year}
+              setYear={allowance.setYear}
+              month={allowance.month}
+              setMonth={allowance.setMonth}
+              quarter={allowance.quarter}
+              setQuarter={allowance.setQuarter}
+              onExport={allowance.handleExport}
+              isExporting={allowance.isExporting}
+            />
+
+            <div className="flex-1 min-h-0 flex flex-col">
+              {allowance.isLoading ? (
+                <div className="flex-1 flex flex-col items-center justify-center bg-white rounded-2xl border border-slate-200 shadow-sm min-h-[400px]">
+                  <Loader2 className="w-10 h-10 text-[#2E3192] animate-spin mb-4" />
+                  <p className="text-slate-500 font-medium">Đang tải dữ liệu báo cáo...</p>
+                </div>
+              ) : allowance.isError ? (
+                <div className="flex-1 flex flex-col items-center justify-center bg-red-50/50 rounded-2xl border border-red-100 min-h-[400px] text-red-600">
+                  <AlertCircle className="w-10 h-10 mb-4 opacity-50" />
+                  <p className="font-bold">Không thể tải dữ liệu báo cáo.</p>
+                  <p className="text-sm opacity-80 mt-1">Vui lòng thử lại sau hoặc liên hệ quản trị viên.</p>
+                </div>
+              ) : (
+                <AllowanceReportTable items={allowance.data?.data?.items || []} />
+              )}
+            </div>
+          </m.div>
         )}
-      </m.div>
+
+        {activeTab === "attendance" && (
+          <m.div 
+            key="attendance"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.15 }}
+            className="flex-1 flex flex-col space-y-6"
+          >
+            <p className="text-slate-600 text-sm italic -mt-2">
+              Tổng hợp điểm chuyên cần, ngày công, vi phạm giờ giấc và phụ cấp chuyên cần.
+            </p>
+            <AttendanceDisciplineReportFilter
+              periodType={attendance.periodType}
+              setPeriodType={attendance.setPeriodType}
+              year={attendance.year}
+              setYear={attendance.setYear}
+              month={attendance.month}
+              setMonth={attendance.setMonth}
+              quarter={attendance.quarter}
+              setQuarter={attendance.setQuarter}
+              onExport={attendance.handleExport}
+              isExporting={attendance.isExporting}
+            />
+
+            <div className="flex-1 min-h-0 flex flex-col">
+              {attendance.isLoading ? (
+                <div className="flex-1 flex flex-col items-center justify-center bg-white rounded-2xl border border-slate-200 shadow-sm min-h-[400px]">
+                  <Loader2 className="w-10 h-10 text-[#2E3192] animate-spin mb-4" />
+                  <p className="text-slate-500 font-medium">Đang tải báo cáo chuyên cần...</p>
+                </div>
+              ) : attendance.isError ? (
+                <div className="flex-1 flex flex-col items-center justify-center bg-red-50/50 rounded-2xl border border-red-100 min-h-[400px] text-red-600">
+                  <AlertCircle className="w-10 h-10 mb-4 opacity-50" />
+                  <p className="font-bold">Không thể tải báo cáo chuyên cần. Vui lòng thử lại sau.</p>
+                </div>
+              ) : (
+                <AttendanceDisciplineReportTable items={attendance.data?.data?.items || []} />
+              )}
+            </div>
+          </m.div>
+        )}
+      </AnimatePresence>
 
     </div>
   );

@@ -110,16 +110,28 @@ export function AttendanceJsonDialog({
 }) {
   const { t } = useTranslation();
 
-  let displayData: unknown = record;
+  const displayData: Record<string, unknown> = {
+    id: record?.id,
+    attendanceCode: record?.attendanceCode,
+    attendanceDate: record?.attendanceDate,
+    employeeCode: record?.employeeCode,
+    employeeName: record?.employeeName,
+    mergedCheckInTime: record?.checkInTime,
+    mergedCheckOutTime: record?.checkOutTime,
+    source: record?.source,
+    updatedAt: record?.updatedAt,
+    latestRawPayload: record?.rawPayload || null,
+  };
+
   if (record?.rawPayload) {
     try {
-      displayData = JSON.parse(record.rawPayload);
+      displayData.latestRawPayload = JSON.parse(record.rawPayload);
     } catch {
-      displayData = { rawPayload: record.rawPayload, note: t("attendance.invalidJson") };
+      displayData.latestRawPayload = record.rawPayload;
     }
   }
 
-  const jsonString = displayData ? JSON.stringify(displayData, null, 2) : "No data";
+  const jsonString = record ? JSON.stringify(displayData, null, 2) : "No data";
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -128,7 +140,7 @@ export function AttendanceJsonDialog({
           <DialogTitle className="flex justify-between items-center text-[#1E2062] text-lg">
              <div className="flex items-center gap-2">
                 <FileJson size={22} className="text-[#2E3192]" />
-                {t("attendance.jsonDetails")}
+                Dữ liệu sync & kết quả merge
              </div>
              <DialogClose className="flex items-center justify-center p-1.5 rounded-md text-slate-400 hover:text-slate-700 hover:bg-slate-200/60 transition-colors">
                <X strokeWidth={2.5} size={18} />
@@ -136,7 +148,15 @@ export function AttendanceJsonDialog({
           </DialogTitle>
         </DialogHeader>
         
-        <div className="relative flex-1 bg-slate-900 border-t border-slate-200 p-0 overflow-hidden">
+        <div className="px-6 py-3 bg-amber-50 border-b border-rose-100">
+          <p className="text-[13px] text-amber-800 flex items-center leading-relaxed">
+            <strong className="mr-1">Lưu ý: </strong> 
+            checkIn / checkOut bên dưới là kết quả merge đã lưu. latestRawPayload chỉ là payload gần nhất, không phải lịch sử toàn bộ lần sync.
+            Nếu trong rawPayload có chứa nhiều event mà merged time khác so với payload, kiểm tra lại cấu hình sync agent.
+          </p>
+        </div>
+
+        <div className="relative flex-1 bg-slate-900 overflow-hidden flex flex-col">
            {record && (
               <Button
                  variant="outline"

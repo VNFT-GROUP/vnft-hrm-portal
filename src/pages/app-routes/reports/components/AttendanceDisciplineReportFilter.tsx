@@ -1,9 +1,8 @@
-
 import { Download, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-interface AllowanceReportFilterProps {
+interface AttendanceDisciplineReportFilterProps {
   periodType: "MONTH" | "QUARTER";
   setPeriodType: (val: "MONTH" | "QUARTER") => void;
   year: number;
@@ -16,7 +15,7 @@ interface AllowanceReportFilterProps {
   isExporting: boolean;
 }
 
-export function AllowanceReportFilter({
+export function AttendanceDisciplineReportFilter({
   periodType,
   setPeriodType,
   year,
@@ -27,8 +26,9 @@ export function AllowanceReportFilter({
   setQuarter,
   onExport,
   isExporting,
-}: AllowanceReportFilterProps) {
-  const years = [2024, 2025, 2026, 2027];
+}: AttendanceDisciplineReportFilterProps) {
+  const currentYear = new Date().getFullYear();
+  const years = [currentYear - 2, currentYear - 1, currentYear, currentYear + 1, currentYear + 2];
 
   return (
     <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-end gap-5">

@@ -84,7 +84,7 @@ export default function PerformanceReviewsPage() {
   const years = Array.from({ length: 5 }, (_, i) => currentYear - 2 + i);
 
   return (
-    <div className="w-full h-full flex flex-col p-4 md:p-6 lg:p-8 gap-4 md:gap-6 bg-slate-50/50">
+    <div className="p-4 md:p-8 w-full min-h-full flex flex-col gap-6 md:gap-8">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-transparent">
         <m.div
           initial={{ opacity: 0, x: -20 }}

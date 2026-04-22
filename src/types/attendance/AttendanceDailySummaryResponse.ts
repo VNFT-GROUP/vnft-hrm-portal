@@ -1,21 +1,19 @@
 import type { RequestFormResponse } from "@/types/requestform/RequestFormResponse";
 
 export interface AttendanceDailySummaryResponse {
-  id: string;
-  userId: string;
-  userProfileId: string;
-  employeeCode: string;
-  attendanceCode: string;
-  employeeName: string;
-  attendanceDate: string;
-  scheduledCheckIn?: string;
-  scheduledCheckOut?: string;
-  actualCheckIn?: string;
-  actualCheckOut?: string;
-  checkInTime?: string;
-  checkOutTime?: string;
-  checkInValid?: boolean;
-  checkOutValid?: boolean;
+  id?: string | null;
+  userId?: string | null;
+  userProfileId?: string | null;
+  employeeCode?: string | null;
+  attendanceCode?: string | null;
+  employeeName?: string | null;
+  attendanceDate?: string | null;
+  scheduledCheckIn?: string | null;
+  scheduledCheckOut?: string | null;
+  actualCheckIn?: string | null;
+  actualCheckOut?: string | null;
+  checkInValid?: boolean | null;
+  checkOutValid?: boolean | null;
   workMinutes?: number;
   lateMinutes?: number;
   earlyLeaveMinutes?: number;

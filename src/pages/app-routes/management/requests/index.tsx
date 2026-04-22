@@ -162,7 +162,7 @@ export default function ManagementRequestsPage() {
         return <span className="px-2.5 py-1 bg-emerald-50 text-emerald-600 border border-emerald-200/60 rounded-md text-[11px] font-bold uppercase tracking-wider">Đã duyệt</span>;
       case "REJECTED":
         return <span className="px-2.5 py-1 bg-red-50 text-red-600 border border-red-200/60 rounded-md text-[11px] font-bold uppercase tracking-wider">Từ chối</span>;
-      case "CANCELLED":
+      case "CANCELED":
         return <span className="px-2.5 py-1 bg-slate-100 text-slate-500 border border-slate-200/60 rounded-md text-[11px] font-bold uppercase tracking-wider">Đã hủy</span>;
       default:
         return <span className="px-2.5 py-1 bg-slate-50 text-slate-500 border border-slate-200/60 rounded-md text-[11px] font-bold uppercase tracking-wider">{status || "UNKNOWN"}</span>;
@@ -176,7 +176,7 @@ export default function ManagementRequestsPage() {
       case "ATTENDANCE_ADJUSTMENT": return "Điều chỉnh chấm công";
       case "BUSINESS_TRIP": return "Công tác";
       case "WFH": return "Làm việc tại nhà";
-      case "RESIGNATION": return "Nghỉ việc";
+      case "RESIGNATION": return "Thôi việc";
       default: return type;
     }
   };
@@ -200,7 +200,8 @@ export default function ManagementRequestsPage() {
         const d2 = format(new Date(req.endDate), "dd/MM/yyyy");
         return d1 === d2 ? `${d1}` : `Từ ${d1} đến ${d2}`;
       } else if (req.type === "RESIGNATION") {
-        return `Làm việc đến hết ${format(new Date(req.resignationDate), "dd/MM/yyyy")}`;
+        if (!req.lastWorkingDate) return "Không xác định";
+        return `Làm việc đến hết ${format(new Date(req.lastWorkingDate), "dd/MM/yyyy")}`;
       }
     } catch {
       return "Không xác định";
@@ -210,7 +211,7 @@ export default function ManagementRequestsPage() {
 
   if (!canApprove) {
     return (
-      <div className="flex flex-col h-full bg-[#f8f9fa] items-center justify-center p-6">
+      <div className="w-full min-h-full flex flex-col items-center justify-center p-6 gap-6 md:gap-8">
         <m.div 
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -227,7 +228,7 @@ export default function ManagementRequestsPage() {
   }
 
   return (
-    <div className="flex flex-col h-full bg-[#f8f9fa] p-4 sm:p-6 lg:p-8 space-y-6">
+    <div className="p-4 md:p-8 w-full min-h-full flex flex-col gap-6 md:gap-8">
       
       {/* Header Section */}
       <m.div
@@ -380,7 +381,7 @@ export default function ManagementRequestsPage() {
                      filterStatus === "PENDING" ? "Chờ duyệt" : 
                      filterStatus === "APPROVED" ? "Đã duyệt" : 
                      filterStatus === "REJECTED" ? "Từ chối" : 
-                     filterStatus === "CANCELLED" ? "Đã hủy" : "Trạng thái"}
+                     filterStatus === "CANCELED" ? "Đã hủy" : "Trạng thái"}
                   </SelectValue>
                 </SelectTrigger>
                 <SelectContent className="rounded-xl">
@@ -388,7 +389,7 @@ export default function ManagementRequestsPage() {
                   <SelectItem value="PENDING">Chờ duyệt</SelectItem>
                   <SelectItem value="APPROVED">Đã duyệt</SelectItem>
                   <SelectItem value="REJECTED">Từ chối</SelectItem>
-                  <SelectItem value="CANCELLED">Đã hủy</SelectItem>
+                  <SelectItem value="CANCELED">Đã hủy</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -408,7 +409,7 @@ export default function ManagementRequestsPage() {
                 <SelectItem value="ATTENDANCE_ADJUSTMENT">Điều chỉnh công</SelectItem>
                 <SelectItem value="BUSINESS_TRIP">Công tác</SelectItem>
                 <SelectItem value="WFH">Làm tại nhà</SelectItem>
-                <SelectItem value="RESIGNATION">Nghỉ việc</SelectItem>
+                <SelectItem value="RESIGNATION">Thôi việc</SelectItem>
               </SelectContent>
             </Select>
             </div>
@@ -432,14 +433,14 @@ export default function ManagementRequestsPage() {
             <tbody className="divide-y divide-slate-100">
               {isLoadingRequests ? (
                 <tr>
-                  <td colSpan={7} className="h-[200px] text-center">
+                  <td colSpan={8} className="h-[200px] text-center">
                     <Loader2 className="w-8 h-8 mx-auto text-[#2E3192] animate-spin mb-2" />
                     <span className="text-slate-500">Đang tải danh sách...</span>
                   </td>
                 </tr>
               ) : paginatedData.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="h-[300px] text-center">
+                  <td colSpan={8} className="h-[300px] text-center">
                     <div className="flex flex-col items-center text-slate-400">
                       <Activity className="w-12 h-12 mb-3 opacity-20" />
                       <p className="text-base font-semibold text-slate-800">Không có đơn từ phù hợp</p>
@@ -475,7 +476,7 @@ export default function ManagementRequestsPage() {
                       {getStatusBadge(req.status)}
                     </td>
                     <td className="px-5 py-3 text-slate-500 text-[13px]">
-                      {formatDateTime(req.createdAt)}
+                      {(req.submittedAt || req.createdAt) ? formatDateTime((req.submittedAt || req.createdAt) as string) : "-"}
                     </td>
                     <td className="px-5 py-3 text-center">
                       <div className="flex items-center justify-center gap-1">
@@ -574,7 +575,7 @@ export default function ManagementRequestsPage() {
                      <span className="text-sm font-semibold text-slate-700">{formatDateTime(selectedRequest.createdAt)}</span>
                   </div>
                   <div className="col-span-2 flex flex-col gap-1">
-                     <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Thời gian xin kiện</span>
+                     <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Thời gian áp dụng</span>
                      <span className="text-sm font-semibold text-[#1E2062] bg-[#2E3192]/5 px-3 py-2 rounded-lg border border-[#2E3192]/10 inline-flex w-fit items-center gap-2">
                        <Clock className="w-4 h-4 text-[#2E3192]/70" />
                        {formatRequestApplyDate(selectedRequest)}
@@ -599,7 +600,11 @@ export default function ManagementRequestsPage() {
                     <span className="text-xs font-bold text-amber-700 uppercase">Tác động hệ thống</span>
                  </div>
                  <p className="text-[13px] text-amber-800/80 leading-relaxed">
-                   Sau khi duyệt, dữ liệu xử lý sẽ tự động map xuống bảng công của nhân sự tương ứng. Hệ thống ghi nhận kết quả phê duyệt qua cơ chế Audit.
+                   {selectedRequest.type === "ABSENCE" ? "Đơn vắng mặt chỉ cộng thời gian được duyệt vào summary định kỳ, không tạo dữ liệu check-in/check-out gốc." :
+                    (selectedRequest.type === "LEAVE" || selectedRequest.type === "WFH" || selectedRequest.type === "BUSINESS_TRIP") ? "Duyệt đơn sẽ trừ vào quỹ thời gian (nếu có); hệ thống tiến hành rebuild công của nhân sự, không tạo dữ liệu quẹt thẻ thực tế." :
+                    selectedRequest.type === "ATTENDANCE_ADJUSTMENT" ? "Duyệt đơn sẽ chèn/sửa dữ liệu chấm công gốc (check-in hoặc check-out) theo yêu cầu. Việc đồng bộ máy chấm công sau này vẫn có thể ghi đè kết quả nếu giờ quét thẻ mới hợp lệ hơn." :
+                    selectedRequest.type === "RESIGNATION" ? "Duyệt đơn sẽ khóa mọi tính toán chấm công sau ngày làm việc cuối cùng." :
+                    "Sau khi duyệt, dữ liệu xử lý sẽ được cập nhật tương ứng. Hệ thống ghi nhận kết quả phê duyệt qua cơ chế Audit."}
                  </p>
                </div>
             </div>

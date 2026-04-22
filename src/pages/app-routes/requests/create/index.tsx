@@ -266,11 +266,25 @@ export default function CreateRequestPage() {
         break;
       case "resign":
         if (!date || !endDate) isValid = false; // endDate is Ngày làm cuối
+        if (date && endDate && endDate < date) {
+           toast.error("Ngày làm việc cuối phải lớn hơn hoặc bằng Ngày nộp đơn.");
+           return;
+        }
         break;
       case "leave":
       case "wfh":
       case "business":
         if (!startDate || !endDate) isValid = false;
+        if (startDate && endDate && endDate < startDate) {
+           toast.error("Ngày kết thúc phải lớn hơn hoặc bằng Ngày bắt đầu.");
+           return;
+        }
+        if (type === "leave" && startDate && endDate && startDate.getTime() === endDate.getTime()) {
+           if (startSession === "afternoon" && endSession === "morning") {
+              toast.error("Khoảng thời gian nghỉ không hợp lệ.");
+              return;
+           }
+        }
         break;
     }
 
@@ -602,36 +616,12 @@ export default function CreateRequestPage() {
                           <Calendar
                             mode="single"
                             selected={endDate}
-                            onSelect={(newDate) => {
-                              setEndDate(newDate);
-                              if (newDate) {
-                                const prev = new Date(newDate);
-                                prev.setDate(prev.getDate() - 1);
-                                setStartDate(prev); // Derived ngày thôi việc = ngày làm cuối - 1
-                              } else {
-                                setStartDate(undefined);
-                              }
-                            }}
+                            onSelect={setEndDate}
                             initialFocus
                             locale={vi}
                           />
                         </PopoverContent>
                       </Popover>
-                    </div>
-
-                    <div className="space-y-1.5">
-                      <Label className="text-[13px] font-semibold text-slate-700">
-                        Ngày thôi việc{" "}
-                        <span className="text-rose-500">*</span>
-                      </Label>
-                      <div className="w-full flex items-center justify-start text-left font-normal h-10 bg-slate-100 border-slate-200 border rounded-md px-4 text-sm text-slate-700 cursor-not-allowed">
-                        <CalendarIcon className="mr-2 h-4 w-4 text-slate-500" />
-                        {startDate ? (
-                          format(startDate, "dd/MM/yyyy")
-                        ) : (
-                          <span className="text-slate-400">Tính tự động</span>
-                        )}
-                      </div>
                     </div>
                   </div>
                 </>
@@ -859,8 +849,7 @@ export default function CreateRequestPage() {
                    <div className="p-3.5 bg-indigo-50/60 border border-indigo-100 rounded-lg text-indigo-900 relative overflow-hidden mb-2">
                        <div className="absolute left-0 top-0 bottom-0 w-1 bg-indigo-500/80"></div>
                        <div className="pl-1.5">
-                          <p className="font-semibold text-[13.5px] uppercase tracking-wide">Lưu ý đới với đơn vắng mặt</p>
-                          <p className="text-[13px] opacity-90 leading-relaxed mt-1">Đơn này <strong>được tính công</strong>. Hệ thống sẽ sử dụng khung giờ bạn đăng ký làm dữ liệu check-in/out và tính lại báo cáo Summary sau khi duyệt.</p>
+                          <p className="text-[13px] opacity-90 leading-relaxed mt-1">Đơn vắng mặt chỉ cộng thời gian được duyệt vào summary, không tạo dữ liệu check-in/check-out.</p>
                        </div>
                    </div>
                 )}
@@ -868,8 +857,7 @@ export default function CreateRequestPage() {
                    <div className="p-3.5 bg-indigo-50/60 border border-indigo-100 rounded-lg text-indigo-900 relative overflow-hidden mb-2">
                        <div className="absolute left-0 top-0 bottom-0 w-1 bg-indigo-500/80"></div>
                        <div className="pl-1.5">
-                          <p className="font-semibold text-[13.5px] uppercase tracking-wide">Cảnh báo đóng dữ liệu sau nghỉ việc</p>
-                          <p className="text-[13px] opacity-90 leading-relaxed mt-1">Vui lòng làm việc đến hết <strong>Ngày làm việc cuối</strong>. Sau mốc thời gian này, phân vùng chấm công của bạn sẽ được đóng lại và không tiếp tục ghi nhận thêm bất kỳ dữ liệu nào.</p>
+                          <p className="text-[13px] opacity-90 leading-relaxed mt-1">Nhân sự làm việc đến hết Ngày làm việc cuối. Sau ngày này hệ thống khóa dữ liệu chấm công.</p>
                        </div>
                    </div>
                 )}
@@ -877,7 +865,7 @@ export default function CreateRequestPage() {
                    <div className="p-3.5 bg-indigo-50/60 border border-indigo-100 rounded-lg text-indigo-900 relative overflow-hidden mb-2">
                        <div className="absolute left-0 top-0 bottom-0 w-1 bg-indigo-500/80"></div>
                        <div className="pl-1.5">
-                          <p className="text-[13px] leading-relaxed"><strong>Đơn có trừ phép:</strong> Số ngày xin nghỉ sẽ bị trừ lập tức vào quỹ phép hiện tại khi đơn được phê duyệt. Hệ thống ghi nhận đây là những ngày có chấm công (có tính công).</p>
+                          <p className="text-[13px] opacity-90 leading-relaxed mt-1">Khi đơn được duyệt, số ngày nghỉ được trừ vào quỹ phép; hệ thống rebuild công, không tạo dữ liệu quẹt thẻ.</p>
                        </div>
                    </div>
                 )}

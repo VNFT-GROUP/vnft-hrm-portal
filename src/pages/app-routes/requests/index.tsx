@@ -4,6 +4,7 @@ import { m  } from 'framer-motion';
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/store/useAuthStore";
+import { PERMISSIONS } from "@/constants/permissions";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { requestFormMeService } from "@/services/requestform/me";
 import CustomPagination from "@/components/custom/CustomPagination";
@@ -18,11 +19,12 @@ const ApplicableDate = ({ req }: { req: RequestFormResponse }) => {
   try {
     if (req.type === "ATTENDANCE_ADJUSTMENT") {
       const tType = req.timeType === "CHECK_IN" ? "check-in" : "check-out";
-      return <>{`Điều chỉnh ${tType} ngày ${format(new Date(req.attendanceDate!), "dd/MM/yyyy")} thành ${req.requestedTime?.substring(0, 5)}`}</>;
+      return <>{req.attendanceDate ? `Điều chỉnh ${tType} ngày ${format(new Date(req.attendanceDate), "dd/MM/yyyy")} thành ${req.requestedTime?.substring(0, 5)}` : "Không xác định"}</>;
     } else if (req.type === "ABSENCE") {
+      if (!req.absenceDate) return <>Không xác định</>;
       return (
          <div className="flex flex-col gap-1 sm:flex-row sm:items-center justify-center">
-            <span>{`Vắng mặt ngày ${format(new Date(req.absenceDate!), "dd/MM/yyyy")}, từ ${req.fromTime?.substring(0, 5)} đến ${req.toTime?.substring(0, 5)}`}</span>
+            <span>{`Vắng mặt ngày ${format(new Date(req.absenceDate), "dd/MM/yyyy")}, từ ${req.fromTime?.substring(0, 5)} đến ${req.toTime?.substring(0, 5)}`}</span>
             {req.absenceReasonType && (
                <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold uppercase shrink-0 w-fit mx-auto sm:mx-0 ${req.absenceReasonType === 'PERSONAL' ? 'bg-amber-100 text-amber-700' : 'bg-blue-100 text-blue-700'}`}>
                  {req.absenceReasonType === 'PERSONAL' ? 'Việc cá nhân' : 'Việc công ty'}
@@ -31,22 +33,28 @@ const ApplicableDate = ({ req }: { req: RequestFormResponse }) => {
          </div>
       );
     } else if (req.type === "LEAVE") {
+      if (!req.startDate || !req.endDate) return <>Không xác định</>;
       const s1 = req.startSession === "FULL_DAY" ? "Cả ngày" : req.startSession === "MORNING" ? "Sáng" : "Chiều";
       const s2 = req.endSession === "FULL_DAY" ? "Cả ngày" : req.endSession === "MORNING" ? "Sáng" : "Chiều";
-      const d1 = format(new Date(req.startDate!), "dd/MM/yyyy");
-      const d2 = format(new Date(req.endDate!), "dd/MM/yyyy");
+      const d1 = format(new Date(req.startDate), "dd/MM/yyyy");
+      const d2 = format(new Date(req.endDate), "dd/MM/yyyy");
       if (d1 === d2) {
         return <>{`Nghỉ phép ngày ${d1} ${s1 === s2 ? `(${s1})` : `(${s1} - ${s2})`}`}</>;
       }
       return <>{`Nghỉ phép từ ${d1} (${s1}) đến ${d2} (${s2})`}</>;
     } else if (req.type === "WFH") {
-      const d1 = format(new Date(req.startDate!), "dd/MM/yyyy");
-      const d2 = format(new Date(req.endDate!), "dd/MM/yyyy");
+      if (!req.startDate || !req.endDate) return <>Không xác định</>;
+      const d1 = format(new Date(req.startDate), "dd/MM/yyyy");
+      const d2 = format(new Date(req.endDate), "dd/MM/yyyy");
       return <>{d1 === d2 ? `WFH ngày ${d1}` : `WFH từ ${d1} đến ${d2}`}</>;
     } else if (req.type === "BUSINESS_TRIP") {
-      const d1 = format(new Date(req.startDate!), "dd/MM/yyyy");
-      const d2 = format(new Date(req.endDate!), "dd/MM/yyyy");
+      if (!req.startDate || !req.endDate) return <>Không xác định</>;
+      const d1 = format(new Date(req.startDate), "dd/MM/yyyy");
+      const d2 = format(new Date(req.endDate), "dd/MM/yyyy");
       return <>{d1 === d2 ? `Công tác ngày ${d1}` : `Công tác từ ${d1} đến ${d2}`}</>;
+    } else if (req.type === "RESIGNATION") {
+      if (!req.lastWorkingDate) return <>Không xác định</>;
+      return <>{`Làm việc đến hết ${format(new Date(req.lastWorkingDate), "dd/MM/yyyy")}`}</>;
     }
   } catch {
     return <>Không xác định</>;
@@ -57,6 +65,11 @@ const ApplicableDate = ({ req }: { req: RequestFormResponse }) => {
 export default function RequestsPage() {
   const navigate = useNavigate();
   const session = useAuthStore(state => state.session);
+
+  const perms = session?.groupPermissions?.map(p => p.code) || [];
+  const isAdmin = session?.groupName === "ADMIN";
+  const canCreate = isAdmin || perms.includes(PERMISSIONS.REQUEST_FORM_CREATE_SELF);
+  const canCancel = isAdmin || perms.includes(PERMISSIONS.REQUEST_FORM_CANCEL_SELF);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -112,7 +125,7 @@ export default function RequestsPage() {
       case "ABSENCE": return "Vắng mặt";
       case "BUSINESS_TRIP": return "Công tác";
       case "ATTENDANCE_ADJUSTMENT": return "Điều chỉnh chấm công";
-      case "RESIGNATION": return "Nghỉ việc";
+      case "RESIGNATION": return "Thôi việc";
       default: return type;
     }
   };
@@ -149,12 +162,14 @@ export default function RequestsPage() {
           </m.div>
 
           <div className="flex items-center gap-4 bg-white p-1.5 rounded-xl border border-slate-200 shadow-sm">
-            <Button 
-               onClick={() => navigate("/app/requests/create")}
-               className="bg-indigo-600 hover:bg-indigo-700 text-white flex items-center gap-2 h-10 px-4 rounded-lg shadow-sm"
-            >
-              <Plus className="w-4 h-4" /> Tạo đơn mới
-            </Button>
+            {canCreate && (
+              <Button 
+                 onClick={() => navigate("/app/requests/create")}
+                 className="bg-indigo-600 hover:bg-indigo-700 text-white flex items-center gap-2 h-10 px-4 rounded-lg shadow-sm"
+              >
+                <Plus className="w-4 h-4" /> Tạo đơn mới
+              </Button>
+            )}
           </div>
         </div>
 
@@ -226,7 +241,7 @@ export default function RequestsPage() {
                           </div>
                         </td>
                         <td className="px-4 py-3.5 text-slate-500 border-x border-slate-200 whitespace-nowrap text-center">
-                          {req.createdAt ? format(new Date(req.createdAt), 'dd/MM/yyyy HH:mm') : "-"}
+                          {(req.submittedAt || req.createdAt) ? format(new Date(req.submittedAt || req.createdAt), 'dd/MM/yyyy HH:mm') : "-"}
                         </td>
                         <td className="px-4 py-3.5 border-x border-slate-200 whitespace-nowrap text-center items-center">
                           <div className="flex items-center justify-center gap-2">
@@ -246,7 +261,7 @@ export default function RequestsPage() {
                                 <FileEdit size={18} />
                               </button>
                             )}
-                            {req.status === "PENDING" && (
+                            {req.status === "PENDING" && canCancel && (
                               <button
                                 onClick={() => cancelMutation.mutate(req.id)}
                                 disabled={cancelMutation.isPending}

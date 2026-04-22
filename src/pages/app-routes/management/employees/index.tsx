@@ -129,6 +129,9 @@ export default function EmployeesPage() {
 
       sysJobTitle: user.jobTitleName || "-",
       avatarUrl: user.avatarUrl,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+      updatedBy: user.updatedBy,
     })) || [];
 
   const totalPages = usersResponse?.data?.totalPages || 1;

@@ -25,6 +25,9 @@ export interface Employee {
   status: string;
   sysJobTitle: string;
   avatarUrl?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  updatedBy?: string;
 }
 
 interface EmployeeTableProps {
@@ -50,20 +53,24 @@ export default function EmployeeTable({ employees, onDelete, onEditBasicInfo, on
     <div className="overflow-x-auto">
       <ContextMenu>
         <ContextMenuTrigger className="block w-full select-text!">
-          <table className="w-full text-sm text-left border-collapse border border-slate-200 select-text">
-            <thead className="text-xs text-slate-600 uppercase bg-slate-100 border-b border-slate-200">
+          <table className="w-full text-sm text-left">
+            <thead className="text-xs text-muted-foreground uppercase bg-muted/50 sticky top-0 z-10 shadow-sm">
               <tr>
-                <th className="px-4 py-3 font-semibold text-center border-x border-slate-200 w-[120px]">{t('management.colEmpCode', { defaultValue: 'EMP.CODE' })}</th>
-                <th className="px-4 py-3 font-semibold text-center border-x border-slate-200 w-[120px]">{t('management.colAttCode', { defaultValue: 'ATT.CODE' })}</th>
-                <th className="px-4 py-3 font-semibold text-center border-x border-slate-200 min-w-[250px]">{t('management.colFullName', { defaultValue: 'FULLNAME' })}</th>
-                <th className="px-4 py-3 font-semibold text-center border-x border-slate-200 min-w-[180px]">{t('management.colEnglishName', { defaultValue: 'ENGLISH NAME' })}</th>
-                <th className="px-4 py-3 font-semibold text-center border-x border-slate-200 w-[180px]">{t('management.colDepartment', { defaultValue: 'DEPARTMENT' })}</th>
-                <th className="px-4 py-3 font-semibold text-center border-x border-slate-200 w-[180px]">{t('management.colPosition', { defaultValue: 'POSITION' })}</th>
-                <th className="px-4 py-3 font-semibold text-center border-x border-slate-200 w-[150px]">{t('management.colStatus', { defaultValue: 'STATUS' })}</th>
-                <th className="px-4 py-3 font-semibold text-center border-x border-slate-200 w-[180px]">{t('management.colAction', { defaultValue: 'THAO TÁC' })}</th>
+                <th className="px-4 py-3 font-medium whitespace-nowrap text-center w-[120px]">{t('management.colEmpCode', { defaultValue: 'EMP.CODE' })}</th>
+                <th className="px-4 py-3 font-medium whitespace-nowrap text-center w-[120px]">{t('management.colAttCode', { defaultValue: 'ATT.CODE' })}</th>
+                <th className="px-4 py-3 font-medium whitespace-nowrap text-left min-w-[250px]">{t('management.colFullName', { defaultValue: 'FULLNAME' })}</th>
+                <th className="px-4 py-3 font-medium whitespace-nowrap text-left min-w-[180px]">{t('management.colEnglishName', { defaultValue: 'ENGLISH NAME' })}</th>
+                <th className="px-4 py-3 font-medium whitespace-nowrap text-left w-[180px]">{t('management.colDepartment', { defaultValue: 'DEPARTMENT' })}</th>
+                <th className="px-4 py-3 font-medium whitespace-nowrap text-left w-[180px]">{t('management.colPosition', { defaultValue: 'POSITION' })}</th>
+                <th className="px-4 py-3 font-medium whitespace-nowrap text-left w-[180px]">{t('management.colJobTitle', { defaultValue: 'CHỨC VỤ' })}</th>
+                <th className="px-4 py-3 font-medium whitespace-nowrap text-center w-[150px]">{t('management.colStatus', { defaultValue: 'STATUS' })}</th>
+                <th className="px-4 py-3 font-medium whitespace-nowrap text-center w-[150px]">{t('management.colCreatedAt', { defaultValue: 'NGÀY TẠO' })}</th>
+                <th className="px-4 py-3 font-medium whitespace-nowrap text-center w-[150px]">{t('management.colUpdatedAt', { defaultValue: 'NGÀY CẬP NHẬT' })}</th>
+                <th className="px-4 py-3 font-medium whitespace-nowrap text-center w-[150px]">{t('management.colUpdatedBy', { defaultValue: 'NGƯỜI CẬP NHẬT' })}</th>
+                <th className="px-4 py-3 font-medium whitespace-nowrap text-center w-[180px]">{t('management.colAction', { defaultValue: 'THAO TÁC' })}</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-200">
+            <tbody className="divide-y divide-border/50">
           <AnimatePresence>
             {employees.map((emp) => (
               <m.tr 
@@ -72,39 +79,56 @@ export default function EmployeeTable({ employees, onDelete, onEditBasicInfo, on
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="hover:bg-slate-50 transition-colors duration-200"
+                className="hover:bg-muted/30 transition-colors"
                 onContextMenu={() => setRightClickedEmpId(emp.id)}
               >
-                <td className="px-4 py-3 font-medium text-[#2E3192] border-x border-slate-200 text-center align-middle whitespace-nowrap">
+                <td className="px-4 py-3 font-medium text-[#2E3192] text-center align-middle whitespace-nowrap">
                   {emp.empCodePrefix}{emp.empCodeId}
                 </td>
-                <td className="px-4 py-3 font-medium text-slate-700 border-x border-slate-200 text-center align-middle whitespace-nowrap">
+                <td className="px-4 py-3 font-medium text-slate-700 text-center align-middle whitespace-nowrap">
                   {emp.attendanceCode || "-"}
                 </td>
-                <td className="px-4 py-3 border-x border-slate-200 text-left align-middle whitespace-nowrap">
+                <td className="px-4 py-3 text-left align-middle whitespace-nowrap">
                   <div className="flex items-center gap-3">
                     <AvatarPlaceholder name={emp.fullName} src={emp.avatarUrl} className="w-10 h-10 text-sm" />
                     <div className="flex flex-col">
-                      <span className="font-bold text-[#1E2062]">{emp.fullName || "-"}</span>
+                      <span className="font-bold text-slate-700">{emp.fullName || "-"}</span>
                       {emp.email && <span className="text-xs text-slate-500">{emp.email}</span>}
                     </div>
                   </div>
                 </td>
-                <td className="px-4 py-3 font-medium text-slate-700 border-x border-slate-200 text-left align-middle whitespace-nowrap">
+                <td className="px-4 py-3 font-medium text-slate-700 text-left align-middle whitespace-nowrap">
                   {emp.englishName || "-"}
                 </td>
-                <td className="px-4 py-3 font-medium text-slate-700 border-x border-slate-200 text-left align-middle whitespace-nowrap">
+                <td className="px-4 py-3 font-medium text-slate-700 text-left align-middle whitespace-nowrap">
                   {emp.department || "-"}
                 </td>
-                <td className="px-4 py-3 font-medium text-slate-700 border-x border-slate-200 text-left align-middle whitespace-nowrap">
+                <td className="px-4 py-3 font-medium text-slate-700 text-left align-middle whitespace-nowrap">
                   {emp.position || "-"}
                 </td>
-                <td className="px-4 py-3 border-x border-slate-200 text-center align-middle">
+                <td className="px-4 py-3 font-medium text-slate-700 text-left align-middle whitespace-nowrap">
+                  {emp.sysJobTitle || "-"}
+                </td>
+                <td className="px-4 py-3 text-center align-middle">
                   <Badge className={`${getEmployeeStatusColor(emp.status)} shadow-sm font-medium border-0`}>
                     {emp.status === "Đang làm" ? t('management.statusWorking', { defaultValue: 'Đang làm' }) : t('management.statusResigned', { defaultValue: 'Đã nghỉ việc' })}
                   </Badge>
                 </td>
-                <td className="px-4 py-2 border-x border-slate-200 text-center align-middle whitespace-nowrap">
+                <td className="px-4 py-3 font-medium text-slate-700 text-center align-middle whitespace-nowrap">
+                  {emp.createdAt ? new Date(emp.createdAt).toLocaleDateString('vi-VN') : "-"}
+                </td>
+                <td className="px-4 py-3 font-medium text-slate-700 text-center align-middle whitespace-nowrap">
+                  {emp.updatedAt ? new Date(emp.updatedAt).toLocaleDateString('vi-VN') : "-"}
+                </td>
+                <td className="px-4 py-3 align-middle text-center text-slate-500 whitespace-nowrap text-xs">
+                  {emp.updatedBy ? (
+                    <div className="flex items-center justify-center gap-2">
+                      <AvatarPlaceholder name={emp.updatedBy} className="w-6 h-6 text-[10px]" />
+                      <span>{emp.updatedBy}</span>
+                    </div>
+                  ) : "-"}
+                </td>
+                <td className="px-4 py-2 text-center align-middle whitespace-nowrap">
                   <div className="flex flex-col items-center gap-1.5">
                     {/* Hàng 1 */}
                     <div className="flex justify-center gap-1">
@@ -137,7 +161,7 @@ export default function EmployeeTable({ employees, onDelete, onEditBasicInfo, on
           </AnimatePresence>
           {employees.length === 0 && (
             <tr>
-              <td colSpan={8} className="h-40 text-center border-x border-slate-200">
+              <td colSpan={12} className="h-40 text-center">
                 <div className="flex flex-col items-center justify-center text-slate-500">
                   <Users size={32} className="mb-2 opacity-50" />
                   <p>{t('management.emptyEmployee', { defaultValue: 'Không tìm thấy nhân viên nào' })}</p>

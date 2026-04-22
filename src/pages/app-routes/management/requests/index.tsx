@@ -185,19 +185,19 @@ export default function ManagementRequestsPage() {
     try {
       if (req.type === "ATTENDANCE_ADJUSTMENT") {
         const tType = req.timeType === "CHECK_IN" ? "check-in" : "check-out";
-        return `Điều chỉnh ${tType} ngày ${format(new Date(req.attendanceDate), "dd/MM/yyyy")} thành ${req.requestedTime?.substring(0, 5)}`;
+        return `Điều chỉnh ${tType} ngày ${req.attendanceDate ? format(new Date(req.attendanceDate), "dd/MM/yyyy") : "—"} thành ${req.requestedTime?.substring(0, 5)}`;
       } else if (req.type === "ABSENCE") {
-        return `Ngày ${format(new Date(req.absenceDate), "dd/MM/yyyy")}, từ ${req.fromTime?.substring(0, 5)} đến ${req.toTime?.substring(0, 5)}`;
+        return `Ngày ${req.absenceDate ? format(new Date(req.absenceDate), "dd/MM/yyyy") : "—"}, từ ${req.fromTime?.substring(0, 5)} đến ${req.toTime?.substring(0, 5)}`;
       } else if (req.type === "LEAVE") {
         const s1 = req.startSession === "FULL_DAY" ? "Cả ngày" : req.startSession === "MORNING" ? "Sáng" : "Chiều";
         const s2 = req.endSession === "FULL_DAY" ? "Cả ngày" : req.endSession === "MORNING" ? "Sáng" : "Chiều";
-        const d1 = format(new Date(req.startDate), "dd/MM/yyyy");
-        const d2 = format(new Date(req.endDate), "dd/MM/yyyy");
+        const d1 = req.startDate ? format(new Date(req.startDate), "dd/MM/yyyy") : "—";
+        const d2 = req.endDate ? format(new Date(req.endDate), "dd/MM/yyyy") : "—";
         if (d1 === d2) return `${d1} ${s1 === s2 ? `(${s1})` : `(${s1} - ${s2})`}`;
         return `Từ ${d1} (${s1}) đến ${d2} (${s2})`;
       } else if (req.type === "WFH" || req.type === "BUSINESS_TRIP") {
-        const d1 = format(new Date(req.startDate), "dd/MM/yyyy");
-        const d2 = format(new Date(req.endDate), "dd/MM/yyyy");
+        const d1 = req.startDate ? format(new Date(req.startDate), "dd/MM/yyyy") : "—";
+        const d2 = req.endDate ? format(new Date(req.endDate), "dd/MM/yyyy") : "—";
         return d1 === d2 ? `${d1}` : `Từ ${d1} đến ${d2}`;
       } else if (req.type === "RESIGNATION") {
         if (!req.lastWorkingDate) return "Không xác định";

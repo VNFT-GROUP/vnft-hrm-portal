@@ -17,6 +17,7 @@ const GroupsPage = lazy(() => import("../pages/app-routes/management/groups"));
 const JobTitlesPage = lazy(() => import("../pages/app-routes/management/job-titles"));
 const ManagementRequestsPage = lazy(() => import("../pages/app-routes/management/requests"));
 const ManagementAttendancePage = lazy(() => import("../pages/app-routes/management/attendance"));
+const ManagementPayrollPage = lazy(() => import("../pages/app-routes/management/payroll"));
 const ServerSettingsPage = lazy(() => import("../pages/app-routes/management/server-settings"));
 const PerformanceReviewsPage = lazy(() => import("../pages/app-routes/management/performance"));
 const MyAttendancePage = lazy(() => import("../pages/app-routes/attendance"));
@@ -105,6 +106,7 @@ export default function AppRoutes() {
              <Route path="job-titles" element={<JobTitlesPage />} />
              <Route path="requests" element={<ManagementRequestsPage />} />
              <Route path="attendance" element={<ManagementAttendancePage />} />
+             <Route path="payroll" element={<ManagementPayrollPage />} />
              <Route path="performance" element={<PerformanceReviewsPage />} />
              <Route path="server-settings" element={<ServerSettingsPage />} />
           </Route>

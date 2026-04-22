@@ -206,3 +206,45 @@ All major root pages (e.g., Employees, Attendance, Requests, Time Settings) shou
   - **The Icon**: Wrapped in a rounded box with `span` classes: `p-2.5 bg-[#2E3192]/10 text-[#2E3192] rounded-xl flex items-center justify-center`.
 - **Subtitle**: `text-muted-foreground text-sm md:text-base ml-1`.
 Do not use old, simple `border-l-4 border-indigo-600 pl-3` lines for standard root pages anymore.
+
+## 6. Table UI & Styling Standardization
+All management tables (Employees, Departments, Positions, Job Titles, Employee Codes, Payroll) must follow these strict UI conventions for a unified, modern aesthetic:
+- **Header (`thead`)**: `className="text-xs text-muted-foreground uppercase bg-muted/50 sticky top-0 z-10 shadow-sm"`. Remove all `bg-slate-100` or `border-b` logic.
+- **Header Cells (`th`)**: Use `font-medium` (not `font-semibold`). Remove any vertical borders like `border-x` or `border-r`.
+- **Body (`tbody`)**: `className="divide-y divide-border/50"`.
+- **Rows (`tr`)**: `className="hover:bg-muted/30 transition-colors"`.
+- **Cells (`td`)**: Remove any vertical borders. Keep them clean.
+- **Avatar in Audit Columns**: Any `createdBy` or `updatedBy` fields must use the `AvatarPlaceholder` component paired with the user's name:
+  ```tsx
+  <div className="flex items-center justify-center gap-2">
+    <AvatarPlaceholder name={item.createdBy} className="w-6 h-6 text-[10px]" />
+    <span>{item.createdBy}</span>
+  </div>
+  ```
+  ```
+- **Action Buttons**: Edit buttons must use `text-amber-500 hover:text-amber-600 hover:bg-amber-50` and Delete buttons must use `text-rose-500 hover:text-rose-600 hover:bg-rose-50`. Actions must always be visible (remove `opacity-0 group-hover:opacity-100` tricks).
+
+## 7. Payroll Architecture & Flow
+The Payroll module operates on a strict "Preview then Create" pattern to avoid massive unintended data processing:
+1. **Candidate Preview**: The UI must first call `GET /payrolls/candidates?year={YYYY}&month={M}` to fetch a preview list of `PayrollEmployeeResponse` objects.
+2. **Selection**: The user selects the exact candidates via a multi-select table (`PayrollTable.tsx`).
+3. **Creation Mutation**: The `POST /payrolls` endpoint is then called with `{ year, month, userProfileIds, employeeCodes, name, note }`. It does not process the entire company by default.
+- **Data Mapping**: The Payroll UI requires tracking 47 distinct columns (from salary ranges to deductions). Tables must utilize `useMemo` strictly to prevent extreme re-rendering bottlenecks.
+- **Permissions**: Creating payrolls strictly requires the `PAYROLL_MANAGE` string mapped via `useAuthStore`.
+
+## 8. Attendance & Settings (WFH & Discipline Logic)
+The Attendance module (`/app/attendance`) and Server Settings (`/app/management/server-settings`) are heavily linked:
+- **Discipline & Allowances**: Discipline scores, WFH limit days, and punctuality allowances are dynamically fetched from `ServerSettingsResponse`. Do not hardcode rules.
+- **Attendance Summaries**: The `AttendanceMonthlySummaryResponse` provides granular violation times (`leaveDeductionViolationTimes`, `majorLateEarlyViolationTimes`).
+- **UI Localization**: Use highly descriptive, localized Vietnamese labels (e.g., `Đi trễ / Về sớm (Lỗi nặng)`) mapped in `vi/attendance.ts` rather than raw technical keys.
+- **Card-Based UI**: Use `Card`, `CardHeader`, and `CardContent` constructs to display summarized metrics (WFH status, discipline scoreboard) cleanly rather than dense text arrays.
+
+## 9. Performance Management Refactor
+- **Flat Payload Structures**: Nested `profile` objects have been eliminated from the architecture. API requests and responses now use flat structures directly mapping fields.
+- **Dynamic Grading Scale**: Do not hardcode performance grades (e.g., A, B, C). Always fetch and map from the dynamic `/performance-review-levels` endpoint.
+- **Component Design**: Implement client-side pagination and distinct Score Selector Cards to improve the UX during review submissions.
+
+## 10. Terminology Rules
+- **Job Title vs Role**: "Chức vụ" is `Job Title`. The term "Role" is deprecated for job classification.
+- **Group Management**: "Nhóm quyền" is `Group` or `Group Management`, replacing previous mentions of "Roles" in the security/permission context.
+- **Level vs Type**: In Position structures, `manager` is a boolean flag indicating `Loại vị trí` (Position Type: Quản lý / Nhân viên), NOT a hierarchical `Cấp bậc` (Level).

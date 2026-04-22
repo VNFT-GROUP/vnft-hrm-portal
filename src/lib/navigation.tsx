@@ -34,6 +34,7 @@ export const useNavigationData = () => {
     PERMISSIONS.PERFORMANCE_REVIEW_ALL, 
     PERMISSIONS.PERFORMANCE_REVIEW_DEPARTMENT, 
     PERMISSIONS.ATTENDANCE_MANAGE, 
+    PERMISSIONS.PAYROLL_MANAGE,
     PERMISSIONS.SETTINGS_MANAGE,
     PERMISSIONS.ALLOWANCE_REPORT_VIEW
   ] as string[]).includes(p)) || isAdmin;
@@ -63,8 +64,24 @@ export const useNavigationData = () => {
       icon: <BarChart3 size={16} />,
     });
   }
+  if (isAdmin || perms.includes(PERMISSIONS.PAYROLL_MANAGE)) {
+    opsSubItems.push({
+      label: t("sidebar.payroll", { defaultValue: "Bảng lương" }),
+      shortName: t("sidebar.payrollShort", { defaultValue: "Lương" }),
+      path: "/app/management/payroll",
+      icon: <FileText size={16} />,
+    });
+  }
 
   const masterDataSubItems = [];
+  if (isAdmin || perms.includes(PERMISSIONS.USER_MANAGE)) {
+    masterDataSubItems.push({
+      label: t("sidebar.employees", { defaultValue: "Hồ sơ nhân sự" }),
+      shortName: t("sidebar.employeesShort", { defaultValue: "Nhân sự" }),
+      path: "/app/management/employees",
+      icon: <Users size={16} />,
+    });
+  }
   if (isAdmin || perms.includes(PERMISSIONS.MASTER_DATA_MANAGE)) {
     masterDataSubItems.push(
       {
@@ -95,14 +112,6 @@ export const useNavigationData = () => {
   }
 
   const adminSubItems = [];
-  if (isAdmin || perms.includes(PERMISSIONS.USER_MANAGE)) {
-    adminSubItems.push({
-      label: t("sidebar.employees", { defaultValue: "Hồ sơ Nhân viên" }),
-      shortName: t("sidebar.employeesShort", { defaultValue: "Nhân viên" }),
-      path: "/app/management/employees",
-      icon: <Users size={16} />,
-    });
-  }
   if (isAdmin || perms.includes(PERMISSIONS.SETTINGS_MANAGE)) {
     adminSubItems.push(
       {

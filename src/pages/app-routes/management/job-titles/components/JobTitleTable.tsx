@@ -11,6 +11,7 @@ import {
   ContextMenuItem,
   ContextMenuSeparator,
 } from "@/components/ui/context-menu";
+import { AvatarPlaceholder } from '@/components/custom/AvatarPlaceholder';
 
 import type { JobTitleResponse } from '@/types/jobtitle/JobTitleResponse';
 
@@ -30,18 +31,19 @@ export default function JobTitleTable({ jobTitles, onEdit, onDelete }: JobTitleT
     <div className="overflow-x-auto">
       <ContextMenu>
         <ContextMenuTrigger className="block w-full select-text!">
-          <table className="w-full text-sm text-left border-collapse border border-slate-200 select-text">
-            <thead className="text-xs text-slate-600 uppercase bg-slate-100 border-b border-slate-200">
+          <table className="w-full text-sm text-left">
+            <thead className="text-xs text-muted-foreground uppercase bg-muted/50 sticky top-0 z-10 shadow-sm">
               <tr>
-                <th className="px-4 py-3 font-semibold text-left border-x border-slate-200 w-[250px]">{t('management.colRoleName', { defaultValue: 'Tên Chức Vụ' })}</th>
-                <th className="px-4 py-3 font-semibold text-left border-x border-slate-200">{t('management.colDesc', { defaultValue: 'Mô tả' })}</th>
-                <th className="px-4 py-3 font-semibold text-center border-x border-slate-200 w-[150px]">{t('management.colStatus', { defaultValue: 'Trạng thái' })}</th>
-                <th className="px-4 py-3 font-semibold text-center border-x border-slate-200 w-[160px]">{t('management.createdAt', { defaultValue: 'Ngày Tạo' })}</th>
-                <th className="px-4 py-3 font-semibold text-center border-x border-slate-200 w-[180px]">{t('management.updatedAt', { defaultValue: 'Cập Nhật Lần Cuối' })}</th>
-                <th className="px-4 py-3 font-semibold text-center border-x border-slate-200 w-[120px]">{t('management.colAction', { defaultValue: 'Thao tác' })}</th>
+                <th className="px-4 py-3 font-medium whitespace-nowrap text-left w-[250px]">{t('management.colRoleName', { defaultValue: 'Tên Chức Vụ' })}</th>
+                <th className="px-4 py-3 font-medium whitespace-nowrap text-left">{t('management.colDesc', { defaultValue: 'Mô tả' })}</th>
+                <th className="px-4 py-3 font-medium whitespace-nowrap text-center w-[150px]">{t('management.colStatus', { defaultValue: 'Trạng thái' })}</th>
+                <th className="px-4 py-3 font-medium whitespace-nowrap text-center w-[160px]">{t('management.createdAt', { defaultValue: 'Ngày Tạo' })}</th>
+                <th className="px-4 py-3 font-medium whitespace-nowrap text-center w-[180px]">{t('management.updatedAt', { defaultValue: 'Cập Nhật Lần Cuối' })}</th>
+                <th className="px-4 py-3 font-medium whitespace-nowrap text-center w-[150px]">{t('management.colCreatedBy', { defaultValue: 'Người Tạo' })}</th>
+                <th className="px-4 py-3 font-medium whitespace-nowrap text-center w-[120px]">{t('management.colAction', { defaultValue: 'Thao tác' })}</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-200">
+            <tbody className="divide-y divide-border/50">
           <AnimatePresence>
             {jobTitles.map((jobTitle) => (
               <m.tr 
@@ -50,16 +52,16 @@ export default function JobTitleTable({ jobTitles, onEdit, onDelete }: JobTitleT
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="hover:bg-slate-50 transition-colors duration-200"
+                className="hover:bg-muted/30 transition-colors"
                 onContextMenu={() => setRightClickedId(jobTitle.id)}
               >
-                <td className="px-4 py-3 font-bold text-[#2E3192] border-x border-slate-200 align-middle">
+                <td className="px-4 py-3 font-bold text-[#2E3192] align-middle">
                   {jobTitle.name}
                 </td>
-                <td className="px-4 py-3 text-slate-700 border-x border-slate-200 align-middle max-w-[300px]">
+                <td className="px-4 py-3 text-slate-700 align-middle max-w-[300px]">
                   <div className="line-clamp-2" title={jobTitle.description}>{jobTitle.description || "—"}</div>
                 </td>
-                <td className="px-4 py-3 border-x border-slate-200 text-center align-middle">
+                <td className="px-4 py-3 text-center align-middle">
                   <Badge 
                     variant={jobTitle.active ? "default" : "secondary"} 
                     className={jobTitle.active 
@@ -70,15 +72,23 @@ export default function JobTitleTable({ jobTitles, onEdit, onDelete }: JobTitleT
                     {jobTitle.active ? t('management.statusActive', { defaultValue: 'Hoạt động' }) : t('management.statusInactive', { defaultValue: 'Tạm ngưng' })}
                   </Badge>
                 </td>
-                <td className="px-4 py-3 text-center text-slate-600 border-x border-slate-200 align-middle">
+                <td className="px-4 py-3 text-center text-slate-600 align-middle">
                   {jobTitle.createdAt ? format(new Date(jobTitle.createdAt), "dd/MM/yyyy") : "—"}
                 </td>
-                <td className="px-4 py-3 text-center text-slate-600 border-x border-slate-200 align-middle">
+                <td className="px-4 py-3 text-center text-slate-600 align-middle">
                   {jobTitle.updatedAt ? format(new Date(jobTitle.updatedAt), "dd/MM/yyyy") : "—"}
                 </td>
-                <td className="px-4 py-3 border-x border-slate-200 text-center align-middle">
+                <td className="px-4 py-3 align-middle text-center text-slate-500 whitespace-nowrap text-xs">
+                  {jobTitle.createdBy ? (
+                    <div className="flex items-center justify-center gap-2">
+                      <AvatarPlaceholder name={jobTitle.createdBy} className="w-6 h-6 text-[10px]" />
+                      <span>{jobTitle.createdBy}</span>
+                    </div>
+                  ) : "—"}
+                </td>
+                <td className="px-4 py-3 text-center align-middle">
                   <div className="flex justify-center gap-2">
-                    <button onClick={() => onEdit(jobTitle)} className="p-1.5 text-indigo-600 hover:bg-indigo-50 rounded transition-colors" title="Edit">
+                    <button onClick={() => onEdit(jobTitle)} className="p-1.5 text-amber-500 hover:bg-amber-50 rounded transition-colors" title="Edit">
                       <Edit2 size={16} />
                     </button>
                     <button onClick={() => onDelete(jobTitle.id)} className="p-1.5 text-rose-500 hover:bg-rose-50 rounded transition-colors" title="Delete">
@@ -91,7 +101,7 @@ export default function JobTitleTable({ jobTitles, onEdit, onDelete }: JobTitleT
           </AnimatePresence>
           {jobTitles.length === 0 && (
             <tr>
-              <td colSpan={6} className="h-40 text-center border-x border-slate-200">
+              <td colSpan={7} className="h-40 text-center">
                 <div className="flex flex-col items-center justify-center text-slate-500">
                   <Layers size={32} className="mb-2 opacity-50" />
                   <p>{t('management.emptyJobTitle', { defaultValue: 'Không tìm thấy chức vụ nào' })}</p>

@@ -11,6 +11,7 @@ import {
   ContextMenuItem,
   ContextMenuSeparator,
 } from "@/components/ui/context-menu";
+import { AvatarPlaceholder } from '@/components/custom/AvatarPlaceholder';
 
 import type { PositionResponse } from '@/types/position/PositionResponse';
 
@@ -30,19 +31,20 @@ export default function PositionTable({ positions, onEdit, onDelete }: PositionT
     <div className="overflow-x-auto">
       <ContextMenu>
         <ContextMenuTrigger className="block w-full select-text!">
-          <table className="w-full text-sm text-left border-collapse border border-slate-200 select-text">
-            <thead className="text-xs text-slate-600 uppercase bg-slate-100 border-b border-slate-200">
+          <table className="w-full text-sm text-left">
+            <thead className="text-xs text-muted-foreground uppercase bg-muted/50 sticky top-0 z-10 shadow-sm">
               <tr>
-                <th className="px-4 py-3 font-semibold text-left border-x border-slate-200 w-[220px]">{t("position.table.name")}</th>
-                <th className="px-4 py-3 font-semibold text-center border-x border-slate-200 w-[150px]">{t("position.table.level")}</th>
-                <th className="px-4 py-3 font-semibold text-left border-x border-slate-200">{t("position.table.description")}</th>
-                <th className="px-4 py-3 font-semibold text-center border-x border-slate-200 w-[150px]">{t("position.table.status")}</th>
-                <th className="px-4 py-3 font-semibold text-center border-x border-slate-200 w-[160px]">{t('management.createdAt', { defaultValue: 'Ngày Tạo' })}</th>
-                <th className="px-4 py-3 font-semibold text-center border-x border-slate-200 w-[180px]">{t('management.updatedAt', { defaultValue: 'Cập Nhật Lần Cuối' })}</th>
-                <th className="px-4 py-3 font-semibold text-center border-x border-slate-200 w-[120px]">{t("position.table.actions")}</th>
+                <th className="px-4 py-3 font-medium whitespace-nowrap text-left w-[220px]">{t("position.table.name")}</th>
+                <th className="px-4 py-3 font-medium whitespace-nowrap text-center w-[150px]">{t("position.table.type", { defaultValue: 'Loại Vị Trí' })}</th>
+                <th className="px-4 py-3 font-medium whitespace-nowrap text-left">{t("position.table.description")}</th>
+                <th className="px-4 py-3 font-medium whitespace-nowrap text-center w-[150px]">{t("position.table.status")}</th>
+                <th className="px-4 py-3 font-medium whitespace-nowrap text-center w-[160px]">{t('management.createdAt', { defaultValue: 'Ngày Tạo' })}</th>
+                <th className="px-4 py-3 font-medium whitespace-nowrap text-center w-[180px]">{t('management.updatedAt', { defaultValue: 'Cập Nhật Lần Cuối' })}</th>
+                <th className="px-4 py-3 font-medium whitespace-nowrap text-center w-[150px]">{t('management.colCreatedBy', { defaultValue: 'Người Tạo' })}</th>
+                <th className="px-4 py-3 font-medium whitespace-nowrap text-center w-[120px]">{t("position.table.actions")}</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-200">
+            <tbody className="divide-y divide-border/50">
           <AnimatePresence>
             {positions.map((position) => (
               <m.tr 
@@ -51,13 +53,13 @@ export default function PositionTable({ positions, onEdit, onDelete }: PositionT
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="hover:bg-slate-50 transition-colors duration-200"
+                className="hover:bg-muted/30 transition-colors"
                 onContextMenu={() => setRightClickedPositionId(position.id)}
               >
-                <td className="px-4 py-3 font-bold text-[#2E3192] border-x border-slate-200 align-middle">
+                <td className="px-4 py-3 font-bold text-[#2E3192] align-middle">
                   {position.name}
                 </td>
-                <td className="px-4 py-3 border-x border-slate-200 text-center align-middle">
+                <td className="px-4 py-3 text-center align-middle">
                   {position.manager ? (
                     <Badge variant="outline" className="bg-amber-50 text-amber-600 border-amber-200 font-medium whitespace-nowrap">
                       <ShieldCheck size={12} className="mr-1 inline-block" /> {t("position.table.manager")}
@@ -68,10 +70,10 @@ export default function PositionTable({ positions, onEdit, onDelete }: PositionT
                     </Badge>
                   )}
                 </td>
-                <td className="px-4 py-3 text-slate-700 border-x border-slate-200 align-middle max-w-[300px]">
+                <td className="px-4 py-3 text-slate-700 align-middle max-w-[300px]">
                   <div className="line-clamp-2" title={position.description}>{position.description || "—"}</div>
                 </td>
-                <td className="px-4 py-3 border-x border-slate-200 text-center align-middle">
+                <td className="px-4 py-3 text-center align-middle">
                   <Badge 
                     variant={position.active ? "default" : "secondary"} 
                     className={position.active 
@@ -82,15 +84,23 @@ export default function PositionTable({ positions, onEdit, onDelete }: PositionT
                     {position.active ? t("position.table.active") : t("position.table.inactive")}
                   </Badge>
                 </td>
-                <td className="px-4 py-3 text-center text-slate-600 border-x border-slate-200 align-middle">
+                <td className="px-4 py-3 text-center text-slate-600 align-middle">
                   {position.createdAt ? format(new Date(position.createdAt), "dd/MM/yyyy") : "—"}
                 </td>
-                <td className="px-4 py-3 text-center text-slate-600 border-x border-slate-200 align-middle">
+                <td className="px-4 py-3 text-center text-slate-600 align-middle">
                   {position.updatedAt ? format(new Date(position.updatedAt), "dd/MM/yyyy") : "—"}
                 </td>
-                <td className="px-4 py-3 border-x border-slate-200 text-center align-middle">
+                <td className="px-4 py-3 align-middle text-center text-slate-500 whitespace-nowrap text-xs">
+                  {position.createdBy ? (
+                    <div className="flex items-center justify-center gap-2">
+                      <AvatarPlaceholder name={position.createdBy} className="w-6 h-6 text-[10px]" />
+                      <span>{position.createdBy}</span>
+                    </div>
+                  ) : "—"}
+                </td>
+                <td className="px-4 py-3 text-center align-middle">
                   <div className="flex justify-center gap-2">
-                    <button onClick={() => onEdit(position)} className="p-1.5 text-indigo-600 hover:bg-indigo-50 rounded transition-colors" title="Edit">
+                    <button onClick={() => onEdit(position)} className="p-1.5 text-amber-500 hover:bg-amber-50 rounded transition-colors" title="Edit">
                       <Edit2 size={16} />
                     </button>
                     <button onClick={() => onDelete(position.id)} className="p-1.5 text-rose-500 hover:bg-rose-50 rounded transition-colors" title="Delete">
@@ -103,7 +113,7 @@ export default function PositionTable({ positions, onEdit, onDelete }: PositionT
           </AnimatePresence>
           {positions.length === 0 && (
             <tr>
-              <td colSpan={7} className="h-40 text-center border-x border-slate-200">
+              <td colSpan={8} className="h-40 text-center">
                 <div className="flex flex-col items-center justify-center text-slate-500">
                   <Briefcase size={32} className="mb-2 opacity-50" />
                   <p>{t("position.table.notFound")}</p>

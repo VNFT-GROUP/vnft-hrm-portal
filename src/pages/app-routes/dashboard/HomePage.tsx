@@ -256,13 +256,13 @@ export default function HomePage() {
 
   // Format Check-in time
   const checkInVal =
-    todayAttendance?.checkInTime || todayAttendance?.actualCheckIn;
+    todayAttendance?.actualCheckIn;
   const checkInDisplay = checkInVal ? checkInVal.substring(0, 5) : "--";
   const checkInAmPm = "";
 
   // Format Check-out time
   const checkOutVal =
-    todayAttendance?.checkOutTime || todayAttendance?.actualCheckOut;
+    todayAttendance?.actualCheckOut;
   const checkOutDisplay = checkOutVal ? checkOutVal.substring(0, 5) : "--";
   const checkOutAmPm = "";
 

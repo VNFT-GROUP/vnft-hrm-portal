@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Edit2, Trash2, FolderOpen, ChevronRight, ChevronDown, Square } from "lucide-react";
+import { Edit2, Trash2, FolderOpen, ChevronRight, ChevronDown } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 
@@ -10,6 +10,7 @@ import {
   ContextMenuSeparator,
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
+import { AvatarPlaceholder } from "@/components/custom/AvatarPlaceholder";
 
 import type { DepartmentResponse } from '@/types/department/DepartmentResponse';
 
@@ -81,20 +82,20 @@ export default function DepartmentTreeList({ departments, onEdit, onDelete }: De
       <div className="w-full overflow-x-auto">
         <ContextMenu>
           <ContextMenuTrigger className="block w-full min-w-[800px]">
-            <table className="w-full text-[13.5px] text-left border-collapse">
-              <thead className="bg-[#f8f9fc] text-slate-500 font-medium border-b border-slate-100">
+            <table className="w-full text-sm text-left">
+              <thead className="text-xs text-muted-foreground uppercase bg-muted/50 sticky top-0 z-10 shadow-sm">
                 <tr>
-                  <th className="px-4 py-3 border-r border-transparent font-medium w-12 text-center">
-                     <Square size={16} className="text-slate-300 mx-auto" strokeWidth={2} />
-                  </th>
-                  <th className="px-4 py-3.5 border-r border-transparent font-medium">Tiêu đề (Phòng ban)</th>
-                  <th className="px-4 py-3.5 border-r border-transparent font-medium text-center">Level</th>
-                  <th className="px-4 py-3.5 border-r border-transparent font-medium">Mô tả</th>
-                  <th className="px-4 py-3.5 border-r border-transparent font-medium">Trạng thái</th>
-                  <th className="px-4 py-3.5 border-r border-transparent font-medium text-right pr-6">Thao tác</th>
+                  <th className="px-4 py-3 font-medium whitespace-nowrap">Tiêu đề (Phòng ban)</th>
+                  <th className="px-4 py-3 font-medium text-center whitespace-nowrap">Level</th>
+                  <th className="px-4 py-3 font-medium whitespace-nowrap">Mô tả</th>
+                  <th className="px-4 py-3 font-medium whitespace-nowrap">Trạng thái</th>
+                  <th className="px-4 py-3 font-medium text-center whitespace-nowrap">Ngày tạo</th>
+                  <th className="px-4 py-3 font-medium text-center whitespace-nowrap">Ngày cập nhật</th>
+                  <th className="px-4 py-3 font-medium text-center whitespace-nowrap">Người tạo</th>
+                  <th className="px-4 py-3 font-medium text-right pr-6 whitespace-nowrap">Thao tác</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100/80">
+              <tbody className="divide-y divide-border/50">
                 {flattenedNodes.length > 0 ? (
                   flattenedNodes.map(({ dept, depth, numberPrefix }) => {
                     const hasChildren = dept.children && dept.children.length > 0;
@@ -105,7 +106,7 @@ export default function DepartmentTreeList({ departments, onEdit, onDelete }: De
                       <tr 
                         key={dept.id} 
                         className={cn(
-                          "transition-colors duration-150 hover:bg-slate-50/70 group relative",
+                          "transition-colors duration-150 hover:bg-muted/30 group relative",
                           rightClickedDeptId === dept.id && "bg-indigo-50/50"
                         )}
                         onContextMenu={(e) => {
@@ -113,11 +114,6 @@ export default function DepartmentTreeList({ departments, onEdit, onDelete }: De
                           setRightClickedDeptId(dept.id);
                         }}
                       >
-                        {/* Checkbox Placeholder */}
-                        <td className="px-4 py-3 align-middle text-center w-12 shrink-0">
-                          <Square size={16} className="text-slate-200 group-hover:text-slate-300 mx-auto transition-colors" strokeWidth={2} />
-                        </td>
-
                         {/* Name (Indented with Numbering) */}
                         <td className="px-4 align-middle relative h-[48px]">
                           <div 
@@ -136,11 +132,11 @@ export default function DepartmentTreeList({ departments, onEdit, onDelete }: De
                                  <div className="w-[5px] h-[5px] rounded-full bg-slate-300 ring-2 ring-white"></div>
                                )}
                             </div>
-                            <span className="font-semibold text-slate-400 shrink-0">{numberPrefix}</span>
+                            <span className="font-medium text-[#2E3192] shrink-0">{numberPrefix}</span>
                             <span 
                               className={cn(
                                 "truncate font-medium transition-colors cursor-default select-none",
-                                isRoot ? "text-rose-600 font-bold" : "text-slate-700 group-hover:text-indigo-600"
+                                isRoot ? "text-[#1E2062] font-bold" : "text-slate-700 group-hover:text-[#2E3192]"
                               )}
                             >
                               {dept.name}
@@ -176,19 +172,35 @@ export default function DepartmentTreeList({ departments, onEdit, onDelete }: De
                            )}
                         </td>
 
+                        {/* Audit info */}
+                        <td className="px-4 py-3 align-middle text-center text-slate-500 whitespace-nowrap text-xs">
+                          {dept.createdAt ? new Date(dept.createdAt).toLocaleDateString('vi-VN') : "—"}
+                        </td>
+                        <td className="px-4 py-3 align-middle text-center text-slate-500 whitespace-nowrap text-xs">
+                          {dept.updatedAt ? new Date(dept.updatedAt).toLocaleDateString('vi-VN') : "—"}
+                        </td>
+                        <td className="px-4 py-3 align-middle text-center text-slate-500 whitespace-nowrap text-xs">
+                          {dept.createdBy ? (
+                            <div className="flex items-center justify-center gap-2">
+                              <AvatarPlaceholder name={dept.createdBy} className="w-6 h-6 text-[10px]" />
+                              <span>{dept.createdBy}</span>
+                            </div>
+                          ) : "—"}
+                        </td>
+
                         {/* Actions */}
                         <td className="px-4 py-3 align-middle text-right pr-6">
-                           <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                           <div className="flex items-center justify-end gap-1">
                              <button
                                 onClick={() => onEdit(dept)}
-                                className="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded transition-colors"
+                                className="p-1.5 text-amber-500 hover:text-amber-600 hover:bg-amber-50 rounded transition-colors"
                                 title="Sửa"
                               >
                                 <Edit2 size={15} />
                               </button>
                               <button
                                 onClick={() => onDelete(dept.id)}
-                                className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded transition-colors"
+                                className="p-1.5 text-rose-500 hover:text-rose-600 hover:bg-rose-50 rounded transition-colors"
                                 title="Xóa"
                               >
                                 <Trash2 size={15} />
@@ -200,7 +212,7 @@ export default function DepartmentTreeList({ departments, onEdit, onDelete }: De
                   })
                 ) : (
                   <tr>
-                    <td colSpan={6} className="py-20 text-center">
+                    <td colSpan={8} className="py-20 text-center">
                       <div className="flex flex-col items-center justify-center text-slate-400">
                          <FolderOpen size={40} className="mb-3 opacity-20" strokeWidth={1} />
                          <p>Không có dữ liệu phòng ban</p>

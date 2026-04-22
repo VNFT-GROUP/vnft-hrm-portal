@@ -151,8 +151,10 @@ export default function Topbar() {
 
           <div className="user-profile" onClick={() => setIsProfileOpen(!isProfileOpen)}>
             <div className="user-info">
-               <span className="user-name">{session?.username || t('profile.defaultUser')}</span>
-               <span className="user-jobTitle">{t('profile.roleAdmin')}</span>
+               <span className="user-name">{session?.fullName || session?.username || t('profile.defaultUser')}</span>
+               <span className="user-jobTitle">
+                 {session?.jobTitleName || (session?.groupName === 'ADMIN' ? 'Quản trị viên' : session?.groupName) || '---'}
+               </span>
             </div>
             <AvatarPlaceholder name={session?.username} src={session?.avatarUrl} className="user-avatar-circle" />
           </div>
@@ -163,9 +165,9 @@ export default function Topbar() {
             <div className="pd-header">
               <AvatarPlaceholder name={session?.username} src={session?.avatarUrl} className="pd-avatar-large" />
               <div className="pd-info">
-                <h3 className="pd-name">{session?.username || t('profile.defaultUser', { defaultValue: 'Người Dùng' })}</h3>
-                <div className="pd-role-item"><Briefcase size={15}/> {t('profile.department', { defaultValue: 'HR & ADM' })}</div>
-                <div className="pd-role-item"><BadgeCheck size={15}/> {t('profile.roleStaff', { defaultValue: 'Nhân viên' })}</div>
+                <h3 className="pd-name">{session?.fullName || session?.username || t('profile.defaultUser', { defaultValue: 'Người Dùng' })}</h3>
+                <div className="pd-role-item" title="Phòng ban"><Briefcase size={15}/> <span>{session?.departmentName || '--'}</span></div>
+                <div className="pd-role-item" title="Chức danh"><BadgeCheck size={15}/> <span>{session?.jobTitleName || (session?.groupName === 'ADMIN' ? 'Quản trị viên' : session?.groupName) || '--'}</span></div>
               </div>
             </div>
             

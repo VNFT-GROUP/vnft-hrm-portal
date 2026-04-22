@@ -19,12 +19,17 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useTranslation } from "react-i18next";
-import type { DepartmentResponse } from '@/types/department/DepartmentResponse';
+import type { DepartmentResponse } from "@/types/department/DepartmentResponse";
 
 interface DepartmentFormSheetProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
-  formData: { name: string; description: string; active: boolean; parentDepartmentId: string | null };
+  formData: {
+    name: string;
+    description: string;
+    active: boolean;
+    parentDepartmentId: string | null;
+  };
   setFormData: (data: {
     name: string;
     description: string;
@@ -45,7 +50,7 @@ export default function DepartmentFormSheet({
   isEditing,
   onSave,
   departments,
-  editingDeptId
+  editingDeptId,
 }: DepartmentFormSheetProps) {
   const { t } = useTranslation();
 
@@ -53,7 +58,7 @@ export default function DepartmentFormSheet({
   // Actually, a simple exclusion: don't allow selecting yourself as your own parent.
   // Better yet, don't allow selecting any descendants. The exact validation is handled by backend,
   // but frontend should at least disable or hide the current dept.
-  const parentOptions = departments.filter(d => d.id !== editingDeptId);
+  const parentOptions = departments.filter((d) => d.id !== editingDeptId);
 
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
@@ -65,11 +70,17 @@ export default function DepartmentFormSheet({
                 <Building2 size={20} />
               </span>
               {isEditing
-                ? t("department.form.updateTitle", { defaultValue: "Cập nhật phòng ban" })
-                : t("department.form.addTitle", { defaultValue: "Thêm mới phòng ban" })}
+                ? t("department.form.updateTitle", {
+                    defaultValue: "Cập nhật phòng ban",
+                  })
+                : t("department.form.addTitle", {
+                    defaultValue: "Thêm mới phòng ban",
+                  })}
             </SheetTitle>
             <SheetDescription className="text-muted-foreground mt-2">
-              {t("department.form.subtitle", { defaultValue: "Cấu hình thông tin và nhánh cây tổ chức." })}
+              {t("department.form.subtitle", {
+                defaultValue: "Cấu hình thông tin và nhánh cây tổ chức.",
+              })}
             </SheetDescription>
           </SheetHeader>
         </div>
@@ -94,7 +105,10 @@ export default function DepartmentFormSheet({
                   htmlFor="name"
                   className="text-xs font-bold text-slate-500 uppercase tracking-wider"
                 >
-                  {t("department.form.nameLabel", { defaultValue: "Tên phòng ban" })} <span className="text-rose-500">*</span>
+                  {t("department.form.nameLabel", {
+                    defaultValue: "Tên phòng ban",
+                  })}{" "}
+                  <span className="text-rose-500">*</span>
                 </Label>
                 <Input
                   id="name"
@@ -102,7 +116,9 @@ export default function DepartmentFormSheet({
                   onChange={(e) =>
                     setFormData({ ...formData, name: e.target.value })
                   }
-                  placeholder={t("department.form.namePlaceholder", { defaultValue: "VD: Khối Kỹ Thuật" })}
+                  placeholder={t("department.form.namePlaceholder", {
+                    defaultValue: "VD: Khối Kỹ Thuật",
+                  })}
                   className="rounded-xl border-slate-200 focus-visible:ring-[#2E3192]/20 h-11"
                 />
               </div>
@@ -116,23 +132,49 @@ export default function DepartmentFormSheet({
                 </Label>
                 <Select
                   value={formData.parentDepartmentId || "ROOT"}
-                  onValueChange={(val) => 
-                     setFormData({ ...formData, parentDepartmentId: val === "ROOT" ? null : val })
+                  onValueChange={(val) =>
+                    setFormData({
+                      ...formData,
+                      parentDepartmentId: val === "ROOT" ? null : val,
+                    })
                   }
                 >
                   <SelectTrigger className="h-11 w-full rounded-xl border-slate-200 focus:ring-[#2E3192]/20">
-                    <SelectValue placeholder="Chọn phòng ban cấp trên" />
+                    <SelectValue placeholder="Chọn phòng ban cấp trên">
+                      {formData.parentDepartmentId
+                        ? formData.parentDepartmentId === "ROOT"
+                          ? "-- ROOT (Không có cấp trên) --"
+                          : parentOptions.find(
+                              (d) => d.id === formData.parentDepartmentId,
+                            )?.name
+                        : "Chọn phòng ban cấp trên"}
+                    </SelectValue>
                   </SelectTrigger>
                   <SelectContent className="max-h-[300px] rounded-xl">
-                    <SelectItem value="ROOT" className="text-slate-500 italic">-- ROOT (Không có cấp trên) --</SelectItem>
+                    <SelectItem value="ROOT" className="text-slate-500 italic">
+                      -- ROOT (Không có cấp trên) --
+                    </SelectItem>
                     {parentOptions.map((dep) => (
                       <SelectItem key={dep.id} value={dep.id}>
-                        {dep.name} <span className="text-slate-400 text-[10px] ml-1">(Cấp {dep.level})</span>
+                        <div
+                          style={{ paddingLeft: `${(dep.level - 1) * 12}px` }}
+                          className="flex items-center"
+                        >
+                          {dep.level > 1 && (
+                            <span className="text-slate-300 mr-2">└</span>
+                          )}
+                          {dep.name}{" "}
+                          <span className="text-slate-400 text-[10px] ml-1.5">
+                            (Cấp {dep.level})
+                          </span>
+                        </div>
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
-                <p className="text-[11px] text-slate-400">Nếu để Root, phòng ban này sẽ nằm ở cấp cao nhất (Level 1).</p>
+                <p className="text-[11px] text-slate-400">
+                  Nếu để Root, phòng ban này sẽ nằm ở cấp cao nhất (Level 1).
+                </p>
               </div>
 
               <div className="space-y-1.5">
@@ -140,7 +182,9 @@ export default function DepartmentFormSheet({
                   htmlFor="desc"
                   className="text-xs font-bold text-slate-500 uppercase tracking-wider"
                 >
-                  {t("department.form.descLabel", { defaultValue: "Mô tả chi tiết" })}
+                  {t("department.form.descLabel", {
+                    defaultValue: "Mô tả chi tiết",
+                  })}
                 </Label>
                 <Textarea
                   id="desc"
@@ -148,7 +192,9 @@ export default function DepartmentFormSheet({
                   onChange={(e) =>
                     setFormData({ ...formData, description: e.target.value })
                   }
-                  placeholder={t("department.form.descPlaceholder", { defaultValue: "Nhập mô tả chức năng, nhiệm vụ..." })}
+                  placeholder={t("department.form.descPlaceholder", {
+                    defaultValue: "Nhập mô tả chức năng, nhiệm vụ...",
+                  })}
                   rows={4}
                   className="rounded-xl border-slate-200 focus-visible:ring-[#2E3192]/20 resize-none p-3"
                 />
@@ -158,10 +204,14 @@ export default function DepartmentFormSheet({
             <div className="flex items-center justify-between rounded-xl border border-slate-200 bg-slate-50/50 p-5 mt-4">
               <div className="space-y-1">
                 <Label className="text-[#1E2062] text-sm font-bold block">
-                  {t("department.form.statusLabel", { defaultValue: "Kích hoạt hoạt động" })}
+                  {t("department.form.statusLabel", {
+                    defaultValue: "Kích hoạt hoạt động",
+                  })}
                 </Label>
                 <p className="text-[11px] text-slate-500">
-                  {t("department.form.statusDesc", { defaultValue: "Cho phép phân bổ nhân sự vào phòng ban này." })}
+                  {t("department.form.statusDesc", {
+                    defaultValue: "Cho phép phân bổ nhân sự vào phòng ban này.",
+                  })}
                 </p>
               </div>
               <Switch
@@ -189,8 +239,12 @@ export default function DepartmentFormSheet({
               disabled={!formData.name.trim()}
             >
               {isEditing
-                ? t("department.form.saveChanges", { defaultValue: "Lưu thay đổi" })
-                : t("department.form.saveBtn", { defaultValue: "Tạo phòng ban" })}
+                ? t("department.form.saveChanges", {
+                    defaultValue: "Lưu thay đổi",
+                  })
+                : t("department.form.saveBtn", {
+                    defaultValue: "Tạo phòng ban",
+                  })}
             </Button>
           </div>
         </form>

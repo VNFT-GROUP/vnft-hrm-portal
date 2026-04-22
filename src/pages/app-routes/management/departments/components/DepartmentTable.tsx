@@ -1,30 +1,33 @@
 import { useState, useMemo, Fragment } from "react";
-import { Edit2, Trash2, ChevronRight, ChevronDown, Network } from "lucide-react";
+import { Edit2, Trash2, FolderOpen, Folder, ChevronRight, ChevronDown, CheckSquare, Square } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { m, AnimatePresence  } from 'framer-motion';
 import { useTranslation } from "react-i18next";
+import { cn } from "@/lib/utils";
+
 import {
   ContextMenu,
-  ContextMenuTrigger,
   ContextMenuContent,
   ContextMenuItem,
   ContextMenuSeparator,
+  ContextMenuTrigger,
 } from "@/components/ui/context-menu";
 
 import type { DepartmentResponse } from '@/types/department/DepartmentResponse';
 
 export type Department = DepartmentResponse & { children?: Department[] };
 
-interface DepartmentTableProps {
+interface DepartmentTreeProps {
   departments: DepartmentResponse[];
   onEdit: (dept: DepartmentResponse) => void;
   onDelete: (id: string) => void;
 }
 
-export default function DepartmentTable({ departments, onEdit, onDelete }: DepartmentTableProps) {
+export default function DepartmentTreeList({ departments, onEdit, onDelete }: DepartmentTreeProps) {
   const { t } = useTranslation();
   const [rightClickedDeptId, setRightClickedDeptId] = useState<string | null>(null);
-  const [expandedNodes, setExpandedNodes] = useState<Set<string>>(new Set());
+  
+  // Track collapsed nodes
+  const [collapsedNodes, setCollapsedNodes] = useState<Set<string>>(new Set());
 
   const activeDept = departments.find(d => d.id === rightClickedDeptId);
 
@@ -47,8 +50,26 @@ export default function DepartmentTable({ departments, onEdit, onDelete }: Depar
     return roots;
   }, [departments]);
 
+  // Flatten the tree for rendering an HTML Table
+  const flattenedNodes = useMemo(() => {
+    const flat: { dept: Department, depth: number, numberPrefix: string }[] = [];
+    const traverse = (node: Department, depth: number, prefix: string) => {
+      flat.push({ dept: node, depth, numberPrefix: prefix });
+      // If NOT collapsed, traverse children
+      if (!collapsedNodes.has(node.id) && node.children && node.children.length > 0) {
+        node.children.forEach((child, index) => {
+           traverse(child, depth + 1, `${prefix}${index + 1}.`);
+        });
+      }
+    };
+    tree.forEach((root, index) => {
+      traverse(root, 0, `${index + 1}.`);
+    });
+    return flat;
+  }, [tree, collapsedNodes]);
+
   const toggleNode = (id: string) => {
-    setExpandedNodes(prev => {
+    setCollapsedNodes(prev => {
       const next = new Set(prev);
       if (next.has(id)) next.delete(id);
       else next.add(id);
@@ -56,143 +77,162 @@ export default function DepartmentTable({ departments, onEdit, onDelete }: Depar
     });
   };
 
-  const renderRow = (dept: Department, depth: number = 0) => {
-    const hasChildren = dept.children && dept.children.length > 0;
-    const isExpanded = expandedNodes.has(dept.id);
-
-    return (
-      <Fragment key={dept.id}>
-        <m.tr 
-          layout 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className={`hover:bg-slate-50 transition-colors duration-200 ${depth === 0 ? 'bg-white' : 'bg-slate-50/30'}`}
-          onContextMenu={(e) => {
-            e.preventDefault();
-            setRightClickedDeptId(dept.id);
-          }}
-        >
-          <td className="px-4 py-3 border-x border-slate-200 align-middle">
-            <div className="flex items-center" style={{ paddingLeft: `${depth * 28}px` }}>
-              <div className="w-6 shrink-0 flex items-center justify-center">
-                {hasChildren ? (
-                  <button 
-                    onClick={() => toggleNode(dept.id)}
-                    className="p-0.5 hover:bg-slate-200 rounded text-slate-500 transition-colors"
-                  >
-                    {isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
-                  </button>
-                ) : (
-                  <span className="w-3 h-px bg-slate-300 inline-block mr-1"></span>
-                )}
-              </div>
-              <div className="flex flex-col ml-1">
-                 <span className={`font-bold ${depth === 0 ? 'text-[#1E2062] text-[14px]' : 'text-slate-700 text-[13px]'}`}>
-                   {dept.name}
-                 </span>
-                 <span className="text-[11px] text-slate-400 font-medium">Cấp {dept.level}</span>
-              </div>
-            </div>
-          </td>
-          <td className="px-4 py-3 text-slate-700 border-x border-slate-200 align-middle max-w-[200px]">
-            <span className="text-xs font-semibold text-slate-500 bg-slate-100 px-2 py-1 rounded truncate block w-fit">
-              {dept.parentDepartmentName || "—"}
-            </span>
-          </td>
-          <td className="px-4 py-3 text-slate-700 border-x border-slate-200 align-middle max-w-[200px]">
-            <div className="line-clamp-2 text-[13px]" title={dept.description || ""}>
-              {dept.description || "—"}
-            </div>
-          </td>
-          <td className="px-4 py-3 border-x border-slate-200 text-center align-middle">
-            <Badge 
-              variant={dept.active ? "default" : "secondary"} 
-              className={dept.active 
-                ? "bg-[#10b981] hover:bg-[#10b981]/90 shadow-sm shadow-[#10b981]/20 font-medium border-0" 
-                : "bg-slate-200 text-slate-500 hover:bg-slate-300 font-medium border-0"
-              }
-            >
-              {dept.active ? t("department.table.active") : t("department.table.inactive")}
-            </Badge>
-          </td>
-          <td className="px-4 py-3 border-x border-slate-200 text-center align-middle">
-            <div className="flex items-center justify-center gap-2">
-               <button
-                onClick={() => onEdit(dept)}
-                className="p-1.5 text-indigo-600 hover:bg-indigo-50 rounded transition-colors"
-                title="Edit"
-              >
-                <Edit2 size={16} />
-              </button>
-              <button
-                onClick={() => onDelete(dept.id)}
-                className="p-1.5 text-rose-500 hover:bg-rose-50 rounded transition-colors"
-                title="Delete"
-              >
-                <Trash2 size={16} />
-              </button>
-            </div>
-          </td>
-        </m.tr>
-        {isExpanded && hasChildren && (
-          dept.children!.map(child => renderRow(child, depth + 1))
-        )}
-      </Fragment>
-    );
-  };
-
   return (
-    <div className="overflow-x-auto">
-      <ContextMenu>
-        <ContextMenuTrigger className="block w-full select-text!">
-          <table className="w-full text-sm text-left border-collapse border border-slate-200 select-text">
-            <thead className="text-xs text-slate-600 uppercase bg-slate-100 border-b border-slate-200">
-              <tr>
-                <th className="px-4 py-3 font-semibold text-left border-x border-slate-200 min-w-[280px]">{t("department.table.name")}</th>
-                <th className="px-4 py-3 font-semibold text-left border-x border-slate-200 w-[200px]">Phòng ban cha</th>
-                <th className="px-4 py-3 font-semibold text-left border-x border-slate-200 min-w-[200px]">{t("department.table.description")}</th>
-                <th className="px-4 py-3 font-semibold text-center border-x border-slate-200 w-[150px]">{t("department.table.status")}</th>
-                <th className="px-4 py-3 font-semibold text-center border-x border-slate-200 w-[120px]">{t("department.table.actions")}</th>
-              </tr>
-            </thead>
-        <tbody className="divide-y divide-slate-200">
-          <AnimatePresence mode="popLayout">
-            {tree.length > 0 ? (
-              tree.map(dept => renderRow(dept, 0))
-            ) : (
-              <tr>
-                <td colSpan={5} className="h-40 text-center border-x border-slate-200">
-                  <div className="flex flex-col items-center justify-center text-slate-500">
-                    <Network size={32} className="mb-2 opacity-30 text-[#1E2062]" />
-                    <p>{t("department.table.notFound")}</p>
-                  </div>
-                </td>
-              </tr>
-            )}
-          </AnimatePresence>
-        </tbody>
-      </table>
-      </ContextMenuTrigger>
+    <div className="w-full h-full bg-white flex flex-col items-center p-0 rounded-2xl overflow-hidden animate-in fade-in duration-300">
+      <div className="w-full overflow-x-auto">
+        <ContextMenu>
+          <ContextMenuTrigger className="block w-full min-w-[800px]">
+            <table className="w-full text-[13.5px] text-left border-collapse">
+              <thead className="bg-[#f8f9fc] text-slate-500 font-medium border-b border-slate-100">
+                <tr>
+                  <th className="px-4 py-3 border-r border-transparent font-medium w-12 text-center">
+                     <Square size={16} className="text-slate-300 mx-auto" strokeWidth={2} />
+                  </th>
+                  <th className="px-4 py-3.5 border-r border-transparent font-medium">Tiêu đề (Phòng ban)</th>
+                  <th className="px-4 py-3.5 border-r border-transparent font-medium text-center">Level</th>
+                  <th className="px-4 py-3.5 border-r border-transparent font-medium">Mô tả</th>
+                  <th className="px-4 py-3.5 border-r border-transparent font-medium">Trạng thái</th>
+                  <th className="px-4 py-3.5 border-r border-transparent font-medium text-right pr-6">Thao tác</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100/80">
+                {flattenedNodes.length > 0 ? (
+                  flattenedNodes.map(({ dept, depth, numberPrefix }) => {
+                    const hasChildren = dept.children && dept.children.length > 0;
+                    const isExpanded = !collapsedNodes.has(dept.id);
+                    const isRoot = depth === 0;
 
-      {/* RENDER CONTEXT MENU FOR THE ROW */}
-      {activeDept && (
-        <ContextMenuContent className="w-56 z-100">
-          <ContextMenuItem className="cursor-pointer" onClick={() => onEdit(activeDept)}>
-            <Edit2 className="mr-2 h-4 w-4 text-[#2E3192]" />
-            <span>{t("department.legendEdit")}</span>
-          </ContextMenuItem>
-          <ContextMenuSeparator />
-          <ContextMenuItem 
-            className="cursor-pointer text-rose-600 focus:text-rose-700 focus:bg-rose-50 dark:focus:bg-rose-500/10" 
-            onClick={() => onDelete(activeDept.id)}
-          >
-            <Trash2 className="mr-2 h-4 w-4 text-rose-500" />
-            <span>{t("department.legendDelete")}</span>
-          </ContextMenuItem>
-        </ContextMenuContent>
-      )}
-      </ContextMenu>
+                    return (
+                      <tr 
+                        key={dept.id} 
+                        className={cn(
+                          "transition-colors duration-150 hover:bg-slate-50/70 group relative",
+                          rightClickedDeptId === dept.id && "bg-indigo-50/50"
+                        )}
+                        onContextMenu={(e) => {
+                          e.preventDefault();
+                          setRightClickedDeptId(dept.id);
+                        }}
+                      >
+                        {/* Checkbox Placeholder */}
+                        <td className="px-4 py-3 align-middle text-center w-12 shrink-0">
+                          <Square size={16} className="text-slate-200 group-hover:text-slate-300 mx-auto transition-colors" strokeWidth={2} />
+                        </td>
+
+                        {/* Name (Indented with Numbering) */}
+                        <td className="px-4 align-middle relative h-[48px]">
+                          <div 
+                            className="flex items-center gap-2 relative z-10 w-full h-full my-auto"
+                            style={{ paddingLeft: `${depth * 28}px` }}
+                          >
+                            <div className="w-5 flex items-center justify-center shrink-0">
+                               {hasChildren ? (
+                                 <button 
+                                  onClick={() => toggleNode(dept.id)}
+                                  className="text-slate-400 hover:text-indigo-600 transition-colors bg-white hover:bg-indigo-50 p-0.5 rounded-sm z-10 block relative"
+                                 >
+                                   {isExpanded ? <ChevronDown size={15} strokeWidth={2.5} /> : <ChevronRight size={15} strokeWidth={2.5} />}
+                                 </button>
+                               ) : (
+                                 <div className="w-[5px] h-[5px] rounded-full bg-slate-300 ring-2 ring-white"></div>
+                               )}
+                            </div>
+                            <span className="font-semibold text-slate-400 shrink-0">{numberPrefix}</span>
+                            <span 
+                              className={cn(
+                                "truncate font-medium transition-colors cursor-default select-none",
+                                isRoot ? "text-rose-600 font-bold" : "text-slate-700 group-hover:text-indigo-600"
+                              )}
+                            >
+                              {dept.name}
+                            </span>
+                          </div>
+                        </td>
+
+                        {/* Level */}
+                        <td className="px-4 py-3 align-middle text-center">
+                          <span className="text-slate-500 font-mono bg-slate-50 px-2 py-0.5 rounded border border-slate-100 text-xs">
+                            Cấp {dept.level}
+                          </span>
+                        </td>
+
+                        {/* Description */}
+                        <td className="px-4 py-3 align-middle">
+                          <span className="text-slate-500 truncate max-w-[200px] block" title={dept.description}>
+                            {dept.description || "—"}
+                          </span>
+                        </td>
+
+                        {/* Status */}
+                        <td className="px-4 py-3 align-middle">
+                           {dept.active ? (
+                             <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-600">
+                               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0"></span>
+                               Hoạt động
+                             </span>
+                           ) : (
+                             <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500">
+                               <span className="w-1.5 h-1.5 rounded-full bg-slate-400 shrink-0"></span>
+                               Tạm dừng
+                             </span>
+                           )}
+                        </td>
+
+                        {/* Actions */}
+                        <td className="px-4 py-3 align-middle text-right pr-6">
+                           <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                             <button
+                                onClick={() => onEdit(dept)}
+                                className="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded transition-colors"
+                                title="Sửa"
+                              >
+                                <Edit2 size={15} />
+                              </button>
+                              <button
+                                onClick={() => onDelete(dept.id)}
+                                className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded transition-colors"
+                                title="Xóa"
+                              >
+                                <Trash2 size={15} />
+                              </button>
+                           </div>
+                        </td>
+                      </tr>
+                    );
+                  })
+                ) : (
+                  <tr>
+                    <td colSpan={6} className="py-20 text-center">
+                      <div className="flex flex-col items-center justify-center text-slate-400">
+                         <FolderOpen size={40} className="mb-3 opacity-20" strokeWidth={1} />
+                         <p>Không có dữ liệu phòng ban</p>
+                      </div>
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </ContextMenuTrigger>
+
+          {/* Context Menu Content for Right-click */}
+          {activeDept && (
+            <ContextMenuContent className="w-48 z-[100] rounded-xl shadow-lg border-slate-200">
+              <ContextMenuItem className="cursor-pointer font-medium py-2" onClick={() => onEdit(activeDept)}>
+                <Edit2 className="mr-2 h-4 w-4 text-indigo-600" />
+                <span className="text-slate-700">{t("department.legendEdit")}</span>
+              </ContextMenuItem>
+              <ContextMenuSeparator />
+              <ContextMenuItem 
+                className="cursor-pointer text-rose-600 focus:text-rose-700 focus:bg-rose-50 py-2 font-medium" 
+                onClick={() => onDelete(activeDept.id)}
+              >
+                <Trash2 className="mr-2 h-4 w-4 text-rose-500" />
+                <span>{t("department.legendDelete")}</span>
+              </ContextMenuItem>
+            </ContextMenuContent>
+          )}
+        </ContextMenu>
+      </div>
     </div>
   );
 }

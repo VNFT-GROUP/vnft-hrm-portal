@@ -61,6 +61,10 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
   const [citizenIdFrontPreview, setCitizenIdFrontPreview] = useState<string | null>(null);
   const [citizenIdBackPreview, setCitizenIdBackPreview] = useState<string | null>(null);
 
+  const cvInputRef = React.useRef<HTMLInputElement>(null);
+  const [cvFile, setCvFile] = useState<File | null>(null);
+  const [cvOriginalUrl, setCvOriginalUrl] = useState<string | null>(null);
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, setter: React.Dispatch<React.SetStateAction<File | null>>, previewSetter: React.Dispatch<React.SetStateAction<string | null>>) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
@@ -119,6 +123,7 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
         setAvatarPreview(d.avatarUrl || null);
         setCitizenIdFrontPreview(d.citizenIdFrontImageUrl || null);
         setCitizenIdBackPreview(d.citizenIdBackImageUrl || null);
+        setCvOriginalUrl(d.cvUrl || null);
 
         setFormData((prev) => ({
           ...prev,
@@ -193,6 +198,10 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
       if (citizenIdBackFile) {
         const res = await s3Service.uploadFile(citizenIdBackFile, `citizen-ids/${userId}/back_${Date.now()}_${citizenIdBackFile.name}`);
         payload.citizenIdBackImageTempKey = res.objectKey;
+      }
+      if (cvFile) {
+        const res = await s3Service.uploadFile(cvFile, `cv/${userId}/${Date.now()}_${cvFile.name}`);
+        payload.cvTempKey = res.objectKey;
       }
     } catch (uploadError: unknown) {
       setLoading(false);
@@ -468,6 +477,71 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
                        />
                      </div>
                   </div>
+
+                   <div className="md:col-span-2 space-y-2 mt-4 pt-4 border-t border-border/50">
+                     <Label className="text-base font-semibold">{t("editProfile.basicInfo.cv", { defaultValue: "Hồ sơ năng lực (CV - Định dạng PDF)" })}</Label>
+                     <div className="flex flex-col sm:flex-row sm:items-center gap-4 bg-muted/20 p-4 rounded-xl border border-border">
+                       <input 
+                         type="file" 
+                         ref={cvInputRef} 
+                         className="hidden" 
+                         accept=".pdf,application/pdf" 
+                         onChange={(e) => {
+                           if (e.target.files && e.target.files.length > 0) {
+                             const file = e.target.files[0];
+                             if (file.type !== "application/pdf" && !file.name.toLowerCase().endsWith('.pdf')) {
+                               toast.error("Chỉ chấp nhận file PDF");
+                               return;
+                             }
+                             setCvFile(file);
+                           }
+                         }} 
+                         disabled={!isEditingMode || loading}
+                       />
+                       {isEditingMode && (
+                         <Button 
+                           type="button" 
+                           onClick={() => cvInputRef.current?.click()} 
+                           variant="outline" 
+                           disabled={loading}
+                           className="rounded-xl h-11 bg-card shrink-0 hover:bg-[#2E3192]/5 hover:text-[#2E3192] hover:border-[#2E3192]/30 transition-colors"
+                         >
+                            <Plus size={16} className="mr-2" /> {t("editProfile.basicInfo.chooseCvBtn", { defaultValue: "Chọn file CV" })}
+                         </Button>
+                       )}
+                       
+                       <div className="flex-1 flex items-center gap-3 overflow-hidden bg-background p-2.5 rounded-lg border border-border/50">
+                         {cvFile ? (
+                           <>
+                             <div className="w-8 h-8 rounded bg-red-100 flex items-center justify-center shrink-0">
+                               <span className="text-red-600 font-bold text-[10px]">PDF</span>
+                             </div>
+                             <span className="text-sm font-medium text-foreground truncate" title={cvFile.name}>
+                               {cvFile.name}
+                             </span>
+                           </>
+                         ) : cvOriginalUrl ? (
+                            <>
+                              <div className="w-8 h-8 rounded bg-red-100 flex items-center justify-center shrink-0">
+                                <span className="text-red-600 font-bold text-[10px]">PDF</span>
+                              </div>
+                              <a href={cvOriginalUrl} target="_blank" rel="noopener noreferrer" className="text-sm font-medium text-blue-600 hover:underline truncate">
+                                {t("editProfile.basicInfo.viewCurrentCv", { defaultValue: "Xem CV hiện tại" })}
+                              </a>
+                            </>
+                         ) : (
+                            <span className="text-sm text-muted-foreground italic pl-2">{t("editProfile.basicInfo.noCv", { defaultValue: "Chưa có CV" })}</span>
+                         )}
+                       </div>
+
+                       {isEditingMode && cvFile && (
+                          <Button type="button" variant="ghost" size="icon" className="shrink-0 text-destructive hover:bg-destructive/10 rounded-xl h-11 w-11" onClick={() => { setCvFile(null); if(cvInputRef.current) cvInputRef.current.value = ""; }}>
+                            <Trash2 size={18} />
+                          </Button>
+                       )}
+                     </div>
+                   </div>
+
                 </div>
               </div>
             )}

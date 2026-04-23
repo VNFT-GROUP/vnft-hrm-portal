@@ -9,6 +9,7 @@ export type MaritalStatus = 'SINGLE' | 'MARRIED';
 export interface UpdateCurrentUserProfileRequest {
   phoneNumber: string;
   avatarTempKey?: string;
+  cvTempKey?: string | null;
   gender?: Gender;
   dateOfBirth: string;
   maritalStatus: MaritalStatus;

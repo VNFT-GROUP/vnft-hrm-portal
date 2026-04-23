@@ -24,6 +24,8 @@ export interface UserProfileResponse {
   phoneNumber?: string;
   avatarKey?: string;
   avatarUrl?: string;
+  cvKey?: string | null;
+  cvUrl?: string | null;
   gender?: Gender;
   dateOfBirth?: string;
   maritalStatus?: MaritalStatus;

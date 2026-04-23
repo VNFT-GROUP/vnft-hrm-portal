@@ -12,6 +12,7 @@ export interface UpdateUserProfileRequest {
   attendanceCode?: string;
   phoneNumber?: string;
   avatarTempKey?: string;
+  cvTempKey?: string | null;
   gender?: Gender;
   dateOfBirth?: string;
   maritalStatus?: MaritalStatus;

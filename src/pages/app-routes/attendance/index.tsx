@@ -176,7 +176,7 @@ export default function MyAttendancePage() {
                     <span className="text-[10px] font-medium text-slate-400 uppercase mb-0.5">{t("myAttendance.totalWorkUnits")}</span>
                     <div className="flex items-baseline gap-1">
                       <div className="text-3xl font-bold text-slate-800">{data.summary?.workUnits ?? 0}</div>
-                      <div className="text-sm font-semibold text-slate-400">/ {maxWorkingDays} {t("myAttendance.daySuffix")}</div>
+                      <div className="text-sm font-semibold text-slate-400">/ {data.summary?.standardWorkdays ?? maxWorkingDays} {t("myAttendance.daySuffix")}</div>
                     </div>
                   </div>
                 </div>
@@ -191,7 +191,10 @@ export default function MyAttendancePage() {
                 <div className="grid grid-cols-2 gap-y-5 gap-x-6 flex-1">
                   <div className="flex flex-col gap-1">
                     <span className="text-[11px] font-medium text-slate-500">{t("myAttendance.summary.workingDays")}</span>
-                    <span className="text-xl font-bold text-slate-800">{data.summary?.workingDays ?? 0}</span>
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-xl font-bold text-slate-800">{data.summary?.workingDays ?? 0}</span>
+                      <span className="text-sm font-semibold text-slate-400">/ {data.summary?.standardWorkdays ?? maxWorkingDays}</span>
+                    </div>
                   </div>
                   <div className="flex flex-col gap-1">
                     <span className="text-[11px] font-medium text-slate-500">{t("myAttendance.summary.approvedWfh", { defaultValue: "Ngày WFH đã duyệt" })}</span>
@@ -395,6 +398,22 @@ export default function MyAttendancePage() {
                               </span>
                             </div>
 
+                            {/* Top Left: Warning Badges */}
+                            {hasData && (record?.checkInValid === false || record?.checkOutValid === false) && (
+                              <div className="absolute top-2 left-2 z-10 flex flex-col gap-1 pointer-events-none">
+                                {record?.checkInValid === false && (
+                                  <span className="text-[9px] uppercase font-bold text-rose-600 bg-rose-50 border border-rose-100 px-1.5 py-0.5 rounded shadow-sm">
+                                    IN: {t("myAttendance.calendar.late", { defaultValue: "TRỄ" })} {record.lateMinutes}P
+                                  </span>
+                                )}
+                                {record?.checkOutValid === false && (
+                                  <span className="text-[9px] uppercase font-bold text-rose-600 bg-rose-50 border border-rose-100 px-1.5 py-0.5 rounded shadow-sm">
+                                    OUT: {t("myAttendance.calendar.early", { defaultValue: "SỚM" })} {record.earlyLeaveMinutes}P
+                                  </span>
+                                )}
+                              </div>
+                            )}
+
                             {(() => {
                               let bigNumberContent: React.ReactNode = null;
                               let bigNumberColor = "text-emerald-500";
@@ -412,7 +431,7 @@ export default function MyAttendancePage() {
                               if (!bigNumberContent) return null;
 
                               return (
-                                <div className="absolute top-[40%] w-full left-0 flex flex-col items-center justify-center select-none pointer-events-none -translate-y-[50%]">
+                                <div className="absolute top-[40%] w-full left-0 flex flex-col items-center justify-center select-none pointer-events-none -translate-y-[50%] z-0">
                                   <span className={`text-[46px] leading-none font-bold tracking-tighter ${bigNumberColor}`}>
                                     {bigNumberContent}
                                   </span>
@@ -420,12 +439,19 @@ export default function MyAttendancePage() {
                               );
                             })()}
                             
-                            <div className="absolute bottom-2 left-0 w-full px-2 flex flex-col gap-1 z-10 pointer-events-none">
+                            <div className="absolute bottom-2 left-0 w-full px-2 flex flex-col items-center gap-1 z-10 pointer-events-none">
                               {hasData && (record?.actualCheckIn || record?.actualCheckOut) && (
-                                <div className="flex justify-center items-center gap-1.5 text-[11px] font-bold tracking-tight bg-white/70 backdrop-blur-xs py-0.5 rounded">
-                                  {record?.actualCheckIn && <span className={record.checkInValid === false ? 'text-rose-500' : 'text-slate-400'}>{record.actualCheckIn.substring(0, 5)}</span>}
-                                  {(record?.actualCheckIn || record?.actualCheckOut) && <span className="text-slate-300 font-medium">-</span>}
-                                  {record?.actualCheckOut && <span className={record.checkOutValid === false ? 'text-rose-500' : 'text-slate-400'}>{record.actualCheckOut.substring(0, 5)}</span>}
+                                <div className="flex flex-col items-center justify-center gap-0.5 bg-white/80 backdrop-blur-xs px-2 py-0.5 rounded shadow-xs border border-slate-100/60 w-max mx-auto">
+                                  <div className="flex justify-center items-center gap-1.5 text-[11px] font-bold tracking-tight uppercase">
+                                    {record?.actualCheckIn && <span className={record.checkInValid === false ? 'text-rose-500' : 'text-slate-600'}>{record.actualCheckIn.substring(0, 5)}</span>}
+                                    {(record?.actualCheckIn || record?.actualCheckOut) && <span className="text-slate-400 font-medium">-</span>}
+                                    {record?.actualCheckOut && <span className={record.checkOutValid === false ? 'text-rose-500' : 'text-slate-600'}>{record.actualCheckOut.substring(0, 5)}</span>}
+                                  </div>
+                                  {(record?.workMinutes || 0) > 0 && (
+                                    <span className="text-[10px] font-bold text-indigo-600 px-1 rounded-sm tracking-tight leading-none bg-indigo-50/50">
+                                      {Math.floor(record!.workMinutes! / 60)}h {record!.workMinutes! % 60}p
+                                    </span>
+                                  )}
                                 </div>
                               )}
 

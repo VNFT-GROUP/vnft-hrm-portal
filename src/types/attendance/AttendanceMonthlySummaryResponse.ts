@@ -8,6 +8,7 @@ export interface AttendanceMonthlySummaryResponse {
   summaryMonth: number;
   periodStartDate: string;
   periodEndDate: string;
+  standardWorkdays: number;
   workingDays: number;
   workUnits: number;
   lateDays: number;

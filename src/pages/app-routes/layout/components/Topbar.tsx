@@ -166,8 +166,8 @@ export default function Topbar() {
               <AvatarPlaceholder name={session?.username} src={session?.avatarUrl} className="pd-avatar-large" />
               <div className="pd-info">
                 <h3 className="pd-name">{session?.fullName || session?.username || t('profile.defaultUser', { defaultValue: 'Người Dùng' })}</h3>
-                <div className="pd-role-item" title="Phòng ban"><Briefcase size={15}/> <span>{session?.departmentName || '--'}</span></div>
-                <div className="pd-role-item" title="Chức danh"><BadgeCheck size={15}/> <span>{session?.jobTitleName || (session?.groupName === 'ADMIN' ? 'Quản trị viên' : session?.groupName) || '--'}</span></div>
+                <div className="pd-role-item" title="Phòng ban"><Briefcase size={15} className="shrink-0"/> <span>{session?.departmentName || '--'}</span></div>
+                <div className="pd-role-item" title="Chức danh"><BadgeCheck size={15} className="shrink-0"/> <span>{session?.jobTitleName || (session?.groupName === 'ADMIN' ? 'Quản trị viên' : session?.groupName) || '--'}</span></div>
               </div>
             </div>
             

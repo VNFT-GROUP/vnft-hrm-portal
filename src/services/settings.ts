@@ -7,4 +7,8 @@ export const settingsService = {
     const response = await apiClient.get("/settings/server");
     return response.data;
   },
+  updateServerSettings: async (settings: Partial<ServerSettingsResponse>): Promise<ApiResponse<ServerSettingsResponse>> => {
+    const response = await apiClient.patch("/settings/server", settings);
+    return response.data;
+  },
 };

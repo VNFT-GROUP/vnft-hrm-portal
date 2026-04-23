@@ -21,16 +21,24 @@ export const s3Service = {
     presignedUrl: string,
     file: File,
   ): Promise<void> => {
-    const response = await fetch(presignedUrl, {
-      method: "PUT",
-      headers: {
-        "Content-Type": file.type || "application/octet-stream",
-      },
-      body: file,
-    });
+    try {
+      const response = await fetch(presignedUrl, {
+        method: "PUT",
+        headers: {
+          "Content-Type": file.type || "application/octet-stream",
+        },
+        body: file,
+      });
 
-    if (!response.ok) {
-      throw new Error(`Upload to S3 failed: ${response.statusText}`);
+      if (!response.ok) {
+        throw new Error(`Upload to S3 failed: ${response.status} ${response.statusText}`);
+      }
+    } catch (error) {
+      if (error instanceof TypeError && error.message.includes("Failed to fetch")) {
+        console.error("S3 Upload 'Failed to fetch'. Potential causes:\n1. CORS not configured on S3/MinIO bucket.\n2. Presigned URL uses internal domain inaccessible from client.\n3. Network disconnection or AdBlocker.\nURL:", presignedUrl);
+        throw new Error("Lỗi kết nối khi upload file (Failed to fetch). Vui lòng kiểm tra Network tab hoặc CORS config.");
+      }
+      throw error;
     }
   },
 

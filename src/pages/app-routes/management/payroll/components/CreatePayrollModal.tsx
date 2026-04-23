@@ -35,6 +35,7 @@ export default function CreatePayrollModal({
   const [year, setYear] = useState(defaultYear);
   const [name, setName] = useState("");
   const [note, setNote] = useState("");
+  const [allEmployees, setAllEmployees] = useState(false);
 
   // --- Job Title selection ---
   const [selectedJobTitleIds, setSelectedJobTitleIds] = useState<string[]>([]);
@@ -94,6 +95,7 @@ export default function CreatePayrollModal({
 
   // --- Validation ---
   const hasSelection =
+    allEmployees ||
     selectedJobTitleIds.length > 0 ||
     selectedUsers.length > 0 ||
     employeeCodes.length > 0;
@@ -108,9 +110,10 @@ export default function CreatePayrollModal({
       month,
       name: finalName,
       note: note.trim() || null,
-      jobTitleIds: selectedJobTitleIds.length > 0 ? selectedJobTitleIds : null,
-      userProfileIds: selectedUsers.length > 0 ? selectedUsers.map((u) => u.id) : null,
-      employeeCodes: employeeCodes.length > 0 ? employeeCodes : null,
+      allEmployees: allEmployees || null,
+      jobTitleIds: !allEmployees && selectedJobTitleIds.length > 0 ? selectedJobTitleIds : null,
+      userProfileIds: !allEmployees && selectedUsers.length > 0 ? selectedUsers.map((u) => u.id) : null,
+      employeeCodes: !allEmployees && employeeCodes.length > 0 ? employeeCodes : null,
     });
   };
 
@@ -184,12 +187,31 @@ export default function CreatePayrollModal({
               Phạm vi nhân sự <span className="text-rose-500">*</span>
             </h3>
             <p className="text-xs text-slate-500 mb-4">
-              Chọn ít nhất 1 trong 3 cách: theo chức vụ, theo nhân sự, hoặc nhập mã nhân viên.
+              Chọn toàn bộ nhân sự hoặc chọn theo chức vụ, danh sách, mã nhân viên.
             </p>
           </div>
 
+          {/* 0. All Employees toggle */}
+          <label
+            className={`flex items-center gap-3 bg-white p-5 border rounded-xl shadow-sm cursor-pointer transition-all ${
+              allEmployees
+                ? "border-[#2E3192]/40 bg-[#2E3192]/5 ring-1 ring-[#2E3192]/20"
+                : "border-slate-200 hover:border-slate-300"
+            }`}
+          >
+            <Checkbox
+              checked={allEmployees}
+              onCheckedChange={(v) => setAllEmployees(!!v)}
+              className="w-5 h-5 data-[state=checked]:bg-[#2E3192] data-[state=checked]:border-[#2E3192]"
+            />
+            <div className="flex flex-col">
+              <span className="text-sm font-semibold text-slate-800">Toàn bộ nhân sự</span>
+              <span className="text-xs text-slate-500">Tạo bảng lương cho tất cả nhân sự đang hoạt động trong hệ thống.</span>
+            </div>
+          </label>
+
           {/* 1. Job Title multi-select */}
-          <div className="bg-white p-5 border border-slate-200 rounded-xl shadow-sm space-y-3">
+          <div className={`bg-white p-5 border border-slate-200 rounded-xl shadow-sm space-y-3 transition-opacity ${allEmployees ? "opacity-40 pointer-events-none" : ""}`}>
             <div className="flex items-center gap-2 text-sm font-semibold text-slate-700">
               <Briefcase size={15} className="text-amber-600" />
               Theo chức vụ
@@ -224,7 +246,7 @@ export default function CreatePayrollModal({
           </div>
 
           {/* 2. User Profile multi-select with search */}
-          <div className="bg-white p-5 border border-slate-200 rounded-xl shadow-sm space-y-3">
+          <div className={`bg-white p-5 border border-slate-200 rounded-xl shadow-sm space-y-3 transition-opacity ${allEmployees ? "opacity-40 pointer-events-none" : ""}`}>
             <div className="flex items-center gap-2 text-sm font-semibold text-slate-700">
               <Users size={15} className="text-indigo-600" />
               Theo nhân sự
@@ -286,7 +308,7 @@ export default function CreatePayrollModal({
           </div>
 
           {/* 3. Employee Codes manual */}
-          <div className="bg-white p-5 border border-slate-200 rounded-xl shadow-sm space-y-3">
+          <div className={`bg-white p-5 border border-slate-200 rounded-xl shadow-sm space-y-3 transition-opacity ${allEmployees ? "opacity-40 pointer-events-none" : ""}`}>
             <div className="flex items-center gap-2 text-sm font-semibold text-slate-700">
               <span className="text-emerald-600 text-base font-mono">#</span>
               Nhập mã nhân viên

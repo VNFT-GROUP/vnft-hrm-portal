@@ -47,6 +47,22 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
+/** Suspense wrapper for lazy-loaded child routes inside /app */
+function Lazy({ children }: { children: React.ReactNode }) {
+  return (
+    <Suspense fallback={
+      <div className="flex-1 flex items-center justify-center p-12">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-8 h-8 border-4 border-[#2E3192] border-t-transparent rounded-full animate-spin" />
+          <span className="text-sm text-muted-foreground">Đang tải trang...</span>
+        </div>
+      </div>
+    }>
+      {children}
+    </Suspense>
+  );
+}
+
 export default function AppRoutes() {
   return (
     <Routes>
@@ -79,46 +95,46 @@ export default function AppRoutes() {
         }
       >
           {/* Dashboard (Home) */}
-          <Route index element={<HomePage />} />
+          <Route index element={<Lazy><HomePage /></Lazy>} />
           
           {/* Core Menu */}
-          <Route path="profile" element={<ProfilePage />} />
-          <Route path="profile/edit" element={<EditProfilePage />} />
-          <Route path="attendance" element={<MyAttendancePage />} />
-          <Route path="evaluation" element={<EvaluationPage />} />
-          <Route path="voting" element={<VotingPage />} />
+          <Route path="profile" element={<Lazy><ProfilePage /></Lazy>} />
+          <Route path="profile/edit" element={<Lazy><EditProfilePage /></Lazy>} />
+          <Route path="attendance" element={<Lazy><MyAttendancePage /></Lazy>} />
+          <Route path="evaluation" element={<Lazy><EvaluationPage /></Lazy>} />
+          <Route path="voting" element={<Lazy><VotingPage /></Lazy>} />
           <Route path="requests">
-             <Route index element={<RequestsPage />} />
-             <Route path="create" element={<CreateRequestPage />} />
+             <Route index element={<Lazy><RequestsPage /></Lazy>} />
+             <Route path="create" element={<Lazy><CreateRequestPage /></Lazy>} />
           </Route>
-          <Route path="reports" element={<ReportsPage />} />
-          <Route path="settings" element={<SettingsPage />} />
-          <Route path="activity-logs" element={<ActivityLogsPage />} />
-          <Route path="user-guide" element={<UserGuidePage />} />
+          <Route path="reports" element={<Lazy><ReportsPage /></Lazy>} />
+          <Route path="settings" element={<Lazy><SettingsPage /></Lazy>} />
+          <Route path="activity-logs" element={<Lazy><ActivityLogsPage /></Lazy>} />
+          <Route path="user-guide" element={<Lazy><UserGuidePage /></Lazy>} />
 
           {/* Cấp 2: Quản lý */}
           <Route path="management">
-             <Route path="employees" element={<EmployeesPage />} />
-             <Route path="departments" element={<DepartmentsPage />} />
-             <Route path="positions" element={<PositionsPage />} />
-             <Route path="employee-codes" element={<EmployeeCodesPage />} />
-             <Route path="groups" element={<GroupsPage />} />
-             <Route path="job-titles" element={<JobTitlesPage />} />
-             <Route path="requests" element={<ManagementRequestsPage />} />
-             <Route path="attendance" element={<ManagementAttendancePage />} />
-             <Route path="payroll" element={<ManagementPayrollPage />} />
-             <Route path="performance" element={<PerformanceReviewsPage />} />
-             <Route path="server-settings" element={<ServerSettingsPage />} />
+             <Route path="employees" element={<Lazy><EmployeesPage /></Lazy>} />
+             <Route path="departments" element={<Lazy><DepartmentsPage /></Lazy>} />
+             <Route path="positions" element={<Lazy><PositionsPage /></Lazy>} />
+             <Route path="employee-codes" element={<Lazy><EmployeeCodesPage /></Lazy>} />
+             <Route path="groups" element={<Lazy><GroupsPage /></Lazy>} />
+             <Route path="job-titles" element={<Lazy><JobTitlesPage /></Lazy>} />
+             <Route path="requests" element={<Lazy><ManagementRequestsPage /></Lazy>} />
+             <Route path="attendance" element={<Lazy><ManagementAttendancePage /></Lazy>} />
+             <Route path="payroll" element={<Lazy><ManagementPayrollPage /></Lazy>} />
+             <Route path="performance" element={<Lazy><PerformanceReviewsPage /></Lazy>} />
+             <Route path="server-settings" element={<Lazy><ServerSettingsPage /></Lazy>} />
           </Route>
 
           {/* Cấp 2: ACC */}
           <Route path="acc">
-             <Route path="profit-report" element={<ProfitReportPage />} />
+             <Route path="profit-report" element={<Lazy><ProfitReportPage /></Lazy>} />
           </Route>
 
           {/* Cấp 2: Tài chính */}
           <Route path="finance">
-             <Route path="reports" element={<FinanceReportsPage />} />
+             <Route path="reports" element={<Lazy><FinanceReportsPage /></Lazy>} />
           </Route>
         </Route>
         <Route path="*" element={<Navigate to="/login" replace />} />

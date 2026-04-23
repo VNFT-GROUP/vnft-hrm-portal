@@ -3,6 +3,7 @@ export interface CreatePayrollRequest {
   month: number;
   name?: string | null;
   note?: string | null;
+  allEmployees?: boolean | null;
   jobTitleIds?: string[] | null;
   userProfileIds?: string[] | null;
   employeeCodes?: string[] | null;
@@ -13,6 +14,7 @@ export interface PayrollCalculateRequest {
   month: number;
   name?: string | null;
   note?: string | null;
+  allEmployees?: boolean | null;
   jobTitleIds?: string[] | null;
   userProfileIds?: string[] | null;
   employeeCodes?: string[] | null;

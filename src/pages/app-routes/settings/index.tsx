@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useLayoutStore } from "@/store/useLayoutStore";
 import { Label } from "@/components/ui/label";
+import { ServerSalarySettingsBlock } from "./components/ServerSalarySettingsBlock";
 
 export default function SettingsPage() {
   const sidebarTheme = useLayoutStore((state) => state.sidebarTheme);
@@ -388,6 +389,8 @@ export default function SettingsPage() {
           </div>
         </m.section>
 
+        {/* Section 4: Server Salary Settings */}
+        <ServerSalarySettingsBlock />
 
         
       </div>

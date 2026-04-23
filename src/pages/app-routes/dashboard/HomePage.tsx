@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { useAuthStore } from "@/store/useAuthStore";
 import { format, parseISO, addDays } from "date-fns";
-import { vi } from "date-fns/locale";
+import { vi, enUS, zhCN } from "date-fns/locale";
 import {
   Popover,
   PopoverContent,
@@ -215,7 +215,8 @@ const IntegratedTaskCard = () => {
 };
 
 export default function HomePage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const dateLocale = i18n.language?.startsWith('en') ? enUS : i18n.language?.startsWith('zh') ? zhCN : vi;
   const session = useAuthStore((state) => state.session);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [attendanceData, setAttendanceData] = useState<
@@ -249,9 +250,9 @@ export default function HomePage() {
   // Format current date
   const dateStr = todayAttendance?.attendanceDate
     ? format(parseISO(todayAttendance.attendanceDate), "EEEE, dd/MM/yyyy", {
-        locale: vi,
+        locale: dateLocale,
       })
-    : format(selectedDate, "EEEE, dd/MM/yyyy", { locale: vi });
+    : format(selectedDate, "EEEE, dd/MM/yyyy", { locale: dateLocale });
   const displayDate = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
 
   // Format Check-in time
@@ -332,7 +333,7 @@ export default function HomePage() {
 
   const workTimeHours = Math.floor((todayAttendance?.workMinutes || 0) / 60);
   const workTimeMins = (todayAttendance?.workMinutes || 0) % 60;
-  const workTimeStr = `${workTimeHours.toString().padStart(2, "0")}h ${workTimeMins.toString().padStart(2, "0")}p`;
+  const workTimeStr = `${workTimeHours.toString().padStart(2, "0")}${t("dashboard.hoursShort")} ${workTimeMins.toString().padStart(2, "0")}${t("dashboard.minutesShort")}`;
 
   const statMonth = session?.currentMonthAttendance?.summaryMonth || new Date().getMonth() + 1;
   const statYear = session?.currentMonthAttendance?.summaryYear || new Date().getFullYear();
@@ -476,7 +477,7 @@ export default function HomePage() {
                         {session?.currentMonthAttendance
                           ?.majorLateEarlyViolationTimes ?? 0}{" "}
                         <span className="text-[11px] font-normal text-muted-foreground">
-                          {t("dashboard.times", { defaultValue: "lần" })}
+                          {t("dashboard.times")}
                         </span>
                       </span>
                     </div>
@@ -490,7 +491,7 @@ export default function HomePage() {
                         {session?.currentMonthAttendance
                           ?.leaveDeductionViolationTimes ?? 0}{" "}
                         <span className="text-[11px] font-normal text-muted-foreground">
-                          {t("dashboard.times", { defaultValue: "lần" })}
+                          {t("dashboard.times")}
                         </span>
                       </span>
                     </div>
@@ -575,7 +576,7 @@ export default function HomePage() {
                           if (date) setSelectedDate(date);
                         }}
                         initialFocus
-                        locale={vi}
+                        locale={dateLocale}
                       />
                     </PopoverContent>
                   </Popover>

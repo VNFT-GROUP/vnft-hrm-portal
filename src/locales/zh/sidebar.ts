@@ -36,5 +36,15 @@ export default {
   switchToUser: "切换到员工视图",
   switchToAdmin: "切换到管理员视图",
   adminMode: "管理",
-  userMode: "用户"
+  userMode: "用户",
+  operations: "业务管理",
+  opsShort: "业务",
+  organization: "组织与人事",
+  orgShort: "组织人事",
+  performance: "绩效评估",
+  performanceShort: "绩效",
+  reports: "内部报告",
+  reportsShort: "报告",
+  payroll: "薪资管理",
+  payrollShort: "薪资"
 };

@@ -6,6 +6,7 @@ import {
   ChevronDown,
   ChevronRight as ChevronRightIcon,
   Palette,
+  Globe,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { ScrollArea } from "../../../../components/ui/scroll-area";
@@ -102,7 +103,7 @@ export default function Sidebar() {
     setActiveToast(null);
   };
 
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { sidebarData: menuData } = useNavigationData();
 
   return (
@@ -335,7 +336,24 @@ export default function Sidebar() {
       )}
 
       {/* Footer Navigation */}
-      <div className="sidebar-footer">
+      <div className="sidebar-footer flex flex-col gap-2">
+
+        <button 
+          onClick={() => {
+            const currentLang = i18n.language || 'vi';
+            const nextLang = currentLang.startsWith('vi') ? 'en' : currentLang.startsWith('en') ? 'zh' : 'vi';
+            i18n.changeLanguage(nextLang);
+          }} 
+          className={`btn-shimmer flex items-center ${isCollapsed ? "justify-center" : "justify-start px-3"} w-full gap-3 p-2.5 rounded-xl border border-white/20 transition-all duration-300 shadow-[0_0_15px_rgba(255,255,255,0.05)] hover:shadow-[0_0_20px_rgba(247,148,29,0.2)] bg-linear-to-r from-white/5 to-white/10 hover:from-white/10 hover:to-white/20 text-white/90 hover:text-white group`}
+          title={t('sidebar.changeLanguage', { defaultValue: 'Ngôn ngữ' })}
+        >
+          <Globe size={20} className="shrink-0 text-white group-hover:text-[#F7941D] group-hover:rotate-180 transition-transform duration-500" />
+          {!isCollapsed && (
+            <span className="font-bold text-[13px] tracking-wider uppercase text-white/70 group-hover:text-[#F7941D] transition-colors duration-300 flex-1 text-left">
+              {i18n.language?.startsWith('vi') ? 'Tiếng Việt' : i18n.language?.startsWith('en') ? 'English' : '中文'}
+            </span>
+          )}
+        </button>
 
         <button 
           onClick={() => navigate('/app/settings')} 

@@ -50,5 +50,16 @@ export default {
     wfhLeaveDeduction: "WFH Leave Deductions",
     disciplineScore: "Punctuality Score",
     allowance: "Discipline Allowance"
-  }
+  },
+  statsRulesBtn: "Explain Metrics",
+  totalWorkUnits: "Total Work Units",
+  daySuffix: "days",
+  disciplineSection: "Time Discipline",
+  disciplineRulesBtn: "Rules & Calculation",
+  score: "SCORE",
+  allowanceBonus: "ALLOWANCE / BONUS",
+  vnd: "VND",
+  violationsSection: "Violations & Penalties",
+  attendanceSection: "Attendance Details",
+  monthSelector: "Month {{month}}/{{year}}"
 };

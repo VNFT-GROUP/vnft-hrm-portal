@@ -13,6 +13,10 @@ import serverSettings from './serverSettings';
 import attendance from './attendance';
 import myAttendance from './myAttendance';
 import dashboard from './dashboard';
+import requests from './requests';
+import performance from './performance';
+import payroll from './payroll';
+import reports from './reports';
 
 export default {
   profile,
@@ -29,5 +33,9 @@ export default {
   serverSettings,
   attendance,
   myAttendance,
-  dashboard
+  dashboard,
+  requests,
+  performance,
+  payroll,
+  reports
 };

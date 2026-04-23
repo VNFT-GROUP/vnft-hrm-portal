@@ -31,7 +31,8 @@ export default {
     salary: "薪资信息"
   },
   workingStatus: {
-    active: "在职"
+    active: "在职",
+    inactive: "已离职"
   },
   fields: {
     basicInfo: "基本信息",
@@ -55,6 +56,34 @@ export default {
     street: "街道 / 门牌号",
     ward: "街道办事处",
     district: "区 / 县",
-    province: "省 / 市"
-  }
+    province: "省 / 市",
+    education: "教育背景",
+    eduLevel: "学历级别",
+    institutionName: "培训机构",
+    major: "专业",
+    eduTime: "时间",
+    dependentsInfo: "受抚养人 / 家庭信息",
+    bankInfo: "银行信息",
+    documents: "个人文件"
+  },
+  salaryTab: {
+    netSalaryYear: "{{year}}年实发工资",
+    month: "月",
+    totalNetYear: "{{year}}年总实发金额",
+    salaryHistory: "工资配置历史",
+    emptyConfig: "暂未设置任何工资配置。",
+    configNote: "发薪备注：",
+    item: "项目",
+    amount: "金额 (VNĐ)",
+    note: "备注",
+    present: "至今"
+  },
+  values: {
+    male: "男",
+    female: "女",
+    other: "其他",
+    married: "已婚",
+    single: "单身"
+  },
+  editBtn: "更新资料"
 };

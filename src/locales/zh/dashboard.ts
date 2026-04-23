@@ -31,5 +31,12 @@ export default {
     workingTime: "工作时长",
     workUnit: "出勤天数",
     workUnitSuffix: "天"
-  }
+  },
+  majorLateEarlyViolationTimes: "迟到 / 早退120分钟及以上",
+  majorLateEarlyViolationTooltip: "迟到或早退120分钟及以上的次数",
+  leaveDeductionViolationTimes: "因迟到 / 早退的扣减次数",
+  leaveDeductionDays: "因迟到 / 早退扣除的休假 / 工作日数",
+  times: "次",
+  hoursShort: "时",
+  minutesShort: "分"
 };

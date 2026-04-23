@@ -36,5 +36,15 @@ export default {
   switchToUser: "Chuyển sang Giao diện Nhân viên",
   switchToAdmin: "Chuyển sang Giao diện Quản trị",
   adminMode: "Quản lý",
-  userMode: "Người dùng"
+  userMode: "Người dùng",
+  operations: "Nghiệp vụ",
+  opsShort: "Nghiệp vụ",
+  organization: "Tổ chức & Nhân sự",
+  orgShort: "Tổ chức",
+  performance: "Đánh giá hiệu suất",
+  performanceShort: "Hiệu suất",
+  reports: "Báo cáo nội bộ",
+  reportsShort: "Báo cáo",
+  payroll: "Bảng lương",
+  payrollShort: "Lương"
 };

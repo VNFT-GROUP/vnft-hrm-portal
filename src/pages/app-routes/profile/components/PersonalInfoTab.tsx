@@ -53,9 +53,9 @@ export default function PersonalInfoTab() {
           <div><Label>{t("profile.fields.fullName", { defaultValue: "Họ và tên" })}</Label><Value>{profile.fullName}</Value></div>
           <div><Label>{t("profile.fields.engName", { defaultValue: "Tên tiếng Anh" })}</Label><Value>{profile.englishName}</Value></div>
           <div><Label>{t("profile.fields.empId", { defaultValue: "Mã nhân viên" })}</Label><Value>{profile.employeeCode}</Value></div>
-          <div><Label>{t("profile.fields.gender", { defaultValue: "Giới tính" })}</Label><Value>{profile.gender === 'MALE' ? 'Nam' : profile.gender === 'FEMALE' ? 'Nữ' : 'Khác'}</Value></div>
+          <div><Label>{t("profile.fields.gender", { defaultValue: "Giới tính" })}</Label><Value>{profile.gender === 'MALE' ? t('profile.values.male') : profile.gender === 'FEMALE' ? t('profile.values.female') : t('profile.values.other')}</Value></div>
           <div><Label>{t("profile.fields.dob", { defaultValue: "Ngày sinh" })}</Label><Value>{profile.dateOfBirth?.substring(0,10)}</Value></div>
-          <div><Label>{t("profile.fields.maritalStatus", { defaultValue: "Hôn nhân" })}</Label><Value>{profile.maritalStatus === 'MARRIED' ? 'Đã kết hôn' : 'Độc thân'}</Value></div>
+          <div><Label>{t("profile.fields.maritalStatus", { defaultValue: "Hôn nhân" })}</Label><Value>{profile.maritalStatus === 'MARRIED' ? t('profile.values.married') : t('profile.values.single')}</Value></div>
           <div><Label>{t("profile.fields.birthPlace", { defaultValue: "Nơi sinh" })}</Label><Value>{profile.placeOfBirth}</Value></div>
           <div><Label>{t("profile.fields.hometown", { defaultValue: "Quê quán" })}</Label><Value>{profile.placeOfOrigin}</Value></div>
           <div><Label>{t("profile.fields.nationality", { defaultValue: "Quốc tịch" })}</Label><Value>{profile.nationality}</Value></div>

@@ -39,7 +39,7 @@ export default function FamilyEduTab() {
                   <div><Label>{t("profile.fields.eduLevel", { defaultValue: "Trình độ" })}</Label><Value>{edu.educationLevel}</Value></div>
                   <div><Label>{t("profile.fields.institutionName", { defaultValue: "Nơi đào tạo" })}</Label><Value>{edu.institutionName}</Value></div>
                   <div><Label>{t("profile.fields.major", { defaultValue: "Chuyên ngành" })}</Label><Value>{edu.major}</Value></div>
-                  <div><Label>{t("profile.fields.eduTime", { defaultValue: "Thời gian" })}</Label><Value>{edu.fromDate ? `${edu.fromDate} - ${edu.toDate || 'Hiện nay'}` : '—'}</Value></div>
+                  <div><Label>{t("profile.fields.eduTime", { defaultValue: "Thời gian" })}</Label><Value>{edu.fromDate ? `${edu.fromDate} - ${edu.toDate || t("profile.salaryTab.present")}` : '—'}</Value></div>
                 </div>
              ))
           ) : (

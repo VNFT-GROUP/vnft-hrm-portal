@@ -31,5 +31,12 @@ export default {
     workingTime: "Working time",
     workUnit: "Work Unit",
     workUnitSuffix: "units"
-  }
+  },
+  majorLateEarlyViolationTimes: "Late / early leave >= 120 mins",
+  majorLateEarlyViolationTooltip: "Number of times arriving late or leaving early by 120+ minutes",
+  leaveDeductionViolationTimes: "Deduction occurrences due to late / early",
+  leaveDeductionDays: "Deducted leave / work days due to late / early",
+  times: "times",
+  hoursShort: "h",
+  minutesShort: "m"
 };

@@ -441,14 +441,14 @@ export default function MyAttendancePage() {
                             
                             <div className="absolute bottom-2 left-0 w-full px-2 flex flex-col items-center gap-1 z-10 pointer-events-none">
                               {hasData && (record?.actualCheckIn || record?.actualCheckOut) && (
-                                <div className="flex flex-col items-center justify-center gap-0.5 bg-white/80 backdrop-blur-xs px-2 py-0.5 rounded shadow-xs border border-slate-100/60 w-max mx-auto">
-                                  <div className="flex justify-center items-center gap-1.5 text-[11px] font-bold tracking-tight uppercase">
+                                <div className="flex flex-col items-center justify-center gap-1 bg-white/80 backdrop-blur-xs px-2.5 py-1 rounded shadow-xs border border-slate-100/60 w-max mx-auto">
+                                  <div className="flex justify-center items-center gap-2 text-[13px] font-bold tracking-tight uppercase">
                                     {record?.actualCheckIn && <span className={record.checkInValid === false ? 'text-rose-500' : 'text-slate-600'}>{record.actualCheckIn.substring(0, 5)}</span>}
                                     {(record?.actualCheckIn || record?.actualCheckOut) && <span className="text-slate-400 font-medium">-</span>}
                                     {record?.actualCheckOut && <span className={record.checkOutValid === false ? 'text-rose-500' : 'text-slate-600'}>{record.actualCheckOut.substring(0, 5)}</span>}
                                   </div>
                                   {(record?.workMinutes || 0) > 0 && (
-                                    <span className="text-[10px] font-bold text-indigo-600 px-1 rounded-sm tracking-tight leading-none bg-indigo-50/50">
+                                    <span className="text-[11px] font-bold text-indigo-600 px-1.5 rounded-sm tracking-tight leading-none py-0.5 bg-indigo-50/50">
                                       {Math.floor(record!.workMinutes! / 60)}h {record!.workMinutes! % 60}p
                                     </span>
                                   )}

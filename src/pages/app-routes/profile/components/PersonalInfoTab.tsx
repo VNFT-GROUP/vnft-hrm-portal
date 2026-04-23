@@ -91,6 +91,33 @@ export default function PersonalInfoTab() {
           <div className="col-span-2"><Label>{t("profile.fields.province", { defaultValue: "Tỉnh/Thành phố" })}</Label><Value>{profile.currentCity}</Value></div>
         </div>
       </m.div>
+
+      {/* CV / Hồ sơ năng lực */}
+      <m.div variants={itemVariants} className="col-span-1 lg:col-span-2 bg-card text-card-foreground p-6 rounded-2xl shadow-sm border border-border hover:border-primary/50 hover:shadow-md transition-all duration-300 group hover:-translate-y-1">
+        <SectionHeader icon={<FileText size={18} />} title={t("profile.fields.cv", { defaultValue: "CV / Hồ sơ năng lực (PDF)" })} />
+        <div className="w-full">
+            {profile.cvUrl ? (
+               <div className="relative w-full h-[800px] rounded-xl overflow-hidden shadow-sm border border-border bg-muted/20">
+                  <iframe 
+                    src={`${profile.cvUrl}#toolbar=0`} 
+                    title="CV / Hồ sơ năng lực" 
+                    className="w-full h-full border-0"
+                    loading="lazy"
+                  />
+                  <div className="absolute top-2 right-2 z-10">
+                    <a href={profile.cvUrl} target="_blank" rel="noopener noreferrer" className="text-xs font-medium text-blue-600 bg-white shadow-sm border border-blue-200 px-3 py-1.5 rounded-lg hover:bg-blue-50 transition-colors flex items-center gap-1.5">
+                      <FileText size={14} /> Mở tab mới
+                    </a>
+                  </div>
+               </div>
+            ) : (
+               <div className="flex flex-col items-center justify-center p-6 text-center bg-muted/50 rounded-xl border border-dashed border-border h-[200px]">
+                 <FileText size={32} className="text-slate-300 mb-2" />
+                 <p className="text-muted-foreground font-medium text-sm">Chưa có CV đính kèm</p>
+               </div>
+            )}
+        </div>
+      </m.div>
     </m.div>
   );
 }

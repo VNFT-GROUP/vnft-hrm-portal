@@ -24,15 +24,18 @@ interface SalaryInformationSheetProps {
 const DEFAULT_COMPONENTS = [
   { value: "BASIC_GROSS_SALARY", label: "Lương cơ bản (Gross)", category: "SALARY" },
   { value: "SOCIAL_INSURANCE_SALARY", label: "Lương đóng BHXH", category: "SALARY" },
-  { value: "INSURANCE_BALANCE_ALLOWANCE", label: "Phụ cấp chênh lệch BHXH", category: "ALLOWANCE" },
-  { value: "JOB_ALLOWANCE", label: "Phụ cấp công việc", category: "ALLOWANCE" },
+  { value: "BUSINESS_SALARY", label: "Lương kinh doanh", category: "SALARY" },
+  { value: "TARGET_ALLOWANCE", label: "Phụ cấp KPI (Target)", category: "ALLOWANCE" },
   { value: "PARKING_ALLOWANCE", label: "Phụ cấp gửi xe", category: "ALLOWANCE" },
-  { value: "MANAGEMENT_ALLOWANCE", label: "Phụ cấp quản lý", category: "ALLOWANCE" },
-  { value: "MEAL_ALLOWANCE", label: "Phụ cấp ăn trưa", category: "ALLOWANCE" },
-  { value: "PHONE_ALLOWANCE", label: "Phụ cấp điện thoại", category: "ALLOWANCE" },
   { value: "FUEL_ALLOWANCE", label: "Phụ cấp xăng xe", category: "ALLOWANCE" },
+  { value: "PHONE_ALLOWANCE", label: "Phụ cấp điện thoại", category: "ALLOWANCE" },
+  { value: "INSURANCE_BALANCE_ALLOWANCE", label: "Phụ cấp chênh lệch BHXH", category: "ALLOWANCE" },
+  { value: "USA_OFFICE_ALLOWANCE", label: "Phụ cấp VP USA", category: "ALLOWANCE" },
+  { value: "MANAGEMENT_ALLOWANCE", label: "Phụ cấp quản lý", category: "ALLOWANCE" },
+  { value: "JOB_ALLOWANCE", label: "Phụ cấp công việc", category: "ALLOWANCE" },
+  { value: "ADMIN_FEE", label: "Phí ADMIN", category: "ALLOWANCE" },
+  { value: "MEAL_ALLOWANCE", label: "Phụ cấp ăn trưa", category: "ALLOWANCE" },
   { value: "CLIENT_ENTERTAINMENT_ALLOWANCE", label: "Phụ cấp tiếp khách", category: "ALLOWANCE" },
-  { value: "TARGET_ALLOWANCE", label: "Phụ cấp KPI", category: "ALLOWANCE" },
 ];
 
 export default function SalaryInformationSheet({ isOpen, onOpenChange, userId }: SalaryInformationSheetProps) {

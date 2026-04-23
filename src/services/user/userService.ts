@@ -13,6 +13,7 @@ import type { UserProfileResponse } from '@/types/user/UserProfileResponse';
 import type { UserCompensationsResponse } from '@/types/user/salary/UserCompensationsResponse';
 import type { UserCompensationResponse } from '@/types/user/salary/UserCompensationResponse';
 import type { UpdateUserCompensationsRequest } from '@/types/user/salary/UpdateUserCompensationsRequest';
+import type { ImportCompensationResponse } from '@/types/user/salary/ImportCompensationResponse';
 import type { ImportUserResponse } from '@/types/user/ImportUserResponse';
 
 export const userService = {
@@ -134,6 +135,17 @@ export const userService = {
     const formData = new FormData();
     formData.append("file", file);
     const response = await apiClient.post("/users/import", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data;
+  },
+
+  importCompensations: async (file: File): Promise<ApiResponse<ImportCompensationResponse>> => {
+    const formData = new FormData();
+    formData.append("file", file);
+    const response = await apiClient.post("/users/compensations/import", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },

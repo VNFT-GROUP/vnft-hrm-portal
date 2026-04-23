@@ -14,6 +14,7 @@ import {
   UserPlus,
   ChevronDown,
   ChevronUp,
+  FileSpreadsheet,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -30,6 +31,7 @@ import ChangePasswordSheet from "./components/ChangePasswordSheet";
 import BasicInformationSheet from "./components/BasicInformationSheet";
 import CompensationInformationSheet from "./components/CompensationInformationSheet";
 import ImportEmployeeModal from "./components/ImportEmployeeModal";
+import ImportCompensationModal from "./components/ImportCompensationModal";
 import UserFormSheet from "../users/components/UserFormSheet";
 import CustomPagination from "@/components/custom/CustomPagination";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -37,6 +39,12 @@ import { userService } from "@/services/user/userService";
 import { departmentService } from "@/services/department";
 import { positionService } from "@/services/position";
 import { SearchableSelect } from "@/components/custom/SearchableSelect";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 import { toast } from "sonner";
 import type { CreateUserRequest } from "@/types/user/CreateUserRequest";
@@ -47,6 +55,7 @@ export default function EmployeesPage() {
   const [isOpen, setIsOpen] = useState(false);
   const [isUserFormOpen, setIsUserFormOpen] = useState(false);
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
+  const [isImportCompModalOpen, setIsImportCompModalOpen] = useState(false);
   const showEmployeeLegend = useLayoutStore((state) => state.showEmployeeLegend);
   const setShowEmployeeLegend = useLayoutStore((state) => state.setShowEmployeeLegend);
   const [editingEmployee, setEditingEmployee] = useState<Employee | null>(null);
@@ -245,13 +254,23 @@ export default function EmployeesPage() {
         </div>
         
         <div className="flex gap-3 w-full md:w-auto shrink-0 justify-end mt-2 md:mt-0">
-          <Button
-            onClick={() => setIsImportModalOpen(true)}
-            variant="outline"
-            className="w-full md:w-auto h-11 px-5 rounded-xl border-indigo-200 text-indigo-700 hover:bg-indigo-50 hover:text-indigo-800 transition-all font-semibold shadow-sm"
-          >
-            <FileUp size={18} className="mr-2" /> Import
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger
+              className="inline-flex items-center justify-center whitespace-nowrap focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 w-full md:w-auto h-11 px-5 rounded-xl border border-indigo-200 text-indigo-700 hover:bg-indigo-50 hover:text-indigo-800 transition-all font-semibold shadow-sm text-sm"
+            >
+              <FileUp size={18} className="mr-2 shrink-0" /> Import <ChevronDown size={16} className="ml-2 opacity-70 shrink-0" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48 rounded-xl shadow-lg border-indigo-100">
+              <DropdownMenuItem onClick={() => setIsImportModalOpen(true)} className="cursor-pointer py-2.5 font-medium text-slate-700">
+                <Users size={16} className="mr-2.5 text-indigo-500" />
+                Import Nhân sự
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setIsImportCompModalOpen(true)} className="cursor-pointer py-2.5 font-medium text-slate-700">
+                <FileSpreadsheet size={16} className="mr-2.5 text-emerald-500" />
+                Import Cấu hình Lương
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
           <Button
             onClick={() => handleOpenForm()}
             className="w-full md:w-auto h-11 px-6 rounded-xl bg-[#2E3192] hover:bg-[#1E2062] text-white shadow-md shadow-[#2E3192]/20 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 font-semibold"
@@ -516,6 +535,11 @@ export default function EmployeesPage() {
       <ImportEmployeeModal
         isOpen={isImportModalOpen}
         onOpenChange={setIsImportModalOpen}
+      />
+
+      <ImportCompensationModal
+        isOpen={isImportCompModalOpen}
+        onOpenChange={setIsImportCompModalOpen}
       />
     </div>
   );

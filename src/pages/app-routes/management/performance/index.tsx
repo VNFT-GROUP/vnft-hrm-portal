@@ -11,6 +11,7 @@ import PerformanceReviewDetailModal from "./components/PerformanceReviewDetailMo
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { SearchableSelect } from "@/components/custom/SearchableSelect";
+import { useTranslation } from "react-i18next";
 
 const SCORE_COLORS: Record<number, string> = {
   1: "bg-rose-50 text-rose-700 border-rose-200",
@@ -21,6 +22,7 @@ const SCORE_COLORS: Record<number, string> = {
 };
 
 export default function PerformanceReviewsPage() {
+  const { t } = useTranslation();
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   
@@ -42,7 +44,7 @@ export default function PerformanceReviewsPage() {
     queryFn: () => performanceService.getReviewableDepartments(),
   });
   const departmentsOpts = [
-    { value: "", label: "Tất cả phòng ban" },
+    { value: "", label: t("performance.allDepartments", { defaultValue: "Tất cả phòng ban" }) },
     ...(departmentsResponse?.data?.map(d => {
        const indent = d.level > 1 ? "\u00A0\u00A0\u00A0 ".repeat(d.level - 1) + "└ " : "";
        return { value: d.id, label: indent + d.name };
@@ -96,10 +98,10 @@ export default function PerformanceReviewsPage() {
             <span className="p-2.5 bg-[#2E3192]/10 text-[#2E3192] rounded-xl flex items-center justify-center">
               <Star size={24} strokeWidth={2.5} />
             </span>
-            Đánh giá hiệu suất
+            {t("performance.title", { defaultValue: "Đánh giá hiệu suất" })}
           </h1>
           <p className="text-slate-500 mt-2 text-sm leading-relaxed max-w-2xl">
-            Quản lý và thực hiện đánh giá hiệu suất hàng tháng cho nhân sự trong phòng ban.
+            {t("performance.subtitle", { defaultValue: "Quản lý và thực hiện đánh giá hiệu suất hàng tháng cho nhân sự trong phòng ban." })}
           </p>
         </m.div>
       </div>
@@ -115,7 +117,7 @@ export default function PerformanceReviewsPage() {
           <Input
             value={search}
             onChange={(e) => { setSearch(e.target.value); setCurrentPage(1); }}
-            placeholder="Tìm kiếm nhân sự bằng tên hoặc mã nhân viên..."
+            placeholder={t("performance.searchPlaceholder", { defaultValue: "Tìm kiếm nhân sự bằng tên hoặc mã nhân viên..." })}
             className="pl-12 h-11 rounded-xl bg-slate-50/50 border-slate-200 focus-visible:ring-[#2E3192]/20 hover:bg-slate-50 transition-colors w-full text-base"
           />
         </div>
@@ -123,29 +125,29 @@ export default function PerformanceReviewsPage() {
         <div className="flex flex-wrap items-center gap-5 pt-4 border-t border-slate-100">
            {/* Kỳ Đánh Giá: Tháng + Năm */}
            <div className="flex items-center gap-2.5">
-             <span className="font-semibold text-slate-700 whitespace-nowrap text-sm">Kỳ đánh giá:</span>
+             <span className="font-semibold text-slate-700 whitespace-nowrap text-sm">{t("performance.period", { defaultValue: "Kỳ đánh giá:" })}</span>
              <div className="flex items-center gap-2">
                <Select value={reviewMonth.toString()} onValueChange={(v) => { setReviewMonth(parseInt(v as string)); setCurrentPage(1); }}>
                  <SelectTrigger className="min-w-[120px] h-11 rounded-xl border-slate-200 hover:bg-slate-50 transition-colors bg-white">
-                   <SelectValue placeholder="Tháng">
-                     {reviewMonth ? `Tháng ${reviewMonth}` : "Tháng"}
+                   <SelectValue placeholder={t("performance.monthLabel", { defaultValue: "Tháng" })}>
+                     {reviewMonth ? `${t("performance.monthLabel", { defaultValue: "Tháng" })} ${reviewMonth}` : t("performance.monthLabel", { defaultValue: "Tháng" })}
                    </SelectValue>
                  </SelectTrigger>
                  <SelectContent>
                    {Array.from({ length: 12 }, (_, i) => i + 1).map(m => (
-                     <SelectItem key={m} value={m.toString()}>Tháng {m}</SelectItem>
+                     <SelectItem key={m} value={m.toString()}>{t("performance.monthLabel", { defaultValue: "Tháng" })} {m}</SelectItem>
                    ))}
                  </SelectContent>
                </Select>
 
                <Select value={reviewYear.toString()} onValueChange={(v) => { setReviewYear(parseInt(v as string)); setCurrentPage(1); }}>
                  <SelectTrigger className="min-w-[120px] h-11 rounded-xl border-slate-200 hover:bg-slate-50 transition-colors bg-white">
-                   <SelectValue placeholder="Năm">
-                     {reviewYear ? `Năm ${reviewYear}` : "Năm"}
+                   <SelectValue placeholder={t("performance.yearLabel", { defaultValue: "Năm" })}>
+                     {reviewYear ? `${t("performance.yearLabel", { defaultValue: "Năm" })} ${reviewYear}` : t("performance.yearLabel", { defaultValue: "Năm" })}
                    </SelectValue>
                  </SelectTrigger>
                  <SelectContent>
-                   {years.map(y => <SelectItem key={y} value={y.toString()}>Năm {y}</SelectItem>)}
+                   {years.map(y => <SelectItem key={y} value={y.toString()}>{t("performance.yearLabel", { defaultValue: "Năm" })} {y}</SelectItem>)}
                  </SelectContent>
                </Select>
              </div>
@@ -153,13 +155,13 @@ export default function PerformanceReviewsPage() {
 
            {/* Phòng Ban */}
            <div className="flex items-center gap-2.5">
-             <span className="font-semibold text-slate-700 whitespace-nowrap text-sm">Phòng ban:</span>
+             <span className="font-semibold text-slate-700 whitespace-nowrap text-sm">{t("performance.department", { defaultValue: "Phòng ban:" })}</span>
              <div className="w-[200px] sm:w-[220px]">
                <SearchableSelect 
                  options={departmentsOpts}
                  value={filterDepartmentId}
                  onChange={(val) => { setFilterDepartmentId(val || ""); setCurrentPage(1); }}
-                 placeholder="Tất cả"
+                 placeholder={t("performance.allDepartments", { defaultValue: "Tất cả" })}
                  isLoading={isFetchingDepts}
                  disabled={departmentsResponse?.data?.length === 1}
                />
@@ -168,17 +170,17 @@ export default function PerformanceReviewsPage() {
 
            {/* Trạng thái đánh giá */}
            <div className="flex items-center gap-2.5">
-             <span className="font-semibold text-slate-700 whitespace-nowrap text-sm">Trạng thái:</span>
+             <span className="font-semibold text-slate-700 whitespace-nowrap text-sm">{t("performance.status", { defaultValue: "Trạng thái:" })}</span>
              <Select value={filterStatus} onValueChange={(v) => { setFilterStatus(v as string); setCurrentPage(1); }}>
                <SelectTrigger className="w-[160px] sm:w-[180px] h-11 rounded-xl border-slate-200 hover:bg-slate-50 transition-colors bg-white">
-                 <SelectValue placeholder="Trạng thái">
-                   {filterStatus === "ALL" ? "Tất cả" : filterStatus === "REVIEWED" ? "Đã đánh giá" : filterStatus === "NOT_REVIEWED" ? "Chưa đánh giá" : "Trạng thái"}
+                 <SelectValue placeholder={t("performance.statusPlaceholder", { defaultValue: "Trạng thái" })}>
+                   {filterStatus === "ALL" ? t("performance.allStatus", { defaultValue: "Tất cả" }) : filterStatus === "REVIEWED" ? t("performance.reviewed", { defaultValue: "Đã đánh giá" }) : filterStatus === "NOT_REVIEWED" ? t("performance.notReviewed", { defaultValue: "Chưa đánh giá" }) : t("performance.statusPlaceholder", { defaultValue: "Trạng thái" })}
                  </SelectValue>
                </SelectTrigger>
                <SelectContent>
-                 <SelectItem value="ALL">Tất cả</SelectItem>
-                 <SelectItem value="REVIEWED">Đã đánh giá</SelectItem>
-                 <SelectItem value="NOT_REVIEWED">Chưa đánh giá</SelectItem>
+                 <SelectItem value="ALL">{t("performance.allStatus", { defaultValue: "Tất cả" })}</SelectItem>
+                 <SelectItem value="REVIEWED">{t("performance.reviewed", { defaultValue: "Đã đánh giá" })}</SelectItem>
+                 <SelectItem value="NOT_REVIEWED">{t("performance.notReviewed", { defaultValue: "Chưa đánh giá" })}</SelectItem>
                </SelectContent>
              </Select>
            </div>
@@ -195,11 +197,11 @@ export default function PerformanceReviewsPage() {
           <table className="w-full text-sm text-left whitespace-nowrap">
             <thead className="text-xs text-slate-500 uppercase bg-slate-50/80 sticky top-0 z-0">
               <tr>
-                <th className="px-5 py-4 font-semibold tracking-wider">Nhân sự</th>
-                <th className="px-5 py-4 font-semibold tracking-wider">Phòng ban / Chức vụ</th>
-                <th className="px-5 py-4 font-semibold tracking-wider text-center">Trạng thái</th>
-                <th className="px-5 py-4 font-semibold tracking-wider text-center">Kết quả</th>
-                <th className="px-5 py-4 font-semibold tracking-wider text-center">Thao tác</th>
+                <th className="px-5 py-4 font-semibold tracking-wider">{t("performance.columns.employee", { defaultValue: "Nhân sự" })}</th>
+                <th className="px-5 py-4 font-semibold tracking-wider">{t("performance.columns.departmentRole", { defaultValue: "Phòng ban / Chức vụ" })}</th>
+                <th className="px-5 py-4 font-semibold tracking-wider text-center">{t("performance.columns.status", { defaultValue: "Trạng thái" })}</th>
+                <th className="px-5 py-4 font-semibold tracking-wider text-center">{t("performance.columns.result", { defaultValue: "Kết quả" })}</th>
+                <th className="px-5 py-4 font-semibold tracking-wider text-center">{t("performance.columns.actions", { defaultValue: "Thao tác" })}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -207,14 +209,14 @@ export default function PerformanceReviewsPage() {
                 <tr>
                   <td colSpan={5} className="px-5 py-12 text-center text-slate-400">
                     <Loader2 className="w-6 h-6 animate-spin mx-auto mb-2 text-[#2E3192]" />
-                    Đang tải danh sách nhân sự...
+                    {t("performance.loading", { defaultValue: "Đang tải danh sách nhân sự..." })}
                   </td>
                 </tr>
               ) : paginatedEmployees.length === 0 ? (
                 <tr>
                   <td colSpan={5} className="px-5 py-16 text-center text-slate-400 bg-slate-50/30">
                     <Star className="w-10 h-10 mx-auto text-slate-300 mb-3" strokeWidth={1} />
-                    <p className="text-base text-slate-600 font-medium">Không tìm thấy nhân sự phù hợp</p>
+                    <p className="text-base text-slate-600 font-medium">{t("performance.noData", { defaultValue: "Không tìm thấy nhân sự phù hợp" })}</p>
                   </td>
                 </tr>
               ) : (
@@ -242,11 +244,11 @@ export default function PerformanceReviewsPage() {
                     <td className="px-5 py-3 text-center">
                        {row.hasReview ? (
                           <span className="inline-flex items-center px-2 py-1 bg-emerald-50 text-emerald-700 text-xs font-semibold rounded-md border border-emerald-200/60">
-                             Đã đánh giá
+                             {t("performance.reviewed", { defaultValue: "Đã đánh giá" })}
                           </span>
                        ) : (
                           <span className="inline-flex items-center px-2 py-1 bg-slate-100 text-slate-600 text-xs font-semibold rounded-md border border-slate-200">
-                             Chưa đánh giá
+                             {t("performance.notReviewed", { defaultValue: "Chưa đánh giá" })}
                           </span>
                        )}
                     </td>
@@ -268,7 +270,7 @@ export default function PerformanceReviewsPage() {
                               onClick={() => setSelectedReviewId(row.reviewId!)}
                               className="px-3 py-1.5 bg-white border border-slate-200 hover:border-[#2E3192]/40 hover:bg-slate-50 hover:text-[#2E3192] text-slate-600 rounded-lg text-xs font-medium transition-colors shadow-sm"
                             >
-                              Chi tiết
+                              {t("performance.actions.viewDetails", { defaultValue: "Chi tiết" })}
                             </button>
                             <button
                               onClick={() => {
@@ -277,7 +279,7 @@ export default function PerformanceReviewsPage() {
                               }}
                               className="px-3 py-1.5 bg-emerald-50 border border-emerald-200 text-emerald-700 hover:bg-emerald-100 rounded-lg text-xs font-medium transition-colors shadow-sm"
                             >
-                              Cập nhật
+                              {t("performance.actions.update", { defaultValue: "Cập nhật" })}
                             </button>
                           </>
                         ) : (
@@ -289,7 +291,7 @@ export default function PerformanceReviewsPage() {
                             disabled={!row.canReview}
                             className="px-4 py-1.5 bg-[#2E3192] hover:bg-[#1E2062] disabled:bg-slate-300 disabled:text-slate-500 disabled:cursor-not-allowed border-transparent text-white rounded-lg text-xs font-medium transition-colors shadow-sm gap-1 flex items-center"
                           >
-                            <Plus size={14} /> Chấm điểm
+                            <Plus size={14} /> {t("performance.actions.rate", { defaultValue: "Chấm điểm" })}
                           </button>
                         )}
                       </div>

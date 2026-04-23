@@ -36,6 +36,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { useNavigate } from "react-router-dom";
 import { RichTextEditor } from "@/components/custom/RichTextEditor";
 import { getErrorMessage } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 
 type RequestType =
   | "leave"
@@ -45,21 +46,13 @@ type RequestType =
   | "resign"
   | "wfh";
 
-const typeLabels: Record<RequestType, string> = {
-  leave: "Đơn xin nghỉ phép",
-  absent: "Đơn vắng mặt",
-  checkInOut: "Đơn checkin/out",
-  business: "Đơn công tác",
-  resign: "Đơn thôi việc",
-  wfh: "Đơn WFH",
-};
+// No typeLabels needed anymore as we will use t(requests.types.xxx)
 
 const requestCards = [
   {
     id: "leave",
-    label: "Đơn xin nghỉ phép",
-    description:
-      "Sử dụng để xin nghỉ phép, nghỉ ốm hoặc công việc cá nhân. Thời gian nghỉ sẽ được đối trừ trực tiếp vào quỹ phép hiện tại của bạn.",
+    labelKey: "requests.types.leave",
+    descKey: "requests.create.descriptions.leave",
     icon: Umbrella,
     color: "text-indigo-500",
     bg: "bg-indigo-50 ring-1 ring-indigo-100",
@@ -67,9 +60,8 @@ const requestCards = [
   },
   {
     id: "wfh",
-    label: "Đơn WFH",
-    description:
-      "Đăng ký hình thức làm việc từ xa. Phù hợp khi bạn không có mặt tại văn phòng nhưng vẫn đảm bảo được hiệu suất và công việc trong ngày.",
+    labelKey: "requests.types.wfh",
+    descKey: "requests.create.descriptions.wfh",
     icon: Home,
     color: "text-purple-500",
     bg: "bg-purple-50 ring-1 ring-purple-100",
@@ -77,9 +69,8 @@ const requestCards = [
   },
   {
     id: "checkInOut",
-    label: "Đơn checkin/out",
-    description:
-      "Điều chỉnh bổ sung dữ liệu chấm công khi bạn quên quẹt thẻ, hệ thống lỗi, hoặc có lịch trình đột xuất không thể check-in/out đúng giờ.",
+    labelKey: "requests.types.checkInOut",
+    descKey: "requests.create.descriptions.checkInOut",
     icon: CheckCircle2,
     color: "text-rose-500",
     bg: "bg-rose-50 ring-1 ring-rose-100",
@@ -87,9 +78,8 @@ const requestCards = [
   },
   {
     id: "absent",
-    label: "Đơn vắng mặt",
-    description:
-      "Đăng ký vắng mặt tạm thời trong ca làm (ra ngoài gặp khách, sự vụ cá nhân). Khung giờ này vẫn sẽ được tính là khung giờ làm việc hợp lệ.",
+    labelKey: "requests.types.absent",
+    descKey: "requests.create.descriptions.absent",
     icon: User,
     color: "text-cyan-500",
     bg: "bg-cyan-50 ring-1 ring-cyan-100",
@@ -97,9 +87,8 @@ const requestCards = [
   },
   {
     id: "business",
-    label: "Đơn công tác",
-    description:
-      "Cập nhật hình thức đi công tác. Toàn bộ thời gian xử lý công việc ngoài văn phòng sẽ được hệ thống tính công đầy đủ.",
+    labelKey: "requests.types.business",
+    descKey: "requests.create.descriptions.business",
     icon: Truck,
     color: "text-lime-600",
     bg: "bg-lime-50 ring-1 ring-lime-100",
@@ -107,8 +96,8 @@ const requestCards = [
   },
   {
     id: "resign",
-    label: "Đơn thôi việc",
-    description: "Đề xuất xin nghỉ việc chính thức. Phân vùng chấm công và xử lý lương sẽ được đóng sau 'Ngày làm việc cuối' của bạn.",
+    labelKey: "requests.types.resign",
+    descKey: "requests.create.descriptions.resign",
     icon: UserMinus,
     color: "text-red-500",
     bg: "bg-red-50 ring-1 ring-red-100",
@@ -121,6 +110,7 @@ const requestCards = [
 
 export default function CreateRequestPage() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [type, setType] = useState<RequestType | "">("");
   const [description, setDescription] = useState("");
 
@@ -310,10 +300,10 @@ export default function CreateRequestPage() {
             </button>
             <div>
               <h1 className="text-2xl font-bold tracking-tight text-slate-900">
-                Tạo đơn mới
+                {t("requests.create.title", { defaultValue: "Tạo đơn mới" })}
               </h1>
               <p className="text-sm text-slate-500 mt-1">
-                Điền đầy đủ các thông tin cần thiết để nộp đơn từ.
+                {t("requests.create.subtitle", { defaultValue: "Điền đầy đủ các thông tin cần thiết để nộp đơn từ." })}
               </p>
             </div>
           </div>
@@ -324,10 +314,10 @@ export default function CreateRequestPage() {
           <div className="space-y-4">
             <div className="space-y-1">
               <Label className="text-[14px] font-semibold text-slate-800 flex items-center">
-                1. Chọn loại đơn <span className="text-rose-500 ml-1">*</span>
+                {t("requests.create.step1Title", { defaultValue: "1. Chọn loại đơn" })} <span className="text-rose-500 ml-1">*</span>
               </Label>
               <p className="text-[12.5px] text-slate-500">
-                Bấm vào để chọn loại đơn cần tạo
+                {t("requests.create.step1Subtitle", { defaultValue: "Bấm vào để chọn loại đơn cần tạo" })}
               </p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -360,14 +350,14 @@ export default function CreateRequestPage() {
                     <div className="flex flex-col gap-1.5 pr-6 items-start">
                       <div className="flex items-center gap-2 flex-wrap">
                         <span className="text-[14px] md:text-[15px] font-semibold text-slate-800 tracking-tight">
-                          {card.label}
+                          {t(card.labelKey)}
                         </span>
                         {card.isPaid && (
-                          <span className="bg-emerald-50 text-emerald-600 border border-emerald-200 px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider">Có tính công</span>
+                          <span className="bg-emerald-50 text-emerald-600 border border-emerald-200 px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider">{t("requests.isPaidText", { defaultValue: "CÓ TÍNH CÔNG" })}</span>
                         )}
                       </div>
                       <span className="text-[12.5px] text-slate-500 leading-snug">
-                        {card.description}
+                        {t(card.descKey)}
                       </span>
                     </div>
                     {isSelected && (
@@ -390,7 +380,7 @@ export default function CreateRequestPage() {
           >
             <div className="p-5 md:p-6 flex flex-col gap-5 border-b border-slate-100">
               <h3 className="text-[15px] font-semibold text-slate-800 border-b border-slate-100 pb-3">
-                2. Chi tiết yêu cầu
+                {t("requests.create.step2Title", { defaultValue: "2. Chi tiết yêu cầu" })}
               </h3>
 
               <div className="grid grid-cols-1 gap-5">
@@ -399,7 +389,7 @@ export default function CreateRequestPage() {
                     Loại đơn đăng ký
                   </Label>
                   <div className="w-full flex items-center justify-start text-left h-10 bg-slate-100/80 border-slate-200 border rounded-md px-4 text-sm text-slate-700 cursor-not-allowed font-medium">
-                    {typeLabels[type as RequestType]}
+                    {t(`requests.types.${type}`)}
                   </div>
                 </div>
               </div>

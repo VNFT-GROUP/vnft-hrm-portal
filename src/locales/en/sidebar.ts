@@ -36,5 +36,15 @@ export default {
   switchToUser: "Switch to Employee View",
   switchToAdmin: "Switch to Admin View",
   adminMode: "Admin",
-  userMode: "User"
+  userMode: "User",
+  operations: "Operations",
+  opsShort: "Ops",
+  organization: "Organization & HR",
+  orgShort: "Org & HR",
+  performance: "Performance Reviews",
+  performanceShort: "Reviews",
+  reports: "Internal Reports",
+  reportsShort: "Reports",
+  payroll: "Payroll",
+  payrollShort: "Payroll"
 };

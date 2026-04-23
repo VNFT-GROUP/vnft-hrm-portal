@@ -50,5 +50,16 @@ export default {
     wfhLeaveDeduction: "居家办公超限扣假",
     disciplineScore: "纪律得分",
     allowance: "纪律津贴"
-  }
+  },
+  statsRulesBtn: "解释指标",
+  totalWorkUnits: "全部工时",
+  daySuffix: "天",
+  disciplineSection: "时间纪律",
+  disciplineRulesBtn: "规则与计算",
+  score: "分数",
+  allowanceBonus: "津贴 / 奖金",
+  vnd: "越南盾",
+  violationsSection: "违规与处罚",
+  attendanceSection: "出勤详情",
+  monthSelector: "{{year}}年{{month}}月"
 };

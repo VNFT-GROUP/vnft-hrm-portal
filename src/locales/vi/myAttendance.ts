@@ -50,5 +50,16 @@ export default {
     wfhLeaveDeduction: "Phép/công trừ do WFH vượt",
     disciplineScore: "Điểm kỷ luật giờ giấc",
     allowance: "Phụ cấp kỷ luật"
-  }
+  },
+  statsRulesBtn: "Giải thích chỉ số",
+  totalWorkUnits: "Tổng số công",
+  daySuffix: "ngày",
+  disciplineSection: "Kỷ luật giờ giấc",
+  disciplineRulesBtn: "Quy tắc & Cách tính",
+  score: "ĐIỂM SỐ",
+  allowanceBonus: "PHỤ CẤP / THƯỞNG",
+  vnd: "VNĐ",
+  violationsSection: "Vi phạm & Phạt",
+  attendanceSection: "Chi tiết đi làm",
+  monthSelector: "Tháng {{month}}/{{year}}"
 };

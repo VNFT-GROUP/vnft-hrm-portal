@@ -31,5 +31,12 @@ export default {
     workingTime: "Thời gian làm",
     workUnit: "Ngày công",
     workUnitSuffix: "công"
-  }
+  },
+  majorLateEarlyViolationTimes: "Số lần đi trễ / về sớm từ 120 phút trở lên",
+  majorLateEarlyViolationTooltip: "Số lần vi phạm đi trễ hoặc về sớm từ 120 phút trở lên",
+  leaveDeductionViolationTimes: "Số lần bị trừ do trễ / về sớm",
+  leaveDeductionDays: "Số ngày phép / công bị trừ do trễ / về sớm",
+  times: "lần",
+  hoursShort: "h",
+  minutesShort: "p"
 };

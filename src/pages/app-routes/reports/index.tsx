@@ -9,8 +9,10 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { PERMISSIONS } from "@/constants/permissions";
 import { useAllowanceReport } from "./hooks/useAllowanceReport";
 import { useAttendanceDisciplineReport } from "./hooks/useAttendanceDisciplineReport";
+import { useTranslation } from "react-i18next";
 
 export default function ReportsPage() {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<"allowance" | "attendance">("allowance");
 
   const allowance = useAllowanceReport();
@@ -32,8 +34,8 @@ export default function ReportsPage() {
           <div className="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mb-6">
             <ShieldAlert className="w-10 h-10 text-red-500" />
           </div>
-          <h2 className="text-xl font-bold text-slate-800 mb-2">Không có quyền truy cập</h2>
-          <p className="text-slate-500 mb-6">Bạn không có quyền xem báo cáo phụ cấp nhân viên. Vui lòng liên hệ quản trị viên nếu bạn cần truy cập tính năng này.</p>
+          <h2 className="text-xl font-bold text-slate-800 mb-2">{t("reports.noAccessTitle", { defaultValue: "Không có quyền truy cập" })}</h2>
+          <p className="text-slate-500 mb-6">{t("reports.noAccessDesc", { defaultValue: "Bạn không có quyền xem báo cáo phụ cấp nhân viên. Vui lòng liên hệ quản trị viên nếu bạn cần truy cập tính năng này." })}</p>
         </m.div>
       </div>
     );
@@ -50,9 +52,9 @@ export default function ReportsPage() {
       >
         <div className="space-y-1">
           <h1 className="text-2xl font-black text-[#1E2062] tracking-tight">
-            Báo cáo nội bộ
+            {t("reports.title", { defaultValue: "Báo cáo nội bộ" })}
           </h1>
-          <p className="text-slate-500 font-medium text-sm">Theo dõi phụ cấp, chuyên cần và các chỉ số vận hành nhân sự theo kỳ.</p>
+          <p className="text-slate-500 font-medium text-sm">{t("reports.subtitle", { defaultValue: "Theo dõi phụ cấp, chuyên cần và các chỉ số vận hành nhân sự theo kỳ." })}</p>
         </div>
       </m.div>
 
@@ -64,7 +66,7 @@ export default function ReportsPage() {
             activeTab === "allowance" ? "text-[#2E3192]" : "text-slate-500 hover:text-slate-700"
           }`}
         >
-          Bảng Tính Phụ Cấp
+          {t("reports.allowanceTab", { defaultValue: "Bảng Tính Phụ Cấp" })}
           {activeTab === "allowance" && (
             <m.div layoutId="activeTabReport" className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#2E3192]" />
           )}
@@ -75,7 +77,7 @@ export default function ReportsPage() {
             activeTab === "attendance" ? "text-[#2E3192]" : "text-slate-500 hover:text-slate-700"
           }`}
         >
-          Báo Cáo Chuyên Cần
+          {t("reports.attendanceTab", { defaultValue: "Báo Cáo Chuyên Cần" })}
           {activeTab === "attendance" && (
             <m.div layoutId="activeTabReport" className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#2E3192]" />
           )}
@@ -109,13 +111,13 @@ export default function ReportsPage() {
               {allowance.isLoading ? (
                 <div className="flex-1 flex flex-col items-center justify-center bg-white rounded-2xl border border-slate-200 shadow-sm min-h-[400px]">
                   <Loader2 className="w-10 h-10 text-[#2E3192] animate-spin mb-4" />
-                  <p className="text-slate-500 font-medium">Đang tải dữ liệu báo cáo...</p>
+                  <p className="text-slate-500 font-medium">{t("reports.allowanceLoading", { defaultValue: "Đang tải dữ liệu báo cáo..." })}</p>
                 </div>
               ) : allowance.isError ? (
                 <div className="flex-1 flex flex-col items-center justify-center bg-red-50/50 rounded-2xl border border-red-100 min-h-[400px] text-red-600">
                   <AlertCircle className="w-10 h-10 mb-4 opacity-50" />
-                  <p className="font-bold">Không thể tải dữ liệu báo cáo.</p>
-                  <p className="text-sm opacity-80 mt-1">Vui lòng thử lại sau hoặc liên hệ quản trị viên.</p>
+                  <p className="font-bold">{t("reports.allowanceError", { defaultValue: "Không thể tải dữ liệu báo cáo." })}</p>
+                  <p className="text-sm opacity-80 mt-1">{t("reports.allowanceErrorHint", { defaultValue: "Vui lòng thử lại sau hoặc liên hệ quản trị viên." })}</p>
                 </div>
               ) : (
                 <AllowanceReportTable items={allowance.data?.data?.items || []} />
@@ -134,7 +136,7 @@ export default function ReportsPage() {
             className="flex-1 flex flex-col space-y-6"
           >
             <p className="text-slate-600 text-sm italic -mt-2">
-              Tổng hợp điểm chuyên cần, ngày công, vi phạm giờ giấc và phụ cấp chuyên cần.
+              {t("reports.attendanceDesc", { defaultValue: "Tổng hợp điểm chuyên cần, ngày công, vi phạm giờ giấc và phụ cấp chuyên cần." })}
             </p>
             <AttendanceDisciplineReportFilter
               periodType={attendance.periodType}
@@ -153,12 +155,12 @@ export default function ReportsPage() {
               {attendance.isLoading ? (
                 <div className="flex-1 flex flex-col items-center justify-center bg-white rounded-2xl border border-slate-200 shadow-sm min-h-[400px]">
                   <Loader2 className="w-10 h-10 text-[#2E3192] animate-spin mb-4" />
-                  <p className="text-slate-500 font-medium">Đang tải báo cáo chuyên cần...</p>
+                  <p className="text-slate-500 font-medium">{t("reports.attendanceLoading", { defaultValue: "Đang tải báo cáo chuyên cần..." })}</p>
                 </div>
               ) : attendance.isError ? (
                 <div className="flex-1 flex flex-col items-center justify-center bg-red-50/50 rounded-2xl border border-red-100 min-h-[400px] text-red-600">
                   <AlertCircle className="w-10 h-10 mb-4 opacity-50" />
-                  <p className="font-bold">Không thể tải báo cáo chuyên cần. Vui lòng thử lại sau.</p>
+                  <p className="font-bold">{t("reports.attendanceError", { defaultValue: "Không thể tải báo cáo chuyên cần. Vui lòng thử lại sau." })}</p>
                 </div>
               ) : (
                 <AttendanceDisciplineReportTable items={attendance.data?.data?.items || []} />

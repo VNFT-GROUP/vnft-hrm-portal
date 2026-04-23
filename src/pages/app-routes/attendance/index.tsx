@@ -137,7 +137,7 @@ export default function MyAttendancePage() {
             </button>
             <div className="flex items-center gap-2 font-medium text-slate-700 min-w-[120px] justify-center text-[15px]">
               <CalendarIcon size={18} className="text-indigo-600" />
-              {t("myAttendance.monthPrefix")} {month}/{year}
+              {t("myAttendance.monthSelector", { month, year })}
             </div>
             <button
               onClick={handleNextMonth}
@@ -168,15 +168,15 @@ export default function MyAttendancePage() {
                     className="flex items-center gap-1.5 text-[11px] uppercase font-bold text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50 bg-white border border-indigo-200 px-2.5 py-1.5 rounded-lg transition-all shadow-sm"
                   >
                     <FileText size={14} />
-                    Giải thích chỉ số
+                    {t("myAttendance.statsRulesBtn")}
                   </button>
                 </div>
                 <div className="flex items-center mt-1">
                   <div className="flex flex-col">
-                    <span className="text-[10px] font-medium text-slate-400 uppercase mb-0.5">Tổng số công</span>
+                    <span className="text-[10px] font-medium text-slate-400 uppercase mb-0.5">{t("myAttendance.totalWorkUnits")}</span>
                     <div className="flex items-baseline gap-1">
                       <div className="text-3xl font-bold text-slate-800">{data.summary?.workUnits ?? 0}</div>
-                      <div className="text-sm font-semibold text-slate-400">/ {maxWorkingDays} ngày</div>
+                      <div className="text-sm font-semibold text-slate-400">/ {maxWorkingDays} {t("myAttendance.daySuffix")}</div>
                     </div>
                   </div>
                 </div>
@@ -186,7 +186,7 @@ export default function MyAttendancePage() {
               <div className="p-5 flex flex-col flex-1">
                 <div className="flex items-center gap-2 mb-4">
                   <CalendarCheck size={16} className="text-indigo-500" />
-                  <h3 className="font-semibold text-slate-700 text-sm">{t("myAttendance.section.attendance", { defaultValue: "Chi tiết đi làm" })}</h3>
+                  <h3 className="font-semibold text-slate-700 text-sm">{t("myAttendance.attendanceSection")}</h3>
                 </div>
                 <div className="grid grid-cols-2 gap-y-5 gap-x-6 flex-1">
                   <div className="flex flex-col gap-1">
@@ -235,20 +235,20 @@ export default function MyAttendancePage() {
                       <div className="flex items-start justify-between mb-3">
                         <div className="flex items-center gap-2 mt-1">
                           <Medal size={18} strokeWidth={2} className="text-indigo-600" />
-                          <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-700">Kỷ luật giờ giấc</span>
+                          <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-700">{t("myAttendance.disciplineSection")}</span>
                         </div>
                         <button 
                           onClick={() => setShowDisciplineRules(true)}
                           className="flex items-center gap-1.5 text-[11px] uppercase font-bold text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50 bg-white border border-indigo-200 px-2.5 py-1.5 rounded-lg transition-all shadow-sm"
                         >
                           <FileText size={14} />
-                          Quy tắc & Cách tính
+                          {t("myAttendance.disciplineRulesBtn")}
                         </button>
                       </div>
                       
                       <div className="flex items-center gap-6 mt-1">
                         <div className="flex flex-col">
-                          <span className="text-[10px] font-medium text-slate-400 mb-0.5">ĐIỂM SỐ</span>
+                          <span className="text-[10px] font-medium text-slate-400 mb-0.5">{t("myAttendance.score")}</span>
                           <div className="flex items-baseline gap-1">
                             <div className={`text-3xl font-bold ${textColor}`}>{score}</div>
                             <div className="text-sm font-semibold text-slate-400">/5</div>
@@ -256,11 +256,11 @@ export default function MyAttendancePage() {
                         </div>
                         <div className="w-px h-10 bg-slate-200"></div>
                         <div className="flex flex-col">
-                          <span className="text-[10px] font-medium text-slate-400 mb-0.5">PHỤ CẤP / THƯỞNG</span>
+                          <span className="text-[10px] font-medium text-slate-400 mb-0.5">{t("myAttendance.allowanceBonus")}</span>
                           <div className="flex items-baseline gap-1">
                             {(data.summary?.punctualityDisciplineAllowance ?? 0) > 0 && <span className="text-xl font-medium text-emerald-600">+</span>}
                             <div className="text-2xl font-bold text-slate-800 shrink-0">{(data.summary?.punctualityDisciplineAllowance ?? 0).toLocaleString('en-US')}</div>
-                            <div className="text-xs font-semibold text-slate-400 ml-1">VNĐ</div>
+                            <div className="text-xs font-semibold text-slate-400 ml-1">{t("myAttendance.vnd")}</div>
                           </div>
                         </div>
                       </div>
@@ -273,7 +273,7 @@ export default function MyAttendancePage() {
               <div className="p-5 flex flex-col flex-1">
                 <div className="flex items-center gap-2 mb-4">
                   <AlertOctagon size={16} className="text-rose-500" />
-                  <h3 className="font-semibold text-slate-700 text-sm">{t("myAttendance.section.violations", { defaultValue: "Vi phạm & Phạt" })}</h3>
+                  <h3 className="font-semibold text-slate-700 text-sm">{t("myAttendance.violationsSection")}</h3>
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-y-5 gap-x-4 flex-1">
                   <div className="flex flex-col gap-1">
@@ -293,14 +293,14 @@ export default function MyAttendancePage() {
                     <span className="text-[11px] font-medium text-slate-500">{t("myAttendance.summary.deductedDays", { defaultValue: "Phép/công trừ do trễ/về sớm" })}</span>
                     <div className="flex items-center gap-1">
                       <span className="text-xl font-bold text-rose-500">{displayNumber(data?.summary?.leaveDeductionDays) > 0 ? `-${displayNumber(data?.summary?.leaveDeductionDays)}` : displayNumber(data?.summary?.leaveDeductionDays)}</span>
-                      {displayNumber(data?.summary?.leaveDeductionDays) > 0 && <span className="text-[10px] text-slate-400 uppercase">Ngày</span>}
+                      {displayNumber(data?.summary?.leaveDeductionDays) > 0 && <span className="text-[10px] text-slate-400 uppercase">{t("myAttendance.daySuffix")}</span>}
                     </div>
                   </div>
                   <div className="flex flex-col gap-1 border-t border-slate-100 pt-3 md:col-span-2">
                     <span className="text-[11px] font-medium text-slate-500">{t("myAttendance.summary.wfhLeaveDeduction", { defaultValue: "Phép/công trừ do WFH vượt" })}</span>
                     <div className="flex items-center gap-1">
                       <span className="text-xl font-bold text-rose-500">{displayNumber(data?.summary?.wfhLeaveDeductionDays) > 0 ? `-${displayNumber(data?.summary?.wfhLeaveDeductionDays)}` : displayNumber(data?.summary?.wfhLeaveDeductionDays)}</span>
-                      {displayNumber(data?.summary?.wfhLeaveDeductionDays) > 0 && <span className="text-[10px] text-slate-400 uppercase">Ngày</span>}
+                      {displayNumber(data?.summary?.wfhLeaveDeductionDays) > 0 && <span className="text-[10px] text-slate-400 uppercase">{t("myAttendance.daySuffix")}</span>}
                     </div>
                   </div>
                 </div>

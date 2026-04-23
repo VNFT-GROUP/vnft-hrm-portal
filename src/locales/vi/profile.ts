@@ -31,7 +31,8 @@ export default {
     salary: "Thông tin lương"
   },
   workingStatus: {
-    active: "Đang làm việc"
+    active: "Đang làm việc",
+    inactive: "Đã nghỉ việc"
   },
   fields: {
     basicInfo: "Thông tin cơ bản",
@@ -55,6 +56,34 @@ export default {
     street: "Số nhà, đường",
     ward: "Phường / Xã",
     district: "Quận / Huyện",
-    province: "Tỉnh / Thành"
-  }
+    province: "Tỉnh / Thành",
+    education: "Trình độ học vấn",
+    eduLevel: "Trình độ",
+    institutionName: "Nơi đào tạo",
+    major: "Chuyên ngành",
+    eduTime: "Thời gian",
+    dependentsInfo: "Thông tin người phụ thuộc / Gia đình",
+    bankInfo: "Thông tin ngân hàng",
+    documents: "Hồ sơ cá nhân"
+  },
+  salaryTab: {
+    netSalaryYear: "Lương thực nhận năm {{year}}",
+    month: "Tháng",
+    totalNetYear: "Tổng thực nhận năm {{year}}",
+    salaryHistory: "Lịch sử cấu hình lương",
+    emptyConfig: "Chưa có cấu hình lương nào được thiết lập.",
+    configNote: "Ghi chú đợt lương:",
+    item: "Khoản mục",
+    amount: "Số tiền (VNĐ)",
+    note: "Ghi chú",
+    present: "Hiện nay"
+  },
+  values: {
+    male: "Nam",
+    female: "Nữ",
+    other: "Khác",
+    married: "Đã kết hôn",
+    single: "Độc thân"
+  },
+  editBtn: "Cập nhật hồ sơ"
 };

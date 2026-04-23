@@ -152,7 +152,7 @@ export default function PayrollPage() {
                 className="bg-transparent border-none outline-none text-sm font-medium focus:ring-0"
               >
                 {Array.from({ length: 12 }, (_, i) => i + 1).map(m => (
-                  <option key={m} value={m}>Tháng {m}</option>
+                  <option key={m} value={m}>{t("payroll.month", { defaultValue: "Tháng" })} {m}</option>
                 ))}
               </select>
             </div>
@@ -163,7 +163,7 @@ export default function PayrollPage() {
               className="bg-transparent border-none outline-none text-sm font-medium px-3 focus:ring-0"
             >
               {Array.from({ length: 10 }, (_, i) => currentDate.getFullYear() - 5 + i).map(y => (
-                <option key={y} value={y}>Năm {y}</option>
+                <option key={y} value={y}>{t("payroll.year", { defaultValue: "Năm" })} {y}</option>
               ))}
             </select>
           </div>
@@ -195,7 +195,7 @@ export default function PayrollPage() {
                 disabled={createMutation.isPending || selectedCount === 0 || candidates.length === 0}
                 className="w-full md:w-auto h-10 px-6 rounded-xl bg-[#2E3192] hover:bg-[#1E2062] text-white shadow-md transition-all font-semibold"
               >
-                {createMutation.isPending ? "Đang tạo..." : t("payroll.createBtn", { defaultValue: "Tạo bảng lương" })}
+                {createMutation.isPending ? t("payroll.creating", { defaultValue: "Đang tạo..." }) : t("payroll.createBtn", { defaultValue: "Tạo bảng lương" })}
               </Button>
             </>
           ) : (
@@ -213,7 +213,7 @@ export default function PayrollPage() {
                 onClick={() => {
                   if (employees.length === 0 && !isImportSheetOpen) {
                     setIsImportSheetOpen(true);
-                    toast.info("Vui lòng nhập số liệu trước khi tính lương");
+                    toast.info(t("payroll.requireImportData", { defaultValue: "Vui lòng nhập số liệu trước khi tính lương" }));
                   } else {
                     handleCalculate([]);
                   }
@@ -222,7 +222,7 @@ export default function PayrollPage() {
                 className="w-full md:w-auto h-10 px-6 rounded-xl bg-amber-500 hover:bg-amber-600 text-white shadow-md transition-all font-semibold"
               >
                 <Calculator size={18} className="mr-2" /> 
-                {calculateMutation.isPending ? "Đang tính..." : t("payroll.calculateBtn", { defaultValue: "Tính lại" })}
+                {calculateMutation.isPending ? t("payroll.calculating", { defaultValue: "Đang tính..." }) : t("payroll.calculateBtn", { defaultValue: "Tính lại" })}
               </Button>
             </>
           )}
@@ -238,7 +238,7 @@ export default function PayrollPage() {
       >
         {isCreateMode && candidates.length > 0 && (
           <div className="absolute top-4 left-4 z-20 bg-indigo-50 text-indigo-700 px-3 py-1.5 rounded-lg text-sm font-semibold border border-indigo-100 shadow-sm">
-            Đã chọn: {selectedCount} nhân sự
+            {t("payroll.selectedCount", { count: selectedCount, defaultValue: `Đã chọn: ${selectedCount} nhân sự` })}
           </div>
         )}
         <PayrollTable 

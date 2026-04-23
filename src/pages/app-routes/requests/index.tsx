@@ -11,6 +11,7 @@ import CustomPagination from "@/components/custom/CustomPagination";
 import type { RequestFormResponse } from "@/types/requestform/RequestFormResponse";
 import { format } from "date-fns";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { RichTextViewer } from "@/components/custom/RichTextViewer";
 import { getErrorMessage } from "@/lib/utils";
@@ -71,6 +72,8 @@ export default function RequestsPage() {
   const canCreate = isAdmin || perms.includes(PERMISSIONS.REQUEST_FORM_CREATE_SELF);
   const canCancel = isAdmin || perms.includes(PERMISSIONS.REQUEST_FORM_CANCEL_SELF);
 
+  const { t } = useTranslation();
+
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   
@@ -106,13 +109,13 @@ export default function RequestsPage() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "PENDING":
-        return <span className="px-2 py-1 bg-amber-500/10 text-amber-600 border border-amber-500/20 rounded text-xs font-semibold uppercase flex items-center gap-1 w-fit"><Clock size={12}/> Chờ duyệt</span>;
+        return <span className="px-2 py-1 bg-amber-500/10 text-amber-600 border border-amber-500/20 rounded text-xs font-semibold uppercase flex items-center gap-1 w-fit"><Clock size={12}/> {t("requests.status.pending", { defaultValue: "Chờ duyệt" })}</span>;
       case "APPROVED":
-        return <span className="px-2 py-1 bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 rounded text-xs font-semibold uppercase flex items-center gap-1 w-fit"><CheckCircle2 size={12}/> Đã duyệt</span>;
+        return <span className="px-2 py-1 bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 rounded text-xs font-semibold uppercase flex items-center gap-1 w-fit"><CheckCircle2 size={12}/> {t("requests.status.approved", { defaultValue: "Đã duyệt" })}</span>;
       case "REJECTED":
-        return <span className="px-2 py-1 bg-red-500/10 text-red-600 border border-red-500/20 rounded text-xs font-semibold uppercase flex items-center gap-1 w-fit"><XCircle size={12}/> Từ chối</span>;
+        return <span className="px-2 py-1 bg-red-500/10 text-red-600 border border-red-500/20 rounded text-xs font-semibold uppercase flex items-center gap-1 w-fit"><XCircle size={12}/> {t("requests.status.rejected", { defaultValue: "Từ chối" })}</span>;
       case "CANCELED":
-        return <span className="px-2 py-1 bg-slate-500/10 text-slate-600 border border-slate-500/20 rounded text-xs font-semibold uppercase flex items-center gap-1 w-fit"><Ban size={12}/> Đã hủy</span>;
+        return <span className="px-2 py-1 bg-slate-500/10 text-slate-600 border border-slate-500/20 rounded text-xs font-semibold uppercase flex items-center gap-1 w-fit"><Ban size={12}/> {t("requests.status.canceled", { defaultValue: "Đã hủy" })}</span>;
       default:
         return <span className="px-2 py-1 bg-gray-500/10 text-gray-600 rounded text-xs font-semibold uppercase">{status}</span>;
     }
@@ -120,13 +123,13 @@ export default function RequestsPage() {
 
   const getTypeName = (type: string) => {
     switch(type) {
-      case "LEAVE": return "Nghỉ phép";
-      case "WFH": return "Làm việc tại nhà";
-      case "ABSENCE": return "Vắng mặt";
-      case "BUSINESS_TRIP": return "Công tác";
-      case "ATTENDANCE_ADJUSTMENT": return "Điều chỉnh chấm công";
-      case "RESIGNATION": return "Thôi việc";
-      default: return type;
+      case "LEAVE": return t("requests.types.leave", { defaultValue: "Nghỉ phép" });
+      case "WFH": return t("requests.types.wfh", { defaultValue: "Làm việc tại nhà" });
+      case "ABSENCE": return t("requests.types.absent", { defaultValue: "Vắng mặt" });
+      case "BUSINESS_TRIP": return t("requests.types.business", { defaultValue: "Công tác" });
+      case "ATTENDANCE_ADJUSTMENT": return t("requests.types.checkInOut", { defaultValue: "Điều chỉnh chấm công" });
+      case "RESIGNATION": return t("requests.types.resign", { defaultValue: "Thôi việc" });
+      default: return t("requests.types.UNKNOWN", { defaultValue: type });
     }
   };
 
@@ -154,10 +157,10 @@ export default function RequestsPage() {
               <span className="p-2.5 bg-[#2E3192]/10 text-[#2E3192] rounded-xl flex items-center justify-center">
                 <FileText size={26} strokeWidth={2.5} />
               </span>
-              Quản lý Đơn từ
+              {t("requests.title", { defaultValue: "Quản lý Đơn từ" })}
             </h1>
             <p className="text-muted-foreground text-sm md:text-base ml-1">
-              Tạo mới và theo dõi trạng thái các yêu cầu, đơn từ của bạn.
+              {t("requests.subtitle", { defaultValue: "Tạo mới và theo dõi trạng thái các yêu cầu, đơn từ của bạn." })}
             </p>
           </m.div>
 
@@ -167,7 +170,7 @@ export default function RequestsPage() {
                  onClick={() => navigate("/app/requests/create")}
                  className="bg-indigo-600 hover:bg-indigo-700 text-white flex items-center gap-2 h-10 px-4 rounded-lg shadow-sm"
               >
-                <Plus className="w-4 h-4" /> Tạo đơn mới
+                <Plus className="w-4 h-4" /> {t("requests.createNew", { defaultValue: "Tạo đơn mới" })}
               </Button>
             )}
           </div>
@@ -178,12 +181,12 @@ export default function RequestsPage() {
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2 text-slate-500">
                 <Umbrella size={18} strokeWidth={2} />
-                <span className="text-[11px] font-semibold uppercase tracking-wider">Ngày nghỉ phép</span>
+                <span className="text-[11px] font-semibold uppercase tracking-wider">{t("requests.leaveDays", { defaultValue: "Ngày nghỉ phép" })}</span>
               </div>
             </div>
             <div className="flex items-baseline gap-1">
               <div className="text-3xl font-bold text-slate-800">{session?.remainingLeaveDays ?? 0}</div>
-              <div className="text-sm font-semibold text-slate-400">/ {session?.maxLeaveDays ?? 0} ngày</div>
+              <div className="text-sm font-semibold text-slate-400">/ {session?.maxLeaveDays ?? 0} {t("requests.daysSuffix", { defaultValue: "ngày" })}</div>
             </div>
           </div>
 
@@ -191,12 +194,12 @@ export default function RequestsPage() {
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2 text-slate-500">
                 <Home size={18} strokeWidth={2} />
-                <span className="text-[11px] font-semibold uppercase tracking-wider">Ngày WFH</span>
+                <span className="text-[11px] font-semibold uppercase tracking-wider">{t("requests.wfhDays", { defaultValue: "Ngày WFH" })}</span>
               </div>
             </div>
             <div className="flex items-baseline gap-1">
               <div className="text-3xl font-bold text-slate-800">{session?.remainingWfhDays ?? 0}</div>
-              <div className="text-sm font-semibold text-slate-400">/ {session?.maxWfhDays ?? 0} ngày</div>
+              <div className="text-sm font-semibold text-slate-400">/ {session?.maxWfhDays ?? 0} {t("requests.daysSuffix", { defaultValue: "ngày" })}</div>
             </div>
           </div>
         </div>
@@ -205,13 +208,13 @@ export default function RequestsPage() {
           {isLoading ? (
             <div className="flex-1 flex flex-col items-center justify-center text-muted-foreground p-12">
               <Loader2 className="w-10 h-10 animate-spin mb-4 text-indigo-500" />
-              <p>Đang tải dữ liệu đơn từ...</p>
+              <p>{t("requests.loading", { defaultValue: "Đang tải dữ liệu đơn từ..." })}</p>
             </div>
           ) : requests.length === 0 ? (
             <div className="flex-1 flex flex-col items-center justify-center text-muted-foreground p-12">
               <FileEdit className="w-12 h-12 mb-4 text-muted-foreground/50" />
-              <h3 className="text-lg font-medium text-foreground mb-1">Chưa có đơn từ nào</h3>
-              <p className="text-sm">Bạn chưa tạo đơn từ nào trong hệ thống.</p>
+              <h3 className="text-lg font-medium text-foreground mb-1">{t("requests.noRequests", { defaultValue: "Chưa có đơn từ nào" })}</h3>
+              <p className="text-sm">{t("requests.noRequestsDesc", { defaultValue: "Bạn chưa tạo đơn từ nào trong hệ thống." })}</p>
             </div>
           ) : (
             <div className="flex flex-col h-full flex-1 justify-between">
@@ -219,14 +222,14 @@ export default function RequestsPage() {
                 <table className="w-full text-sm text-left border-collapse border border-slate-200 select-text">
                   <thead className="text-xs text-slate-600 uppercase bg-slate-100 border-b border-slate-200">
                     <tr>
-                      <th className="px-4 py-3 font-semibold text-left border-x border-slate-200">Loại đơn</th>
-                      <th className="px-4 py-3 font-semibold text-center border-x border-slate-200">Trạng thái</th>
+                      <th className="px-4 py-3 font-semibold text-left border-x border-slate-200">{t("requests.columns.type", { defaultValue: "Loại đơn" })}</th>
+                      <th className="px-4 py-3 font-semibold text-center border-x border-slate-200">{t("requests.columns.status", { defaultValue: "Trạng thái" })}</th>
                       <th className="px-4 py-3 font-semibold text-center border-x border-slate-200">
-                        <div className="flex items-center justify-center gap-1.5"><Calendar size={14}/> Thời gian áp dụng</div>
+                        <div className="flex items-center justify-center gap-1.5"><Calendar size={14}/> {t("requests.columns.appliedDate", { defaultValue: "Thời gian áp dụng" })}</div>
                       </th>
-                      <th className="px-4 py-3 font-semibold text-left border-x border-slate-200">Lý do</th>
-                      <th className="px-4 py-3 font-semibold text-center border-x border-slate-200">Ngày gửi</th>
-                      <th className="px-4 py-3 font-semibold text-center border-x border-slate-200">Thao tác</th>
+                      <th className="px-4 py-3 font-semibold text-left border-x border-slate-200">{t("requests.columns.reason", { defaultValue: "Lý do" })}</th>
+                      <th className="px-4 py-3 font-semibold text-center border-x border-slate-200">{t("requests.columns.submittedDate", { defaultValue: "Ngày gửi" })}</th>
+                      <th className="px-4 py-3 font-semibold text-center border-x border-slate-200">{t("requests.columns.actions", { defaultValue: "Thao tác" })}</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-200">
@@ -248,7 +251,7 @@ export default function RequestsPage() {
                             <button
                               onClick={() => setSelectedRequest(req)}
                               className="p-1.5 text-indigo-600 hover:bg-indigo-50 rounded transition-colors"
-                              title="Xem chi tiết"
+                              title={t("requests.actions.viewDetails", { defaultValue: "Xem chi tiết" })}
                             >
                               <Eye size={18} />
                             </button>
@@ -256,7 +259,7 @@ export default function RequestsPage() {
                               <button
                                 onClick={() => { setEditRequest(req); setIsModalOpen(true); }}
                                 className="p-1.5 text-amber-600 hover:bg-amber-50 rounded transition-colors"
-                                title="Chỉnh sửa đơn"
+                                title={t("requests.actions.edit", { defaultValue: "Chỉnh sửa đơn" })}
                               >
                                 <FileEdit size={18} />
                               </button>
@@ -266,7 +269,7 @@ export default function RequestsPage() {
                                 onClick={() => cancelMutation.mutate(req.id)}
                                 disabled={cancelMutation.isPending}
                                 className="p-1.5 text-rose-600 hover:bg-rose-50 rounded transition-colors disabled:opacity-50"
-                                title="Thu hồi đơn"
+                                title={t("requests.actions.cancel", { defaultValue: "Thu hồi đơn" })}
                               >
                                 <XCircle size={18} />
                               </button>

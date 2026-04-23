@@ -1,12 +1,14 @@
 import type { AttendanceDisciplineReportItem } from "@/types/report/AttendanceDisciplineReportItem";
 import { FolderKanban } from "lucide-react";
 import { formatVND } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 
 interface AttendanceDisciplineReportTableProps {
   items: AttendanceDisciplineReportItem[];
 }
 
 export function AttendanceDisciplineReportTable({ items }: AttendanceDisciplineReportTableProps) {
+  const { t } = useTranslation();
   const formatNum = (val: number | undefined | null) => {
     if (val === null || val === undefined) return "—";
     return Number(val).toLocaleString('vi-VN', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
@@ -31,23 +33,23 @@ export function AttendanceDisciplineReportTable({ items }: AttendanceDisciplineR
           <thead className="text-[13px] text-slate-500 uppercase bg-slate-50/80 sticky top-0 z-10 
                             after:absolute after:bottom-0 after:left-0 after:right-0 after:h-px after:bg-slate-200">
             <tr>
-              <th className="px-4 py-4 font-bold tracking-wider text-[#1E2062] sticky left-0 z-20 bg-slate-50/80">Mã NV</th>
-              <th className="px-4 py-4 font-bold tracking-wider text-[#1E2062] sticky left-[100px] z-20 bg-slate-50/80">Họ tên</th>
-              <th className="px-4 py-4 font-bold tracking-wider text-[#1E2062]">Phòng ban</th>
-              <th className="px-4 py-4 font-bold tracking-wider text-[#1E2062] text-center border-l border-slate-200/50">Điểm CV</th>
-              <th className="px-4 py-4 font-bold tracking-wider text-[#1E2062] text-right">PC Chuyên Cần</th>
-              <th className="px-4 py-4 font-bold tracking-wider text-[#1E2062] text-center border-l border-slate-200/50">Ngày công</th>
-              <th className="px-4 py-4 font-bold tracking-wider text-[#1E2062] text-center">Công QĐ</th>
-              <th className="px-4 py-4 font-bold tracking-wider text-[#1E2062] text-center border-l border-slate-200/50">Đi trễ</th>
-              <th className="px-4 py-4 font-bold tracking-wider text-[#1E2062] text-center">Vắng</th>
-              <th className="px-4 py-4 font-bold tracking-wider text-[#1E2062] text-center">VP lớn</th>
-              <th className="px-4 py-4 font-bold tracking-wider text-[#1E2062] text-center border-l border-slate-200/50">Lần trừ phép</th>
-              <th className="px-4 py-4 font-bold tracking-wider text-[#1E2062] text-center">Phép trừ</th>
-              <th className="px-4 py-4 font-bold tracking-wider text-[#1E2062] text-center border-l border-slate-200/50">WFH Duyệt</th>
-              <th className="px-4 py-4 font-bold tracking-wider text-[#1E2062] text-center">WFH Vượt</th>
-              <th className="px-4 py-4 font-bold tracking-wider text-[#1E2062] text-center">Phép trừ WFH</th>
-              <th className="px-4 py-4 font-bold tracking-wider text-[#1E2062] text-center border-l border-slate-200/50">Tháng khóa</th>
-              <th className="px-4 py-4 font-bold tracking-wider text-[#1E2062]">Ghi chú</th>
+              <th className="px-4 py-4 font-bold tracking-wider text-[#1E2062] sticky left-0 z-20 bg-slate-50/80">{t("reports.columns.empId", { defaultValue: "Mã NV" })}</th>
+              <th className="px-4 py-4 font-bold tracking-wider text-[#1E2062] sticky left-[100px] z-20 bg-slate-50/80">{t("reports.columns.fullName", { defaultValue: "Họ tên" })}</th>
+              <th className="px-4 py-4 font-bold tracking-wider text-[#1E2062]">{t("reports.columns.department", { defaultValue: "Phòng ban" })}</th>
+              <th className="px-4 py-4 font-bold tracking-wider text-[#1E2062] text-center border-l border-slate-200/50">{t("reports.columns.scoreCC", { defaultValue: "Điểm CV" })}</th>
+              <th className="px-4 py-4 font-bold tracking-wider text-[#1E2062] text-right">{t("reports.columns.pcAttendance", { defaultValue: "PC Chuyên Cần" })}</th>
+              <th className="px-4 py-4 font-bold tracking-wider text-[#1E2062] text-center border-l border-slate-200/50">{t("reports.columns.workDays", { defaultValue: "Ngày công" })}</th>
+              <th className="px-4 py-4 font-bold tracking-wider text-[#1E2062] text-center">{t("reports.columns.workUnits", { defaultValue: "Công QĐ" })}</th>
+              <th className="px-4 py-4 font-bold tracking-wider text-[#1E2062] text-center border-l border-slate-200/50">{t("reports.columns.late", { defaultValue: "Đi trễ" })}</th>
+              <th className="px-4 py-4 font-bold tracking-wider text-[#1E2062] text-center">{t("reports.columns.absent", { defaultValue: "Vắng" })}</th>
+              <th className="px-4 py-4 font-bold tracking-wider text-[#1E2062] text-center">{t("reports.columns.majorViolation", { defaultValue: "VP lớn" })}</th>
+              <th className="px-4 py-4 font-bold tracking-wider text-[#1E2062] text-center border-l border-slate-200/50">{t("reports.columns.leaveDeductionTimes", { defaultValue: "Lần trừ phép" })}</th>
+              <th className="px-4 py-4 font-bold tracking-wider text-[#1E2062] text-center">{t("reports.columns.leaveDeductionDays", { defaultValue: "Phép trừ" })}</th>
+              <th className="px-4 py-4 font-bold tracking-wider text-[#1E2062] text-center border-l border-slate-200/50">{t("reports.columns.wfhApproved", { defaultValue: "WFH Duyệt" })}</th>
+              <th className="px-4 py-4 font-bold tracking-wider text-[#1E2062] text-center">{t("reports.columns.wfhExceeded", { defaultValue: "WFH Vượt" })}</th>
+              <th className="px-4 py-4 font-bold tracking-wider text-[#1E2062] text-center">{t("reports.columns.wfhLeaveDeduction", { defaultValue: "Phép trừ WFH" })}</th>
+              <th className="px-4 py-4 font-bold tracking-wider text-[#1E2062] text-center border-l border-slate-200/50">{t("reports.columns.lockedMonth", { defaultValue: "Tháng khóa" })}</th>
+              <th className="px-4 py-4 font-bold tracking-wider text-[#1E2062]">{t("reports.columns.note", { defaultValue: "Ghi chú" })}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
@@ -124,8 +126,8 @@ export function AttendanceDisciplineReportTable({ items }: AttendanceDisciplineR
                 <td colSpan={17} className="h-64 text-center">
                   <div className="flex flex-col items-center justify-center text-slate-400">
                     <FolderKanban size={40} className="mb-3 opacity-30" />
-                    <p className="text-base font-semibold text-slate-800">Không có dữ liệu chuyên cần cho kỳ đã chọn</p>
-                    <p className="text-sm mt-1 text-slate-500">Vui lòng thay đổi tiêu chí lọc hoặc chọn kỳ khác để xem thêm.</p>
+                    <p className="text-base font-semibold text-slate-800">{t("reports.table.noAttendanceData", { defaultValue: "Không có dữ liệu chuyên cần cho kỳ đã chọn" })}</p>
+                    <p className="text-sm mt-1 text-slate-500">{t("reports.table.changeFilterHint", { defaultValue: "Vui lòng thay đổi tiêu chí lọc hoặc chọn kỳ khác để xem thêm." })}</p>
                   </div>
                 </td>
               </tr>
@@ -136,11 +138,11 @@ export function AttendanceDisciplineReportTable({ items }: AttendanceDisciplineR
       
       {items.length > 0 && (
         <div className="px-5 py-3 border-t border-slate-200 bg-slate-50 flex flex-wrap gap-x-8 gap-y-2 justify-between items-center shrink-0">
-          <span className="text-sm font-medium text-slate-600">Tổng NV: <span className="font-bold text-[#1E2062]">{totalEmp}</span></span>
-          <span className="text-sm font-medium text-slate-600">TB Điểm CC: <span className="font-bold text-indigo-600">{formatNum(avgAttScore)}</span></span>
-          <span className="text-sm font-medium text-slate-600">Tổng Trễ: <span className="font-bold text-rose-600">{formatNum(totalLate)}</span></span>
-          <span className="text-sm font-medium text-slate-600">Tổng Vắng: <span className="font-bold text-rose-600">{formatNum(totalAbsent)}</span></span>
-          <span className="text-sm font-medium text-slate-600 border-l border-slate-300 pl-8">Tổng PC CC: <span className="font-bold text-emerald-600">{formatVND(totalAttAllowance)}</span></span>
+          <span className="text-sm font-medium text-slate-600">{t("reports.table.totalEmp", { defaultValue: "Tổng NV" })}: <span className="font-bold text-[#1E2062]">{totalEmp}</span></span>
+          <span className="text-sm font-medium text-slate-600">{t("reports.table.avgAttScore", { defaultValue: "TB Điểm CC" })}: <span className="font-bold text-indigo-600">{formatNum(avgAttScore)}</span></span>
+          <span className="text-sm font-medium text-slate-600">{t("reports.table.totalLate", { defaultValue: "Tổng Trễ" })}: <span className="font-bold text-rose-600">{formatNum(totalLate)}</span></span>
+          <span className="text-sm font-medium text-slate-600">{t("reports.table.totalAbsent", { defaultValue: "Tổng Vắng" })}: <span className="font-bold text-rose-600">{formatNum(totalAbsent)}</span></span>
+          <span className="text-sm font-medium text-slate-600 border-l border-slate-300 pl-8">{t("reports.table.totalAttAllowance", { defaultValue: "Tổng PC CC" })}: <span className="font-bold text-emerald-600">{formatVND(totalAttAllowance)}</span></span>
         </div>
       )}
     </div>

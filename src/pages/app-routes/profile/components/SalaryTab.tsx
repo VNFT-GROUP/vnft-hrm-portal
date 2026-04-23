@@ -1,8 +1,10 @@
 import { AlertCircle, ChevronDown, BarChart3 } from "lucide-react";
 import { useContext, useState } from "react";
 import { ProfileContext } from "../contexts/ProfileContext";
+import { useTranslation } from "react-i18next";
 
 export default function SalaryTab() {
+  const { t } = useTranslation();
   const { profile } = useContext(ProfileContext);
   const months = Array.from({ length: 12 }, (_, i) => i + 1);
 
@@ -26,7 +28,7 @@ export default function SalaryTab() {
               <div className="p-1.5 bg-[#1E2062]/10 text-[#1E2062] rounded">
                 <BarChart3 size={18} />
               </div>
-              <h3 className="text-lg font-bold text-[#1E2062]">Lương thực nhận năm 2026</h3>
+              <h3 className="text-lg font-bold text-[#1E2062]">{t('profile.salaryTab.netSalaryYear', { year: '2026' })}</h3>
             </div>
             
             <div className="relative w-full md:w-32 hover:scale-[1.02] transition-transform">
@@ -54,7 +56,7 @@ export default function SalaryTab() {
                 >
                   <div className="flex items-center justify-between mb-3">
                     <span className={`text-xs font-bold uppercase tracking-wider ${!isFuture ? "text-muted-foreground group-hover:text-[#2E3192] transition-colors" : "text-muted-foreground/50"}`}>
-                      Tháng {month}
+                      {t('profile.salaryTab.month')} {month}
                     </span>
                   </div>
                   <div className="text-right">
@@ -70,7 +72,7 @@ export default function SalaryTab() {
           </div>
 
           <div className="mt-6 p-5 bg-linear-to-r from-muted/50 to-muted/20 rounded-2xl flex flex-col sm:flex-row justify-between items-center border border-border/80 gap-3">
-            <span className="font-semibold text-muted-foreground uppercase tracking-wider text-sm">Tổng thực nhận năm 2026</span>
+            <span className="font-semibold text-muted-foreground uppercase tracking-wider text-sm">{t('profile.salaryTab.totalNetYear', { year: '2026' })}</span>
             <span className="text-2xl font-mono font-bold text-[#1E2062]">0 <span className="text-sm font-sans text-muted-foreground">VNĐ</span></span>
           </div>
         </div>
@@ -79,12 +81,12 @@ export default function SalaryTab() {
       {/* Cột phải: Chi tiết mốc lương hiện tại / lịch sử */}
       <div className="lg:col-span-1">
         <div className="bg-card text-card-foreground p-6 rounded-2xl shadow-sm border border-border sticky top-6">
-          <h3 className="text-lg font-bold text-[#1E2062] mb-6 pb-4 border-b border-border/80">Lịch sử cấu hình lương</h3>
+          <h3 className="text-lg font-bold text-[#1E2062] mb-6 pb-4 border-b border-border/80">{t('profile.salaryTab.salaryHistory')}</h3>
         
         {!currentConfig ? (
           <div className="flex flex-col items-center justify-center py-10 text-center text-muted-foreground">
             <AlertCircle size={32} className="mb-3 opacity-30" />
-            <p className="text-sm">Chưa có cấu hình lương nào được thiết lập.</p>
+            <p className="text-sm">{t('profile.salaryTab.emptyConfig')}</p>
           </div>
         ) : (
           <div className="space-y-6">
@@ -107,7 +109,7 @@ export default function SalaryTab() {
 
             {currentConfig.note && (
               <div className="bg-amber-50/50 text-amber-700 px-4 py-3 rounded-xl text-sm italic border border-amber-100/50">
-                <span className="font-semibold mr-2">Ghi chú đợt lương:</span> 
+                <span className="font-semibold mr-2">{t('profile.salaryTab.configNote')}</span> 
                 {currentConfig.note}
               </div>
             )}
@@ -116,9 +118,9 @@ export default function SalaryTab() {
               <table className="w-full text-left text-sm text-muted-foreground min-w-[400px]">
                 <thead className="text-xs uppercase bg-muted/40 text-muted-foreground border-b border-border">
                   <tr>
-                    <th className="px-4 py-3.5 font-semibold">Khoản mục</th>
-                    <th className="px-4 py-3.5 font-semibold text-right w-[160px]">Số tiền (VNĐ)</th>
-                    <th className="px-4 py-3.5 font-semibold max-w-[200px]">Ghi chú</th>
+                    <th className="px-4 py-3.5 font-semibold">{t('profile.salaryTab.item')}</th>
+                    <th className="px-4 py-3.5 font-semibold text-right w-[160px]">{t('profile.salaryTab.amount')}</th>
+                    <th className="px-4 py-3.5 font-semibold max-w-[200px]">{t('profile.salaryTab.note')}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border">

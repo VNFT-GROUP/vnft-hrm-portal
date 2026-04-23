@@ -31,7 +31,8 @@ export default {
     salary: "Salary Info"
   },
   workingStatus: {
-    active: "Working"
+    active: "Working",
+    inactive: "Resigned"
   },
   fields: {
     basicInfo: "Basic Information",
@@ -55,6 +56,34 @@ export default {
     street: "Street Number",
     ward: "Ward / Commune",
     district: "District",
-    province: "Province / City"
-  }
+    province: "Province / City",
+    education: "Education Background",
+    eduLevel: "Degree Level",
+    institutionName: "Institution Name",
+    major: "Major",
+    eduTime: "Duration",
+    dependentsInfo: "Dependents / Family Information",
+    bankInfo: "Bank Information",
+    documents: "Personal Documents"
+  },
+  salaryTab: {
+    netSalaryYear: "Net Salary in {{year}}",
+    month: "Month",
+    totalNetYear: "Total Net in {{year}}",
+    salaryHistory: "Salary Configuration History",
+    emptyConfig: "No salary configuration has been set up yet.",
+    configNote: "Config Note:",
+    item: "Item",
+    amount: "Amount (VND)",
+    note: "Note",
+    present: "Present"
+  },
+  values: {
+    male: "Male",
+    female: "Female",
+    other: "Other",
+    married: "Married",
+    single: "Single"
+  },
+  editBtn: "Update Profile"
 };

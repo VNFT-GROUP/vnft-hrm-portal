@@ -1,38 +1,38 @@
 import { apiClient } from "@/lib/apiClient";
-import type { PageResponse } from "@/types/base/PageResponse";
-import type { PayrollResponse } from "@/types/payroll/PayrollResponse";
-import type { PayrollEmployeeResponse } from "@/types/payroll/PayrollEmployeeResponse";
-import type { CalculatePayrollRequest, CreatePayrollRequest } from "@/types/payroll/CalculatePayrollRequest";
+import type { ApiResponse } from "@/types/base/ApiResponse";
+import type { PayrollResponse, PayrollEmployeeResponse } from "@/types/payroll/PayrollResponse";
+import type { CreatePayrollRequest, PayrollCalculateRequest } from "@/types/payroll/CalculatePayrollRequest";
 
 export const payrollService = {
-  getPayrollCandidates: async (year: number, month: number): Promise<PayrollEmployeeResponse[]> => {
-    const response = await apiClient.get<PayrollEmployeeResponse[]>("/payrolls/candidates", { params: { year, month } });
-    // DTO from API is ApiResponse<PayrollEmployeeResponse[]> -> we extract data directly
-    return response.data as any; // apiClient in this project usually unwraps data via axios interceptors, wait no it returns the wrapper? Wait, I will return response.data if it unwraps, or return response.data.data. Let's look at previous methods
-  },
-
   createPayroll: async (payload: CreatePayrollRequest): Promise<PayrollResponse> => {
-    const response = await apiClient.post<PayrollResponse>("/payrolls", payload);
-    return response.data as any;
+    const { data } = await apiClient.post<ApiResponse<PayrollResponse>>("/payrolls", payload);
+    return data.data!;
   },
 
-  calculatePayroll: async (request: CalculatePayrollRequest) => {
-    const { data } = await apiClient.post<PayrollResponse>("/payrolls/calculate", request);
-    return data;
+  calculatePayroll: async (payload: PayrollCalculateRequest): Promise<PayrollResponse> => {
+    const { data } = await apiClient.post<ApiResponse<PayrollResponse>>("/payrolls/calculate", payload);
+    return data.data!;
   },
 
-  getPayrolls: async (params?: { year?: number; month?: number }) => {
-    const { data } = await apiClient.get<PageResponse<PayrollResponse>>("/payrolls", { params });
-    return data;
+  getPayrollByYearMonth: async (year: number, month: number): Promise<PayrollResponse | null> => {
+    const { data } = await apiClient.get<ApiResponse<PayrollResponse>>("/payrolls", { params: { year, month } });
+    return data.data ?? null;
   },
 
-  getPayrollById: async (id: number | string) => {
-    const { data } = await apiClient.get<PayrollResponse>(`/payrolls/${id}`);
-    return data;
+  getPayrollById: async (id: string): Promise<PayrollResponse> => {
+    const { data } = await apiClient.get<ApiResponse<PayrollResponse>>(`/payrolls/${id}`);
+    return data.data!;
   },
 
-  getPayrollEmployees: async (id: number | string) => {
-    const { data } = await apiClient.get<PayrollEmployeeResponse[]>(`/payrolls/${id}/employees`);
-    return data;
-  }
+  getPayrollEmployees: async (id: string): Promise<PayrollEmployeeResponse[]> => {
+    const { data } = await apiClient.get<ApiResponse<PayrollEmployeeResponse[]>>(`/payrolls/${id}/employees`);
+    return data.data ?? [];
+  },
+
+  getPayrollCandidates: async (year: number, month: number): Promise<PayrollEmployeeResponse[]> => {
+    const { data } = await apiClient.get<ApiResponse<PayrollEmployeeResponse[]>>("/payrolls/candidates", {
+      params: { year, month },
+    });
+    return data.data ?? [];
+  },
 };

@@ -1,123 +1,128 @@
 import { useState } from "react";
-import { Search, Calculator, Upload, Calendar as CalendarIcon, FileText } from "lucide-react";
+import { Search, Calculator, Plus, Calendar as CalendarIcon, FileText, Clock, CheckCircle2, Lock, Ban, FileCheck, FilePen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { m } from 'framer-motion';
+import { m } from "framer-motion";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 import { useDebounce } from "@/hooks/useDebounce";
+import { format } from "date-fns";
+import { getErrorMessage } from "@/lib/utils";
 
 import { payrollService } from "@/services/payroll/payroll.service";
-import PayrollTable from "./components/PayrollTable";
+import type { PayrollResponse, PayrollStatus } from "@/types/payroll/PayrollResponse";
+import type { CreatePayrollRequest, PayrollCalculateRequest, PayrollEmployeeImportRequest } from "@/types/payroll/CalculatePayrollRequest";
 
-import type { CalculatePayrollRequest, CreatePayrollRequest, PayrollImportRequest } from "@/types/payroll/CalculatePayrollRequest";
-import PayrollImportSheet from "./components/PayrollImportSheet";
+import CreatePayrollModal from "./components/CreatePayrollModal";
+import PayrollSummary from "./components/PayrollSummary";
+import PayrollEmployeeTable from "./components/PayrollEmployeeTable";
+import CalculateSheet from "./components/CalculateSheet";
+
+// ---- Status utilities ----
+const STATUS_CONFIG: Record<PayrollStatus, { label: string; color: string; bg: string; icon: React.ReactNode }> = {
+  DRAFT: { label: "Nháp", color: "text-slate-600", bg: "bg-slate-100 border-slate-200", icon: <FilePen size={14} /> },
+  CALCULATED: { label: "Đã tính", color: "text-indigo-700", bg: "bg-indigo-50 border-indigo-200", icon: <Calculator size={14} /> },
+  FINALIZED: { label: "Đã chốt", color: "text-amber-700", bg: "bg-amber-50 border-amber-200", icon: <FileCheck size={14} /> },
+  APPROVED: { label: "Đã duyệt", color: "text-emerald-700", bg: "bg-emerald-50 border-emerald-200", icon: <CheckCircle2 size={14} /> },
+  LOCKED: { label: "Đã khóa", color: "text-rose-700", bg: "bg-rose-50 border-rose-200", icon: <Lock size={14} /> },
+  CANCELED: { label: "Đã hủy", color: "text-slate-500", bg: "bg-slate-50 border-slate-200", icon: <Ban size={14} /> },
+};
+
+const LOCKED_STATUSES: PayrollStatus[] = ["FINALIZED", "APPROVED", "LOCKED"];
+
+function StatusBadge({ status }: { status: PayrollStatus }) {
+  const cfg = STATUS_CONFIG[status] || STATUS_CONFIG.DRAFT;
+  return (
+    <span className={`inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold rounded-full border ${cfg.bg} ${cfg.color}`}>
+      {cfg.icon} {cfg.label}
+    </span>
+  );
+}
+
+function fmtDatetime(d?: string | null) {
+  if (!d) return "—";
+  try { return format(new Date(d), "dd/MM/yyyy HH:mm"); } catch { return d; }
+}
+
+function fmtDate(d?: string | null) {
+  if (!d) return "—";
+  try { return format(new Date(d), "dd/MM/yyyy"); } catch { return d; }
+}
 
 export default function PayrollPage() {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
-  
+
   const currentDate = new Date();
-  const [selectedYear, setSelectedYear] = useState(() => new Date().getFullYear());
-  const [selectedMonth, setSelectedMonth] = useState(() => new Date().getMonth() + 1);
+  const [selectedYear, setSelectedYear] = useState(() => currentDate.getFullYear());
+  const [selectedMonth, setSelectedMonth] = useState(() => currentDate.getMonth() + 1);
   const [searchTerm, setSearchTerm] = useState("");
-  const debouncedSearchTerm = useDebounce(searchTerm, 500);
+  const debouncedSearch = useDebounce(searchTerm, 500);
 
-  const [isImportSheetOpen, setIsImportSheetOpen] = useState(false);
-  const [rowSelection, setRowSelection] = useState<Record<string, boolean>>({});
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isCalculateSheetOpen, setIsCalculateSheetOpen] = useState(false);
 
-  // Fetch Payroll for selected month/year
-  const { data: payrollData, isLoading: isLoadingPayroll } = useQuery({
-    queryKey: ["payrolls", selectedYear, selectedMonth],
-    queryFn: () => payrollService.getPayrolls({ year: selectedYear, month: selectedMonth }),
+  // ---- Fetch payroll ----
+  const { data: payroll, isLoading: isLoadingPayroll } = useQuery<PayrollResponse | null>({
+    queryKey: ["payroll", selectedYear, selectedMonth],
+    queryFn: () => payrollService.getPayrollByYearMonth(selectedYear, selectedMonth),
   });
 
-  const payroll = payrollData?.content?.[0] || null;
+  const employees = payroll?.employees ?? [];
+  const isLocked = payroll ? LOCKED_STATUSES.includes(payroll.status) : false;
 
-  // Fetch Employees for the payroll if it exists
-  const { data: employeesData, isLoading: isLoadingEmployees } = useQuery({
-    queryKey: ["payroll-employees", payroll?.id],
-    queryFn: () => payrollService.getPayrollEmployees(payroll!.id),
-    enabled: !!payroll?.id,
+  // Filter employees locally
+  const filteredEmployees = employees.filter((emp) => {
+    if (!debouncedSearch) return true;
+    const q = debouncedSearch.toLowerCase();
+    return (
+      emp.personnelName?.toLowerCase().includes(q) ||
+      emp.personnelCode?.toLowerCase().includes(q) ||
+      emp.departmentName?.toLowerCase().includes(q)
+    );
   });
 
-  const employees = employeesData || [];
-
-  // Fetch Candidates for new payroll creation
-  const { data: candidatesData, refetch: fetchCandidates, isFetching: isFetchingCandidates } = useQuery({
-    queryKey: ["payroll-candidates", selectedYear, selectedMonth],
-    queryFn: () => payrollService.getPayrollCandidates(selectedYear, selectedMonth),
-    enabled: false,
-  });
-
-  const candidates = candidatesData || [];
-
+  // ---- Create payroll ----
   const createMutation = useMutation({
     mutationFn: (data: CreatePayrollRequest) => payrollService.createPayroll(data),
     onSuccess: () => {
-      toast.success(t("payroll.createSuccess", { defaultValue: "Tạo bảng lương thành công!" }));
-      setRowSelection({});
-      queryClient.invalidateQueries({ queryKey: ["payrolls"] });
+      toast.success("Tạo bảng lương thành công!");
+      setIsCreateModalOpen(false);
+      queryClient.invalidateQueries({ queryKey: ["payroll", selectedYear, selectedMonth] });
     },
     onError: (error: unknown) => {
-      const err = error as { response?: { data?: { message?: string } } };
-      const msg = err?.response?.data?.message || "Lỗi khi tạo bảng lương";
-      toast.error(msg);
-    }
-  });
-
-  const calculateMutation = useMutation({
-    mutationFn: (data: CalculatePayrollRequest) => payrollService.calculatePayroll(data),
-    onSuccess: () => {
-      toast.success(t("payroll.calculateSuccess", { defaultValue: "Tính lương thành công!" }));
-      queryClient.invalidateQueries({ queryKey: ["payrolls"] });
-      queryClient.invalidateQueries({ queryKey: ["payroll-employees"] });
-      setIsImportSheetOpen(false);
+      toast.error(getErrorMessage(error, "Lỗi khi tạo bảng lương"));
     },
-    onError: () => {
-      toast.error(t("payroll.calculateError", { defaultValue: "Lỗi khi tính lương" }));
-    }
   });
 
-  const handleCalculate = (imports: PayrollImportRequest[]) => {
+  // ---- Calculate payroll ----
+  const calculateMutation = useMutation({
+    mutationFn: (data: PayrollCalculateRequest) => payrollService.calculatePayroll(data),
+    onSuccess: (result) => {
+      toast.success("Tính lương thành công!");
+      setIsCalculateSheetOpen(false);
+      // Replace cache with backend response — backend is source of truth
+      queryClient.setQueryData(["payroll", selectedYear, selectedMonth], result);
+    },
+    onError: (error: unknown) => {
+      toast.error(getErrorMessage(error, "Lỗi khi tính lương"));
+    },
+  });
+
+  const handleCalculate = (imports: PayrollEmployeeImportRequest[]) => {
     calculateMutation.mutate({
       year: selectedYear,
       month: selectedMonth,
-      name: `Bảng lương tháng ${selectedMonth.toString().padStart(2, '0')}/${selectedYear}`,
-      imports: imports
+      name: payroll?.name || `Bảng lương tháng ${selectedMonth.toString().padStart(2, "0")}/${selectedYear}`,
+      imports,
     });
   };
-
-  const handleCreatePayroll = () => {
-    const selectedIds = Object.keys(rowSelection).filter(key => rowSelection[key]);
-    if (selectedIds.length === 0) return;
-    
-    createMutation.mutate({
-      year: selectedYear,
-      month: selectedMonth,
-      name: `Bảng lương tháng ${selectedMonth.toString().padStart(2, '0')}/${selectedYear}`,
-      userProfileIds: selectedIds
-    });
-  };
-
-  const isCreateMode = !isLoadingPayroll && !payroll;
-  const currentData = isCreateMode ? candidates : employees;
-  const isLoadingData = isLoadingPayroll || isLoadingEmployees || isFetchingCandidates;
-
-  // Filter local data
-  const filteredData = currentData.filter(emp => 
-    emp.personnelName?.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
-    emp.personnelCode?.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
-    emp.departmentName?.toLowerCase().includes(debouncedSearchTerm.toLowerCase())
-  );
-
-  const selectedCount = Object.keys(rowSelection).filter(k => rowSelection[k]).length;
 
   return (
     <div className="p-4 md:p-8 w-full min-h-full flex flex-col gap-6 md:gap-8">
-      {/* 1. Header Section */}
-      <m.div 
+      {/* ===== HEADER ===== */}
+      <m.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
@@ -134,8 +139,8 @@ export default function PayrollPage() {
         </p>
       </m.div>
 
-      {/* 2. Toolbar Section */}
-      <m.div 
+      {/* ===== TOOLBAR ===== */}
+      <m.div
         initial={{ opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
@@ -146,118 +151,150 @@ export default function PayrollPage() {
           <div className="flex items-center gap-2 bg-muted p-1 rounded-xl">
             <div className="flex items-center px-3 gap-2">
               <CalendarIcon size={18} className="text-muted-foreground" />
-              <select 
+              <select
                 value={selectedMonth}
                 onChange={(e) => setSelectedMonth(Number(e.target.value))}
                 className="bg-transparent border-none outline-none text-sm font-medium focus:ring-0"
               >
-                {Array.from({ length: 12 }, (_, i) => i + 1).map(m => (
-                  <option key={m} value={m}>{t("payroll.month", { defaultValue: "Tháng" })} {m}</option>
+                {Array.from({ length: 12 }, (_, i) => i + 1).map((m) => (
+                  <option key={m} value={m}>Tháng {m}</option>
                 ))}
               </select>
             </div>
-            <div className="w-px h-6 bg-border mx-1"></div>
+            <div className="w-px h-6 bg-border mx-1" />
             <select
               value={selectedYear}
               onChange={(e) => setSelectedYear(Number(e.target.value))}
               className="bg-transparent border-none outline-none text-sm font-medium px-3 focus:ring-0"
             >
-              {Array.from({ length: 10 }, (_, i) => currentDate.getFullYear() - 5 + i).map(y => (
-                <option key={y} value={y}>{t("payroll.year", { defaultValue: "Năm" })} {y}</option>
+              {Array.from({ length: 10 }, (_, i) => currentDate.getFullYear() - 5 + i).map((y) => (
+                <option key={y} value={y}>{y}</option>
               ))}
             </select>
           </div>
 
-          <div className="relative flex-1 md:min-w-[250px]">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
-            <Input 
-              placeholder={t("payroll.searchPlaceholder", { defaultValue: "Tìm theo tên, mã NV..." })} 
-              className="pl-10 h-10 rounded-xl bg-muted border-none focus-visible:ring-1 focus-visible:ring-[#2E3192]"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
+          {payroll && (
+            <div className="relative flex-1 md:min-w-[250px]">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
+              <Input
+                placeholder="Tìm theo tên, mã NV..."
+                className="pl-10 h-10 rounded-xl bg-muted border-none focus-visible:ring-1 focus-visible:ring-[#2E3192]"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+          )}
         </div>
 
         <div className="flex items-center gap-3 w-full md:w-auto">
-          {isCreateMode ? (
+          {!payroll && !isLoadingPayroll ? (
+            <Button
+              onClick={() => setIsCreateModalOpen(true)}
+              className="w-full md:w-auto h-10 px-6 rounded-xl bg-[#2E3192] hover:bg-[#1E2062] text-white shadow-md transition-all font-semibold"
+            >
+              <Plus size={18} className="mr-2" />
+              Tạo bảng lương
+            </Button>
+          ) : payroll ? (
             <>
-              <Button 
+              <Button
                 variant="outline"
-                onClick={() => fetchCandidates()}
-                disabled={isFetchingCandidates}
-                className="w-full md:w-auto h-10 px-4 rounded-xl text-slate-700"
+                onClick={() => setIsCalculateSheetOpen(true)}
+                disabled={isLocked}
+                className="w-full md:w-auto h-10 px-4 rounded-xl border-[#2E3192]/20 text-[#2E3192] hover:bg-[#2E3192]/5"
               >
-                {t("payroll.fetchCandidates", { defaultValue: "Lấy danh sách nhân sự" })}
-              </Button>
-              <Button 
-                onClick={handleCreatePayroll} 
-                disabled={createMutation.isPending || selectedCount === 0 || candidates.length === 0}
-                className="w-full md:w-auto h-10 px-6 rounded-xl bg-[#2E3192] hover:bg-[#1E2062] text-white shadow-md transition-all font-semibold"
-              >
-                {createMutation.isPending ? t("payroll.creating", { defaultValue: "Đang tạo..." }) : t("payroll.createBtn", { defaultValue: "Tạo bảng lương" })}
+                <Calculator size={18} className="mr-2" />
+                Nhập & Tính lương
               </Button>
             </>
-          ) : (
-            <>
-              <Button 
-                variant="outline"
-                onClick={() => setIsImportSheetOpen(true)} 
-                className="w-full md:w-auto h-10 px-4 rounded-xl border-[#2E3192]/20 text-[#2E3192] hover:bg-[#2E3192]/5 transition-all"
-              >
-                <Upload size={18} className="mr-2" /> 
-                {t("payroll.importData", { defaultValue: "Nhập số liệu" })}
-              </Button>
-              
-              <Button 
-                onClick={() => {
-                  if (employees.length === 0 && !isImportSheetOpen) {
-                    setIsImportSheetOpen(true);
-                    toast.info(t("payroll.requireImportData", { defaultValue: "Vui lòng nhập số liệu trước khi tính lương" }));
-                  } else {
-                    handleCalculate([]);
-                  }
-                }} 
-                disabled={calculateMutation.isPending}
-                className="w-full md:w-auto h-10 px-6 rounded-xl bg-amber-500 hover:bg-amber-600 text-white shadow-md transition-all font-semibold"
-              >
-                <Calculator size={18} className="mr-2" /> 
-                {calculateMutation.isPending ? t("payroll.calculating", { defaultValue: "Đang tính..." }) : t("payroll.calculateBtn", { defaultValue: "Tính lại" })}
-              </Button>
-            </>
-          )}
+          ) : null}
         </div>
       </m.div>
 
-      {/* 3. Main Table Section */}
-      <m.div 
+      {/* ===== PAYROLL DETAIL ===== */}
+      {payroll && (
+        <m.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.15, ease: "easeOut" }}
+          className="space-y-6"
+        >
+          {/* Header info bar */}
+          <div className="bg-card text-card-foreground p-5 rounded-2xl shadow-sm border border-border">
+            <div className="flex flex-wrap items-center justify-between gap-4 mb-5 pb-4 border-b border-border">
+              <div>
+                <h2 className="text-lg font-bold text-[#1E2062]">{payroll.name}</h2>
+                <p className="text-sm text-slate-500 mt-0.5">
+                  Kỳ: {fmtDate(payroll.periodStartDate)} — {fmtDate(payroll.periodEndDate)}
+                </p>
+              </div>
+              <StatusBadge status={payroll.status} />
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+              <div className="flex flex-col gap-1">
+                <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Trạng thái</span>
+                <StatusBadge status={payroll.status} />
+              </div>
+              <div className="flex flex-col gap-1">
+                <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1">
+                  <Clock size={11} /> Snapshot
+                </span>
+                <span className="font-medium text-slate-700">{fmtDatetime(payroll.snapshotAt)}</span>
+              </div>
+              <div className="flex flex-col gap-1">
+                <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1">
+                  <Calculator size={11} /> Đã tính lúc
+                </span>
+                <span className="font-medium text-slate-700">{fmtDatetime(payroll.calculatedAt)}</span>
+              </div>
+              <div className="flex flex-col gap-1">
+                <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Số nhân sự</span>
+                <span className="font-bold text-[#2E3192] text-lg">{payroll.totals?.employeeCount ?? employees.length}</span>
+              </div>
+            </div>
+
+            {payroll.note && (
+              <div className="mt-4 pt-3 border-t border-border text-sm text-slate-500 italic">
+                📝 {payroll.note}
+              </div>
+            )}
+          </div>
+
+          {/* Totals */}
+          {payroll.totals && <PayrollSummary totals={payroll.totals} />}
+        </m.div>
+      )}
+
+      {/* ===== EMPLOYEE TABLE ===== */}
+      <m.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
         className="bg-card text-card-foreground rounded-2xl shadow-sm border border-border overflow-hidden flex-1 flex flex-col relative"
       >
-        {isCreateMode && candidates.length > 0 && (
-          <div className="absolute top-4 left-4 z-20 bg-indigo-50 text-indigo-700 px-3 py-1.5 rounded-lg text-sm font-semibold border border-indigo-100 shadow-sm">
-            {t("payroll.selectedCount", { count: selectedCount, defaultValue: `Đã chọn: ${selectedCount} nhân sự` })}
-          </div>
-        )}
-        <PayrollTable 
-          employees={filteredData} 
-          isLoading={isLoadingData} 
-          isSelectionMode={isCreateMode && candidates.length > 0}
-          rowSelection={rowSelection}
-          onRowSelectionChange={setRowSelection}
+        <PayrollEmployeeTable
+          employees={filteredEmployees}
+          isLoading={isLoadingPayroll}
         />
       </m.div>
 
-      {/* Import & Calculate Sheet */}
-      <PayrollImportSheet 
-        isOpen={isImportSheetOpen}
-        onOpenChange={setIsImportSheetOpen}
+      {/* ===== MODALS & SHEETS ===== */}
+      <CreatePayrollModal
+        isOpen={isCreateModalOpen}
+        onOpenChange={setIsCreateModalOpen}
+        onSubmit={(payload) => createMutation.mutate(payload)}
+        isPending={createMutation.isPending}
+        defaultMonth={selectedMonth}
+        defaultYear={selectedYear}
+      />
+
+      <CalculateSheet
+        isOpen={isCalculateSheetOpen}
+        onOpenChange={setIsCalculateSheetOpen}
+        employees={employees}
         onCalculate={handleCalculate}
         isCalculating={calculateMutation.isPending}
-        selectedMonth={selectedMonth}
-        selectedYear={selectedYear}
       />
     </div>
   );

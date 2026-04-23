@@ -1,34 +1,38 @@
-export interface PayrollImportRequest {
-  employeeCode?: string;
-  userProfileId?: number;
-  targetSalary: number;
-  commission: number;
-  seniorityAllowance: number;
-  performanceAttitudeAllowance: number;
-  punctualityDisciplineAllowance: number;
-  outstandingAllowance: number;
-  hotBonus: number;
-  monthlyBonus: number;
-  businessTripFee: number;
-  mealAllowance: number;
-  clientEntertainment: number;
-  personalIncomeTax: number;
-  bankTransfer: number;
-}
-
-export interface CalculatePayrollRequest {
-  year: number;
-  month: number;
-  name: string;
-  note?: string;
-  imports: PayrollImportRequest[];
-}
-
 export interface CreatePayrollRequest {
   year: number;
   month: number;
-  name?: string;
-  note?: string;
-  userProfileIds?: string[];
-  employeeCodes?: string[];
+  name?: string | null;
+  note?: string | null;
+  jobTitleIds?: string[] | null;
+  userProfileIds?: string[] | null;
+  employeeCodes?: string[] | null;
+}
+
+export interface PayrollCalculateRequest {
+  year: number;
+  month: number;
+  name?: string | null;
+  note?: string | null;
+  jobTitleIds?: string[] | null;
+  userProfileIds?: string[] | null;
+  employeeCodes?: string[] | null;
+  imports?: PayrollEmployeeImportRequest[] | null;
+}
+
+export interface PayrollEmployeeImportRequest {
+  userProfileId?: string | null;
+  employeeCode?: string | null;
+  targetSalary?: number | null;
+  commission?: number | null;
+  seniorityAllowance?: number | null;
+  performanceAttitudeAllowance?: number | null;
+  punctualityDisciplineAllowance?: number | null;
+  outstandingAllowance?: number | null;
+  hotBonus?: number | null;
+  monthlyBonus?: number | null;
+  businessTripFee?: number | null;
+  mealAllowance?: number | null;
+  clientEntertainment?: number | null;
+  personalIncomeTax?: number | null;
+  bankTransfer?: number | null;
 }

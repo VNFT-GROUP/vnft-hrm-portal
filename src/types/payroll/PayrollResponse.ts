@@ -80,6 +80,7 @@ export interface PayrollEmployeeResponse {
   userProfileId: string;
   personnelCode?: string | null;
   personnelName?: string | null;
+  avatarUrl?: string | null;
   departmentName?: string | null;
   basicSalary: number;
   targetSalary: number;

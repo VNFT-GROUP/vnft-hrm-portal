@@ -1,21 +1,25 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useCallback } from "react";
 import {
   useReactTable,
   getCoreRowModel,
   flexRender,
-  getPaginationRowModel,
   getSortedRowModel,
   type SortingState,
   type ColumnDef,
 } from "@tanstack/react-table";
-import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, FileWarning } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { FileWarning } from "lucide-react";
 import { AvatarPlaceholder } from "@/components/custom/AvatarPlaceholder";
 import type { PayrollEmployeeResponse } from "@/types/payroll/PayrollResponse";
+
+/** Override map: userProfileId → field → value */
+export type CellOverrides = Record<string, Record<string, number>>;
 
 interface PayrollEmployeeTableProps {
   employees: PayrollEmployeeResponse[];
   isLoading: boolean;
+  editable?: boolean;
+  overrides?: CellOverrides;
+  onCellChange?: (userProfileId: string, field: string, value: number) => void;
 }
 
 const fmt = (v: number) =>
@@ -26,13 +30,67 @@ const fmtWd = (v?: number | null) => {
   return Number.isInteger(r) ? r.toString() : r.toFixed(2).replace(/\.?0+$/, "");
 };
 
-type ColMeta = { group: "info" | "system" | "manual" | "calculated" };
+// ---- Inline editable cell ----
+function EditableCell({
+  value,
+  userProfileId,
+  field,
+  onCellChange,
+}: {
+  value: number;
+  userProfileId: string;
+  field: string;
+  onCellChange: (uid: string, f: string, v: number) => void;
+}) {
+  const [localValue, setLocalValue] = useState(() =>
+    value === 0 ? "" : value.toLocaleString("vi-VN")
+  );
 
-function currCol(key: keyof PayrollEmployeeResponse, header: string, group: ColMeta["group"], highlight?: string): ColumnDef<PayrollEmployeeResponse> {
+  const handleBlur = useCallback(() => {
+    const numValue = Number(localValue.replace(/[^0-9.-]/g, "")) || 0;
+    onCellChange(userProfileId, field, numValue);
+    setLocalValue(numValue === 0 ? "" : numValue.toLocaleString("vi-VN"));
+  }, [localValue, userProfileId, field, onCellChange]);
+
+  return (
+    <input
+      type="text"
+      value={localValue}
+      onChange={(e) => setLocalValue(e.target.value)}
+      onBlur={handleBlur}
+      onKeyDown={(e) => { if (e.key === "Enter") (e.target as HTMLInputElement).blur(); }}
+      placeholder="0"
+      className="w-full min-w-[90px] h-7 px-2 text-sm font-mono bg-white border border-amber-200 rounded-md text-right focus:outline-none focus:ring-1 focus:ring-amber-400 focus:border-amber-400 transition-colors"
+    />
+  );
+}
+
+// ---- Column meta ----
+type ColRole = "info" | "editable" | "readonly";
+interface ColMeta { role: ColRole }
+
+const HEADER_STYLE: Record<ColRole, string> = {
+  info: "bg-slate-100 text-slate-600",
+  editable: "bg-amber-100/70 text-amber-900",
+  readonly: "bg-slate-100/80 text-slate-500",
+};
+
+const CELL_STYLE: Record<ColRole, string> = {
+  info: "",
+  editable: "bg-amber-50/30",
+  readonly: "",
+};
+
+function col(
+  key: keyof PayrollEmployeeResponse,
+  header: string,
+  role: ColRole,
+  highlight?: string,
+): ColumnDef<PayrollEmployeeResponse> {
   return {
     accessorKey: key,
     header,
-    meta: { group } as ColMeta,
+    meta: { role } as ColMeta,
     cell: (info) => {
       const val = fmt(info.getValue() as number);
       if (highlight) return <span className={highlight}>{val}</span>;
@@ -41,111 +99,170 @@ function currCol(key: keyof PayrollEmployeeResponse, header: string, group: ColM
   };
 }
 
-export default function PayrollEmployeeTable({ employees, isLoading }: PayrollEmployeeTableProps) {
+export default function PayrollEmployeeTable({
+  employees,
+  isLoading,
+  editable = false,
+  overrides = {},
+  onCellChange,
+}: PayrollEmployeeTableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
 
+  // Merge overrides into employee data for display
+  const displayData: PayrollEmployeeResponse[] = useMemo(() => {
+    if (!editable || Object.keys(overrides).length === 0) return employees;
+    return employees.map((emp) => {
+      const empOverrides = overrides[emp.userProfileId];
+      if (!empOverrides) return emp;
+      return { ...emp, ...empOverrides } as PayrollEmployeeResponse;
+    });
+  }, [employees, overrides, editable]);
+
+  // Build editable cell renderer
+  const editableCell = useCallback(
+    (key: string) =>
+      (info: { row: { original: PayrollEmployeeResponse }; getValue: () => unknown }) => {
+        if (!editable || !onCellChange) {
+          const val = fmt(info.getValue() as number);
+          return val;
+        }
+        const uid = info.row.original.userProfileId;
+        const currentVal = (overrides[uid]?.[key] ?? info.getValue()) as number;
+        return (
+          <EditableCell
+            key={`${uid}-${key}`}
+            value={currentVal}
+            userProfileId={uid}
+            field={key}
+            onCellChange={onCellChange}
+          />
+        );
+      },
+    [editable, onCellChange, overrides]
+  );
+
+  function editableCol(
+    key: keyof PayrollEmployeeResponse,
+    header: string,
+    highlight?: string,
+  ): ColumnDef<PayrollEmployeeResponse> {
+    return {
+      accessorKey: key,
+      header,
+      meta: { role: "editable" } as ColMeta,
+      cell: editable && onCellChange
+        ? editableCell(key)
+        : (info) => {
+            const val = fmt(info.getValue() as number);
+            if (highlight) return <span className={highlight}>{val}</span>;
+            return val;
+          },
+    };
+  }
+
+  // Columns in EXACT business order
   const columns: ColumnDef<PayrollEmployeeResponse>[] = useMemo(
     () => [
-      // ===== INFO =====
+      // --- Thông tin nhân sự ---
       {
         accessorKey: "personnelCode",
-        header: "Mã NV",
-        meta: { group: "info" } as ColMeta,
-        cell: (info) => <span className="font-medium text-[#1E2062]">{info.getValue() as string}</span>,
+        header: "Mã nhân sự",
+        meta: { role: "info" } as ColMeta,
+        cell: (info) => <span className="font-mono font-semibold text-[#1E2062]">{info.getValue() as string}</span>,
       },
       {
         accessorKey: "personnelName",
-        header: "Họ và Tên",
-        meta: { group: "info" } as ColMeta,
+        header: "Họ tên",
+        meta: { role: "info" } as ColMeta,
         cell: (info) => {
           const name = info.getValue() as string;
+          const avatarUrl = info.row.original.avatarUrl;
           return (
             <div className="flex items-center gap-2.5">
-              <AvatarPlaceholder name={name} className="w-7 h-7 text-[10px]" />
+              <AvatarPlaceholder name={name} src={avatarUrl ?? undefined} className="w-7 h-7 text-[10px]" />
               <span className="font-medium text-slate-700">{name}</span>
             </div>
           );
         },
       },
+      { accessorKey: "departmentName", header: "Tên phòng ban", meta: { role: "info" } as ColMeta },
+
+      // --- Lương & phụ cấp ---
+      col("basicSalary", "Lương cơ bản", "readonly"),
+      editableCol("targetSalary", "Lương theo Target"),
+      col("targetThreshold", "Target", "readonly"),
+      editableCol("commission", "Hoa hồng"),
+      col("parkingAllowance", "Gửi xe", "readonly"),
+      col("fuelAllowance", "Xăng xe", "readonly"),
+      col("phoneAllowance", "Điện thoại", "readonly"),
+      editableCol("seniorityAllowance", "Phụ cấp thâm niên"),
+      col("performanceAttitudeAllowance", "Phụ cấp hiệu suất & thái độ", "readonly"),
+      col("punctualityDisciplineAllowance", "Phụ cấp giờ giấc & kỷ luật", "readonly"),
+      editableCol("outstandingAllowance", "Phụ cấp vượt trội"),
+      col("insuranceBalance", "Balance bảo hiểm", "readonly"),
+      col("usaOfficeAllowance", "Phụ cấp VP USA", "readonly"),
+      editableCol("hotBonus", "Thưởng nóng"),
+      editableCol("monthlyBonus", "Tiền thưởng tháng"),
+      col("managementAllowance", "Phụ cấp quản lý", "readonly"),
+      editableCol("businessTripFee", "Công tác"),
+      editableCol("mealAllowance", "Tiền ăn"),
+      col("jobAllowance", "Phụ cấp công việc", "readonly"),
+      editableCol("clientEntertainment", "Tiếp khách"),
+
+      // --- Bảo hiểm ---
+      col("socialInsuranceSalary", "Lương BHXH", "readonly"),
+      col("companySocialInsurance", "BHXH công ty", "readonly"),
+      col("companyHealthInsurance", "BHYT công ty", "readonly"),
+      col("companyUnemploymentInsurance", "BHTN công ty", "readonly"),
+      col("employeeSocialInsurance", "BHXH nhân viên", "readonly"),
+      col("employeeHealthInsurance", "BHYT nhân viên", "readonly"),
+      col("employeeUnemploymentInsurance", "BHTN nhân viên", "readonly"),
+
+      // --- Thuế & thực lãnh ---
+      col("workdaySalary", "Tổng lương", "readonly", "font-semibold text-emerald-600"),
+      col("taxableIncome", "Thu nhập chịu thuế", "readonly"),
+      col("personalDeduction", "Giảm trừ gia cảnh bản thân", "readonly"),
+      { accessorKey: "dependentCount", header: "Số người phụ thuộc", meta: { role: "readonly" } as ColMeta },
+      col("dependentTaxDeductionAmount", "Mức miễn giảm thuế với 1 NPT", "readonly"),
+      col("dependentDeduction", "Miễn giảm thuế người phụ thuộc", "readonly"),
+      col("assessableIncome", "Thu nhập tính thuế", "readonly"),
+      editableCol("personalIncomeTax", "Thuế TNCN"),
+      col("netSalary", "Thực lãnh", "readonly", "font-bold text-[#2E3192]"),
+      editableCol("bankTransfer", "Chuyển khoản"),
+      col("cashPayment", "Tiền mặt", "readonly"),
+
+      // --- Ghi chú & công ---
       {
-        accessorKey: "departmentName",
-        header: "Phòng ban",
-        meta: { group: "info" } as ColMeta,
+        accessorKey: "salaryNote",
+        header: "Ghi chú",
+        meta: { role: "info" } as ColMeta,
+        cell: (info) => <span className="text-slate-500 text-xs max-w-[200px] truncate block">{(info.getValue() as string) || "—"}</span>,
       },
-
-      // ===== MANUAL EDITABLE (displayed, editable via import sheet) =====
-      currCol("targetSalary", "Lương Target", "manual"),
-      currCol("commission", "Hoa hồng", "manual"),
-      currCol("seniorityAllowance", "PC Thâm niên", "manual"),
-      currCol("outstandingAllowance", "PC Vượt trội", "manual"),
-      currCol("hotBonus", "Thưởng nóng", "manual"),
-      currCol("monthlyBonus", "Thưởng tháng", "manual"),
-      currCol("businessTripFee", "Công tác phí", "manual"),
-      currCol("mealAllowance", "Tiền ăn", "manual"),
-      currCol("clientEntertainment", "Tiếp khách", "manual"),
-      currCol("personalIncomeTax", "Thuế TNCN", "manual", "text-rose-500"),
-      currCol("bankTransfer", "Chuyển khoản", "manual"),
-
-      // ===== SYSTEM / READONLY =====
-      currCol("basicSalary", "Lương CB", "system"),
-      currCol("targetThreshold", "Target", "system"),
-      currCol("parkingAllowance", "Gửi xe", "system"),
-      currCol("fuelAllowance", "Xăng xe", "system"),
-      currCol("phoneAllowance", "Điện thoại", "system"),
-      currCol("insuranceBalance", "Balance BH", "system"),
-      currCol("usaOfficeAllowance", "VP USA", "system"),
-      currCol("managementAllowance", "PC Quản lý", "system"),
-      currCol("jobAllowance", "PC Công việc", "system"),
-      currCol("socialInsuranceSalary", "Lương BHXH", "system"),
       {
         accessorKey: "standardWorkdays",
-        header: "Công chuẩn",
-        meta: { group: "system" } as ColMeta,
+        header: "Số công chuẩn",
+        meta: { role: "readonly" } as ColMeta,
         cell: (info) => fmtWd(info.getValue() as number),
       },
       {
         accessorKey: "actualWorkdays",
-        header: "Công thực",
-        meta: { group: "system" } as ColMeta,
+        header: "Công làm việc",
+        meta: { role: "readonly" } as ColMeta,
         cell: (info) => fmtWd(info.getValue() as number),
       },
-      {
-        accessorKey: "dependentCount",
-        header: "SL NPT",
-        meta: { group: "system" } as ColMeta,
-      },
-      currCol("dependentTaxDeductionAmount", "MG 1 NPT", "system"),
-      currCol("performanceAttitudeAllowance", "PC Hiệu suất", "system"),
-      currCol("punctualityDisciplineAllowance", "PC Kỷ luật", "system"),
-
-      // ===== AUTO CALCULATED =====
-      currCol("companySocialInsurance", "BHXH Cty", "calculated"),
-      currCol("companyHealthInsurance", "BHYT Cty", "calculated"),
-      currCol("companyUnemploymentInsurance", "BHTN Cty", "calculated"),
-      currCol("employeeSocialInsurance", "BHXH NV", "calculated"),
-      currCol("employeeHealthInsurance", "BHYT NV", "calculated"),
-      currCol("employeeUnemploymentInsurance", "BHTN NV", "calculated"),
-      currCol("workdaySalary", "Lương theo công", "calculated", "font-semibold text-emerald-600"),
-      currCol("taxableIncome", "TN Chịu thuế", "calculated"),
-      currCol("personalDeduction", "GTGC Bản thân", "calculated"),
-      currCol("dependentDeduction", "GT NPT", "calculated"),
-      currCol("assessableIncome", "TN Tính thuế", "calculated"),
-      currCol("netSalary", "Thực lãnh", "calculated", "font-bold text-[#2E3192]"),
-      currCol("cashPayment", "Tiền mặt", "calculated"),
     ],
-    []
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [editableCell]
   );
 
   const table = useReactTable({
-    data: employees,
+    data: displayData,
     columns,
     state: { sorting },
     onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
     getRowId: (row) => row.id || row.userProfileId,
-    initialState: { pagination: { pageSize: 15 } },
   });
 
   if (isLoading) {
@@ -166,27 +283,17 @@ export default function PayrollEmployeeTable({ employees, isLoading }: PayrollEm
     );
   }
 
-  const groupColorMap: Record<string, string> = {
-    info: "",
-    manual: "bg-amber-50/30",
-    system: "bg-slate-50/50",
-    calculated: "bg-indigo-50/20",
-  };
-
-  const headerColorMap: Record<string, string> = {
-    info: "bg-slate-100",
-    manual: "bg-amber-100/60 text-amber-900",
-    system: "bg-slate-100/80 text-slate-600",
-    calculated: "bg-indigo-100/60 text-indigo-900",
-  };
-
   return (
-    <div className="w-full h-full flex flex-col">
-      {/* Group legend */}
-      <div className="flex items-center gap-4 px-4 py-2 border-b border-slate-200 bg-white text-[11px] font-semibold uppercase tracking-widest text-slate-500">
-        <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-sm bg-amber-300" /> Nhập tay</span>
-        <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-sm bg-slate-300" /> Hệ thống</span>
-        <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-sm bg-indigo-300" /> Tự tính</span>
+    <div className="w-full h-full flex flex-col relative">
+      {/* Legend */}
+      <div className="flex items-center gap-5 px-4 py-2 border-b border-slate-200 bg-white text-[11px] font-semibold uppercase tracking-widest text-slate-500">
+        <span className="flex items-center gap-1.5">
+          <span className="w-2.5 h-2.5 rounded-sm bg-amber-400" />
+          {editable ? "Nhập trực tiếp" : "Cho phép thay đổi"}
+        </span>
+        <span className="flex items-center gap-1.5">
+          <span className="w-2.5 h-2.5 rounded-sm bg-slate-300" /> Hệ thống
+        </span>
       </div>
 
       <div className="flex-1 overflow-auto">
@@ -195,11 +302,11 @@ export default function PayrollEmployeeTable({ employees, isLoading }: PayrollEm
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
-                  const group = (header.column.columnDef.meta as ColMeta | undefined)?.group || "info";
+                  const role = (header.column.columnDef.meta as ColMeta | undefined)?.role || "info";
                   return (
                     <th
                       key={header.id}
-                      className={`px-3 py-2.5 font-semibold whitespace-nowrap cursor-pointer hover:bg-opacity-80 transition-colors ${headerColorMap[group]}`}
+                      className={`px-3 py-2.5 font-semibold whitespace-nowrap cursor-pointer hover:brightness-95 transition-colors ${HEADER_STYLE[role]}`}
                       onClick={header.column.getToggleSortingHandler()}
                     >
                       {flexRender(header.column.columnDef.header, header.getContext())}
@@ -213,9 +320,9 @@ export default function PayrollEmployeeTable({ employees, isLoading }: PayrollEm
             {table.getRowModel().rows.map((row) => (
               <tr key={row.id} className="hover:bg-slate-50/80 transition-colors">
                 {row.getVisibleCells().map((cell) => {
-                  const group = (cell.column.columnDef.meta as ColMeta | undefined)?.group || "info";
+                  const role = (cell.column.columnDef.meta as ColMeta | undefined)?.role || "info";
                   return (
-                    <td key={cell.id} className={`px-3 py-2.5 whitespace-nowrap ${groupColorMap[group]}`}>
+                    <td key={cell.id} className={`px-3 py-2 whitespace-nowrap ${CELL_STYLE[role]}`}>
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </td>
                   );
@@ -226,39 +333,11 @@ export default function PayrollEmployeeTable({ employees, isLoading }: PayrollEm
         </table>
       </div>
 
-      {/* Pagination */}
-      <div className="border-t border-border p-3 flex items-center justify-between bg-white mt-auto">
+      {/* Record count */}
+      <div className="border-t border-border px-4 py-2.5 bg-white mt-auto">
         <span className="text-xs text-muted-foreground">
-          Hiển thị{" "}
-          <span className="font-medium text-foreground">
-            {table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1}
-          </span>
-          –
-          <span className="font-medium text-foreground">
-            {Math.min(
-              (table.getState().pagination.pageIndex + 1) * table.getState().pagination.pageSize,
-              employees.length
-            )}
-          </span>{" "}
-          / <span className="font-medium text-foreground">{employees.length}</span>
+          Tổng: <span className="font-semibold text-foreground">{employees.length}</span> nhân sự
         </span>
-        <div className="flex items-center gap-1.5">
-          <Button variant="outline" size="icon" className="w-7 h-7 rounded-lg" onClick={() => table.setPageIndex(0)} disabled={!table.getCanPreviousPage()}>
-            <ChevronsLeft size={14} />
-          </Button>
-          <Button variant="outline" size="icon" className="w-7 h-7 rounded-lg" onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>
-            <ChevronLeft size={14} />
-          </Button>
-          <div className="flex items-center gap-1 px-2 text-xs font-medium">
-            {table.getState().pagination.pageIndex + 1} / {table.getPageCount()}
-          </div>
-          <Button variant="outline" size="icon" className="w-7 h-7 rounded-lg" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
-            <ChevronRight size={14} />
-          </Button>
-          <Button variant="outline" size="icon" className="w-7 h-7 rounded-lg" onClick={() => table.setPageIndex(table.getPageCount() - 1)} disabled={!table.getCanNextPage()}>
-            <ChevronsRight size={14} />
-          </Button>
-        </div>
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { Search, Calculator, Plus, Calendar as CalendarIcon, FileText, Clock, CheckCircle2, Lock, Ban, FileCheck, FilePen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,8 +16,7 @@ import type { CreatePayrollRequest, PayrollCalculateRequest, PayrollEmployeeImpo
 
 import CreatePayrollModal from "./components/CreatePayrollModal";
 import PayrollSummary from "./components/PayrollSummary";
-import PayrollEmployeeTable from "./components/PayrollEmployeeTable";
-import CalculateSheet from "./components/CalculateSheet";
+import PayrollEmployeeTable, { type CellOverrides } from "./components/PayrollEmployeeTable";
 
 // ---- Status utilities ----
 const STATUS_CONFIG: Record<PayrollStatus, { label: string; color: string; bg: string; icon: React.ReactNode }> = {
@@ -61,7 +60,9 @@ export default function PayrollPage() {
   const debouncedSearch = useDebounce(searchTerm, 500);
 
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const [isCalculateSheetOpen, setIsCalculateSheetOpen] = useState(false);
+
+  // ---- Inline editing overrides ----
+  const [overrides, setOverrides] = useState<CellOverrides>({});
 
   // ---- Fetch payroll ----
   const { data: payroll, isLoading: isLoadingPayroll } = useQuery<PayrollResponse | null>({
@@ -69,8 +70,9 @@ export default function PayrollPage() {
     queryFn: () => payrollService.getPayrollByYearMonth(selectedYear, selectedMonth),
   });
 
-  const employees = payroll?.employees ?? [];
+  const employees = useMemo(() => payroll?.employees ?? [], [payroll?.employees]);
   const isLocked = payroll ? LOCKED_STATUSES.includes(payroll.status) : false;
+  const canEdit = payroll && !isLocked;
 
   // Filter employees locally
   const filteredEmployees = employees.filter((emp) => {
@@ -89,6 +91,7 @@ export default function PayrollPage() {
     onSuccess: () => {
       toast.success("Tạo bảng lương thành công!");
       setIsCreateModalOpen(false);
+      setOverrides({});
       queryClient.invalidateQueries({ queryKey: ["payroll", selectedYear, selectedMonth] });
     },
     onError: (error: unknown) => {
@@ -96,31 +99,64 @@ export default function PayrollPage() {
     },
   });
 
-  // ---- Calculate payroll ----
   const calculateMutation = useMutation({
     mutationFn: (data: PayrollCalculateRequest) => payrollService.calculatePayroll(data),
     onSuccess: (result) => {
-      toast.success("Tính lương thành công!");
-      setIsCalculateSheetOpen(false);
-      // Replace cache with backend response — backend is source of truth
+      setOverrides({});
       queryClient.setQueryData(["payroll", selectedYear, selectedMonth], result);
-    },
-    onError: (error: unknown) => {
-      toast.error(getErrorMessage(error, "Lỗi khi tính lương"));
     },
   });
 
-  const handleCalculate = (imports: PayrollEmployeeImportRequest[]) => {
-    calculateMutation.mutate({
-      year: selectedYear,
-      month: selectedMonth,
-      name: payroll?.name || `Bảng lương tháng ${selectedMonth.toString().padStart(2, "0")}/${selectedYear}`,
-      imports,
+  const handleCellChange = useCallback((userProfileId: string, field: string, value: number) => {
+    // 1. Check if actually changed
+    const emp = employees.find(e => e.userProfileId === userProfileId);
+    if (!emp || (emp as unknown as Record<string, unknown>)[field] === value) return; // No change
+
+    // 2. Compute new overrides immediately
+    const newOverrides = {
+      ...overrides,
+      [userProfileId]: { ...(overrides[userProfileId] || {}), [field]: value },
+    };
+
+    setOverrides(newOverrides);
+
+    // 3. Trigger save with accumulated changes
+    const imports: PayrollEmployeeImportRequest[] = employees.map((e) => {
+      const empOverrides = newOverrides[e.userProfileId] || {};
+      return {
+        userProfileId: e.userProfileId,
+        targetSalary: empOverrides.targetSalary ?? e.targetSalary,
+        commission: empOverrides.commission ?? e.commission,
+        seniorityAllowance: empOverrides.seniorityAllowance ?? e.seniorityAllowance,
+        outstandingAllowance: empOverrides.outstandingAllowance ?? e.outstandingAllowance,
+        hotBonus: empOverrides.hotBonus ?? e.hotBonus,
+        monthlyBonus: empOverrides.monthlyBonus ?? e.monthlyBonus,
+        businessTripFee: empOverrides.businessTripFee ?? e.businessTripFee,
+        mealAllowance: empOverrides.mealAllowance ?? e.mealAllowance,
+        clientEntertainment: empOverrides.clientEntertainment ?? e.clientEntertainment,
+        personalIncomeTax: empOverrides.personalIncomeTax ?? e.personalIncomeTax,
+        bankTransfer: empOverrides.bankTransfer ?? e.bankTransfer,
+      };
     });
-  };
+
+    toast.promise(
+      calculateMutation.mutateAsync({
+        year: selectedYear,
+        month: selectedMonth,
+        name: payroll?.name || `Bảng lương tháng ${selectedMonth.toString().padStart(2, "0")}/${selectedYear}`,
+        imports,
+      }),
+      {
+        loading: "Đang lưu thay đổi...",
+        success: "Đã lưu thay đổi",
+        error: "Lỗi khi lưu bảng lương",
+      }
+    );
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [employees, overrides, selectedYear, selectedMonth, payroll?.name, calculateMutation]);
 
   return (
-    <div className="p-4 md:p-8 w-full min-h-full flex flex-col gap-6 md:gap-8">
+    <div className="p-4 md:p-6 w-full min-h-full flex flex-col gap-6">
       {/* ===== HEADER ===== */}
       <m.div
         initial={{ opacity: 0, y: -20 }}
@@ -144,7 +180,7 @@ export default function PayrollPage() {
         initial={{ opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
-        className="bg-card text-card-foreground p-5 rounded-2xl shadow-sm border border-border flex flex-col md:flex-row justify-between items-center gap-4"
+        className="bg-card text-card-foreground p-4 md:p-5 rounded-2xl shadow-sm border border-border flex flex-col md:flex-row justify-between items-center gap-4"
       >
         <div className="flex flex-wrap items-center gap-4 w-full md:w-auto">
           {/* Month/Year Filter */}
@@ -153,7 +189,7 @@ export default function PayrollPage() {
               <CalendarIcon size={18} className="text-muted-foreground" />
               <select
                 value={selectedMonth}
-                onChange={(e) => setSelectedMonth(Number(e.target.value))}
+                onChange={(e) => { setSelectedMonth(Number(e.target.value)); setOverrides({}); }}
                 className="bg-transparent border-none outline-none text-sm font-medium focus:ring-0"
               >
                 {Array.from({ length: 12 }, (_, i) => i + 1).map((m) => (
@@ -164,7 +200,7 @@ export default function PayrollPage() {
             <div className="w-px h-6 bg-border mx-1" />
             <select
               value={selectedYear}
-              onChange={(e) => setSelectedYear(Number(e.target.value))}
+              onChange={(e) => { setSelectedYear(Number(e.target.value)); setOverrides({}); }}
               className="bg-transparent border-none outline-none text-sm font-medium px-3 focus:ring-0"
             >
               {Array.from({ length: 10 }, (_, i) => currentDate.getFullYear() - 5 + i).map((y) => (
@@ -195,18 +231,6 @@ export default function PayrollPage() {
               <Plus size={18} className="mr-2" />
               Tạo bảng lương
             </Button>
-          ) : payroll ? (
-            <>
-              <Button
-                variant="outline"
-                onClick={() => setIsCalculateSheetOpen(true)}
-                disabled={isLocked}
-                className="w-full md:w-auto h-10 px-4 rounded-xl border-[#2E3192]/20 text-[#2E3192] hover:bg-[#2E3192]/5"
-              >
-                <Calculator size={18} className="mr-2" />
-                Nhập & Tính lương
-              </Button>
-            </>
           ) : null}
         </div>
       </m.div>
@@ -271,15 +295,18 @@ export default function PayrollPage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
-        className="bg-card text-card-foreground rounded-2xl shadow-sm border border-border overflow-hidden flex-1 flex flex-col relative"
+        className="bg-card text-card-foreground rounded-2xl shadow-sm border border-border overflow-hidden flex flex-col relative h-[70vh] min-h-[500px]"
       >
         <PayrollEmployeeTable
           employees={filteredEmployees}
           isLoading={isLoadingPayroll}
+          editable={!!canEdit}
+          overrides={overrides}
+          onCellChange={handleCellChange}
         />
       </m.div>
 
-      {/* ===== MODALS & SHEETS ===== */}
+      {/* ===== MODALS ===== */}
       <CreatePayrollModal
         isOpen={isCreateModalOpen}
         onOpenChange={setIsCreateModalOpen}
@@ -287,14 +314,6 @@ export default function PayrollPage() {
         isPending={createMutation.isPending}
         defaultMonth={selectedMonth}
         defaultYear={selectedYear}
-      />
-
-      <CalculateSheet
-        isOpen={isCalculateSheetOpen}
-        onOpenChange={setIsCalculateSheetOpen}
-        employees={employees}
-        onCalculate={handleCalculate}
-        isCalculating={calculateMutation.isPending}
       />
     </div>
   );

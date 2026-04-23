@@ -26,4 +26,13 @@ export interface ServerSettingsResponse {
   attendanceDisciplineLightLateLimitMinutes: number;
   attendanceAcceptableDisciplineLateTimes: number;
   attendanceLightViolationDisciplineLateMaxTimes: number;
+  salaryPersonalDeduction: number;
+  salaryDependentTaxDeductionAmount: number;
+  salaryCompanySocialInsuranceRate: number;
+  salaryCompanyHealthInsuranceRate: number;
+  salaryCompanyUnemploymentInsuranceRate: number;
+  salaryEmployeeSocialInsuranceRate: number;
+  salaryEmployeeHealthInsuranceRate: number;
+  salaryEmployeeUnemploymentInsuranceRate: number;
+  salaryConfidentialSalaryNote: string;
 }

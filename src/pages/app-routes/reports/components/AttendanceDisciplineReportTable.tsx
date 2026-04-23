@@ -58,7 +58,7 @@ export function AttendanceDisciplineReportTable({ items }: AttendanceDisciplineR
                 key={item.userId || index} 
                 className="hover:bg-indigo-50/30 transition-colors group"
               >
-                <td className="px-4 py-3.5 font-mono text-slate-600 font-medium sticky left-0 z-10 bg-white group-hover:bg-indigo-50/30">
+                <td className="px-4 py-3.5 font-mono text-indigo-700 font-medium sticky left-0 z-10 bg-white group-hover:bg-indigo-50/30">
                   {item.employeeCode}
                 </td>
                 <td className="px-4 py-3.5 font-bold text-[#1E2062] truncate max-w-[180px] sticky left-[100px] z-10 bg-white group-hover:bg-indigo-50/30" title={item.fullName}>

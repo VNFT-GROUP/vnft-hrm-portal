@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import DOMPurify from "dompurify";
 
-export interface RichTextViewerProps {
+interface RichTextViewerProps {
   htmlContent: string;
   className?: string;
 }

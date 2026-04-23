@@ -22,7 +22,7 @@ export default function ScrollToTopButton({ scrollViewportRef }: ScrollToTopButt
       }
     };
 
-    viewport.addEventListener("scroll", handleScroll);
+    viewport.addEventListener("scroll", handleScroll, { passive: true });
     return () => viewport.removeEventListener("scroll", handleScroll);
   }, [scrollViewportRef]);
 

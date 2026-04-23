@@ -318,7 +318,7 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
                 
                 <div className="flex flex-col items-center justify-center sm:justify-start sm:flex-row sm:items-center gap-6 mb-8 bg-muted/20 p-5 rounded-2xl border border-border">
                   <input type="file" ref={avatarInputRef} disabled={!isEditingMode} className="hidden" accept="image/jpeg, image/png, image/webp" onChange={(e) => handleFileChange(e, setAvatarFile, setAvatarPreview)} />
-                  <div className="relative group cursor-pointer" onClick={() => isEditingMode && avatarInputRef.current?.click()}>
+                  <div className="relative group cursor-pointer" onClick={() => isEditingMode && avatarInputRef.current?.click()} onKeyDown={(e) => { if ((e.key === 'Enter' || e.key === ' ') && isEditingMode) avatarInputRef.current?.click(); }} role="button" tabIndex={0}>
                      <div className="w-28 h-28 rounded-full bg-card border-4 border-background shadow-md overflow-hidden flex items-center justify-center shrink-0 text-muted-foreground group-hover:opacity-80 transition-opacity">
                         {avatarPreview ? (
                           <img src={avatarPreview} alt="Avatar" className="w-full h-full object-cover" />
@@ -621,7 +621,7 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
                    <div className="space-y-3 relative group">
                       <Label className="font-semibold block">{t("editProfile.identity.frontImg", { defaultValue: "Ảnh mặt trước CCCD" })}</Label>
                       <input type="file" ref={frontInputRef} disabled={!isEditingMode} className="hidden" accept="image/jpeg, image/png, image/webp" onChange={(e) => handleFileChange(e, setCitizenIdFrontFile, setCitizenIdFrontPreview)} />
-                      <div onClick={() => isEditingMode && frontInputRef.current?.click()} className={`relative border-2 border-dashed border-border rounded-2xl h-48 flex flex-col items-center justify-center text-muted-foreground bg-muted/10 transition-colors overflow-hidden ${isEditingMode ? 'hover:bg-muted/50 hover:border-[#2E3192]/40 cursor-pointer' : ''}`}>
+                      <div onClick={() => isEditingMode && frontInputRef.current?.click()} onKeyDown={(e) => { if ((e.key === 'Enter' || e.key === ' ') && isEditingMode) frontInputRef.current?.click(); }} role="button" tabIndex={0} className={`relative border-2 border-dashed border-border rounded-2xl h-48 flex flex-col items-center justify-center text-muted-foreground bg-muted/10 transition-colors overflow-hidden ${isEditingMode ? 'hover:bg-muted/50 hover:border-[#2E3192]/40 cursor-pointer' : ''}`}>
                          {citizenIdFrontPreview ? (
                             <img src={citizenIdFrontPreview} alt="Front ID" className="w-full h-full object-cover" />
                          ) : (
@@ -636,7 +636,7 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
                    <div className="space-y-3 relative group">
                       <Label className="font-semibold block">{t("editProfile.identity.backImg", { defaultValue: "Ảnh mặt sau CCCD" })}</Label>
                       <input type="file" ref={backInputRef} disabled={!isEditingMode} className="hidden" accept="image/jpeg, image/png, image/webp" onChange={(e) => handleFileChange(e, setCitizenIdBackFile, setCitizenIdBackPreview)} />
-                      <div onClick={() => isEditingMode && backInputRef.current?.click()} className={`relative border-2 border-dashed border-border rounded-2xl h-48 flex flex-col items-center justify-center text-muted-foreground bg-muted/10 transition-colors overflow-hidden ${isEditingMode ? 'hover:bg-muted/50 hover:border-[#2E3192]/40 cursor-pointer' : ''}`}>
+                      <div onClick={() => isEditingMode && backInputRef.current?.click()} onKeyDown={(e) => { if ((e.key === 'Enter' || e.key === ' ') && isEditingMode) backInputRef.current?.click(); }} role="button" tabIndex={0} className={`relative border-2 border-dashed border-border rounded-2xl h-48 flex flex-col items-center justify-center text-muted-foreground bg-muted/10 transition-colors overflow-hidden ${isEditingMode ? 'hover:bg-muted/50 hover:border-[#2E3192]/40 cursor-pointer' : ''}`}>
                          {citizenIdBackPreview ? (
                             <img src={citizenIdBackPreview} alt="Back ID" className="w-full h-full object-cover" />
                          ) : (

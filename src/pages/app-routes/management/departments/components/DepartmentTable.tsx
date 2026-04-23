@@ -14,7 +14,7 @@ import { AvatarPlaceholder } from "@/components/custom/AvatarPlaceholder";
 
 import type { DepartmentResponse } from '@/types/department/DepartmentResponse';
 
-export type Department = DepartmentResponse & { children?: Department[] };
+type Department = DepartmentResponse & { children?: Department[] };
 
 interface DepartmentTreeProps {
   departments: DepartmentResponse[];
@@ -124,7 +124,7 @@ export default function DepartmentTreeList({ departments, onEdit, onDelete }: De
                                {hasChildren ? (
                                  <button 
                                   onClick={() => toggleNode(dept.id)}
-                                  className="text-slate-400 hover:text-indigo-600 transition-colors bg-white hover:bg-indigo-50 p-0.5 rounded-sm z-10 block relative"
+                                  className="text-indigo-400 hover:text-indigo-600 transition-colors bg-white hover:bg-indigo-50 p-0.5 rounded-sm z-10 block relative"
                                  >
                                    {isExpanded ? <ChevronDown size={15} strokeWidth={2.5} /> : <ChevronRight size={15} strokeWidth={2.5} />}
                                  </button>

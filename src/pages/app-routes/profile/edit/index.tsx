@@ -43,6 +43,32 @@ interface VietQRBank {
   lookupSupported: number;
 }
 
+async function uploadProfileFiles(
+  avatarFile: File | null,
+  citizenIdFrontFile: File | null,
+  citizenIdBackFile: File | null,
+  cvFile: File | null,
+  sessionId: string | number,
+  payload: Record<string, unknown>
+) {
+  if (avatarFile) {
+    const res = await s3Service.uploadFile(avatarFile, `avatars/${sessionId}/${Date.now()}_${avatarFile.name}`);
+    payload.avatarTempKey = res.objectKey;
+  }
+  if (citizenIdFrontFile) {
+    const res = await s3Service.uploadFile(citizenIdFrontFile, `citizen-ids/${sessionId}/front_${Date.now()}_${citizenIdFrontFile.name}`);
+    payload.citizenIdFrontImageTempKey = res.objectKey;
+  }
+  if (citizenIdBackFile) {
+    const res = await s3Service.uploadFile(citizenIdBackFile, `citizen-ids/${sessionId}/back_${Date.now()}_${citizenIdBackFile.name}`);
+    payload.citizenIdBackImageTempKey = res.objectKey;
+  }
+  if (cvFile) {
+    const res = await s3Service.uploadFile(cvFile, `cv/${sessionId}/${Date.now()}_${cvFile.name}`);
+    payload.cvTempKey = res.objectKey;
+  }
+}
+
 export default function EditProfilePage() {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
@@ -99,35 +125,62 @@ export default function EditProfilePage() {
   const handleRotateImage = async (e: React.MouseEvent, type: 'avatar' | 'front' | 'back') => {
     e.stopPropagation();
     e.preventDefault();
+    
+    const currentSession = session;
+    const sessionAvatarUrl = currentSession ? currentSession.avatarUrl : null;
+    const sessionUsername = currentSession ? currentSession.username : null;
+
+    let avatarSource: File | string | null = avatarFile;
+    if (!avatarSource) {
+      avatarSource = avatarPreview ? avatarPreview : (sessionAvatarUrl ? sessionAvatarUrl : (sessionUsername ?? null));
+    }
+
+    let frontSource: File | string | null = citizenIdFrontFile;
+    if (!frontSource) frontSource = citizenIdFrontPreview;
+
+    let backSource: File | string | null = citizenIdBackFile;
+    if (!backSource) backSource = citizenIdBackPreview;
+
+    let fileToRotate: File | string | null = null;
+    if (type === 'avatar') {
+      if (!avatarSource) return;
+      fileToRotate = avatarFile;
+      if (!fileToRotate) fileToRotate = avatarPreview ?? null;
+      if (!fileToRotate) fileToRotate = sessionAvatarUrl ?? null;
+      if (!fileToRotate) fileToRotate = sessionUsername ? `https://api.dicebear.com/7.x/notionists/svg?seed=${sessionUsername}` : null;
+    } else if (type === 'front') {
+      if (!frontSource) return;
+      fileToRotate = frontSource;
+    } else if (type === 'back') {
+      if (!backSource) return;
+      fileToRotate = backSource;
+    }
+
+    if (!fileToRotate) return;
+
     try {
       if (type === 'avatar') {
-        const source = avatarFile || avatarPreview || session?.avatarUrl || session?.username;
-        if (!source) return;
         const newFile = await rotateImageFile(
-            avatarFile ? avatarFile : (avatarPreview || session?.avatarUrl ? (avatarPreview || session?.avatarUrl) : `https://api.dicebear.com/7.x/notionists/svg?seed=${session?.username}`)!,
+            fileToRotate,
             90,
             "avatar.jpg"
         );
         setAvatarFile(newFile);
         setAvatarPreview(URL.createObjectURL(newFile));
       } else if (type === 'front') {
-        const source = citizenIdFrontFile || citizenIdFrontPreview;
-        if (!source) return;
-        const newFile = await rotateImageFile(source, 90, "front_id.jpg");
+        const newFile = await rotateImageFile(fileToRotate, 90, "front_id.jpg");
         setCitizenIdFrontFile(newFile);
         setCitizenIdFrontPreview(URL.createObjectURL(newFile));
       } else if (type === 'back') {
-        const source = citizenIdBackFile || citizenIdBackPreview;
-        if (!source) return;
-        const newFile = await rotateImageFile(source, 90, "back_id.jpg");
+        const newFile = await rotateImageFile(fileToRotate, 90, "back_id.jpg");
         setCitizenIdBackFile(newFile);
         setCitizenIdBackPreview(URL.createObjectURL(newFile));
       }
     } catch (error) {
       console.error(error);
-      const e = error as Error;
+      const errObj = error as Error;
       toast.error(t("editProfile.rotateFailed", { defaultValue: "Lỗi xoay ảnh, có thể do định dạng hoặc lỗi CORS." }), {
-        description: e.message || ""
+        description: errObj.message || ""
       });
     }
   };
@@ -249,23 +302,9 @@ export default function EditProfilePage() {
 
     setLoading(true);
 
+    const sessionId = session?.id || 'me';
     try {
-      if (avatarFile) {
-        const res = await s3Service.uploadFile(avatarFile, `avatars/${session?.id || 'me'}/${Date.now()}_${avatarFile.name}`);
-        payload.avatarTempKey = res.objectKey;
-      }
-      if (citizenIdFrontFile) {
-        const res = await s3Service.uploadFile(citizenIdFrontFile, `citizen-ids/${session?.id || 'me'}/front_${Date.now()}_${citizenIdFrontFile.name}`);
-        payload.citizenIdFrontImageTempKey = res.objectKey;
-      }
-      if (citizenIdBackFile) {
-        const res = await s3Service.uploadFile(citizenIdBackFile, `citizen-ids/${session?.id || 'me'}/back_${Date.now()}_${citizenIdBackFile.name}`);
-        payload.citizenIdBackImageTempKey = res.objectKey;
-      }
-      if (cvFile) {
-        const res = await s3Service.uploadFile(cvFile, `cv/${session?.id || 'me'}/${Date.now()}_${cvFile.name}`);
-        payload.cvTempKey = res.objectKey;
-      }
+      await uploadProfileFiles(avatarFile, citizenIdFrontFile, citizenIdBackFile, cvFile, sessionId, payload);
     } catch (uploadError: unknown) {
       setLoading(false);
       const err = uploadError as Error;
@@ -381,7 +420,7 @@ export default function EditProfilePage() {
                 {/* AVATAR UPLOAD */}
                 <div className="flex flex-col items-center justify-center sm:justify-start sm:flex-row sm:items-center gap-6 mb-8 bg-muted/20 p-5 rounded-2xl border border-border">
                   <input type="file" ref={avatarInputRef} className="hidden" accept="image/jpeg, image/png, image/webp" onChange={(e) => handleFileChange(e, setAvatarFile, setAvatarPreview)} />
-                  <div className="relative group cursor-pointer" onClick={() => avatarInputRef.current?.click()}>
+                  <div className="relative group cursor-pointer" onClick={() => avatarInputRef.current?.click()} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') avatarInputRef.current?.click(); }} role="button" tabIndex={0}>
                      <div className="w-28 h-28 rounded-full bg-card border-4 border-background shadow-md overflow-hidden flex items-center justify-center shrink-0 text-muted-foreground group-hover:opacity-80 transition-opacity">
                         {avatarPreview ? (
                           <img src={avatarPreview} alt="Avatar" className="w-full h-full object-contain bg-muted" />
@@ -686,7 +725,7 @@ export default function EditProfilePage() {
                       <Label className="font-semibold block">{t("editProfile.identity.frontImg", { defaultValue: "Ảnh mặt trước CCCD" })}</Label>
                       <input type="file" ref={frontInputRef} className="hidden" accept="image/jpeg, image/png, image/webp" onChange={(e) => handleFileChange(e, setCitizenIdFrontFile, setCitizenIdFrontPreview)} />
                       <div className="flex flex-col gap-2">
-                          <div onClick={() => frontInputRef.current?.click()} className="relative border-2 border-dashed border-border rounded-2xl h-48 flex flex-col items-center justify-center text-muted-foreground bg-muted/10 hover:bg-muted/50 hover:border-[#2E3192]/40 transition-colors cursor-pointer overflow-hidden">
+                          <div onClick={() => frontInputRef.current?.click()} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') frontInputRef.current?.click(); }} role="button" tabIndex={0} className="relative border-2 border-dashed border-border rounded-2xl h-48 flex flex-col items-center justify-center text-muted-foreground bg-muted/10 hover:bg-muted/50 hover:border-[#2E3192]/40 transition-colors cursor-pointer overflow-hidden">
                              {citizenIdFrontPreview ? (
                                 <img src={citizenIdFrontPreview} alt="Front ID" className="w-full h-full object-contain bg-muted" />
                              ) : (
@@ -710,7 +749,7 @@ export default function EditProfilePage() {
                       <Label className="font-semibold block">{t("editProfile.identity.backImg", { defaultValue: "Ảnh mặt sau CCCD" })}</Label>
                       <input type="file" ref={backInputRef} className="hidden" accept="image/jpeg, image/png, image/webp" onChange={(e) => handleFileChange(e, setCitizenIdBackFile, setCitizenIdBackPreview)} />
                       <div className="flex flex-col gap-2">
-                          <div onClick={() => backInputRef.current?.click()} className="relative border-2 border-dashed border-border rounded-2xl h-48 flex flex-col items-center justify-center text-muted-foreground bg-muted/10 hover:bg-muted/50 hover:border-[#2E3192]/40 transition-colors cursor-pointer overflow-hidden">
+                          <div onClick={() => backInputRef.current?.click()} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') backInputRef.current?.click(); }} role="button" tabIndex={0} className="relative border-2 border-dashed border-border rounded-2xl h-48 flex flex-col items-center justify-center text-muted-foreground bg-muted/10 hover:bg-muted/50 hover:border-[#2E3192]/40 transition-colors cursor-pointer overflow-hidden">
                              {citizenIdBackPreview ? (
                                 <img src={citizenIdBackPreview} alt="Back ID" className="w-full h-full object-contain bg-muted" />
                              ) : (

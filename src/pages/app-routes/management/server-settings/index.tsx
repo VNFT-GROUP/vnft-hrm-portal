@@ -9,6 +9,21 @@ import { useQuery } from "@tanstack/react-query";
 import { settingsService } from "@/services/settings";
 import { useTranslation } from "react-i18next";
 
+const parseCronToText = (cron: string) => {
+  try {
+    const parts = cron.trim().split(/\s+/);
+    if (parts.length === 6 && parts[3] === "*" && parts[4] === "*" && parts[5] === "*") {
+      const sec = parts[0];
+      const min = parts[1].padStart(2, "0");
+      const hr = parts[2].padStart(2, "0");
+      return `Hàng ngày lúc ${hr}:${min}${sec !== "0" ? `:${sec.padStart(2, "0")}` : ''}`;
+    }
+    return "Lịch tự động theo cấu hình hệ thống";
+  } catch {
+    return "Lịch tự động theo cấu hình hệ thống";
+  }
+};
+
 export default function ServerSettingsPage() {
   const { t } = useTranslation();
   const [activeSection, setActiveSection] = useState<string>("flex");
@@ -33,21 +48,6 @@ export default function ServerSettingsPage() {
     }
   };
 
-  const parseCronToText = (cron: string) => {
-    try {
-      const parts = cron.trim().split(/\s+/);
-      if (parts.length === 6 && parts[3] === "*" && parts[4] === "*" && parts[5] === "*") {
-        const sec = parts[0];
-        const min = parts[1].padStart(2, "0");
-        const hr = parts[2].padStart(2, "0");
-        return `Hàng ngày lúc ${hr}:${min}${sec !== "0" ? `:${sec.padStart(2, "0")}` : ''}`;
-      }
-      return "Lịch tự động theo cấu hình hệ thống";
-    } catch {
-      return "Lịch tự động theo cấu hình hệ thống";
-    }
-  };
-  
   const { data, isLoading, isError } = useQuery({
     queryKey: ["server-settings"],
     queryFn: () => settingsService.getServerSettings()
@@ -85,12 +85,19 @@ export default function ServerSettingsPage() {
   }, [isLoading]);
 
   const getGraceTimeRange = () => {
-    if (!settings?.attendanceMorningStart) return "08:00 - 08:15";
+    const startTime = settings?.attendanceMorningStart;
+    if (!startTime) return "08:00 - 08:15";
+
+    let graceMinutes = 15;
+    if (settings && settings.attendanceLateGraceMinutes != null) {
+      graceMinutes = settings.attendanceLateGraceMinutes;
+    }
+
     try {
-      const [h, m] = settings.attendanceMorningStart.split(':').map(Number);
+      const [h, m] = startTime.split(':').map(Number);
       const date = new Date();
-      date.setHours(h, m + (settings.attendanceLateGraceMinutes ?? 15), 0);
-      return `${settings.attendanceMorningStart.slice(0, 5)} - ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+      date.setHours(h, m + graceMinutes, 0);
+      return `${startTime.slice(0, 5)} - ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
     } catch {
       return "08:15";
     }
@@ -316,8 +323,8 @@ export default function ServerSettingsPage() {
                               { majorTimes: settings.attendanceMajorLateEarlyViolationFreeTimes + 1, deductionTimes: 1, deductionDays: settings.attendanceLeaveDeductionPerMajorLateEarlyViolation },
                               { majorTimes: settings.attendanceMajorLateEarlyViolationFreeTimes + 2, deductionTimes: 1, deductionDays: settings.attendanceLeaveDeductionPerMajorLateEarlyViolation },
                               { majorTimes: (settings.attendanceMajorLateEarlyViolationFreeTimes + 1) * 2, deductionTimes: 2, deductionDays: settings.attendanceLeaveDeductionPerMajorLateEarlyViolation * 2 }
-                            ].map((ex, idx) => (
-                              <div key={idx} className="bg-slate-50 border border-slate-100/80 rounded-lg p-3 flex flex-col text-[13px] text-slate-600 gap-1.5 shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]">
+                            ].map((ex) => (
+                              <div key={`major-${ex.majorTimes}-${ex.deductionTimes}`} className="bg-slate-50 border border-slate-100/80 rounded-lg p-3 flex flex-col text-[13px] text-slate-600 gap-1.5 shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]">
                                 <div className="flex justify-between items-center px-1"><span>Số lần VP lớn:</span><strong className="text-slate-800">{ex.majorTimes}</strong></div>
                                 <div className="flex justify-between items-center px-1"><span>Số lần bị trừ:</span><strong className={ex.deductionTimes > 0 ? "text-rose-600" : "text-emerald-600"}>{ex.deductionTimes}</strong></div>
                                 <div className="flex justify-between items-center px-1 border-t border-slate-200/60 pt-1 mt-0.5"><span>Số ngày trừ:</span><strong className={ex.deductionDays > 0 ? "text-rose-600 font-bold" : "text-emerald-600"}>{ex.deductionDays.toFixed(1)}</strong></div>

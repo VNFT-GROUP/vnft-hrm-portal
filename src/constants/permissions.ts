@@ -34,5 +34,3 @@ export const PERMISSIONS = {
   MASTER_DATA_MANAGE: "MASTER_DATA_MANAGE",
   SETTINGS_MANAGE: "SETTINGS_MANAGE",
 } as const;
-
-export type PermissionCode = keyof typeof PERMISSIONS;

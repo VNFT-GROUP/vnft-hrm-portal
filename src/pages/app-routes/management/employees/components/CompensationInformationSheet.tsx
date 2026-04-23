@@ -287,6 +287,9 @@ export default function SalaryInformationSheet({ isOpen, onOpenChange, userId }:
                     <div 
                       className="flex items-center justify-between py-3 mt-4 border-t border-border cursor-pointer text-[#2E3192] hover:text-[#1E2062] transition-colors"
                       onClick={() => toggleConfig(configIdx)}
+                      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') toggleConfig(configIdx); }}
+                      role="button"
+                      tabIndex={0}
                     >
                       <span className="text-sm font-semibold">Danh sách khoản mục ({config.compensationItems.length})</span>
                       <div className="flex items-center gap-1 text-xs font-medium">
@@ -378,7 +381,7 @@ export default function SalaryInformationSheet({ isOpen, onOpenChange, userId }:
                                           type="button"
                                           variant="ghost"
                                           size="sm"
-                                          className="h-8 w-8 p-0 text-slate-400 hover:text-rose-500 hover:bg-rose-50"
+                                          className="h-8 w-8 p-0 text-rose-400 hover:text-rose-500 hover:bg-rose-50"
                                           onClick={() => handleRemoveDetailItem(configIdx, itemIdx)}
                                         >
                                           <Trash2 size={14} />

@@ -19,21 +19,27 @@ export default function AppLayout() {
   // Fetch current user session once when Layout mounts
   useEffect(() => {
     const fetchSession = async () => {
+      let sessionData = null;
       try {
         const res = await currentUserProfileService.getCurrentUserSession();
-        if (res.data) {
-          updateSession(res.data);
-          
-          // Trust the store's existing passwordChangedAt if the API returns null/undefined
-          const storedSession = useAuthStore.getState().session;
-          const finalChangedAt = res.data.passwordChangedAt || storedSession?.passwordChangedAt;
-          
-          if (!finalChangedAt) {
-            setIsForcePasswordOpen(true);
-          }
-        }
+        sessionData = res.data;
       } catch (error) {
         console.error("Failed to fetch user session", error);
+      }
+      
+      if (sessionData) {
+        updateSession(sessionData);
+        
+        // Trust the store's existing passwordChangedAt if the API returns null/undefined
+        const storedSession = useAuthStore.getState().session;
+        let finalChangedAt = sessionData.passwordChangedAt;
+        if (!finalChangedAt && storedSession) {
+          finalChangedAt = storedSession.passwordChangedAt;
+        }
+        
+        if (!finalChangedAt) {
+          setIsForcePasswordOpen(true);
+        }
       }
     };
     fetchSession();

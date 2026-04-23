@@ -95,7 +95,7 @@ export default function GroupFormSheet({ isOpen, onOpenChange, formData, setForm
               ) : (
                 groupedPermissions.map(([category, perms]) => (
                   <div key={category} className="space-y-3">
-                    <h4 className="text-sm font-bold text-[#1E2062] bg-[#2E3192]/5 px-3 py-1.5 rounded-md border-l-2 border-[#2E3192] uppercase">{category}</h4>
+                    <h4 className="text-sm font-bold text-[#1E2062] bg-[#2E3192]/5 px-3 py-1.5 rounded-md border-b-2 border-[#2E3192] uppercase">{category}</h4>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pl-1">
                       {perms.map(p => (
                         <Label key={p.id} htmlFor={`perm-${p.id}`} className="flex items-center gap-3 p-3 hover:bg-card rounded-lg transition-colors border border-border/60 shadow-sm hover:border-[#2E3192]/50 hover:shadow-md cursor-pointer font-normal group/item bg-background">

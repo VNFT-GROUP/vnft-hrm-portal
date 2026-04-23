@@ -7,13 +7,6 @@ export type LeaveSessionType =
   | "AFTERNOON"
   | "FULL_DAY";
 
-export type RequestFormAction = 
-  | "SUBMIT"
-  | "APPROVE"
-  | "REJECT"
-  | "CANCEL"
-  | "COMMENT"
-  | "REASSIGN";
 
 export type RequestFormStatus = 
   | "PENDING"

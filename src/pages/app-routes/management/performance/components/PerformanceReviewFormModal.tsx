@@ -233,7 +233,7 @@ export default function PerformanceReviewFormModal({ isOpen, onOpenChange, userI
                         <span className="text-xs font-semibold text-slate-700 uppercase tracking-widest mb-3 block">Đánh giá tiêu chí (Chọn các mục đạt được)</span>
                         <div className="flex flex-col space-y-3 pl-1">
                            {selectedLevel.criteria?.map((c, i) => (
-                             <div key={`${selectedLevel.score}-${i}-${c.substring(0, 10)}`} className="flex items-start space-x-3 group">
+                             <div key={`${selectedLevel.score}-${c}`} className="flex items-start space-x-3 group">
                                <Checkbox 
                                   id={`criteria-${selectedLevel.score}-${i}`}
                                   checked={(performanceDescriptions[overallScore.toString()] || []).includes(i)}

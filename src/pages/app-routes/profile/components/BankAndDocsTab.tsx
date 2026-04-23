@@ -35,7 +35,7 @@ export default function BankAndDocsTab() {
         <div className="flex flex-col gap-6">
           {profile.bankInformations && profile.bankInformations.length > 0 ? (
             profile.bankInformations.map((bank, idx) => (
-               <div key={idx} className="flex flex-col gap-6 border-b border-border pb-6 last:border-0 last:pb-0">
+               <div key={bank.bankAccountNumber || `bank-${idx}`} className="flex flex-col gap-6 border-b border-border pb-6 last:border-0 last:pb-0">
                   <div className="p-4 bg-linear-to-br from-slate-800 to-slate-900 rounded-xl text-white shadow-md relative overflow-hidden group/card hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 cursor-pointer">
                     <div className="absolute top-0 right-0 p-4 opacity-10 group-hover/card:scale-110 group-hover/card:opacity-20 transition-all duration-500">
                       <CreditCard size={64} />

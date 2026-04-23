@@ -610,10 +610,10 @@ export default function MyAttendancePage() {
                     <div className="text-sm text-slate-500 italic py-2">Không có đơn liên quan trong ngày này.</div>
                   ) : (
                     <div className="flex flex-col gap-3 mt-2 pr-2 overflow-y-auto w-full custom-scrollbar">
-                      {selectedRecord.requestForms.map((req, idx) => {
+                      {selectedRecord.requestForms.map((req) => {
                         const display = getRequestFormDisplay(req);
                         return (
-                          <div key={idx} className="flex flex-col bg-white border border-slate-200 rounded-xl p-4 shadow-xs relative">
+                          <div key={req.id} className="flex flex-col bg-white border border-slate-200 rounded-xl p-4 shadow-xs relative">
                             <div className="flex items-start justify-between mb-1">
                               <div className="flex flex-col">
                                 <span className="font-bold text-slate-800 text-[15px] flex flex-wrap items-center gap-2">
@@ -638,12 +638,12 @@ export default function MyAttendancePage() {
                             </div>
 
                             <div className="flex flex-col mt-4">
-                              {display.lines.map((l, i) => {
+                              {display.lines.map((l) => {
                                 const splitIdx = l.indexOf(": ");
                                 const label = splitIdx !== -1 ? l.substring(0, splitIdx) : "";
                                 const value = splitIdx !== -1 ? l.substring(splitIdx + 2) : l;
                                 return (
-                                  <div key={i} className="grid grid-cols-[120px_1fr] sm:grid-cols-[140px_1fr] items-center gap-4 py-2.5 border-b border-slate-100 border-dashed last:border-0 hover:bg-slate-50/50 transition-colors -mx-4 px-4">
+                                  <div key={`line-${label || value}`} className="grid grid-cols-[120px_1fr] sm:grid-cols-[140px_1fr] items-center gap-4 py-2.5 border-b border-slate-100 border-dashed last:border-0 hover:bg-slate-50/50 transition-colors -mx-4 px-4">
                                     {label && <span className="text-[13px] font-medium text-slate-400">{label}</span>}
                                     <span className="text-[14px] font-bold text-slate-800 tracking-tight">{value}</span>
                                   </div>

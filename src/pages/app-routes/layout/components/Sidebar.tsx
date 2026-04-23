@@ -300,6 +300,10 @@ export default function Sidebar() {
           <div 
             className="fixed inset-0 z-9998" 
             onClick={() => setActivePopout(null)}
+            onKeyDown={(e) => { if (e.key === 'Escape') setActivePopout(null); }}
+            role="button"
+            tabIndex={-1}
+            aria-label="Close menu"
           />
           <div 
             className="fixed z-9999 bg-[#1e293b] border border-white/10 shadow-2xl rounded-xl p-2 left-[105px] w-56 animate-in slide-in-from-left-2 fade-in"

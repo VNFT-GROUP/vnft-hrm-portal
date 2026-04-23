@@ -149,7 +149,7 @@ export default function Topbar() {
 
           <LiveClock />
 
-          <div className="user-profile" onClick={() => setIsProfileOpen(!isProfileOpen)}>
+          <div className="user-profile" onClick={() => setIsProfileOpen(!isProfileOpen)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setIsProfileOpen(!isProfileOpen); }} role="button" tabIndex={0}>
             <div className="user-info">
                <span className="user-name">{session?.fullName || session?.username || t('profile.defaultUser')}</span>
                <span className="user-jobTitle">
@@ -236,7 +236,7 @@ export default function Topbar() {
 
       {/* BACKDROP MUST BE INSIDE HEADER FOR STACKING CONTEXT */}
       {isProfileOpen && (
-        <div className="profile-backdrop" onClick={() => setIsProfileOpen(false)}></div>
+        <div className="profile-backdrop" onClick={() => setIsProfileOpen(false)} onKeyDown={(e) => { if (e.key === 'Escape') setIsProfileOpen(false); }} role="button" tabIndex={-1} aria-label="Close profile menu"></div>
       )}
 
       {/* PASSWORDS MODAL */}

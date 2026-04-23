@@ -97,7 +97,7 @@ export default function SalaryTab() {
                 className="w-full appearance-none bg-slate-50 border-0 text-[#1E2062] font-bold text-lg rounded-xl px-5 py-4 pr-12 focus:outline-none focus:ring-2 focus:ring-purple-500/20 hover:bg-slate-100 transition-colors cursor-pointer shadow-sm"
               >
                 {sortedConfigs.map((config, idx) => (
-                  <option key={idx} value={idx}>
+                  <option key={config.effectiveFrom || idx} value={idx}>
                     {config.effectiveFrom}
                   </option>
                 ))}
@@ -124,8 +124,8 @@ export default function SalaryTab() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border">
-                  {currentConfig.compensationItems.map((item, idx) => (
-                    <tr key={idx} className="hover:bg-muted/20 transition-colors">
+                  {currentConfig.compensationItems.map((item) => (
+                    <tr key={`${item.name}-${item.amount}`} className="hover:bg-muted/20 transition-colors">
                       <td className="px-4 py-3 font-medium text-foreground">{item.name}</td>
                       <td className="px-4 py-3 text-right font-medium text-foreground">
                         {formatCurrency(item.amount)}

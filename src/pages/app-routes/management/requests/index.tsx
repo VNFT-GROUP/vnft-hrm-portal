@@ -183,32 +183,52 @@ export default function ManagementRequestsPage() {
     }
   };
 
-  const formatRequestApplyDate = (req: RequestFormResponse) => {
+  const safeFormatDate = (dateString?: string | null) => {
+    if (!dateString) return "—";
     try {
-      if (req.type === "ATTENDANCE_ADJUSTMENT") {
-        const tType = req.timeType === "CHECK_IN" ? "check-in" : "check-out";
-        const dateStr = req.attendanceDate ? format(new Date(req.attendanceDate), "dd/MM/yyyy") : "—";
-        return t("requests.management.format.adjustCheckinOut", { type: tType, date: dateStr, time: req.requestedTime?.substring(0, 5), defaultValue: `Điều chỉnh ${tType} ngày ${dateStr} thành ${req.requestedTime?.substring(0, 5)}` });
-      } else if (req.type === "ABSENCE") {
-        const dateStr = req.absenceDate ? format(new Date(req.absenceDate), "dd/MM/yyyy") : "—";
-        return t("requests.management.format.absentDetail", { date: dateStr, from: req.fromTime?.substring(0, 5), to: req.toTime?.substring(0, 5), defaultValue: `Ngày ${dateStr}, từ ${req.fromTime?.substring(0, 5)} đến ${req.toTime?.substring(0, 5)}` });
-      } else if (req.type === "LEAVE") {
-        const s1 = req.startSession === "FULL_DAY" ? t("requests.management.format.fullDay", { defaultValue: "Cả ngày" }) : req.startSession === "MORNING" ? t("requests.management.format.morning", { defaultValue: "Sáng" }) : t("requests.management.format.afternoon", { defaultValue: "Chiều" });
-        const s2 = req.endSession === "FULL_DAY" ? t("requests.management.format.fullDay", { defaultValue: "Cả ngày" }) : req.endSession === "MORNING" ? t("requests.management.format.morning", { defaultValue: "Sáng" }) : t("requests.management.format.afternoon", { defaultValue: "Chiều" });
-        const d1 = req.startDate ? format(new Date(req.startDate), "dd/MM/yyyy") : "—";
-        const d2 = req.endDate ? format(new Date(req.endDate), "dd/MM/yyyy") : "—";
-        if (d1 === d2) return s1 === s2 ? t("requests.management.format.leaveSameDay", { date: d1, session: s1, defaultValue: `${d1} (${s1})` }) : t("requests.management.format.leaveSameDay", { date: d1, session: `${s1} - ${s2}`, defaultValue: `${d1} (${s1} - ${s2})` });
-        return t("requests.management.format.leaveDiffDay", { d1, s1, d2, s2, defaultValue: `Từ ${d1} (${s1}) đến ${d2} (${s2})` });
-      } else if (req.type === "WFH" || req.type === "BUSINESS_TRIP") {
-        const d1 = req.startDate ? format(new Date(req.startDate), "dd/MM/yyyy") : "—";
-        const d2 = req.endDate ? format(new Date(req.endDate), "dd/MM/yyyy") : "—";
-        return d1 === d2 ? t("requests.management.format.rangeSameDay", { date: d1, defaultValue: `${d1}` }) : t("requests.management.format.rangeDiffDay", { d1, d2, defaultValue: `Từ ${d1} đến ${d2}` });
-      } else if (req.type === "RESIGNATION") {
-        if (!req.lastWorkingDate) return t("requests.management.format.unknown", { defaultValue: "Không xác định" });
-        return t("requests.management.format.resignDetail", { date: format(new Date(req.lastWorkingDate), "dd/MM/yyyy"), defaultValue: `Làm việc đến hết ${format(new Date(req.lastWorkingDate), "dd/MM/yyyy")}` });
-      }
+      return format(new Date(dateString), "dd/MM/yyyy");
     } catch {
-      return t("requests.management.format.unknown", { defaultValue: "Không xác định" });
+      return "—";
+    }
+  };
+
+  const formatRequestApplyDate = (req: RequestFormResponse) => {
+    if (req.type === "ATTENDANCE_ADJUSTMENT") {
+      let tType = "check-out";
+      if (req.timeType === "CHECK_IN") tType = "check-in";
+      const dateStr = safeFormatDate(req.attendanceDate);
+      const reqTime = req.requestedTime ? req.requestedTime.substring(0, 5) : "";
+      return t("requests.management.format.adjustCheckinOut", { type: tType, date: dateStr, time: reqTime, defaultValue: `Điều chỉnh ${tType} ngày ${dateStr} thành ${reqTime}` });
+    } else if (req.type === "ABSENCE") {
+      const dateStr = safeFormatDate(req.absenceDate);
+      const fTime = req.fromTime ? req.fromTime.substring(0, 5) : "";
+      const tTime = req.toTime ? req.toTime.substring(0, 5) : "";
+      return t("requests.management.format.absentDetail", { date: dateStr, from: fTime, to: tTime, defaultValue: `Ngày ${dateStr}, từ ${fTime} đến ${tTime}` });
+    } else if (req.type === "LEAVE") {
+      let s1 = t("requests.management.format.afternoon", { defaultValue: "Chiều" });
+      if (req.startSession === "FULL_DAY") s1 = t("requests.management.format.fullDay", { defaultValue: "Cả ngày" });
+      else if (req.startSession === "MORNING") s1 = t("requests.management.format.morning", { defaultValue: "Sáng" });
+      
+      let s2 = t("requests.management.format.afternoon", { defaultValue: "Chiều" });
+      if (req.endSession === "FULL_DAY") s2 = t("requests.management.format.fullDay", { defaultValue: "Cả ngày" });
+      else if (req.endSession === "MORNING") s2 = t("requests.management.format.morning", { defaultValue: "Sáng" });
+      
+      const d1 = safeFormatDate(req.startDate);
+      const d2 = safeFormatDate(req.endDate);
+      if (d1 === d2) {
+        if (s1 === s2) return t("requests.management.format.leaveSameDay", { date: d1, session: s1, defaultValue: `${d1} (${s1})` });
+        return t("requests.management.format.leaveSameDay", { date: d1, session: `${s1} - ${s2}`, defaultValue: `${d1} (${s1} - ${s2})` });
+      }
+      return t("requests.management.format.leaveDiffDay", { d1, s1, d2, s2, defaultValue: `Từ ${d1} (${s1}) đến ${d2} (${s2})` });
+    } else if (req.type === "WFH" || req.type === "BUSINESS_TRIP") {
+      const d1 = safeFormatDate(req.startDate);
+      const d2 = safeFormatDate(req.endDate);
+      if (d1 === d2) return t("requests.management.format.rangeSameDay", { date: d1, defaultValue: `${d1}` });
+      return t("requests.management.format.rangeDiffDay", { d1, d2, defaultValue: `Từ ${d1} đến ${d2}` });
+    } else if (req.type === "RESIGNATION") {
+      if (!req.lastWorkingDate) return t("requests.management.format.unknown", { defaultValue: "Không xác định" });
+      const dateStr = safeFormatDate(req.lastWorkingDate);
+      return t("requests.management.format.resignDetail", { date: dateStr, defaultValue: `Làm việc đến hết ${dateStr}` });
     }
     return t("requests.management.format.unknown", { defaultValue: "Không xác định" });
   };

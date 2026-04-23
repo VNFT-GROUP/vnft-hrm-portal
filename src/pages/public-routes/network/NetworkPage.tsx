@@ -119,6 +119,9 @@ export default function NetworkPage() {
                 key={branch.name} 
                 className="branch-card-light shadow-sm cursor-pointer hover:bg-slate-50 transition-colors"
                 onClick={() => setActiveLocation(branch.coords)}
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setActiveLocation(branch.coords); }}
+                role="button"
+                tabIndex={0}
               >
                 <div className="branch-name">{branch.name}</div>
                 <div className="branch-addr">{branch.addr}</div>

@@ -36,7 +36,7 @@ export function AttendanceDisciplineReportFilter({
         
         {/* Toggle Period Type */}
         <div className="space-y-1.5">
-          <label className="text-xs font-bold text-slate-500 uppercase px-1">Kỳ Báo Cáo</label>
+          <span className="text-xs font-bold text-slate-500 uppercase px-1">Kỳ Báo Cáo</span>
           <div className="flex bg-slate-100 p-1.5 rounded-xl border border-slate-200 h-11">
             <button
               onClick={() => setPeriodType("MONTH")}
@@ -63,7 +63,7 @@ export function AttendanceDisciplineReportFilter({
 
         {/* Year Dropdown */}
         <div className="space-y-1.5">
-          <label className="text-xs font-bold text-slate-500 uppercase px-1">Năm</label>
+          <span className="text-xs font-bold text-slate-500 uppercase px-1">Năm</span>
           <Select value={year.toString()} onValueChange={(v) => setYear(Number(v))}>
             <SelectTrigger className="w-[120px] h-11 bg-slate-50 border-slate-200 focus:ring-[#2E3192] rounded-xl font-medium text-[#1E2062]">
               <SelectValue />
@@ -81,7 +81,7 @@ export function AttendanceDisciplineReportFilter({
         {/* Month / Quarter Dropdown */}
         {periodType === "MONTH" ? (
           <div className="space-y-1.5">
-            <label className="text-xs font-bold text-slate-500 uppercase px-1">Tháng</label>
+            <span className="text-xs font-bold text-slate-500 uppercase px-1">Tháng</span>
             <Select value={month.toString()} onValueChange={(v) => setMonth(Number(v))}>
               <SelectTrigger className="w-[140px] h-11 bg-slate-50 border-slate-200 focus:ring-[#2E3192] rounded-xl font-medium text-[#1E2062]">
                 <SelectValue />
@@ -97,7 +97,7 @@ export function AttendanceDisciplineReportFilter({
           </div>
         ) : (
           <div className="space-y-1.5">
-            <label className="text-xs font-bold text-slate-500 uppercase px-1">Quý</label>
+            <span className="text-xs font-bold text-slate-500 uppercase px-1">Quý</span>
             <Select value={quarter.toString()} onValueChange={(v) => setQuarter(Number(v))}>
               <SelectTrigger className="w-[140px] h-11 bg-slate-50 border-slate-200 focus:ring-[#2E3192] rounded-xl font-medium text-[#1E2062]">
                 <SelectValue />

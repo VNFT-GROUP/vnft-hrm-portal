@@ -129,7 +129,7 @@ export default function PerformanceReviewDetailModal({ isOpen, onOpenChange, id 
                      <div className="mt-4 pt-4 border-t border-white/20">
                          <span className="text-indigo-200 text-[11px] uppercase mb-1 block">Tiêu chí đạt được (Lý do chọn)</span>
                          <ul className="list-disc pl-4 text-xs text-indigo-50 space-y-1.5 opacity-95">
-                            {review.scoreCriteria.map((c, i) => <li key={i}>{c}</li>)}
+                            {review.scoreCriteria.map((c) => <li key={c}>{c}</li>)}
                          </ul>
                      </div>
                  )}

@@ -35,7 +35,7 @@ export default function FamilyEduTab() {
         <div className="space-y-6">
           {profile.educationRecords && profile.educationRecords.length > 0 ? (
              profile.educationRecords.map((edu, idx) => (
-                <div key={idx} className="grid grid-cols-1 md:grid-cols-4 gap-y-4 gap-x-4 pb-4 border-b border-border last:border-0 last:pb-0">
+                <div key={edu.institutionName ? `${edu.educationLevel}-${edu.institutionName}` : `edu-${idx}`} className="grid grid-cols-1 md:grid-cols-4 gap-y-4 gap-x-4 pb-4 border-b border-border last:border-0 last:pb-0">
                   <div><Label>{t("profile.fields.eduLevel", { defaultValue: "Trình độ" })}</Label><Value>{edu.educationLevel}</Value></div>
                   <div><Label>{t("profile.fields.institutionName", { defaultValue: "Nơi đào tạo" })}</Label><Value>{edu.institutionName}</Value></div>
                   <div><Label>{t("profile.fields.major", { defaultValue: "Chuyên ngành" })}</Label><Value>{edu.major}</Value></div>
@@ -56,7 +56,7 @@ export default function FamilyEduTab() {
         <div className="space-y-6 mt-4">
           {profile.dependents && profile.dependents.length > 0 ? (
              profile.dependents.map((dep, idx) => (
-                <div key={idx} className="grid grid-cols-1 md:grid-cols-5 gap-y-4 gap-x-4 pb-4 border-b border-border last:border-0 last:pb-0">
+                <div key={dep.dependentFullName ? `${dep.dependentFullName}-${dep.dependentRelationship}` : `dep-${idx}`} className="grid grid-cols-1 md:grid-cols-5 gap-y-4 gap-x-4 pb-4 border-b border-border last:border-0 last:pb-0">
                   <div><Label>Họ và tên</Label><Value>{dep.dependentFullName}</Value></div>
                   <div><Label>Mối quan hệ</Label><Value>{dep.dependentRelationship}</Value></div>
                   <div><Label>Ngày sinh</Label><Value>{dep.dependentDateOfBirth}</Value></div>

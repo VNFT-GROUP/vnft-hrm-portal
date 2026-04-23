@@ -18,15 +18,18 @@ export default function ProfilePage() {
 
   useEffect(() => {
     const fetchProfile = async () => {
+      let profileData = null;
       try {
         setLoading(true);
         const res = await currentUserProfileService.getCurrentUserProfile();
-        setProfile(res.data || null);
-        setLoading(false);
+        if (res.data) profileData = res.data;
       } catch (err) {
         console.error("Failed to fetch profile", err);
+        setProfile(profileData);
         setLoading(false);
       }
+      setProfile(profileData);
+      setLoading(false);
     };
     fetchProfile();
   }, []);

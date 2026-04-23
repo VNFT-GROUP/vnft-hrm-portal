@@ -16,49 +16,64 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { RichTextViewer } from "@/components/custom/RichTextViewer";
 import { getErrorMessage } from "@/lib/utils";
 import RequestFormModal from "./components/RequestFormModal";
-const ApplicableDate = ({ req }: { req: RequestFormResponse }) => {
+const safeFormatDate = (dateString?: string) => {
+  if (!dateString) return "—";
   try {
-    if (req.type === "ATTENDANCE_ADJUSTMENT") {
-      const tType = req.timeType === "CHECK_IN" ? "check-in" : "check-out";
-      return <>{req.attendanceDate ? `Điều chỉnh ${tType} ngày ${format(new Date(req.attendanceDate), "dd/MM/yyyy")} thành ${req.requestedTime?.substring(0, 5)}` : "Không xác định"}</>;
-    } else if (req.type === "ABSENCE") {
-      if (!req.absenceDate) return <>Không xác định</>;
-      return (
-         <div className="flex flex-col gap-1 sm:flex-row sm:items-center justify-center">
-            <span>{`Vắng mặt ngày ${format(new Date(req.absenceDate), "dd/MM/yyyy")}, từ ${req.fromTime?.substring(0, 5)} đến ${req.toTime?.substring(0, 5)}`}</span>
-            {req.absenceReasonType && (
-               <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold uppercase shrink-0 w-fit mx-auto sm:mx-0 ${req.absenceReasonType === 'PERSONAL' ? 'bg-amber-100 text-amber-700' : 'bg-blue-100 text-blue-700'}`}>
-                 {req.absenceReasonType === 'PERSONAL' ? 'Việc cá nhân' : 'Việc công ty'}
-               </span>
-            )}
-         </div>
-      );
-    } else if (req.type === "LEAVE") {
-      if (!req.startDate || !req.endDate) return <>Không xác định</>;
-      const s1 = req.startSession === "FULL_DAY" ? "Cả ngày" : req.startSession === "MORNING" ? "Sáng" : "Chiều";
-      const s2 = req.endSession === "FULL_DAY" ? "Cả ngày" : req.endSession === "MORNING" ? "Sáng" : "Chiều";
-      const d1 = format(new Date(req.startDate), "dd/MM/yyyy");
-      const d2 = format(new Date(req.endDate), "dd/MM/yyyy");
-      if (d1 === d2) {
-        return <>{`Nghỉ phép ngày ${d1} ${s1 === s2 ? `(${s1})` : `(${s1} - ${s2})`}`}</>;
-      }
-      return <>{`Nghỉ phép từ ${d1} (${s1}) đến ${d2} (${s2})`}</>;
-    } else if (req.type === "WFH") {
-      if (!req.startDate || !req.endDate) return <>Không xác định</>;
-      const d1 = format(new Date(req.startDate), "dd/MM/yyyy");
-      const d2 = format(new Date(req.endDate), "dd/MM/yyyy");
-      return <>{d1 === d2 ? `WFH ngày ${d1}` : `WFH từ ${d1} đến ${d2}`}</>;
-    } else if (req.type === "BUSINESS_TRIP") {
-      if (!req.startDate || !req.endDate) return <>Không xác định</>;
-      const d1 = format(new Date(req.startDate), "dd/MM/yyyy");
-      const d2 = format(new Date(req.endDate), "dd/MM/yyyy");
-      return <>{d1 === d2 ? `Công tác ngày ${d1}` : `Công tác từ ${d1} đến ${d2}`}</>;
-    } else if (req.type === "RESIGNATION") {
-      if (!req.lastWorkingDate) return <>Không xác định</>;
-      return <>{`Làm việc đến hết ${format(new Date(req.lastWorkingDate), "dd/MM/yyyy")}`}</>;
-    }
+    return format(new Date(dateString), "dd/MM/yyyy");
   } catch {
-    return <>Không xác định</>;
+    return "—";
+  }
+};
+
+const ApplicableDate = ({ req }: { req: RequestFormResponse }) => {
+  if (req.type === "ATTENDANCE_ADJUSTMENT") {
+    let tType = "check-out";
+    if (req.timeType === "CHECK_IN") tType = "check-in";
+    const reqTime = req.requestedTime ? req.requestedTime.substring(0, 5) : "";
+    return <>{req.attendanceDate ? `Điều chỉnh ${tType} ngày ${safeFormatDate(req.attendanceDate)} thành ${reqTime}` : "Không xác định"}</>;
+  } else if (req.type === "ABSENCE") {
+    if (!req.absenceDate) return <>Không xác định</>;
+    const fTime = req.fromTime ? req.fromTime.substring(0, 5) : "";
+    const tTime = req.toTime ? req.toTime.substring(0, 5) : "";
+    return (
+       <div className="flex flex-col gap-1 sm:flex-row sm:items-center justify-center">
+          <span>{`Vắng mặt ngày ${safeFormatDate(req.absenceDate)}, từ ${fTime} đến ${tTime}`}</span>
+          {req.absenceReasonType && (
+             <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold uppercase shrink-0 w-fit mx-auto sm:mx-0 ${req.absenceReasonType === 'PERSONAL' ? 'bg-amber-100 text-amber-700' : 'bg-blue-100 text-blue-700'}`}>
+               {req.absenceReasonType === 'PERSONAL' ? 'Việc cá nhân' : 'Việc công ty'}
+             </span>
+          )}
+       </div>
+    );
+  } else if (req.type === "LEAVE") {
+    if (!req.startDate || !req.endDate) return <>Không xác định</>;
+    let s1 = "Chiều";
+    if (req.startSession === "FULL_DAY") s1 = "Cả ngày";
+    else if (req.startSession === "MORNING") s1 = "Sáng";
+    
+    let s2 = "Chiều";
+    if (req.endSession === "FULL_DAY") s2 = "Cả ngày";
+    else if (req.endSession === "MORNING") s2 = "Sáng";
+    
+    const d1 = safeFormatDate(req.startDate);
+    const d2 = safeFormatDate(req.endDate);
+    if (d1 === d2) {
+      return <>{`Nghỉ phép ngày ${d1} ${s1 === s2 ? `(${s1})` : `(${s1} - ${s2})`}`}</>;
+    }
+    return <>{`Nghỉ phép từ ${d1} (${s1}) đến ${d2} (${s2})`}</>;
+  } else if (req.type === "WFH") {
+    if (!req.startDate || !req.endDate) return <>Không xác định</>;
+    const d1 = safeFormatDate(req.startDate);
+    const d2 = safeFormatDate(req.endDate);
+    return <>{d1 === d2 ? `WFH ngày ${d1}` : `WFH từ ${d1} đến ${d2}`}</>;
+  } else if (req.type === "BUSINESS_TRIP") {
+    if (!req.startDate || !req.endDate) return <>Không xác định</>;
+    const d1 = safeFormatDate(req.startDate);
+    const d2 = safeFormatDate(req.endDate);
+    return <>{d1 === d2 ? `Công tác ngày ${d1}` : `Công tác từ ${d1} đến ${d2}`}</>;
+  } else if (req.type === "RESIGNATION") {
+    if (!req.lastWorkingDate) return <>Không xác định</>;
+    return <>{`Làm việc đến hết ${safeFormatDate(req.lastWorkingDate)}`}</>;
   }
   return <>Không xác định</>;
 };
@@ -137,7 +152,12 @@ export default function RequestsPage() {
     if (!html) return "-";
     try {
       const doc = new DOMParser().parseFromString(html, "text/html");
-      return doc.body.textContent?.trim() || "-";
+      const textContent = doc.body.textContent;
+      if (textContent) {
+        const trimmed = textContent.trim();
+        if (trimmed) return trimmed;
+      }
+      return "-";
     } catch {
       return "-";
     }

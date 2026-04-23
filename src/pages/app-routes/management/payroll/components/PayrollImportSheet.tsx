@@ -74,7 +74,10 @@ export default function PayrollImportSheet({
   const handleInputChange = (index: number, field: keyof PayrollImportRequest, value: string) => {
     const numValue = Number(value.replace(/[^0-9]/g, "")) || 0;
     const newImports = [...imports];
-    (newImports[index][field] as number) = numValue;
+    newImports[index] = {
+      ...newImports[index],
+      [field]: numValue
+    };
     setImports(newImports);
   };
 

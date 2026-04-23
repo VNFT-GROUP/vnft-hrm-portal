@@ -35,32 +35,35 @@ export default function SettingsPage() {
   }, []);
 
   const timezoneOptions = fullTimezones.map(tz => {
+    let timeString = '';
+    let formatParts: Intl.DateTimeFormatPart[] = [];
     try {
-      const timeString = now.toLocaleTimeString('vi-VN', { timeZone: tz, hour: '2-digit', minute: '2-digit' });
-      const formatParts = new Intl.DateTimeFormat('en', { timeZone: tz, timeZoneName: 'shortOffset' }).formatToParts(now);
-      const tzNamePart = formatParts.find(p => p.type === 'timeZoneName');
-      const offsetPart = tzNamePart ? tzNamePart.value : '';
-      
-      const popPart = tz.split('/').pop();
-      let city = popPart ? popPart.replace(/_/g, ' ') : tz;
-      
-      // Custom display names based on VNFT office locations
-      if (tz === 'Asia/Ho_Chi_Minh') city = t('settings.tzSection.hcm');
-      if (tz === 'Asia/Shanghai') city = t('settings.tzSection.shanghai');
-      if (tz === 'America/New_York') city = t('settings.tzSection.ny');
-      if (tz === 'America/Chicago') city = t('settings.tzSection.chicago');
-      if (tz === 'America/Edmonton') city = t('settings.tzSection.edmonton');
-      if (tz === 'America/Vancouver') city = t('settings.tzSection.vancouver');
-
-      return {
-        value: tz,
-        city,
-        offsetPart,
-        timeString
-      };
+      timeString = now.toLocaleTimeString('vi-VN', { timeZone: tz, hour: '2-digit', minute: '2-digit' });
+      formatParts = new Intl.DateTimeFormat('en', { timeZone: tz, timeZoneName: 'shortOffset' }).formatToParts(now);
     } catch {
       return { value: tz, city: tz, offsetPart: '', timeString: '' };
     }
+    
+    const tzNamePart = formatParts.find(p => p.type === 'timeZoneName');
+    const offsetPart = tzNamePart ? tzNamePart.value : '';
+    
+    const popPart = tz.split('/').pop();
+    let city = popPart ? popPart.replace(/_/g, ' ') : tz;
+    
+    // Custom display names based on VNFT office locations
+    if (tz === 'Asia/Ho_Chi_Minh') city = t('settings.tzSection.hcm');
+    if (tz === 'Asia/Shanghai') city = t('settings.tzSection.shanghai');
+    if (tz === 'America/New_York') city = t('settings.tzSection.ny');
+    if (tz === 'America/Chicago') city = t('settings.tzSection.chicago');
+    if (tz === 'America/Edmonton') city = t('settings.tzSection.edmonton');
+    if (tz === 'America/Vancouver') city = t('settings.tzSection.vancouver');
+
+    return {
+      value: tz,
+      city,
+      offsetPart,
+      timeString
+    };
   });
 
   const themePresets = [

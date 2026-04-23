@@ -14,22 +14,25 @@ export function ServerSalarySettingsBlock() {
   const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
+    const fetchSettings = async () => {
+      let responseData = null;
+      try {
+        const res = await settingsService.getServerSettings();
+        responseData = res.data;
+      } catch {
+        toast.error("Lỗi khi tải cấu hình máy chủ");
+        setIsLoading(false);
+      }
+      setIsLoading(false);
+      
+      if (responseData) {
+        setSettings(responseData);
+      }
+    };
     fetchSettings();
   }, []);
 
-  const fetchSettings = async () => {
-    try {
-      setIsLoading(true);
-      const res = await settingsService.getServerSettings();
-      if (res.data) {
-        setSettings(res.data);
-      }
-    } catch {
-      toast.error("Lỗi khi tải cấu hình máy chủ");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+
 
   const handleChange = (key: keyof ServerSettingsResponse, value: string | number | boolean) => {
     setSettings((prev) => {
@@ -55,9 +58,9 @@ export function ServerSalarySettingsBlock() {
       };
       await settingsService.updateServerSettings(reqPayload);
       toast.success("Cập nhật thông tin cấu hình lương thành công");
+      setIsSaving(false);
     } catch {
       toast.error("Lỗi khi lưu cấu hình");
-    } finally {
       setIsSaving(false);
     }
   };

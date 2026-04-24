@@ -16,6 +16,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { RichTextViewer } from "@/components/custom/RichTextViewer";
 import { getErrorMessage } from "@/lib/utils";
 import RequestFormModal from "./components/RequestFormModal";
+import { LEAVE_REASON_LABELS, ABSENCE_REASON_LABELS, ATTENDANCE_ADJUSTMENT_REASON_LABELS, BUSINESS_TRIP_REASON_LABELS, countedWorkLabel } from "@/types/requestform/RequestFormLabels";
 const safeFormatDate = (dateString?: string) => {
   if (!dateString) return "—";
   try {
@@ -38,11 +39,6 @@ const ApplicableDate = ({ req }: { req: RequestFormResponse }) => {
     return (
        <div className="flex flex-col gap-1 sm:flex-row sm:items-center justify-center">
           <span>{`Vắng mặt ngày ${safeFormatDate(req.absenceDate)}, từ ${fTime} đến ${tTime}`}</span>
-          {req.absenceReasonType && (
-             <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold uppercase shrink-0 w-fit mx-auto sm:mx-0 ${req.absenceReasonType === 'PERSONAL' ? 'bg-amber-100 text-amber-700' : 'bg-blue-100 text-blue-700'}`}>
-               {req.absenceReasonType === 'PERSONAL' ? 'Việc cá nhân' : 'Việc công ty'}
-             </span>
-          )}
        </div>
     );
   } else if (req.type === "LEAVE") {
@@ -275,7 +271,7 @@ export default function RequestsPage() {
                             >
                               <Eye size={18} />
                             </button>
-                            {req.status === "PENDING" && (
+                            {req.status === "PENDING" && req.type !== "RESIGNATION" && (
                               <button
                                 onClick={() => { setEditRequest(req); setIsModalOpen(true); }}
                                 className="p-1.5 text-amber-600 hover:bg-amber-50 rounded transition-colors"
@@ -341,12 +337,104 @@ export default function RequestsPage() {
                   <span className="text-muted-foreground block mb-1">Trạng thái:</span>
                   {getStatusBadge(selectedRequest.status)}
                 </div>
-                <div className="col-span-2">
-                  <span className="text-muted-foreground block mb-1">Thời gian áp dụng:</span>
-                  <span className="font-medium text-slate-800"><ApplicableDate req={selectedRequest} /></span>
-                </div>
-                <div className="col-span-2">
-                  <span className="text-muted-foreground block mb-2">Mô tả/Lý do:</span>
+
+                {selectedRequest.type === "LEAVE" && (
+                  <>
+                    <div className="col-span-2">
+                      <span className="text-muted-foreground block mb-1">Lý do nghỉ:</span>
+                      <span className="font-medium text-slate-800">{selectedRequest.leaveReasonType ? LEAVE_REASON_LABELS[selectedRequest.leaveReasonType] : "—"}</span>
+                    </div>
+                    <div className="col-span-2">
+                      <span className="text-muted-foreground block mb-1">Tính công:</span>
+                      <span className="font-medium text-indigo-600">{countedWorkLabel(selectedRequest.countedWork)}</span>
+                    </div>
+                    <div className="col-span-2">
+                      <span className="text-muted-foreground block mb-1">Khoảng thời gian:</span>
+                      <span className="font-medium text-slate-800"><ApplicableDate req={selectedRequest} /></span>
+                    </div>
+                  </>
+                )}
+
+                {selectedRequest.type === "ABSENCE" && (
+                  <>
+                    <div className="col-span-2">
+                      <span className="text-muted-foreground block mb-1">Ngày vắng mặt:</span>
+                      <span className="font-medium text-slate-800">{safeFormatDate(selectedRequest.absenceDate)}</span>
+                    </div>
+                    <div className="col-span-2">
+                      <span className="text-muted-foreground block mb-1">Thời gian vắng:</span>
+                      <span className="font-medium text-slate-800">{selectedRequest.fromTime ? selectedRequest.fromTime.substring(0, 5) : ""} - {selectedRequest.toTime ? selectedRequest.toTime.substring(0, 5) : ""}</span>
+                    </div>
+                    <div className="col-span-2">
+                      <span className="text-muted-foreground block mb-1">Lý do:</span>
+                      <span className="font-medium text-slate-800">{selectedRequest.absenceReasonType ? ABSENCE_REASON_LABELS[selectedRequest.absenceReasonType] : "—"}</span>
+                    </div>
+                    <div className="col-span-2">
+                      <span className="text-muted-foreground block mb-1">Tính công:</span>
+                      <span className="font-medium text-indigo-600">{countedWorkLabel(selectedRequest.countedWork)}</span>
+                    </div>
+                  </>
+                )}
+
+                {selectedRequest.type === "ATTENDANCE_ADJUSTMENT" && (
+                  <>
+                    <div className="col-span-2">
+                      <span className="text-muted-foreground block mb-1">Ngày điều chỉnh:</span>
+                      <span className="font-medium text-slate-800">{safeFormatDate(selectedRequest.attendanceDate)}</span>
+                    </div>
+                    <div className="col-span-2">
+                      <span className="text-muted-foreground block mb-1">Loại thời gian:</span>
+                      <span className="font-medium text-slate-800">{selectedRequest.timeType === "CHECK_IN" ? "Check-in" : "Check-out"}</span>
+                    </div>
+                    <div className="col-span-2">
+                      <span className="text-muted-foreground block mb-1">Giờ đề nghị:</span>
+                      <span className="font-medium text-slate-800">{selectedRequest.requestedTime ? selectedRequest.requestedTime.substring(0, 5) : ""}</span>
+                    </div>
+                    <div className="col-span-2">
+                      <span className="text-muted-foreground block mb-1">Lý do:</span>
+                      <span className="font-medium text-slate-800">{selectedRequest.attendanceAdjustmentReasonType ? ATTENDANCE_ADJUSTMENT_REASON_LABELS[selectedRequest.attendanceAdjustmentReasonType] : "—"}</span>
+                    </div>
+                  </>
+                )}
+
+                {selectedRequest.type === "BUSINESS_TRIP" && (
+                  <>
+                    <div className="col-span-2">
+                      <span className="text-muted-foreground block mb-1">Khoảng thời gian:</span>
+                      <span className="font-medium text-slate-800"><ApplicableDate req={selectedRequest} /></span>
+                    </div>
+                    <div className="col-span-2">
+                      <span className="text-muted-foreground block mb-1">Hình thức công tác:</span>
+                      <span className="font-medium text-slate-800">{selectedRequest.businessTripMode || "—"}</span>
+                    </div>
+                    <div className="col-span-2">
+                      <span className="text-muted-foreground block mb-1">Địa điểm:</span>
+                      <span className="font-medium text-slate-800">{selectedRequest.businessTripLocation || "—"}</span>
+                    </div>
+                    <div className="col-span-2">
+                      <span className="text-muted-foreground block mb-1">Địa chỉ:</span>
+                      <span className="font-medium text-slate-800">{selectedRequest.businessTripAddress || "—"}</span>
+                    </div>
+                    <div className="col-span-2">
+                      <span className="text-muted-foreground block mb-1">Lý do:</span>
+                      <span className="font-medium text-slate-800">{selectedRequest.businessTripReasonType ? BUSINESS_TRIP_REASON_LABELS[selectedRequest.businessTripReasonType] : "—"}</span>
+                    </div>
+                    <div className="col-span-2">
+                      <span className="text-muted-foreground block mb-1">Tính công:</span>
+                      <span className="font-medium text-indigo-600">{countedWorkLabel(selectedRequest.countedWork)}</span>
+                    </div>
+                  </>
+                )}
+
+                {(selectedRequest.type === "WFH" || selectedRequest.type === "RESIGNATION") && (
+                  <div className="col-span-2">
+                    <span className="text-muted-foreground block mb-1">Thời gian áp dụng:</span>
+                    <span className="font-medium text-slate-800"><ApplicableDate req={selectedRequest} /></span>
+                  </div>
+                )}
+
+                <div className="col-span-2 mt-2">
+                  <span className="text-muted-foreground block mb-2">Mô tả/Lý do chi tiết:</span>
                   <div className="p-3 bg-slate-50 border border-slate-200 rounded-md">
                     {selectedRequest.description ? (
                       <RichTextViewer htmlContent={selectedRequest.description} />

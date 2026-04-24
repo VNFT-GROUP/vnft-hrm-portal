@@ -16,6 +16,13 @@ import { format, subMonths, setDate } from "date-fns";
 import { getErrorMessage, formatDateTime } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
+import { 
+  LEAVE_REASON_LABELS, 
+  ABSENCE_REASON_LABELS, 
+  ATTENDANCE_ADJUSTMENT_REASON_LABELS, 
+  BUSINESS_TRIP_REASON_LABELS,
+  countedWorkLabel
+} from "@/types/requestform/RequestFormLabels";
 
 export default function ManagementRequestsPage() {
   const { t } = useTranslation();
@@ -433,7 +440,6 @@ export default function ManagementRequestsPage() {
                 <SelectItem value="ATTENDANCE_ADJUSTMENT">{t("requests.types.checkInOut", { defaultValue: "Điều chỉnh công" })}</SelectItem>
                 <SelectItem value="BUSINESS_TRIP">{t("requests.types.business", { defaultValue: "Công tác" })}</SelectItem>
                 <SelectItem value="WFH">{t("requests.types.wfh", { defaultValue: "Làm tại nhà" })}</SelectItem>
-                <SelectItem value="RESIGNATION">{t("requests.types.resign", { defaultValue: "Thôi việc" })}</SelectItem>
               </SelectContent>
             </Select>
             </div>
@@ -598,13 +604,111 @@ export default function ManagementRequestsPage() {
                      <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">{t("requests.columns.submittedDate", { defaultValue: "Ngày gửi" })}</span>
                      <span className="text-sm font-semibold text-slate-700">{formatDateTime(selectedRequest.createdAt)}</span>
                   </div>
-                  <div className="col-span-2 flex flex-col gap-1">
-                     <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">{t("requests.columns.appliedDate", { defaultValue: "Thời gian áp dụng" })}</span>
-                     <span className="text-sm font-semibold text-[#1E2062] bg-[#2E3192]/5 px-3 py-2 rounded-lg border border-[#2E3192]/10 inline-flex w-fit items-center gap-2">
-                       <Clock className="w-4 h-4 text-[#2E3192]/70" />
-                       {formatRequestApplyDate(selectedRequest)}
-                     </span>
-                  </div>
+
+                  {selectedRequest.type === "LEAVE" && (
+                    <>
+                      <div className="flex flex-col gap-1">
+                        <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Lý do nghỉ</span>
+                        <span className="text-sm font-semibold text-slate-700">{selectedRequest.leaveReasonType ? LEAVE_REASON_LABELS[selectedRequest.leaveReasonType] : "—"}</span>
+                      </div>
+                      <div className="flex flex-col gap-1">
+                        <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Tính công</span>
+                        <span className="text-sm font-bold text-indigo-600">{countedWorkLabel(selectedRequest.countedWork)}</span>
+                      </div>
+                      <div className="col-span-2 flex flex-col gap-1">
+                        <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Khoảng thời gian</span>
+                        <span className="text-sm font-semibold text-[#1E2062] bg-[#2E3192]/5 px-3 py-2 rounded-lg border border-[#2E3192]/10 inline-flex w-fit items-center gap-2">
+                          <Clock className="w-4 h-4 text-[#2E3192]/70" />
+                          {formatRequestApplyDate(selectedRequest)}
+                        </span>
+                      </div>
+                    </>
+                  )}
+
+                  {selectedRequest.type === "ABSENCE" && (
+                    <>
+                      <div className="flex flex-col gap-1">
+                        <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Ngày vắng mặt</span>
+                        <span className="text-sm font-semibold text-slate-700">{safeFormatDate(selectedRequest.absenceDate)}</span>
+                      </div>
+                      <div className="flex flex-col gap-1">
+                        <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Thời gian vắng</span>
+                        <span className="text-sm font-semibold text-slate-700">{selectedRequest.fromTime ? selectedRequest.fromTime.substring(0, 5) : ""} - {selectedRequest.toTime ? selectedRequest.toTime.substring(0, 5) : ""}</span>
+                      </div>
+                      <div className="flex flex-col gap-1">
+                        <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Lý do</span>
+                        <span className="text-sm font-semibold text-slate-700">{selectedRequest.absenceReasonType ? ABSENCE_REASON_LABELS[selectedRequest.absenceReasonType] : "—"}</span>
+                      </div>
+                      <div className="flex flex-col gap-1">
+                        <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Tính công</span>
+                        <span className="text-sm font-bold text-indigo-600">{countedWorkLabel(selectedRequest.countedWork)}</span>
+                      </div>
+                    </>
+                  )}
+
+                  {selectedRequest.type === "ATTENDANCE_ADJUSTMENT" && (
+                    <>
+                      <div className="flex flex-col gap-1">
+                        <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Ngày điều chỉnh</span>
+                        <span className="text-sm font-semibold text-slate-700">{safeFormatDate(selectedRequest.attendanceDate)}</span>
+                      </div>
+                      <div className="flex flex-col gap-1">
+                        <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Loại thời gian</span>
+                        <span className="text-sm font-semibold text-slate-700">{selectedRequest.timeType === "CHECK_IN" ? "Check-in" : "Check-out"}</span>
+                      </div>
+                      <div className="flex flex-col gap-1">
+                        <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Giờ đề nghị</span>
+                        <span className="text-sm font-semibold text-slate-700">{selectedRequest.requestedTime ? selectedRequest.requestedTime.substring(0, 5) : ""}</span>
+                      </div>
+                      <div className="flex flex-col gap-1">
+                        <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Lý do</span>
+                        <span className="text-sm font-semibold text-slate-700">{selectedRequest.attendanceAdjustmentReasonType ? ATTENDANCE_ADJUSTMENT_REASON_LABELS[selectedRequest.attendanceAdjustmentReasonType] : "—"}</span>
+                      </div>
+                    </>
+                  )}
+
+                  {selectedRequest.type === "BUSINESS_TRIP" && (
+                    <>
+                      <div className="col-span-2 flex flex-col gap-1">
+                        <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Khoảng thời gian</span>
+                        <span className="text-sm font-semibold text-[#1E2062] bg-[#2E3192]/5 px-3 py-2 rounded-lg border border-[#2E3192]/10 inline-flex w-fit items-center gap-2">
+                          <Clock className="w-4 h-4 text-[#2E3192]/70" />
+                          {formatRequestApplyDate(selectedRequest)}
+                        </span>
+                      </div>
+                      <div className="flex flex-col gap-1">
+                        <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Hình thức công tác</span>
+                        <span className="text-sm font-semibold text-slate-700">{selectedRequest.businessTripMode || "—"}</span>
+                      </div>
+                      <div className="flex flex-col gap-1">
+                        <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Tính công</span>
+                        <span className="text-sm font-bold text-indigo-600">{countedWorkLabel(selectedRequest.countedWork)}</span>
+                      </div>
+                      <div className="col-span-2 flex flex-col gap-1">
+                        <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Lý do</span>
+                        <span className="text-sm font-semibold text-slate-700">{selectedRequest.businessTripReasonType ? BUSINESS_TRIP_REASON_LABELS[selectedRequest.businessTripReasonType] : "—"}</span>
+                      </div>
+                      <div className="flex flex-col gap-1">
+                        <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Địa điểm</span>
+                        <span className="text-sm font-semibold text-slate-700">{selectedRequest.businessTripLocation || "—"}</span>
+                      </div>
+                      <div className="flex flex-col gap-1">
+                        <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Địa chỉ</span>
+                        <span className="text-sm font-semibold text-slate-700">{selectedRequest.businessTripAddress || "—"}</span>
+                      </div>
+                    </>
+                  )}
+
+                  {(selectedRequest.type === "WFH" || selectedRequest.type === "RESIGNATION") && (
+                    <div className="col-span-2 flex flex-col gap-1">
+                       <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">{t("requests.columns.appliedDate", { defaultValue: "Thời gian áp dụng" })}</span>
+                       <span className="text-sm font-semibold text-[#1E2062] bg-[#2E3192]/5 px-3 py-2 rounded-lg border border-[#2E3192]/10 inline-flex w-fit items-center gap-2">
+                         <Clock className="w-4 h-4 text-[#2E3192]/70" />
+                         {formatRequestApplyDate(selectedRequest)}
+                       </span>
+                    </div>
+                  )}
+
                </div>
 
                <div className="flex flex-col gap-1">

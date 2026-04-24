@@ -1,9 +1,10 @@
-import type { LeaveSessionType } from "./RequestFormEnums";
+import type { LeaveReasonType, LeaveSessionType } from "./RequestFormEnums";
 
 export interface CreateLeaveRequest {
-  description: string;
-  startDate: string;
+  reasonType: LeaveReasonType;
+  description?: string | null;
+  startDate: string;       // YYYY-MM-DD
   startSession: LeaveSessionType;
-  endDate: string;
+  endDate: string;         // YYYY-MM-DD
   endSession: LeaveSessionType;
 }

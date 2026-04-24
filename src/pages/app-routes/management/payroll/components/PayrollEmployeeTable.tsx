@@ -7,8 +7,14 @@ import {
   type SortingState,
   type ColumnDef,
 } from "@tanstack/react-table";
-import { FileWarning } from "lucide-react";
+import { FileWarning, Info } from "lucide-react";
 import { AvatarPlaceholder } from "@/components/custom/AvatarPlaceholder";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import type { PayrollEmployeeResponse } from "@/types/payroll/PayrollResponse";
 
 /** Override map: userProfileId → field → value */
@@ -67,7 +73,7 @@ function EditableCell({
 
 // ---- Column meta ----
 type ColRole = "info" | "editable" | "readonly";
-interface ColMeta { role: ColRole }
+interface ColMeta { role: ColRole; tooltip?: string }
 
 const HEADER_STYLE: Record<ColRole, string> = {
   info: "bg-slate-100 text-slate-600",
@@ -81,16 +87,71 @@ const CELL_STYLE: Record<ColRole, string> = {
   readonly: "",
 };
 
+// ---- Formula tooltip definitions ----
+const FORMULA_TOOLTIPS: Record<string, string> = {
+  // Insurance auto-calc (§5)
+  companySocialInsurance: "= Lương BHXH × 17.5%",
+  companyHealthInsurance: "= Lương BHXH × 3%",
+  companyUnemploymentInsurance: "= Lương BHXH × 1%",
+  employeeSocialInsurance: "= Lương BHXH × 8%",
+  employeeHealthInsurance: "= Lương BHXH × 1.5%",
+  employeeUnemploymentInsurance: "= Lương BHXH × 1%",
+
+  // §6.1 Lương theo công
+  workdaySalary:
+    "= ROUND(Hoa hồng + (Lương Target + Lương CB + Gửi xe + Xăng xe + ĐT) × [Công LV / Công chuẩn] + Balance BH + Thưởng nóng + Thưởng tháng + PC VP USA + PC QL + Công tác + Tiền ăn + PC công việc + Tiếp khách − BHXH NV − BHYT NV − BHTN NV + PC thâm niên + PC hiệu suất & thái độ + PC giờ giấc & kỷ luật + PC vượt trội, 0)",
+
+  // §6.2 Thu nhập chịu thuế
+  taxableIncome: "= Lương cơ bản + Hoa hồng + Phụ cấp quản lý",
+
+  // §6.3 Miễn giảm thuế NPT
+  dependentDeduction: "= Số NPT × 6.200.000",
+
+  // §6.4 Thu nhập tính thuế
+  assessableIncome:
+    "= MAX(Thu nhập chịu thuế − Giảm trừ bản thân (15.500.000) − Miễn giảm NPT − BHXH NV − BHYT NV − BHTN NV, 0)",
+
+  // §6.5 Thực lãnh
+  netSalary: "= ROUND(Tổng Lương − Thuế TNCN, 0)",
+
+  // §6.6 Tiền mặt
+  cashPayment: "= Thực lãnh − Chuyển khoản",
+
+  // Constants
+  personalDeduction: "Giảm trừ gia cảnh bản thân = 15.500.000",
+  dependentTaxDeductionAmount: "Mức miễn giảm thuế 1 NPT = 6.200.000",
+};
+
+// ---- Header with optional tooltip ----
+function HeaderWithTooltip({ label, tooltip }: { label: string; tooltip?: string }) {
+  if (!tooltip) return <>{label}</>;
+  return (
+    <Tooltip>
+      <TooltipTrigger className="inline-flex items-center gap-1 cursor-help">
+        {label}
+        <Info size={12} className="text-slate-400 shrink-0" />
+      </TooltipTrigger>
+      <TooltipContent
+        side="bottom"
+        className="text-xs font-normal normal-case tracking-normal whitespace-pre-wrap"
+      >
+        <span className="font-mono text-[11px] leading-relaxed">{tooltip}</span>
+      </TooltipContent>
+    </Tooltip>
+  );
+}
+
 function col(
   key: keyof PayrollEmployeeResponse,
   header: string,
   role: ColRole,
   highlight?: string,
 ): ColumnDef<PayrollEmployeeResponse> {
+  const tooltip = FORMULA_TOOLTIPS[key];
   return {
     accessorKey: key,
-    header,
-    meta: { role } as ColMeta,
+    header: () => <HeaderWithTooltip label={header} tooltip={tooltip} />,
+    meta: { role, tooltip } as ColMeta,
     cell: (info) => {
       const val = fmt(info.getValue() as number);
       if (highlight) return <span className={highlight}>{val}</span>;
@@ -146,10 +207,11 @@ export default function PayrollEmployeeTable({
     header: string,
     highlight?: string,
   ): ColumnDef<PayrollEmployeeResponse> {
+    const tooltip = FORMULA_TOOLTIPS[key];
     return {
       accessorKey: key,
-      header,
-      meta: { role: "editable" } as ColMeta,
+      header: () => <HeaderWithTooltip label={header} tooltip={tooltip} />,
+      meta: { role: "editable", tooltip } as ColMeta,
       cell: editable && onCellChange
         ? editableCell(key)
         : (info) => {
@@ -160,10 +222,12 @@ export default function PayrollEmployeeTable({
     };
   }
 
-  // Columns in EXACT business order
+  // ============================================================
+  // Columns in EXACT business spec order (§4 → §6)
+  // ============================================================
   const columns: ColumnDef<PayrollEmployeeResponse>[] = useMemo(
     () => [
-      // --- Thông tin nhân sự ---
+      // ── 1. Thông tin nhân sự ──
       {
         accessorKey: "personnelCode",
         header: "Mã nhân sự",
@@ -187,57 +251,22 @@ export default function PayrollEmployeeTable({
       },
       { accessorKey: "departmentName", header: "Tên phòng ban", meta: { role: "info" } as ColMeta },
 
-      // --- Lương & phụ cấp ---
+      // ── 2. Lương & Target (§4.1 from user compensation) ──
       col("basicSalary", "Lương cơ bản", "readonly"),
-      editableCol("targetSalary", "Lương theo Target"),
       col("targetThreshold", "Target", "readonly"),
+      editableCol("targetSalary", "Lương Target"),
       editableCol("commission", "Hoa hồng"),
+
+      // ── 3. Phụ cấp từ profile (§4.1) ──
       col("parkingAllowance", "Gửi xe", "readonly"),
       col("fuelAllowance", "Xăng xe", "readonly"),
       col("phoneAllowance", "Điện thoại", "readonly"),
-      editableCol("seniorityAllowance", "Phụ cấp thâm niên"),
-      col("performanceAttitudeAllowance", "Phụ cấp hiệu suất & thái độ", "readonly"),
-      col("punctualityDisciplineAllowance", "Phụ cấp giờ giấc & kỷ luật", "readonly"),
-      editableCol("outstandingAllowance", "Phụ cấp vượt trội"),
       col("insuranceBalance", "Balance bảo hiểm", "readonly"),
       col("usaOfficeAllowance", "Phụ cấp VP USA", "readonly"),
-      editableCol("hotBonus", "Thưởng nóng"),
-      editableCol("monthlyBonus", "Tiền thưởng tháng"),
       col("managementAllowance", "Phụ cấp quản lý", "readonly"),
-      editableCol("businessTripFee", "Công tác"),
-      editableCol("mealAllowance", "Tiền ăn"),
       col("jobAllowance", "Phụ cấp công việc", "readonly"),
-      editableCol("clientEntertainment", "Tiếp khách"),
 
-      // --- Bảo hiểm ---
-      col("socialInsuranceSalary", "Lương BHXH", "readonly"),
-      col("companySocialInsurance", "BHXH công ty", "readonly"),
-      col("companyHealthInsurance", "BHYT công ty", "readonly"),
-      col("companyUnemploymentInsurance", "BHTN công ty", "readonly"),
-      col("employeeSocialInsurance", "BHXH nhân viên", "readonly"),
-      col("employeeHealthInsurance", "BHYT nhân viên", "readonly"),
-      col("employeeUnemploymentInsurance", "BHTN nhân viên", "readonly"),
-
-      // --- Thuế & thực lãnh ---
-      col("workdaySalary", "Tổng lương", "readonly", "font-semibold text-emerald-600"),
-      col("taxableIncome", "Thu nhập chịu thuế", "readonly"),
-      col("personalDeduction", "Giảm trừ gia cảnh bản thân", "readonly"),
-      { accessorKey: "dependentCount", header: "Số người phụ thuộc", meta: { role: "readonly" } as ColMeta },
-      col("dependentTaxDeductionAmount", "Mức miễn giảm thuế với 1 NPT", "readonly"),
-      col("dependentDeduction", "Miễn giảm thuế người phụ thuộc", "readonly"),
-      col("assessableIncome", "Thu nhập tính thuế", "readonly"),
-      editableCol("personalIncomeTax", "Thuế TNCN"),
-      col("netSalary", "Thực lãnh", "readonly", "font-bold text-[#2E3192]"),
-      editableCol("bankTransfer", "Chuyển khoản"),
-      col("cashPayment", "Tiền mặt", "readonly"),
-
-      // --- Ghi chú & công ---
-      {
-        accessorKey: "salaryNote",
-        header: "Ghi chú",
-        meta: { role: "info" } as ColMeta,
-        cell: (info) => <span className="text-slate-500 text-xs max-w-[200px] truncate block">{(info.getValue() as string) || "—"}</span>,
-      },
+      // ── 4. Công (§4.1) ──
       {
         accessorKey: "standardWorkdays",
         header: "Số công chuẩn",
@@ -249,6 +278,59 @@ export default function PayrollEmployeeTable({
         header: "Công làm việc",
         meta: { role: "readonly" } as ColMeta,
         cell: (info) => fmtWd(info.getValue() as number),
+      },
+
+      // ── 5. Phụ cấp hiệu suất từ performance (§4.2) ──
+      col("performanceAttitudeAllowance", "PC hiệu suất & thái độ", "readonly"),
+
+      // ── 6. Phụ cấp giờ giấc từ Attendance (§4.3) ──
+      col("punctualityDisciplineAllowance", "PC giờ giấc & kỷ luật", "readonly"),
+
+      // ── 7. Các field nhập vào (§4.4) ──
+      editableCol("seniorityAllowance", "PC thâm niên"),
+      editableCol("outstandingAllowance", "PC vượt trội"),
+      editableCol("hotBonus", "Thưởng nóng"),
+      editableCol("monthlyBonus", "Tiền thưởng tháng"),
+      editableCol("businessTripFee", "Công tác"),
+      editableCol("mealAllowance", "Tiền ăn"),
+      editableCol("clientEntertainment", "Tiếp khách"),
+
+      // ── 8. Bảo hiểm (§5 — auto-calc) ──
+      col("socialInsuranceSalary", "Lương BHXH", "readonly"),
+      col("companySocialInsurance", "BHXH công ty", "readonly"),
+      col("companyHealthInsurance", "BHYT công ty", "readonly"),
+      col("companyUnemploymentInsurance", "BHTN công ty", "readonly"),
+      col("employeeSocialInsurance", "BHXH nhân viên", "readonly"),
+      col("employeeHealthInsurance", "BHYT nhân viên", "readonly"),
+      col("employeeUnemploymentInsurance", "BHTN nhân viên", "readonly"),
+
+      // ── 9. Tổng lương (§6.1) ──
+      col("workdaySalary", "Tổng lương", "readonly", "font-semibold text-emerald-600"),
+
+      // ── 10. Thuế (§6.2 → §6.4) ──
+      col("taxableIncome", "TN chịu thuế", "readonly"),
+      col("personalDeduction", "GT gia cảnh bản thân", "readonly"),
+      {
+        accessorKey: "dependentCount",
+        header: "Số NPT",
+        meta: { role: "readonly" } as ColMeta,
+      },
+      col("dependentTaxDeductionAmount", "Mức GT 1 NPT", "readonly"),
+      col("dependentDeduction", "Miễn giảm NPT", "readonly"),
+      col("assessableIncome", "TN tính thuế", "readonly"),
+
+      // ── 11. Final (§6.5 → §6.6) ──
+      editableCol("personalIncomeTax", "Thuế TNCN"),
+      col("netSalary", "Thực lãnh", "readonly", "font-bold text-[#2E3192]"),
+      editableCol("bankTransfer", "Chuyển khoản"),
+      col("cashPayment", "Tiền mặt", "readonly"),
+
+      // ── 12. Ghi chú ──
+      {
+        accessorKey: "salaryNote",
+        header: "Ghi chú",
+        meta: { role: "info" } as ColMeta,
+        cell: (info) => <span className="text-slate-500 text-xs max-w-[200px] truncate block">{(info.getValue() as string) || "—"}</span>,
       },
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -284,6 +366,7 @@ export default function PayrollEmployeeTable({
   }
 
   return (
+    <TooltipProvider>
     <div className="w-full h-full flex flex-col relative">
       {/* Legend */}
       <div className="flex items-center gap-5 px-4 py-2 border-b border-slate-200 bg-white text-[11px] font-semibold uppercase tracking-widest text-slate-500">
@@ -293,6 +376,9 @@ export default function PayrollEmployeeTable({
         </span>
         <span className="flex items-center gap-1.5">
           <span className="w-2.5 h-2.5 rounded-sm bg-slate-300" /> Hệ thống
+        </span>
+        <span className="flex items-center gap-1.5">
+          <Info size={11} className="text-slate-400" /> Có công thức (hover để xem)
         </span>
       </div>
 
@@ -340,5 +426,6 @@ export default function PayrollEmployeeTable({
         </span>
       </div>
     </div>
+    </TooltipProvider>
   );
 }

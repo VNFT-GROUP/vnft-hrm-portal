@@ -21,6 +21,7 @@ import {
   Home,
   Check,
   Loader2,
+  Info
 } from "lucide-react";
 import { toast } from "sonner";
 import {
@@ -377,22 +378,20 @@ export default function RequestFormModal({ isOpen, onOpenChange, initialData }: 
             <div className="p-5 md:p-6 flex flex-col gap-5 border-b border-slate-100">
               <h3 className="text-[15px] font-semibold text-slate-800 border-b border-slate-100 pb-3">2. Chi tiết yêu cầu</h3>
 
-              <div className="grid grid-cols-1 gap-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div className="space-y-1.5">
                   <Label className="text-[13px] font-semibold text-slate-700">Loại đơn đăng ký</Label>
                   <div className="w-full flex items-center justify-start text-left h-10 bg-slate-100/80 border-slate-200 border rounded-md px-4 text-sm text-slate-700 cursor-not-allowed font-medium">
                     {REQUEST_FORM_TYPE_LABELS[type as RequestFormType]}
                   </div>
                 </div>
-              </div>
 
-              {type === "LEAVE" && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                  <div className="space-y-1.5 sm:col-span-2">
+                {type === "LEAVE" && (
+                  <div className="space-y-1.5">
                     <Label className="text-[13px] font-semibold text-slate-700">Lý do nghỉ <span className="text-rose-500">*</span></Label>
                     <Select value={leaveReasonType} onValueChange={(val) => setLeaveReasonType(val as LeaveReasonType)}>
                       <SelectTrigger className="w-full h-10 border-slate-200">
-                        <SelectValue placeholder="-- Chọn lý do --" />
+                        <SelectValue placeholder="-- Chọn lý do --">{leaveReasonType ? LEAVE_REASON_LABELS[leaveReasonType as LeaveReasonType] : undefined}</SelectValue>
                       </SelectTrigger>
                       <SelectContent>
                         {Object.entries(LEAVE_REASON_LABELS).map(([key, label]) => (
@@ -401,12 +400,70 @@ export default function RequestFormModal({ isOpen, onOpenChange, initialData }: 
                       </SelectContent>
                     </Select>
                   </div>
+                )}
+                {type === "ABSENCE" && (
+                  <div className="space-y-1.5">
+                    <Label className="text-[13px] font-semibold text-slate-700">Lý do vắng mặt <span className="text-rose-500">*</span></Label>
+                    <Select value={absenceReasonType} onValueChange={(val) => setAbsenceReasonType(val as AbsenceReasonType)}>
+                      <SelectTrigger className="w-full h-10 border-slate-200">
+                        <SelectValue placeholder="-- Chọn lý do --">{absenceReasonType ? ABSENCE_REASON_LABELS[absenceReasonType as AbsenceReasonType] : undefined}</SelectValue>
+                      </SelectTrigger>
+                      <SelectContent>
+                        {Object.entries(ABSENCE_REASON_LABELS).map(([key, label]) => (
+                          <SelectItem key={key} value={key}>{label}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+                {type === "ATTENDANCE_ADJUSTMENT" && (
+                  <div className="space-y-1.5">
+                    <Label className="text-[13px] font-semibold text-slate-700">Lý do điều chỉnh <span className="text-rose-500">*</span></Label>
+                    <Select value={attendanceAdjustmentReasonType} onValueChange={(val) => setAttendanceAdjustmentReasonType(val as AttendanceAdjustmentReasonType)}>
+                      <SelectTrigger className="w-full h-10 border-slate-200">
+                        <SelectValue placeholder="-- Chọn lý do --">{attendanceAdjustmentReasonType ? ATTENDANCE_ADJUSTMENT_REASON_LABELS[attendanceAdjustmentReasonType as AttendanceAdjustmentReasonType] : undefined}</SelectValue>
+                      </SelectTrigger>
+                      <SelectContent>
+                        {Object.entries(ATTENDANCE_ADJUSTMENT_REASON_LABELS).map(([key, label]) => (
+                          <SelectItem key={key} value={key}>{label}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+                {type === "BUSINESS_TRIP" && (
+                  <div className="space-y-1.5">
+                    <Label className="text-[13px] font-semibold text-slate-700">Lý do công tác <span className="text-rose-500">*</span></Label>
+                    <Select value={businessTripReasonType} onValueChange={(val) => setBusinessTripReasonType(val as BusinessTripReasonType)}>
+                      <SelectTrigger className="w-full h-10 border-slate-200">
+                        <SelectValue placeholder="-- Chọn lý do --">{businessTripReasonType ? BUSINESS_TRIP_REASON_LABELS[businessTripReasonType as BusinessTripReasonType] : undefined}</SelectValue>
+                      </SelectTrigger>
+                      <SelectContent>
+                        {Object.entries(BUSINESS_TRIP_REASON_LABELS).map(([key, label]) => (
+                          <SelectItem key={key} value={key}>{label}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+                {type === "WFH" && (
+                  <div className="hidden sm:block"></div>
+                )}
+                {(type === "LEAVE" || type === "ABSENCE" || type === "BUSINESS_TRIP" || type === "WFH") && (
                   <div className="space-y-1.5 sm:col-span-2">
                     <Label className="text-[13px] font-semibold text-slate-700">Tính công</Label>
-                    <div className="w-full flex items-center h-10 bg-slate-50/50 border-slate-200 border rounded-md px-4 text-sm font-medium text-indigo-700">
-                      {leaveReasonType ? countedWorkLabel(LEAVE_COUNTED_WORK[leaveReasonType as LeaveReasonType]) : "—"}
+                    <div className="w-full flex items-center h-10 bg-indigo-50/50 border-indigo-200 border rounded-md px-4 text-sm font-semibold text-indigo-700 shadow-sm">
+                      {type === "LEAVE" ? (leaveReasonType ? countedWorkLabel(LEAVE_COUNTED_WORK[leaveReasonType as LeaveReasonType]) : "—")
+                      : type === "ABSENCE" ? (absenceReasonType ? countedWorkLabel(ABSENCE_COUNTED_WORK[absenceReasonType as AbsenceReasonType]) : "—")
+                      : type === "BUSINESS_TRIP" ? "Có tính công"
+                      : type === "WFH" ? "Có tính công" : "—"}
                     </div>
                   </div>
+                )}
+              </div>
+
+              {type === "LEAVE" && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   <div className="space-y-1.5">
                     <Label className="text-[13px] font-semibold text-slate-700">Từ ngày <span className="text-rose-500">*</span></Label>
                     <div className="flex gap-2">
@@ -420,7 +477,7 @@ export default function RequestFormModal({ isOpen, onOpenChange, initialData }: 
                         </PopoverContent>
                       </Popover>
                       <Select value={startSession} onValueChange={(val) => setStartSession(val as LeaveSessionType)}>
-                        <SelectTrigger className="flex-1 h-10 border-slate-200"><SelectValue placeholder="Ca nghỉ" /></SelectTrigger>
+                        <SelectTrigger className="flex-1 h-10 border-slate-200"><SelectValue placeholder="Ca nghỉ">{startSession === "FULL_DAY" ? "Cả ngày" : startSession === "MORNING" ? "Ca sáng" : startSession === "AFTERNOON" ? "Ca chiều" : undefined}</SelectValue></SelectTrigger>
                         <SelectContent>
                           <SelectItem value="FULL_DAY">Cả ngày</SelectItem>
                           <SelectItem value="MORNING">Ca sáng</SelectItem>
@@ -442,7 +499,7 @@ export default function RequestFormModal({ isOpen, onOpenChange, initialData }: 
                         </PopoverContent>
                       </Popover>
                       <Select value={endSession} onValueChange={(val) => setEndSession(val as LeaveSessionType)}>
-                        <SelectTrigger className="flex-1 h-10 border-slate-200"><SelectValue placeholder="Ca nghỉ" /></SelectTrigger>
+                        <SelectTrigger className="flex-1 h-10 border-slate-200"><SelectValue placeholder="Ca nghỉ">{endSession === "FULL_DAY" ? "Cả ngày" : endSession === "MORNING" ? "Ca sáng" : endSession === "AFTERNOON" ? "Ca chiều" : undefined}</SelectValue></SelectTrigger>
                         <SelectContent>
                           <SelectItem value="FULL_DAY">Cả ngày</SelectItem>
                           <SelectItem value="MORNING">Ca sáng</SelectItem>
@@ -476,25 +533,6 @@ export default function RequestFormModal({ isOpen, onOpenChange, initialData }: 
                     <Label className="text-[13px] font-semibold text-slate-700">Thời gian vắng đến <span className="text-rose-500">*</span></Label>
                     <TimeSelect value={time2} onChange={setTime2} />
                   </div>
-                  <div className="space-y-1.5 sm:col-span-2">
-                    <Label className="text-[13px] font-semibold text-slate-700">Lý do vắng mặt <span className="text-rose-500">*</span></Label>
-                    <Select value={absenceReasonType} onValueChange={(val) => setAbsenceReasonType(val as AbsenceReasonType)}>
-                      <SelectTrigger className="w-full h-10 border-slate-200">
-                        <SelectValue placeholder="-- Chọn lý do --" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {Object.entries(ABSENCE_REASON_LABELS).map(([key, label]) => (
-                          <SelectItem key={key} value={key}>{label}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-1.5 sm:col-span-2">
-                    <Label className="text-[13px] font-semibold text-slate-700">Tính công</Label>
-                    <div className="w-full flex items-center h-10 bg-slate-50/50 border-slate-200 border rounded-md px-4 text-sm font-medium text-indigo-700">
-                      {absenceReasonType ? countedWorkLabel(ABSENCE_COUNTED_WORK[absenceReasonType as AbsenceReasonType]) : "—"}
-                    </div>
-                  </div>
                 </div>
               )}
 
@@ -516,7 +554,7 @@ export default function RequestFormModal({ isOpen, onOpenChange, initialData }: 
                     <Label className="text-[13px] font-semibold text-slate-700">Loại Check-in / Check-out <span className="text-rose-500">*</span></Label>
                     <Select value={timeType} onValueChange={(val) => setTimeType(val as AttendanceAdjustmentTimeType)}>
                       <SelectTrigger className="w-full h-10 border-slate-200">
-                        <SelectValue placeholder="-- Chọn loại --" />
+                        <SelectValue placeholder="-- Chọn loại --">{timeType === "CHECK_IN" ? "Check-in" : timeType === "CHECK_OUT" ? "Check-out" : undefined}</SelectValue>
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="CHECK_IN">Check-in</SelectItem>
@@ -527,19 +565,6 @@ export default function RequestFormModal({ isOpen, onOpenChange, initialData }: 
                   <div className="space-y-1.5">
                     <Label className="text-[13px] font-semibold text-slate-700">Giờ đề nghị <span className="text-rose-500">*</span></Label>
                     <TimeSelect value={time1} onChange={setTime1} />
-                  </div>
-                  <div className="space-y-1.5 sm:col-span-2">
-                    <Label className="text-[13px] font-semibold text-slate-700">Lý do điều chỉnh <span className="text-rose-500">*</span></Label>
-                    <Select value={attendanceAdjustmentReasonType} onValueChange={(val) => setAttendanceAdjustmentReasonType(val as AttendanceAdjustmentReasonType)}>
-                      <SelectTrigger className="w-full h-10 border-slate-200">
-                        <SelectValue placeholder="-- Chọn lý do --" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {Object.entries(ATTENDANCE_ADJUSTMENT_REASON_LABELS).map(([key, label]) => (
-                          <SelectItem key={key} value={key}>{label}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
                   </div>
                 </div>
               )}
@@ -581,25 +606,6 @@ export default function RequestFormModal({ isOpen, onOpenChange, initialData }: 
                   <div className="space-y-1.5 sm:col-span-2">
                     <Label className="text-[13px] font-semibold text-slate-700">Địa chỉ</Label>
                     <Input className="h-10 text-sm border-slate-200" placeholder="Địa chỉ chi tiết..." value={address} onChange={(e) => setAddress(e.target.value)} />
-                  </div>
-                  <div className="space-y-1.5 sm:col-span-2">
-                    <Label className="text-[13px] font-semibold text-slate-700">Lý do công tác <span className="text-rose-500">*</span></Label>
-                    <Select value={businessTripReasonType} onValueChange={(val) => setBusinessTripReasonType(val as BusinessTripReasonType)}>
-                      <SelectTrigger className="w-full h-10 border-slate-200">
-                        <SelectValue placeholder="-- Chọn lý do --" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {Object.entries(BUSINESS_TRIP_REASON_LABELS).map(([key, label]) => (
-                          <SelectItem key={key} value={key}>{label}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-1.5 sm:col-span-2">
-                    <Label className="text-[13px] font-semibold text-slate-700">Tính công</Label>
-                    <div className="w-full flex items-center h-10 bg-slate-50/50 border-slate-200 border rounded-md px-4 text-sm font-medium text-indigo-700">
-                      Có tính công
-                    </div>
                   </div>
                 </div>
               )}

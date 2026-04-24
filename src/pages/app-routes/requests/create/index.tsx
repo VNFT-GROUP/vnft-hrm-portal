@@ -1,4 +1,6 @@
-import { useState, useRef, useMemo } from "react";
+import { useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import { ChevronLeft } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { requestFormMeService } from "@/services/requestform/me";
 import {
@@ -6,18 +8,18 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
+  SelectValue
 } from "@/components/ui/select";
 import { TimeSelect } from "@/components/ui/time-select";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   CalendarIcon,
-  ChevronLeft,
   Umbrella,
   User,
   CheckCircle2,
   Truck,
-  UserMinus,
   Home,
   Check,
   Loader2,
@@ -29,146 +31,111 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
+import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { vi } from "date-fns/locale";
-import { cn } from "@/lib/utils";
-import { Calendar } from "@/components/ui/calendar";
-import { useNavigate } from "react-router-dom";
+import { cn, getErrorMessage } from "@/lib/utils";
+
 import { RichTextEditor } from "@/components/custom/RichTextEditor";
-import { getErrorMessage } from "@/lib/utils";
-import { useTranslation } from "react-i18next";
 
-type RequestType =
-  | "leave"
-  | "absent"
-  | "checkInOut"
-  | "business"
-  | "resign"
-  | "wfh";
 
-// No typeLabels needed anymore as we will use t(requests.types.xxx)
+import type { 
+  RequestFormType, 
+  LeaveReasonType, 
+  LeaveSessionType, 
+  AbsenceReasonType, 
+  AttendanceAdjustmentReasonType, 
+  AttendanceAdjustmentTimeType,
+  BusinessTripReasonType 
+} from "@/types/requestform/RequestFormEnums";
+import { 
+  LEAVE_REASON_LABELS, 
+  LEAVE_COUNTED_WORK, 
+  ABSENCE_REASON_LABELS, 
+  ABSENCE_COUNTED_WORK, 
+  ATTENDANCE_ADJUSTMENT_REASON_LABELS, 
+  BUSINESS_TRIP_REASON_LABELS, 
+  REQUEST_FORM_TYPE_LABELS,
+  countedWorkLabel
+} from "@/types/requestform/RequestFormLabels";
 
 const requestCards = [
   {
-    id: "leave",
-    labelKey: "requests.types.leave",
-    descKey: "requests.create.descriptions.leave",
+    id: "LEAVE",
+    label: "Đơn nghỉ phép",
+    description: "Nghỉ phép năm, nghỉ ốm, thai sản, hội nghị...",
     icon: Umbrella,
     color: "text-indigo-500",
     bg: "bg-indigo-50 ring-1 ring-indigo-100",
-    isPaid: true,
   },
   {
-    id: "wfh",
-    labelKey: "requests.types.wfh",
-    descKey: "requests.create.descriptions.wfh",
-    icon: Home,
-    color: "text-purple-500",
-    bg: "bg-purple-50 ring-1 ring-purple-100",
-    isPaid: true,
-  },
-  {
-    id: "checkInOut",
-    labelKey: "requests.types.checkInOut",
-    descKey: "requests.create.descriptions.checkInOut",
-    icon: CheckCircle2,
-    color: "text-rose-500",
-    bg: "bg-rose-50 ring-1 ring-rose-100",
-    isPaid: true,
-  },
-  {
-    id: "absent",
-    labelKey: "requests.types.absent",
-    descKey: "requests.create.descriptions.absent",
+    id: "ABSENCE",
+    label: "Đơn vắng mặt",
+    description: "Gặp khách hàng, việc cá nhân, đi trễ/về sớm...",
     icon: User,
     color: "text-cyan-500",
     bg: "bg-cyan-50 ring-1 ring-cyan-100",
-    isPaid: true,
   },
   {
-    id: "business",
-    labelKey: "requests.types.business",
-    descKey: "requests.create.descriptions.business",
+    id: "ATTENDANCE_ADJUSTMENT",
+    label: "Đơn điều chỉnh chấm công",
+    description: "Quên vân tay, máy chấm công hỏng...",
+    icon: CheckCircle2,
+    color: "text-rose-500",
+    bg: "bg-rose-50 ring-1 ring-rose-100",
+  },
+  {
+    id: "BUSINESS_TRIP",
+    label: "Đơn công tác",
+    description: "Công tác, gặp gỡ khách hàng, tham quan nhà máy...",
     icon: Truck,
     color: "text-lime-600",
     bg: "bg-lime-50 ring-1 ring-lime-100",
-    isPaid: true,
   },
   {
-    id: "resign",
-    labelKey: "requests.types.resign",
-    descKey: "requests.create.descriptions.resign",
-    icon: UserMinus,
-    color: "text-red-500",
-    bg: "bg-red-50 ring-1 ring-red-100",
-    isPaid: false,
+    id: "WFH",
+    label: "Đơn làm việc tại nhà",
+    description: "Làm việc tại nhà theo quy định.",
+    icon: Home,
+    color: "text-purple-500",
+    bg: "bg-purple-50 ring-1 ring-purple-100",
   },
 ] as const;
 
 
 
-
 export default function CreateRequestPage() {
   const navigate = useNavigate();
-  const { t } = useTranslation();
-  const [type, setType] = useState<RequestType | "">("");
+  const [type, setType] = useState<RequestFormType | "">("");
   const [description, setDescription] = useState("");
 
+  const [date1, setDate1] = useState<Date>();
+  const [date2, setDate2] = useState<Date>();
+  const [time1, setTime1] = useState("");
+  const [time2, setTime2] = useState("");
 
-  const [date, setDate] = useState<Date>();
-  const [startDate, setStartDate] = useState<Date>();
-  const [endDate, setEndDate] = useState<Date>();
+  const [leaveReasonType, setLeaveReasonType] = useState<LeaveReasonType | "">("");
+  const [startSession, setStartSession] = useState<LeaveSessionType | "">("");
+  const [endSession, setEndSession] = useState<LeaveSessionType | "">("");
 
-  const [startTime, setStartTime] = useState("");
-  const [checkInOutType, setCheckInOutType] = useState<
-    "checkin" | "checkout" | ""
-  >("");
-  const [endTime, setEndTime] = useState("");
+  const [absenceReasonType, setAbsenceReasonType] = useState<AbsenceReasonType | "">("");
 
-  const [startSession, setStartSession] = useState<
-    "morning" | "afternoon" | "all"
-  >("all");
-  const [endSession, setEndSession] = useState<"morning" | "afternoon" | "all">(
-    "all",
-  );
+  const [attendanceAdjustmentReasonType, setAttendanceAdjustmentReasonType] = useState<AttendanceAdjustmentReasonType | "">("");
+  const [timeType, setTimeType] = useState<AttendanceAdjustmentTimeType | "">("");
 
-  const [reasonType, setReasonType] = useState<"PERSONAL" | "COMPANY" | "">("");
+  const [businessTripReasonType, setBusinessTripReasonType] = useState<BusinessTripReasonType | "">("");
+  const [tripMode, setTripMode] = useState("");
+  const [location, setLocation] = useState("");
+  const [address, setAddress] = useState("");
 
-  const durationPreview = useMemo(() => {
-    if (!startTime || !endTime) return 0;
-    const [startH, startM] = startTime.split(":").map(Number);
-    const [endH, endM] = endTime.split(":").map(Number);
-    const startMinutes = startH * 60 + startM;
-    const endMinutes = endH * 60 + endM;
-    return Math.max(0, endMinutes - startMinutes);
-  }, [startTime, endTime]);
 
-  const calculatedDays = useMemo(() => {
-    if (!startDate || !endDate) return 0;
-
-    const start = new Date(startDate);
-    start.setHours(0, 0, 0, 0);
-    const end = new Date(endDate);
-    end.setHours(0, 0, 0, 0);
-
-    const diffTime = end.getTime() - start.getTime();
-    if (diffTime < 0) return 0;
-
-    let totalDays = diffTime / (1000 * 3600 * 24) + 1;
-    if (startSession === "afternoon") totalDays -= 0.5;
-    if (endSession === "morning") totalDays -= 0.5;
-
-    return Math.max(0, totalDays);
-  }, [startDate, endDate, startSession, endSession]);
 
   const formRef = useRef<HTMLDivElement>(null);
 
-  const handleTypeChange = (val: string | null) => {
+  const handleTypeChange = (val: string) => {
     const isFirstTimeSelection = type === "";
+    setType(val as RequestFormType);
 
-    setType((val as RequestType) || "");
-
-    // Automatically scroll down to the form only if no option was previously selected
     if (isFirstTimeSelection && val) {
       setTimeout(() => {
         formRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
@@ -180,48 +147,59 @@ export default function CreateRequestPage() {
 
   const createMutation = useMutation({
     mutationFn: async () => {
+
       switch (type) {
-        case "checkInOut":
-          return requestFormMeService.createCurrentUserAttendanceAdjustmentForm({
-            timeType: checkInOutType === "checkin" ? "CHECK_IN" : "CHECK_OUT",
-            attendanceDate: format(date!, "yyyy-MM-dd"),
-            requestedTime: startTime,
-            description: description,
-          });
-        case "absent":
-          return requestFormMeService.createCurrentUserAbsenceForm({
-            absenceDate: format(date!, "yyyy-MM-dd"),
-            fromTime: startTime,
-            toTime: endTime,
-            reasonType: reasonType as "PERSONAL" | "COMPANY",
-            description: description,
-          });
-        case "resign":
-          return requestFormMeService.createCurrentUserResignationForm({
-            submissionDate: format(date!, "yyyy-MM-dd"),
-            lastWorkingDate: format(endDate!, "yyyy-MM-dd"),
-            description: description,
-          });
-        case "leave":
-          return requestFormMeService.createCurrentUserLeaveForm({
-            startDate: format(startDate!, "yyyy-MM-dd"),
-            startSession: (startSession === "all" ? "FULL_DAY" : startSession.toUpperCase()) as "MORNING" | "AFTERNOON" | "FULL_DAY",
-            endDate: format(endDate!, "yyyy-MM-dd"),
-            endSession: (endSession === "all" ? "FULL_DAY" : endSession.toUpperCase()) as "MORNING" | "AFTERNOON" | "FULL_DAY",
-            description: description,
-          });
-        case "wfh":
-          return requestFormMeService.createCurrentUserWfhForm({
-            startDate: format(startDate!, "yyyy-MM-dd"),
-            endDate: format(endDate!, "yyyy-MM-dd"),
-            description: description,
-          });
-        case "business":
-          return requestFormMeService.createCurrentUserBusinessTripForm({
-            startDate: format(startDate!, "yyyy-MM-dd"),
-            endDate: format(endDate!, "yyyy-MM-dd"),
-            description: description,
-          });
+        case "LEAVE": {
+          const payload = {
+            reasonType: leaveReasonType as LeaveReasonType,
+            startDate: format(date1!, "yyyy-MM-dd"),
+            startSession: startSession as LeaveSessionType,
+            endDate: format(date2!, "yyyy-MM-dd"),
+            endSession: endSession as LeaveSessionType,
+            description,
+          };
+          return requestFormMeService.createLeave(payload);
+        }
+        case "ABSENCE": {
+          const payload = {
+            absenceDate: format(date1!, "yyyy-MM-dd"),
+            fromTime: time1,
+            toTime: time2,
+            reasonType: absenceReasonType as AbsenceReasonType,
+            description,
+          };
+          return requestFormMeService.createAbsence(payload);
+        }
+        case "ATTENDANCE_ADJUSTMENT": {
+          const payload = {
+            timeType: timeType as AttendanceAdjustmentTimeType,
+            attendanceDate: format(date1!, "yyyy-MM-dd"),
+            requestedTime: time1,
+            reasonType: attendanceAdjustmentReasonType as AttendanceAdjustmentReasonType,
+            description,
+          };
+          return requestFormMeService.createAttendanceAdjustment(payload);
+        }
+        case "BUSINESS_TRIP": {
+          const payload = {
+            startDate: format(date1!, "yyyy-MM-dd"),
+            endDate: format(date2!, "yyyy-MM-dd"),
+            tripMode: tripMode,
+            location: location || null,
+            address: address || null,
+            reasonType: businessTripReasonType as BusinessTripReasonType,
+            description,
+          };
+          return requestFormMeService.createBusinessTrip(payload);
+        }
+        case "WFH": {
+          const payload = {
+            startDate: format(date1!, "yyyy-MM-dd"),
+            endDate: format(date2!, "yyyy-MM-dd"),
+            description,
+          };
+          return requestFormMeService.createWfh(payload);
+        }
         default:
           throw new Error("Invalid request type");
       }
@@ -237,44 +215,35 @@ export default function CreateRequestPage() {
   });
 
   const onSubmit = () => {
-    if (!description || description.trim() === "" || description === "<p><br></p>") {
-      toast.error("Vui lòng nhập mô tả đơn.");
-      return;
-    }
-
     let isValid = true;
     switch (type) {
-      case "checkInOut":
-        if (!checkInOutType || !date || !startTime) isValid = false;
-        break;
-      case "absent":
-        if (!date || !startTime || !endTime || !reasonType) isValid = false;
-        if (startTime && endTime && startTime >= endTime) {
-           toast.error("Giờ kết thúc vắng mặt phải lớn hơn giờ bắt đầu.");
-           return;
+      case "LEAVE":
+        if (!leaveReasonType || !date1 || !startSession || !date2 || !endSession) isValid = false;
+        if (date1 && date2 && date2 < date1) { toast.error("Ngày kết thúc phải lớn hơn hoặc bằng ngày bắt đầu."); return; }
+        if (date1 && date2 && date1.getTime() === date2.getTime() && startSession === "AFTERNOON" && endSession === "MORNING") {
+          toast.error("Khoảng thời gian nghỉ không hợp lệ."); return;
         }
         break;
-      case "resign":
-        if (!date || !endDate) isValid = false; // endDate is Ngày làm cuối
-        if (date && endDate && endDate < date) {
-           toast.error("Ngày làm việc cuối phải lớn hơn hoặc bằng Ngày nộp đơn.");
-           return;
+      case "ABSENCE":
+        if (!date1 || !time1 || !time2 || !absenceReasonType) isValid = false;
+        if (time1 && time2 && time1 >= time2) { toast.error("Giờ kết thúc vắng mặt phải lớn hơn giờ bắt đầu."); return; }
+        if (absenceReasonType === "LATE_EARLY_UNDER_NINETY") {
+           const from = parseInt(time1.split(':')[0]) * 60 + parseInt(time1.split(':')[1]);
+           const to = parseInt(time2.split(':')[0]) * 60 + parseInt(time2.split(':')[1]);
+           if (to - from > 90) { toast.error("Đi xin muộn/về sớm thời gian vắng mặt tối đa là 90 phút."); return; }
         }
         break;
-      case "leave":
-      case "wfh":
-      case "business":
-        if (!startDate || !endDate) isValid = false;
-        if (startDate && endDate && endDate < startDate) {
-           toast.error("Ngày kết thúc phải lớn hơn hoặc bằng Ngày bắt đầu.");
-           return;
-        }
-        if (type === "leave" && startDate && endDate && startDate.getTime() === endDate.getTime()) {
-           if (startSession === "afternoon" && endSession === "morning") {
-              toast.error("Khoảng thời gian nghỉ không hợp lệ.");
-              return;
-           }
-        }
+      case "ATTENDANCE_ADJUSTMENT":
+        if (!date1 || !timeType || !time1 || !attendanceAdjustmentReasonType) isValid = false;
+        break;
+      case "BUSINESS_TRIP":
+        if (!date1 || !date2 || !tripMode || !businessTripReasonType) isValid = false;
+        if (date1 && date2 && date2 < date1) { toast.error("Ngày kết thúc phải lớn hơn hoặc bằng ngày bắt đầu."); return; }
+        break;
+      case "WFH":
+        if (!date1 || !date2) isValid = false;
+        if (date1 && date2 && date2 < date1) { toast.error("Ngày kết thúc phải lớn hơn hoặc bằng ngày bắt đầu."); return; }
+        if (!description || description.trim() === "" || description === "<p><br></p>") isValid = false;
         break;
     }
 
@@ -282,12 +251,17 @@ export default function CreateRequestPage() {
       toast.error("Vui lòng nhập đầy đủ thông tin bắt buộc.");
       return;
     }
+    
+    if (type !== "WFH" && description.length > 1000) {
+       toast.error("Mô tả không được vượt quá 1000 ký tự."); return;
+    }
 
     createMutation.mutate();
   };
 
   return (
-    <div className="w-full p-4 md:p-6">
+    
+    <div className="w-full p-4 md:p-6 mx-auto">
       <div className="w-full space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between mb-4">
@@ -300,591 +274,334 @@ export default function CreateRequestPage() {
             </button>
             <div>
               <h1 className="text-2xl font-bold tracking-tight text-slate-900">
-                {t("requests.create.title", { defaultValue: "Tạo đơn mới" })}
+                Tạo đơn mới
               </h1>
               <p className="text-sm text-slate-500 mt-1">
-                {t("requests.create.subtitle", { defaultValue: "Điền đầy đủ các thông tin cần thiết để nộp đơn từ." })}
+                Điền đầy đủ các thông tin cần thiết để nộp đơn từ.
               </p>
             </div>
           </div>
         </div>
 
-        {/* Section 1: Types */}
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden p-5 md:p-6">
-          <div className="space-y-4">
-            <div className="space-y-1">
-              <Label className="text-[14px] font-semibold text-slate-800 flex items-center">
-                {t("requests.create.step1Title", { defaultValue: "1. Chọn loại đơn" })} <span className="text-rose-500 ml-1">*</span>
-              </Label>
-              <p className="text-[12.5px] text-slate-500">
-                {t("requests.create.step1Subtitle", { defaultValue: "Bấm vào để chọn loại đơn cần tạo" })}
-              </p>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {requestCards.map((card) => {
-                const isSelected = type === card.id;
-                const Icon = card.icon;
-                return (
-                  <button
-                    key={card.id}
-                    type="button"
-                    onClick={() => handleTypeChange(card.id)}
-                    className={cn(
-                      "relative flex flex-row items-center text-left p-4 rounded-xl border transition-all duration-200 gap-4 select-none outline-none overflow-hidden hover:shadow-sm",
-                      isSelected
-                        ? "border-[#2E3192] ring-1 ring-[#2E3192] bg-[#2E3192]/5"
-                        : "border-slate-200 hover:border-slate-300 hover:bg-slate-50/50 bg-white",
-                    )}
-                  >
-                    <div
+
+        
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden p-5 md:p-6">
+            <div className="space-y-4">
+              <div className="space-y-1">
+                <Label className="text-[14px] font-semibold text-slate-800 flex items-center">
+                  1. Chọn loại đơn <span className="text-rose-500 ml-1">*</span>
+                </Label>
+                <p className="text-[12.5px] text-slate-500">Bấm vào để chọn loại đơn cần tạo</p>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {requestCards.map((card) => {
+                  const isSelected = type === card.id;
+                  const Icon = card.icon;
+                  return (
+                    <button
+                      key={card.id}
+                      type="button"
+                      onClick={() => handleTypeChange(card.id)}
                       className={cn(
-                        "p-2.5 rounded-full shrink-0 flex items-center justify-center",
-                        card.bg,
+                        "relative flex flex-row items-center text-left p-4 rounded-xl border transition-all duration-200 gap-4 select-none outline-none overflow-hidden hover:shadow-sm",
+                        isSelected
+                          ? "border-[#2E3192] ring-1 ring-[#2E3192] bg-[#2E3192]/5"
+                          : "border-slate-200 hover:border-slate-300 hover:bg-slate-50/50 bg-white",
                       )}
                     >
-                      <Icon
-                        className={cn("w-6 h-6", card.color)}
-                        strokeWidth={1.5}
-                      />
-                    </div>
-                    <div className="flex flex-col gap-1.5 pr-6 items-start">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className="text-[14px] md:text-[15px] font-semibold text-slate-800 tracking-tight">
-                          {t(card.labelKey)}
-                        </span>
-                        {card.isPaid && (
-                          <span className="bg-emerald-50 text-emerald-600 border border-emerald-200 px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider">{t("requests.isPaidText", { defaultValue: "CÓ TÍNH CÔNG" })}</span>
-                        )}
+                      <div className={cn("p-2.5 rounded-full shrink-0 flex items-center justify-center", card.bg)}>
+                        <Icon className={cn("w-6 h-6", card.color)} strokeWidth={1.5} />
                       </div>
-                      <span className="text-[12.5px] text-slate-500 leading-snug">
-                        {t(card.descKey)}
-                      </span>
-                    </div>
-                    {isSelected && (
-                      <div className="absolute top-4 right-4 bg-[#2E3192] text-white rounded-full flex items-center justify-center w-5 h-5 shadow-sm">
-                        <Check className="w-3.5 h-3.5" strokeWidth={3} />
+                      <div className="flex flex-col gap-1.5 pr-6 items-start">
+                        <span className="text-[14px] md:text-[15px] font-semibold text-slate-800 tracking-tight">{card.label}</span>
+                        <span className="text-[12.5px] text-slate-500 leading-snug">{card.description}</span>
                       </div>
-                    )}
-                  </button>
-                );
-              })}
+                      {isSelected && (
+                        <div className="absolute top-4 right-4 bg-[#2E3192] text-white rounded-full flex items-center justify-center w-5 h-5 shadow-sm">
+                          <Check className="w-3.5 h-3.5" strokeWidth={3} />
+                        </div>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Section 2: Form Fields */}
         {type !== "" && (
-          <div
-            ref={formRef}
-            className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col animate-in fade-in slide-in-from-bottom-4 duration-500"
-          >
+          <div ref={formRef} className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="p-5 md:p-6 flex flex-col gap-5 border-b border-slate-100">
-              <h3 className="text-[15px] font-semibold text-slate-800 border-b border-slate-100 pb-3">
-                {t("requests.create.step2Title", { defaultValue: "2. Chi tiết yêu cầu" })}
-              </h3>
+              <h3 className="text-[15px] font-semibold text-slate-800 border-b border-slate-100 pb-3">2. Chi tiết yêu cầu</h3>
 
-              <div className="grid grid-cols-1 gap-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div className="space-y-1.5">
-                  <Label className="text-[13px] font-semibold text-slate-700">
-                    Loại đơn đăng ký
-                  </Label>
+                  <Label className="text-[13px] font-semibold text-slate-700">Loại đơn đăng ký</Label>
                   <div className="w-full flex items-center justify-start text-left h-10 bg-slate-100/80 border-slate-200 border rounded-md px-4 text-sm text-slate-700 cursor-not-allowed font-medium">
-                    {t(`requests.types.${type}`)}
+                    {REQUEST_FORM_TYPE_LABELS[type as RequestFormType]}
                   </div>
                 </div>
+
+                {type === "LEAVE" && (
+                  <div className="space-y-1.5">
+                    <Label className="text-[13px] font-semibold text-slate-700">Lý do nghỉ <span className="text-rose-500">*</span></Label>
+                    <Select value={leaveReasonType} onValueChange={(val) => setLeaveReasonType(val as LeaveReasonType)}>
+                      <SelectTrigger className="w-full h-10 border-slate-200">
+                        <SelectValue placeholder="-- Chọn lý do --">{leaveReasonType ? LEAVE_REASON_LABELS[leaveReasonType as LeaveReasonType] : undefined}</SelectValue>
+                      </SelectTrigger>
+                      <SelectContent>
+                        {Object.entries(LEAVE_REASON_LABELS).map(([key, label]) => (
+                          <SelectItem key={key} value={key}>{label}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+                {type === "ABSENCE" && (
+                  <div className="space-y-1.5">
+                    <Label className="text-[13px] font-semibold text-slate-700">Lý do vắng mặt <span className="text-rose-500">*</span></Label>
+                    <Select value={absenceReasonType} onValueChange={(val) => setAbsenceReasonType(val as AbsenceReasonType)}>
+                      <SelectTrigger className="w-full h-10 border-slate-200">
+                        <SelectValue placeholder="-- Chọn lý do --">{absenceReasonType ? ABSENCE_REASON_LABELS[absenceReasonType as AbsenceReasonType] : undefined}</SelectValue>
+                      </SelectTrigger>
+                      <SelectContent>
+                        {Object.entries(ABSENCE_REASON_LABELS).map(([key, label]) => (
+                          <SelectItem key={key} value={key}>{label}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+                {type === "ATTENDANCE_ADJUSTMENT" && (
+                  <div className="space-y-1.5">
+                    <Label className="text-[13px] font-semibold text-slate-700">Lý do điều chỉnh <span className="text-rose-500">*</span></Label>
+                    <Select value={attendanceAdjustmentReasonType} onValueChange={(val) => setAttendanceAdjustmentReasonType(val as AttendanceAdjustmentReasonType)}>
+                      <SelectTrigger className="w-full h-10 border-slate-200">
+                        <SelectValue placeholder="-- Chọn lý do --">{attendanceAdjustmentReasonType ? ATTENDANCE_ADJUSTMENT_REASON_LABELS[attendanceAdjustmentReasonType as AttendanceAdjustmentReasonType] : undefined}</SelectValue>
+                      </SelectTrigger>
+                      <SelectContent>
+                        {Object.entries(ATTENDANCE_ADJUSTMENT_REASON_LABELS).map(([key, label]) => (
+                          <SelectItem key={key} value={key}>{label}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+                {type === "BUSINESS_TRIP" && (
+                  <div className="space-y-1.5">
+                    <Label className="text-[13px] font-semibold text-slate-700">Lý do công tác <span className="text-rose-500">*</span></Label>
+                    <Select value={businessTripReasonType} onValueChange={(val) => setBusinessTripReasonType(val as BusinessTripReasonType)}>
+                      <SelectTrigger className="w-full h-10 border-slate-200">
+                        <SelectValue placeholder="-- Chọn lý do --">{businessTripReasonType ? BUSINESS_TRIP_REASON_LABELS[businessTripReasonType as BusinessTripReasonType] : undefined}</SelectValue>
+                      </SelectTrigger>
+                      <SelectContent>
+                        {Object.entries(BUSINESS_TRIP_REASON_LABELS).map(([key, label]) => (
+                          <SelectItem key={key} value={key}>{label}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+                {type === "WFH" && (
+                  <div className="hidden sm:block"></div>
+                )}
+                {(type === "LEAVE" || type === "ABSENCE" || type === "BUSINESS_TRIP" || type === "WFH") && (
+                  <div className="space-y-1.5 sm:col-span-2">
+                    <Label className="text-[13px] font-semibold text-slate-700">Tính công</Label>
+                    <div className="w-full flex items-center h-10 bg-indigo-50/50 border-indigo-200 border rounded-md px-4 text-sm font-semibold text-indigo-700 shadow-sm">
+                      {type === "LEAVE" ? (leaveReasonType ? countedWorkLabel(LEAVE_COUNTED_WORK[leaveReasonType as LeaveReasonType]) : "—")
+                      : type === "ABSENCE" ? (absenceReasonType ? countedWorkLabel(ABSENCE_COUNTED_WORK[absenceReasonType as AbsenceReasonType]) : "—")
+                      : type === "BUSINESS_TRIP" ? "Có tính công"
+                      : type === "WFH" ? "Có tính công" : "—"}
+                    </div>
+                  </div>
+                )}
               </div>
 
-              {type === "checkInOut" ? (
-                <>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-                    <div className="space-y-1.5">
-                      <Label className="text-[13px] font-semibold text-slate-700">
-                        Loại thời gian <span className="text-rose-500">*</span>
-                      </Label>
-                      <Select
-                        value={checkInOutType}
-                        onValueChange={(val) =>
-                          setCheckInOutType(val as "checkin" | "checkout" | "")
-                        }
-                      >
-                        <SelectTrigger className="w-full text-[14px] bg-slate-50/50 h-10 border-slate-200 focus:ring-indigo-500/20">
-                          <span
-                            className={
-                              checkInOutType === "" ? "text-slate-500" : ""
-                            }
-                          >
-                            {checkInOutType === ""
-                              ? "-- Chọn --"
-                              : checkInOutType === "checkin"
-                                ? "Check-in"
-                                : "Check-out"}
-                          </span>
-                        </SelectTrigger>
+              {type === "LEAVE" && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <div className="space-y-1.5">
+                    <Label className="text-[13px] font-semibold text-slate-700">Từ ngày <span className="text-rose-500">*</span></Label>
+                    <div className="flex gap-2">
+                      <Popover>
+                        <PopoverTrigger className={cn("flex-2 flex items-center justify-start text-left font-normal h-10 border rounded-md px-3 text-sm", !date1 && "text-slate-400")}>
+                          <CalendarIcon className="mr-2 h-4 w-4 text-slate-400" />
+                          {date1 ? format(date1, "dd/MM/yyyy") : <span>Chọn ngày</span>}
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar mode="single" selected={date1} onSelect={setDate1} initialFocus locale={vi} />
+                        </PopoverContent>
+                      </Popover>
+                      <Select value={startSession} onValueChange={(val) => setStartSession(val as LeaveSessionType)}>
+                        <SelectTrigger className="flex-1 h-10 border-slate-200"><SelectValue placeholder="Ca nghỉ">{startSession === "FULL_DAY" ? "Cả ngày" : startSession === "MORNING" ? "Ca sáng" : startSession === "AFTERNOON" ? "Ca chiều" : undefined}</SelectValue></SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="checkin">Check-in</SelectItem>
-                          <SelectItem value="checkout">Check-out</SelectItem>
+                          <SelectItem value="FULL_DAY">Cả ngày</SelectItem>
+                          <SelectItem value="MORNING">Ca sáng</SelectItem>
+                          <SelectItem value="AFTERNOON">Ca chiều</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
-
-                    <div className="space-y-1.5">
-                      <Label className="text-[13px] font-semibold text-slate-700">
-                        Ngày <span className="text-rose-500">*</span>
-                      </Label>
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label className="text-[13px] font-semibold text-slate-700">Đến ngày <span className="text-rose-500">*</span></Label>
+                    <div className="flex gap-2">
                       <Popover>
-                        <PopoverTrigger
-                          className={cn(
-                            "w-full flex items-center justify-start text-left font-normal h-10 bg-slate-50/50 border-slate-200 border rounded-md px-4 text-sm hover:bg-slate-100/50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/20",
-                            !date && "text-slate-400",
-                          )}
-                        >
+                        <PopoverTrigger className={cn("flex-2 flex items-center justify-start text-left font-normal h-10 border rounded-md px-3 text-sm", !date2 && "text-slate-400")}>
                           <CalendarIcon className="mr-2 h-4 w-4 text-slate-400" />
-                          {date ? (
-                            format(date, "dd/MM/yyyy")
-                          ) : (
-                            <span>Chọn ngày</span>
-                          )}
+                          {date2 ? format(date2, "dd/MM/yyyy") : <span>Chọn ngày</span>}
                         </PopoverTrigger>
                         <PopoverContent className="w-auto p-0" align="start">
-                          <Calendar
-                            mode="single"
-                            selected={date}
-                            onSelect={setDate}
-                            initialFocus
-                            locale={vi}
-                          />
+                          <Calendar mode="single" selected={date2} onSelect={setDate2} initialFocus locale={vi} />
                         </PopoverContent>
                       </Popover>
-                    </div>
-
-                    <div className="space-y-1.5">
-                      <Label className="text-[13px] font-semibold text-slate-700">
-                        Giờ <span className="text-rose-500">*</span>
-                      </Label>
-                      <TimeSelect value={startTime} onChange={setStartTime} />
-                    </div>
-                  </div>
-                </>
-              ) : type === "absent" ? (
-                <>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-                    <div className="space-y-1.5 flex flex-col justify-start">
-                      <Label className="text-[13px] font-semibold text-slate-700">
-                         Lý do <span className="text-rose-500">*</span>
-                      </Label>
-                      <Select value={reasonType} onValueChange={(val) => setReasonType(val as "PERSONAL" | "COMPANY")}>
-                        <SelectTrigger className="w-full text-[14px] bg-slate-50/50 h-10 border-slate-200">
-                          <span className={reasonType === "" ? "text-slate-500" : ""}>
-                            {reasonType === "" ? "-- Chọn loại lý do --" : reasonType === "PERSONAL" ? "Việc cá nhân" : "Việc công ty"}
-                          </span>
-                        </SelectTrigger>
+                      <Select value={endSession} onValueChange={(val) => setEndSession(val as LeaveSessionType)}>
+                        <SelectTrigger className="flex-1 h-10 border-slate-200"><SelectValue placeholder="Ca nghỉ">{endSession === "FULL_DAY" ? "Cả ngày" : endSession === "MORNING" ? "Ca sáng" : endSession === "AFTERNOON" ? "Ca chiều" : undefined}</SelectValue></SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="PERSONAL">Việc cá nhân (Tối đa 90p)</SelectItem>
-                          <SelectItem value="COMPANY">Việc công ty (Tối đa 8h)</SelectItem>
+                          <SelectItem value="FULL_DAY">Cả ngày</SelectItem>
+                          <SelectItem value="MORNING">Ca sáng</SelectItem>
+                          <SelectItem value="AFTERNOON">Ca chiều</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
-                    <div className="space-y-1.5">
-                      <Label className="text-[13px] font-semibold text-slate-700">
-                        Ngày vắng mặt <span className="text-rose-500">*</span>
-                      </Label>
-                      <Popover>
-                        <PopoverTrigger
-                          className={cn(
-                            "w-full flex items-center justify-start text-left font-normal h-10 bg-slate-50/50 border-slate-200 border rounded-md px-4 text-sm hover:bg-slate-100/50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/20",
-                            !date && "text-slate-400",
-                          )}
-                        >
-                          <CalendarIcon className="mr-2 h-4 w-4 text-slate-400" />
-                          {date ? (
-                            format(date, "dd/MM/yyyy")
-                          ) : (
-                            <span>Chọn ngày</span>
-                          )}
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
-                          <Calendar
-                            mode="single"
-                            selected={date}
-                            onSelect={setDate}
-                            initialFocus
-                            locale={vi}
-                          />
-                        </PopoverContent>
-                      </Popover>
-                    </div>
-
-                    <div className="space-y-1.5">
-                      <Label className="text-[13px] font-semibold text-slate-700">
-                        Vắng mặt từ <span className="text-rose-500">*</span>
-                      </Label>
-                      <TimeSelect value={startTime} onChange={setStartTime} />
-                    </div>
-
-                    <div className="space-y-1.5">
-                      <Label className="text-[13px] font-semibold text-slate-700">
-                        Vắng mặt đến <span className="text-rose-500">*</span>
-                      </Label>
-                      <TimeSelect value={endTime} onChange={setEndTime} />
-                    </div>
                   </div>
-
-                  {/* Duration Alert */}
-                  {durationPreview > 0 && reasonType && (
-                    <div className="mt-4 p-3 bg-amber-50/80 border border-amber-200/60 rounded-xl text-sm flex gap-3 text-amber-800 shadow-sm animate-in fade-in slide-in-from-top-2 duration-300">
-                       <span className="shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-amber-100 text-amber-600">
-                          <CalendarIcon size={14} />
-                       </span>
-                       <div className="flex flex-col">
-                          <span className="font-semibold text-amber-900">
-                             Thời gian vắng: {(durationPreview / 60).toFixed(1).replace(/\.0$/, '')} giờ ({durationPreview} phút)
-                          </span>
-                          <span className="text-amber-700/80 mt-0.5">
-                             {reasonType === "PERSONAL" && durationPreview > 90 && (
-                                "Lưu ý: Bạn chọn Việc cá nhân. Chỉ 90 phút được ghi nhận tính công, phần còn lại sẽ coi như vắng mặt không lương."
-                             )}
-                             {reasonType === "COMPANY" && durationPreview > 480 && (
-                                "Lưu ý: Bạn chọn Việc công ty. Thời gian được tính cộng vào công trong ngày thay vì vắng mặt (tối đa 480 phút/ngày)."
-                             )}
-                          </span>
-                       </div>
-                    </div>
-                  )}
-                </>
-              ) : type === "resign" ? (
-                <>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-                    <div className="space-y-1.5">
-                      <Label className="text-[13px] font-semibold text-slate-700">
-                        Ngày nộp đơn <span className="text-rose-500">*</span>
-                      </Label>
-                      <Popover>
-                        <PopoverTrigger
-                          className={cn(
-                            "w-full flex items-center justify-start text-left font-normal h-10 bg-slate-50/50 border-slate-200 border rounded-md px-4 text-sm hover:bg-slate-100/50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/20",
-                            !date && "text-slate-400",
-                          )}
-                        >
-                          <CalendarIcon className="mr-2 h-4 w-4 text-slate-400" />
-                          {date ? (
-                            format(date, "dd/MM/yyyy")
-                          ) : (
-                            <span>Chọn ngày</span>
-                          )}
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
-                          <Calendar
-                            mode="single"
-                            selected={date}
-                            onSelect={setDate}
-                            initialFocus
-                            locale={vi}
-                          />
-                        </PopoverContent>
-                      </Popover>
-                    </div>
-
-                    <div className="space-y-1.5">
-                      <Label className="text-[13px] font-semibold text-slate-700">
-                        Ngày làm việc cuối <span className="text-rose-500">*</span>
-                      </Label>
-                      <Popover>
-                        <PopoverTrigger
-                          className={cn(
-                            "w-full flex items-center justify-start text-left font-normal h-10 bg-slate-50/50 border-slate-200 border rounded-md px-4 text-sm hover:bg-slate-100/50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/20",
-                            !endDate && "text-slate-400",
-                          )}
-                        >
-                          <CalendarIcon className="mr-2 h-4 w-4 text-slate-400" />
-                          {endDate ? (
-                            format(endDate, "dd/MM/yyyy")
-                          ) : (
-                            <span>Chọn ngày</span>
-                          )}
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
-                          <Calendar
-                            mode="single"
-                            selected={endDate}
-                            onSelect={setEndDate}
-                            initialFocus
-                            locale={vi}
-                          />
-                        </PopoverContent>
-                      </Popover>
-                    </div>
-                  </div>
-                </>
-              ) : type === "leave" ? (
-                <div className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                    <div className="space-y-1.5 flex flex-col">
-                      <Label className="text-[13px] font-semibold text-slate-700">
-                        Ngày bắt đầu nghỉ{" "}
-                        <span className="text-rose-500">*</span>
-                      </Label>
-                      <div className="flex gap-2">
-                        <Popover>
-                          <PopoverTrigger
-                            className={cn(
-                              "flex-1 flex items-center justify-start text-left font-normal h-10 bg-slate-50/50 border-slate-200 border rounded-md px-4 text-sm hover:bg-slate-100/50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/20",
-                              !startDate && "text-slate-400",
-                            )}
-                          >
-                            <CalendarIcon className="mr-2 h-4 w-4 text-slate-400" />
-                            {startDate ? (
-                              format(startDate, "dd/MM/yyyy")
-                            ) : (
-                              <span>Chọn ngày</span>
-                            )}
-                          </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0" align="start">
-                            <Calendar
-                              mode="single"
-                              selected={startDate}
-                              onSelect={setStartDate}
-                              initialFocus
-                              locale={vi}
-                            />
-                          </PopoverContent>
-                        </Popover>
-
-                        <Select
-                          value={startSession}
-                          onValueChange={(
-                            val: "morning" | "afternoon" | "all" | null,
-                          ) => val && setStartSession(val)}
-                        >
-                          <SelectTrigger className="flex-1 w-full text-[13px] h-10 bg-slate-50/50 border-slate-200 focus:ring-indigo-500/20">
-                            <span className="truncate">
-                              {startSession === "all"
-                                ? "Cả ngày"
-                                : startSession === "morning"
-                                  ? "Ca sáng"
-                                  : "Ca chiều"}
-                            </span>
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="all">Cả ngày</SelectItem>
-                            <SelectItem value="morning">
-                              Ca sáng (8h-12h)
-                            </SelectItem>
-                            <SelectItem value="afternoon">
-                              Ca chiều (13h30-17h30)
-                            </SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
-
-                    <div className="space-y-1.5 flex flex-col">
-                      <Label className="text-[13px] font-semibold text-slate-700">
-                        Ngày kết thúc nghỉ{" "}
-                        <span className="text-rose-500">*</span>
-                      </Label>
-                      <div className="flex gap-2">
-                        <Popover>
-                          <PopoverTrigger
-                            className={cn(
-                              "flex-1 flex items-center justify-start text-left font-normal h-10 bg-slate-50/50 border-slate-200 border rounded-md px-4 text-sm hover:bg-slate-100/50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/20",
-                              !endDate && "text-slate-400",
-                            )}
-                          >
-                            <CalendarIcon className="mr-2 h-4 w-4 text-slate-400" />
-                            {endDate ? (
-                              format(endDate, "dd/MM/yyyy")
-                            ) : (
-                              <span>Chọn ngày</span>
-                            )}
-                          </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0" align="start">
-                            <Calendar
-                              mode="single"
-                              selected={endDate}
-                              onSelect={setEndDate}
-                              initialFocus
-                              locale={vi}
-                            />
-                          </PopoverContent>
-                        </Popover>
-
-                        <Select
-                          value={endSession}
-                          onValueChange={(
-                            val: "morning" | "afternoon" | "all" | null,
-                          ) => val && setEndSession(val)}
-                        >
-                          <SelectTrigger className="flex-1 w-full text-[13px] h-10 bg-slate-50/50 border-slate-200 focus:ring-indigo-500/20">
-                            <span className="truncate">
-                              {endSession === "all"
-                                ? "Cả ngày"
-                                : endSession === "morning"
-                                  ? "Ca sáng"
-                                  : "Ca chiều"}
-                            </span>
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="all">Cả ngày</SelectItem>
-                            <SelectItem value="morning">
-                              Ca sáng (8h-12h)
-                            </SelectItem>
-                            <SelectItem value="afternoon">
-                              Ca chiều (13h30-17h30)
-                            </SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
-                  </div>
-
-                  {calculatedDays > 0 ? (
-                    <div className="p-3 bg-indigo-50/80 border border-indigo-100 rounded-md text-sm text-indigo-700 flex items-center justify-between">
-                      <span className="font-medium">
-                        Tổng số ngày nghỉ dự kiến
-                      </span>
-                      <span className="text-base font-bold">
-                        {calculatedDays} ngày
-                      </span>
-                    </div>
-                  ) : startDate && endDate ? (
-                    <div className="p-3 bg-rose-50 border border-rose-100 rounded-md text-sm text-rose-600 flex items-center justify-between">
-                      <span className="font-medium">
-                        Khoảng thời gian không hợp lệ
-                      </span>
-                      <span className="text-base font-bold">0 ngày</span>
-                    </div>
-                  ) : null}
                 </div>
-              ) : (
-                <>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                    <div className="space-y-1.5">
-                      <Label className="text-[13px] font-semibold text-slate-700">
-                        Ngày bắt đầu <span className="text-rose-500">*</span>
-                      </Label>
-                      <Popover>
-                        <PopoverTrigger
-                          className={cn(
-                            "w-full flex items-center justify-start text-left font-normal h-10 bg-slate-50/50 border-slate-200 border rounded-md px-4 text-sm hover:bg-slate-100/50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/20",
-                            !startDate && "text-slate-400",
-                          )}
-                        >
-                          <CalendarIcon className="mr-2 h-4 w-4 text-slate-400" />
-                          {startDate ? (
-                            format(startDate, "dd/MM/yyyy")
-                          ) : (
-                            <span>Chọn ngày</span>
-                          )}
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
-                          <Calendar
-                            mode="single"
-                            selected={startDate}
-                            onSelect={setStartDate}
-                            initialFocus
-                            locale={vi}
-                          />
-                        </PopoverContent>
-                      </Popover>
-                    </div>
-                    <div className="space-y-1.5">
-                      <Label className="text-[13px] font-semibold text-slate-700">
-                        Ngày kết thúc <span className="text-rose-500">*</span>
-                      </Label>
-                      <Popover>
-                        <PopoverTrigger
-                          className={cn(
-                            "w-full flex items-center justify-start text-left font-normal h-10 bg-slate-50/50 border-slate-200 border rounded-md px-4 text-sm hover:bg-slate-100/50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/20",
-                            !endDate && "text-slate-400",
-                          )}
-                        >
-                          <CalendarIcon className="mr-2 h-4 w-4 text-slate-400" />
-                          {endDate ? (
-                            format(endDate, "dd/MM/yyyy")
-                          ) : (
-                            <span>Chọn ngày</span>
-                          )}
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
-                          <Calendar
-                            mode="single"
-                            selected={endDate}
-                            onSelect={setEndDate}
-                            initialFocus
-                            locale={vi}
-                          />
-                        </PopoverContent>
-                      </Popover>
-                    </div>
-                  </div>
-                </>
               )}
-              
-              {/* Type-Specific Helper Text */}
-              <div className="mt-2 mb-1">
-                {type === "checkInOut" && (
-                   <div className="p-3.5 bg-indigo-50/60 border border-indigo-100 rounded-lg text-indigo-900 relative overflow-hidden mb-2">
-                       <div className="absolute left-0 top-0 bottom-0 w-1 bg-indigo-500/80"></div>
-                       <div className="pl-1.5">
-                          <p className="font-semibold text-[13.5px] uppercase tracking-wide">Lưu ý đồng bộ chấm công</p>
-                          <ul className="list-disc list-inside text-[13px] ml-1 space-y-1 opacity-90 mt-1">
-                             <li><strong>Check-in:</strong> Chỉ điều chỉnh giờ vào làm. <strong>Check-out:</strong> Chỉ điều chỉnh giờ tan làm.</li>
-                             <li>Hệ thống sẽ tự động tính lại công của bạn ngay sau khi đơn được duyệt.</li>
-                             <li><strong>Lưu ý:</strong> Nếu máy chấm công tiếp tục ghi nhận dữ liệu mới của bạn sau đó, kết quả tính công cuối cùng có thể sẽ thay đổi dựa theo dữ liệu thực tế nhất.</li>
-                          </ul>
-                       </div>
-                   </div>
-                )}
-                {type === "absent" && (
-                   <div className="p-3.5 bg-indigo-50/60 border border-indigo-100 rounded-lg text-indigo-900 relative overflow-hidden mb-2">
-                       <div className="absolute left-0 top-0 bottom-0 w-1 bg-indigo-500/80"></div>
-                       <div className="pl-1.5">
-                          <p className="text-[13px] opacity-90 leading-relaxed mt-1">Đơn vắng mặt chỉ cộng thời gian được duyệt vào summary, không tạo dữ liệu check-in/check-out.</p>
-                       </div>
-                   </div>
-                )}
-                {type === "resign" && (
-                   <div className="p-3.5 bg-indigo-50/60 border border-indigo-100 rounded-lg text-indigo-900 relative overflow-hidden mb-2">
-                       <div className="absolute left-0 top-0 bottom-0 w-1 bg-indigo-500/80"></div>
-                       <div className="pl-1.5">
-                          <p className="text-[13px] opacity-90 leading-relaxed mt-1">Nhân sự làm việc đến hết Ngày làm việc cuối. Sau ngày này hệ thống khóa dữ liệu chấm công.</p>
-                       </div>
-                   </div>
-                )}
-                {type === "leave" && (
-                   <div className="p-3.5 bg-indigo-50/60 border border-indigo-100 rounded-lg text-indigo-900 relative overflow-hidden mb-2">
-                       <div className="absolute left-0 top-0 bottom-0 w-1 bg-indigo-500/80"></div>
-                       <div className="pl-1.5">
-                          <p className="text-[13px] opacity-90 leading-relaxed mt-1">Khi đơn được duyệt, số ngày nghỉ được trừ vào quỹ phép; hệ thống rebuild công, không tạo dữ liệu quẹt thẻ.</p>
-                       </div>
-                   </div>
-                )}
-                {type === "wfh" && (
-                   <div className="p-3.5 bg-indigo-50/60 border border-indigo-100 rounded-lg text-indigo-900 relative overflow-hidden mb-2">
-                       <div className="absolute left-0 top-0 bottom-0 w-1 bg-indigo-500/80"></div>
-                       <div className="pl-1.5">
-                          <p className="text-[13px] leading-relaxed"><strong>Đơn có tính công:</strong> Ngày tương ứng sẽ được tự động tính là ngày đi làm hợp lệ trong tháng mà không yêu cầu bạn phải có dữ liệu quẹt thẻ.</p>
-                       </div>
-                   </div>
-                )}
-                {type === "business" && (
-                   <div className="p-3.5 bg-indigo-50/60 border border-indigo-100 rounded-lg text-indigo-900 relative overflow-hidden mb-2">
-                       <div className="absolute left-0 top-0 bottom-0 w-1 bg-indigo-500/80"></div>
-                       <div className="pl-1.5">
-                          <p className="text-[13px] leading-relaxed"><strong>Đơn có tính công:</strong> Thời gian đi công tác sẽ được tự động tính vào tổng số ngày làm việc trong tháng mà không cần dữ liệu điểm danh tại văn phòng.</p>
-                       </div>
-                   </div>
-                )}
-              </div>
 
-              <div className="space-y-1.5">
+              {type === "ABSENCE" && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <div className="space-y-1.5 sm:col-span-2">
+                    <Label className="text-[13px] font-semibold text-slate-700">Ngày vắng mặt <span className="text-rose-500">*</span></Label>
+                    <Popover>
+                      <PopoverTrigger className={cn("w-full flex items-center justify-start text-left font-normal h-10 border rounded-md px-4 text-sm", !date1 && "text-slate-400")}>
+                        <CalendarIcon className="mr-2 h-4 w-4 text-slate-400" />
+                        {date1 ? format(date1, "dd/MM/yyyy") : <span>Chọn ngày</span>}
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar mode="single" selected={date1} onSelect={setDate1} initialFocus locale={vi} />
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label className="text-[13px] font-semibold text-slate-700">Thời gian vắng từ <span className="text-rose-500">*</span></Label>
+                    <TimeSelect value={time1} onChange={setTime1} />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label className="text-[13px] font-semibold text-slate-700">Thời gian vắng đến <span className="text-rose-500">*</span></Label>
+                    <TimeSelect value={time2} onChange={setTime2} />
+                  </div>
+                </div>
+              )}
+
+              {type === "ATTENDANCE_ADJUSTMENT" && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <div className="space-y-1.5 sm:col-span-2">
+                    <Label className="text-[13px] font-semibold text-slate-700">Ngày điều chỉnh <span className="text-rose-500">*</span></Label>
+                    <Popover>
+                      <PopoverTrigger className={cn("w-full flex items-center justify-start text-left font-normal h-10 border rounded-md px-4 text-sm", !date1 && "text-slate-400")}>
+                        <CalendarIcon className="mr-2 h-4 w-4 text-slate-400" />
+                        {date1 ? format(date1, "dd/MM/yyyy") : <span>Chọn ngày</span>}
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar mode="single" selected={date1} onSelect={setDate1} initialFocus locale={vi} />
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label className="text-[13px] font-semibold text-slate-700">Loại Check-in / Check-out <span className="text-rose-500">*</span></Label>
+                    <Select value={timeType} onValueChange={(val) => setTimeType(val as AttendanceAdjustmentTimeType)}>
+                      <SelectTrigger className="w-full h-10 border-slate-200">
+                        <SelectValue placeholder="-- Chọn loại --">{timeType === "CHECK_IN" ? "Check-in" : timeType === "CHECK_OUT" ? "Check-out" : undefined}</SelectValue>
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="CHECK_IN">Check-in</SelectItem>
+                        <SelectItem value="CHECK_OUT">Check-out</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label className="text-[13px] font-semibold text-slate-700">Giờ đề nghị <span className="text-rose-500">*</span></Label>
+                    <TimeSelect value={time1} onChange={setTime1} />
+                  </div>
+                </div>
+              )}
+
+              {type === "BUSINESS_TRIP" && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <div className="space-y-1.5">
+                    <Label className="text-[13px] font-semibold text-slate-700">Từ ngày <span className="text-rose-500">*</span></Label>
+                    <Popover>
+                      <PopoverTrigger className={cn("w-full flex items-center justify-start text-left font-normal h-10 border rounded-md px-4 text-sm", !date1 && "text-slate-400")}>
+                        <CalendarIcon className="mr-2 h-4 w-4 text-slate-400" />
+                        {date1 ? format(date1, "dd/MM/yyyy") : <span>Chọn ngày</span>}
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar mode="single" selected={date1} onSelect={setDate1} initialFocus locale={vi} />
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label className="text-[13px] font-semibold text-slate-700">Đến ngày <span className="text-rose-500">*</span></Label>
+                    <Popover>
+                      <PopoverTrigger className={cn("w-full flex items-center justify-start text-left font-normal h-10 border rounded-md px-4 text-sm", !date2 && "text-slate-400")}>
+                        <CalendarIcon className="mr-2 h-4 w-4 text-slate-400" />
+                        {date2 ? format(date2, "dd/MM/yyyy") : <span>Chọn ngày</span>}
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar mode="single" selected={date2} onSelect={setDate2} initialFocus locale={vi} />
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label className="text-[13px] font-semibold text-slate-700">Hình thức công tác <span className="text-rose-500">*</span></Label>
+                    <Input className="h-10 text-sm border-slate-200" placeholder="Máy bay, tàu hỏa..." value={tripMode} onChange={(e) => setTripMode(e.target.value)} />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label className="text-[13px] font-semibold text-slate-700">Địa điểm</Label>
+                    <Input className="h-10 text-sm border-slate-200" placeholder="Tên địa điểm..." value={location} onChange={(e) => setLocation(e.target.value)} />
+                  </div>
+                  <div className="space-y-1.5 sm:col-span-2">
+                    <Label className="text-[13px] font-semibold text-slate-700">Địa chỉ</Label>
+                    <Input className="h-10 text-sm border-slate-200" placeholder="Địa chỉ chi tiết..." value={address} onChange={(e) => setAddress(e.target.value)} />
+                  </div>
+                </div>
+              )}
+
+              {type === "WFH" && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <div className="space-y-1.5">
+                    <Label className="text-[13px] font-semibold text-slate-700">Từ ngày <span className="text-rose-500">*</span></Label>
+                    <Popover>
+                      <PopoverTrigger className={cn("w-full flex items-center justify-start text-left font-normal h-10 border rounded-md px-4 text-sm", !date1 && "text-slate-400")}>
+                        <CalendarIcon className="mr-2 h-4 w-4 text-slate-400" />
+                        {date1 ? format(date1, "dd/MM/yyyy") : <span>Chọn ngày</span>}
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar mode="single" selected={date1} onSelect={setDate1} initialFocus locale={vi} />
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label className="text-[13px] font-semibold text-slate-700">Đến ngày <span className="text-rose-500">*</span></Label>
+                    <Popover>
+                      <PopoverTrigger className={cn("w-full flex items-center justify-start text-left font-normal h-10 border rounded-md px-4 text-sm", !date2 && "text-slate-400")}>
+                        <CalendarIcon className="mr-2 h-4 w-4 text-slate-400" />
+                        {date2 ? format(date2, "dd/MM/yyyy") : <span>Chọn ngày</span>}
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar mode="single" selected={date2} onSelect={setDate2} initialFocus locale={vi} />
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+                </div>
+              )}
+
+              <div className="space-y-1.5 mt-2">
                 <Label className="text-[13px] font-semibold text-slate-700 flex items-center justify-between">
-                  <span>Mô tả <span className="text-rose-500">*</span></span>
+                  <span>Mô tả {type === "WFH" ? <span className="text-rose-500">*</span> : "(Tùy chọn)"}</span>
                 </Label>
                 <RichTextEditor 
                   value={description} 
                   onChange={setDescription} 
-                  placeholder="Nhập mô tả chi tiết (bắt buộc)..." 
+                  placeholder={type === "WFH" ? "Nhập mô tả bắt buộc..." : "Nhập mô tả bổ sung (tối đa 1000 ký tự)..."} 
                 />
               </div>
 
@@ -901,12 +618,12 @@ export default function CreateRequestPage() {
               <Button
                 onClick={onSubmit}
                 disabled={createMutation.isPending}
-                className="h-11 px-8 bg-[#2563EB] hover:bg-[#1d4ed8] text-white font-medium shadow-sm transition-colors"
+                className="h-11 font-medium bg-[#2E3192] hover:bg-[#1E2062] text-white shadow-sm border-none gap-2 px-8"
               >
                 {createMutation.isPending && (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  <Loader2 className="w-4 h-4 animate-spin" />
                 )}
-                Tạo đơn
+                "Tạo yêu cầu"
               </Button>
             </div>
           </div>

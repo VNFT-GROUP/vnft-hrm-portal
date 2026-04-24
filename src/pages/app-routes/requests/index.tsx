@@ -17,7 +17,7 @@ import { RichTextViewer } from "@/components/custom/RichTextViewer";
 import { getErrorMessage } from "@/lib/utils";
 import RequestFormModal from "./components/RequestFormModal";
 import { LEAVE_REASON_LABELS, ABSENCE_REASON_LABELS, ATTENDANCE_ADJUSTMENT_REASON_LABELS, BUSINESS_TRIP_REASON_LABELS, countedWorkLabel } from "@/types/requestform/RequestFormLabels";
-const safeFormatDate = (dateString?: string) => {
+const safeFormatDate = (dateString?: string | null) => {
   if (!dateString) return "—";
   try {
     return format(new Date(dateString), "dd/MM/yyyy");
@@ -144,7 +144,7 @@ export default function RequestsPage() {
     }
   };
 
-  const extractPlainText = (html?: string) => {
+  const extractPlainText = (html?: string | null) => {
     if (!html) return "-";
     try {
       const doc = new DOMParser().parseFromString(html, "text/html");
@@ -180,13 +180,13 @@ export default function RequestsPage() {
             </p>
           </m.div>
 
-          <div className="flex items-center gap-4 bg-white p-1.5 rounded-xl border border-slate-200 shadow-sm">
+          <div className="flex items-center gap-4">
             {canCreate && (
               <Button 
                  onClick={() => navigate("/app/requests/create")}
-                 className="bg-indigo-600 hover:bg-indigo-700 text-white flex items-center gap-2 h-10 px-4 rounded-lg shadow-sm"
+                 className="w-full md:w-auto h-12 px-6 rounded-xl bg-[#2E3192] hover:bg-[#1E2062] text-white shadow-md shadow-[#2E3192]/20 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 text-base font-semibold"
               >
-                <Plus className="w-4 h-4" /> {t("requests.createNew", { defaultValue: "Tạo đơn mới" })}
+                <Plus size={20} className="mr-2" /> {t("requests.createNew", { defaultValue: "Tạo đơn mới" })}
               </Button>
             )}
           </div>
@@ -260,7 +260,7 @@ export default function RequestsPage() {
                           </div>
                         </td>
                         <td className="px-4 py-3.5 text-slate-500 border-x border-slate-200 whitespace-nowrap text-center">
-                          {(req.submittedAt || req.createdAt) ? format(new Date(req.submittedAt || req.createdAt), 'dd/MM/yyyy HH:mm') : "-"}
+                          {(req.submittedAt || req.createdAt) ? format(new Date((req.submittedAt || req.createdAt) as string), 'dd/MM/yyyy HH:mm') : "-"}
                         </td>
                         <td className="px-4 py-3.5 border-x border-slate-200 whitespace-nowrap text-center items-center">
                           <div className="flex items-center justify-center gap-2">

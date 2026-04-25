@@ -1,3 +1,5 @@
+/* eslint-disable react-compiler/react-compiler */
+"use no memo";
 import { useMemo, useState, useCallback } from "react";
 import {
   useReactTable,

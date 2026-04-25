@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/store/useAuthStore';
+import axios from 'axios';
 import { portalConfig, getGatewayLoginUrl } from '@/config/portal.config';
 
 /**
@@ -32,25 +33,29 @@ export default function VerifyPage() {
 
     const verify = async () => {
       try {
-        const response = await fetch(`${portalConfig.api}/auth/refresh`, {
-          method: 'POST',
-          credentials: 'include', // Send .dev.local cookies
-          headers: { 'Content-Type': 'application/json' },
-        });
+        const response = await axios.post(
+          `${portalConfig.api}/auth/refresh`,
+          {},
+          { withCredentials: true }
+        );
 
-        if (!response.ok) {
-          throw new Error('Session expired');
+        let data = null;
+        if (response.data) {
+          if (response.data.data) {
+            data = response.data.data;
+          }
         }
 
-        const result = await response.json();
-        const data = result?.data;
-
-        if (data?.user && data?.accessToken) {
-          login(data.user, data.accessToken);
-          navigate('/app', { replace: true });
-        } else {
-          throw new Error('Invalid response');
+        if (data) {
+          if (data.user) {
+            if (data.accessToken) {
+              login(data.user, data.accessToken);
+              navigate('/app', { replace: true });
+              return;
+            }
+          }
         }
+        throw new Error('Invalid response');
       } catch {
         setError('Phiên đăng nhập không hợp lệ hoặc đã hết hạn.');
         // Wait a moment so user can see the message, then redirect

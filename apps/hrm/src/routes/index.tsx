@@ -1,5 +1,5 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { getGatewayLoginUrl } from "@/config/portal.config";
 
 
@@ -40,11 +40,17 @@ import { useAuthStore } from "@/store/useAuthStore";
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      window.location.href = getGatewayLoginUrl();
+    }
+  }, [isAuthenticated]);
+
   if (!isAuthenticated) {
-    // Redirect to gateway login instead of local /login
-    window.location.href = getGatewayLoginUrl();
     return <LoadingPage message="Đang chuyển hướng..." />;
   }
+
   return <>{children}</>;
 }
 

@@ -77,7 +77,7 @@ export default function MyAttendancePage() {
     switch (form.type) {
       case "LEAVE": return { title: "Đơn nghỉ phép", lines: [`Thời gian nghỉ: ${formatDate(form.startDate)} ${sessionStr(form.startSession)} → ${formatDate(form.endDate)} ${sessionStr(form.endSession)}`, `Số ngày công: ${calculatedDays} ngày`] };
       case "WFH": return { title: "Đơn làm việc tại nhà", lines: [`Thời gian WFH: ${formatDate(form.startDate)} → ${formatDate(form.endDate)}`, `Số ngày công: ${calculatedDays || 1} ngày`] };
-      case "ABSENCE": return { title: "Đơn vắng mặt", reasonTypeStr: form.absenceReasonType === "PERSONAL" ? "Việc cá nhân" : form.absenceReasonType === "COMPANY" ? "Việc công ty" : null, reasonTypeKind: form.absenceReasonType, lines: [`Ngày vắng: ${formatDate(form.absenceDate)}`, `Khung giờ: ${formatTime(form.fromTime)} → ${formatTime(form.toTime)}`] };
+      case "ABSENCE": return { title: "Đơn vắng mặt", reasonTypeStr: form.absenceReasonType === "PERSONAL_BUSINESS" ? "Việc cá nhân" : null, reasonTypeKind: form.absenceReasonType, lines: [`Ngày vắng: ${formatDate(form.absenceDate)}`, `Khung giờ: ${formatTime(form.fromTime)} → ${formatTime(form.toTime)}`] };
       case "ATTENDANCE_ADJUSTMENT": return { title: "Đơn điều chỉnh chấm công", lines: [`Ngày chấm công: ${formatDate(form.attendanceDate)}`, `Loại điều chỉnh: ${form.timeType === "CHECK_IN" ? "Giờ vào" : "Giờ ra"}`, `Giờ đề xuất: ${formatTime(form.requestedTime)}`] };
       case "BUSINESS_TRIP": return { title: "Đơn công tác", lines: [`Thời gian công tác: ${formatDate(form.startDate)} → ${formatDate(form.endDate)}`, `Số ngày công: ${calculatedDays || 1} ngày`] };
       case "RESIGNATION": return { title: "Đơn nghỉ việc", lines: [`Ngày nộp đơn: ${formatDate(form.submissionDate)}`, `Ngày làm việc cuối: ${formatDate(form.lastWorkingDate)}`, `Ngày nghỉ việc: ${formatDate(form.resignationDate)}`] };
@@ -619,7 +619,7 @@ export default function MyAttendancePage() {
                                 <span className="font-bold text-slate-800 text-[15px] flex flex-wrap items-center gap-2">
                                   <FileText className="w-4 h-4 text-slate-400"/> {display.title}
                                   {display.reasonTypeStr && (
-                                     <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold uppercase shrink-0 w-fit ${display.reasonTypeKind === 'PERSONAL' ? 'bg-amber-100 text-amber-700' : 'bg-blue-100 text-blue-700'}`}>
+                                     <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold uppercase shrink-0 w-fit ${display.reasonTypeKind === 'PERSONAL_BUSINESS' ? 'bg-amber-100 text-amber-700' : 'bg-blue-100 text-blue-700'}`}>
                                        {display.reasonTypeStr}
                                      </span>
                                   )}

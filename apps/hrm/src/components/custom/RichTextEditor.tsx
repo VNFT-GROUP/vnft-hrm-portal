@@ -32,6 +32,7 @@ export const RichTextEditor = memo(function RichTextEditor({ value, onChange, pl
         className
       )}
     >
+      {/* @ts-expect-error ReactQuill lacks React 19 JSX types */}
       <ReactQuill
         theme="snow"
         value={value}

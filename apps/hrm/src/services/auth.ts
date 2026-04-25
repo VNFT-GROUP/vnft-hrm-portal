@@ -1,17 +1,8 @@
 import { apiClient } from '@/lib/apiClient';
 import type { ApiResponse } from '@/types/base/ApiResponse';
 import type { AuthResponse } from '@/types/auth/AuthResponse';
-import type { DefaultLoginRequest } from '@/types/auth/DefaultLoginRequest';
 
 export const authService = {
-  /**
-   * API đăng nhập và cấp access token + refresh token cookie
-   */
-  login: async (data: DefaultLoginRequest): Promise<ApiResponse<AuthResponse>> => {
-    const response = await apiClient.post<ApiResponse<AuthResponse>>('/auth/login', data);
-    return response.data;
-  },
-
   /**
    * API refresh session từ refresh token trong cookie
    */

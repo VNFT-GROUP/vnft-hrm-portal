@@ -79,7 +79,7 @@ export default function AppLayout() {
 
         <ScrollArea className="app-content-scroll shadow-inner" viewportRef={scrollViewportRef}>
           <div className="app-content">
-            <Suspense fallback={<LoadingPage variant="inner" message="Tải phân hệ..." />}>
+            <Suspense fallback={<LoadingPage message="Tải phân hệ..." />}>
               <Outlet />
             </Suspense>
           </div>

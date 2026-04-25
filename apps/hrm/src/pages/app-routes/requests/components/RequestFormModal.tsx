@@ -20,8 +20,7 @@ import {
   Truck,
   Home,
   Check,
-  Loader2,
-  Info
+  Loader2
 } from "lucide-react";
 import { toast } from "sonner";
 import {

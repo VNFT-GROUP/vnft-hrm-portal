@@ -1,0 +1,23 @@
+export default {
+  title: "Hikvision - Bản ghi",
+  subtitle: "Xem và kiểm tra dữ liệu chấm công thô từ thiết bị.",
+  searchPlaceholder: "Tìm kiếm theo MSNV hoặc Tên...",
+  startDate: "Từ ngày",
+  endDate: "Đến ngày",
+  loadingData: "Đang tải dữ liệu...",
+  noData: "Không có dữ liệu chấm công",
+  noDataDesc: "Vui lòng thay đổi bộ lọc hoặc đợi đồng bộ dữ liệu.",
+  date: "Ngày",
+  employeeCode: "Mã NV",
+  employeeName: "Tên nhân viên",
+  attendanceCode: "Mã CC",
+  checkIn: "Giờ vào",
+  checkOut: "Giờ ra",
+  jsonDetails: "Chi tiết dữ liệu thiết bị (Raw Payload)",
+  viewJson: "Xem JSON",
+  copyJsonSuccess: "Đã sao chép JSON",
+  invalidJson: "Định dạng JSON không hợp lệ",
+  infoTitle: "Lưu ý dữ liệu",
+  infoNotice: "Chú ý:",
+  infoDesc: "Đây là dữ liệu thô lấy được trực tiếp từ máy chấm công (chưa được đồng bộ bù trừ qua các đơn từ vắng mặt hay đi muộn). Dữ liệu này chỉ mang tính chất thống kê log và đối chiếu lỗi hệ thống, không dùng làm căn cứ chốt công cuối cùng."
+};

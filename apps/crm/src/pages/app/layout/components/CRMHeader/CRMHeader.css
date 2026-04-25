@@ -1,0 +1,613 @@
+/* =============================================================
+   CRMHeader â€” 2-tier horizontal navigation
+   Colors: HRM Navy/Orange palette adapted for CRM
+   ============================================================= */
+
+/* â”€â”€ TIER 1 â”€â”€ */
+.crm-header-l1 {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  padding: 0 1.25rem;
+  gap: 0;
+  background: linear-gradient(135deg, #161845 0%, #1E2062 50%, #2E3192 100%);
+  background-size: 200% 200%;
+  animation: crm-header-shift 12s ease infinite alternate;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.25);
+}
+@keyframes crm-header-shift {
+  0%   { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+
+/* Logo area */
+.crm-header-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-right: 2rem;
+  flex-shrink: 0;
+  text-decoration: none;
+}
+.crm-header-logo-mark {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 16px rgba(247, 148, 29, 0.4);
+  flex-shrink: 0;
+}
+.crm-header-logo-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+}
+.crm-header-logo-title {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: white;
+  letter-spacing: 0.04em;
+}
+.crm-header-logo-sub {
+  font-size: 0.6rem;
+  font-weight: 500;
+  color: rgba(255,255,255,0.45);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-top: 1px;
+}
+
+/* Main tabs */
+.crm-header-tabs {
+  display: flex;
+  align-items: stretch;
+  height: 100%;
+  gap: 2px;
+  flex: 1;
+}
+
+.crm-header-tab {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0 14px;
+  height: 100%;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.65);
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  position: relative;
+  white-space: nowrap;
+  transition: color 0.2s ease, background 0.2s ease;
+  border-bottom: 3px solid transparent;
+}
+.crm-header-tab:hover {
+  color: white;
+  background: rgba(255, 255, 255, 0.06);
+}
+.crm-header-tab.active {
+  color: #F7941D;
+  border-bottom-color: #F7941D;
+  background: rgba(247, 148, 29, 0.08);
+}
+.crm-header-tab.active svg {
+  color: #F7941D;
+}
+.crm-header-tab svg {
+  flex-shrink: 0;
+  opacity: 0.8;
+  transition: color 0.2s, transform 0.2s;
+}
+.crm-header-tab:hover svg {
+  transform: scale(1.12);
+  opacity: 1;
+}
+
+/* Hover Dropdown Menu */
+.crm-header-tab-wrapper {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+}
+
+.crm-header-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  padding-top: 14px; /* Bridge the gap between L1 and the menu, effectively hanging over the L2 bar */
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(6px) scale(0.98);
+  transform-origin: top center;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  z-index: 1000;
+}
+
+.crm-header-tab-wrapper:hover .crm-header-dropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+.crm-dropdown-inner {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(0, 0, 0, 0.05);
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  min-width: 190px;
+  position: relative;
+}
+
+/* Little triangle pointing up */
+.crm-dropdown-inner::before {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: 20px;
+  width: 10px;
+  height: 10px;
+  background: white;
+  transform: rotate(45deg);
+  border-top: 1px solid rgba(0,0,0,0.05);
+  border-left: 1px solid rgba(0,0,0,0.05);
+  z-index: -1;
+}
+
+.crm-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #334155;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-align: left;
+}
+.crm-dropdown-item:hover {
+  background: #f1f5f9;
+  color: #1E2062;
+  transform: translateX(2px);
+}
+.crm-dropdown-item svg {
+  color: #94a3b8;
+  transition: color 0.15s;
+}
+.crm-dropdown-item:hover svg {
+  color: #F7941D;
+}
+
+/* Right actions area */
+.crm-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+.crm-header-action-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+.crm-header-action-btn:hover {
+  background: rgba(255,255,255,0.12);
+  color: white;
+  border-color: rgba(255,255,255,0.22);
+}
+.crm-header-action-btn .badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #ef4444;
+  color: white;
+  font-size: 9px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #1E2062;
+}
+
+/* Avatar */
+.crm-header-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #F7941D, #f9a84d);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: white;
+  cursor: pointer;
+  border: 2px solid rgba(255,255,255,0.2);
+  box-shadow: 0 0 10px rgba(247, 148, 29, 0.3);
+  transition: all 0.2s;
+}
+.crm-header-avatar:hover {
+  transform: scale(1.08);
+  box-shadow: 0 0 16px rgba(247, 148, 29, 0.5);
+}
+
+/* â”€â”€ TIER 2 â”€â”€ */
+.crm-header-l2 {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  padding: 0 1.25rem;
+  background: rgba(15, 23, 41, 0.97);
+  border-bottom: 2px solid #F7941D;
+  gap: 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.crm-header-l2::-webkit-scrollbar { display: none; }
+
+.crm-sub-tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  white-space: nowrap;
+  transition: all 0.18s ease;
+}
+.crm-sub-tab:hover {
+  color: rgba(255,255,255,0.85);
+  background: rgba(255, 255, 255, 0.07);
+}
+.crm-sub-tab.active {
+  color: white;
+  background: rgba(247, 148, 29, 0.14);
+  border: 1px solid rgba(247, 148, 29, 0.3);
+}
+.crm-sub-tab.active svg {
+  color: #F7941D;
+}
+.crm-sub-tab svg {
+  opacity: 0.7;
+  transition: color 0.15s;
+}
+.crm-sub-tab:hover svg {
+  opacity: 1;
+  color: #F7941D;
+}
+
+/* No sub-items placeholder */
+.crm-header-l2-empty {
+  font-size: 0.72rem;
+  color: rgba(255,255,255,0.25);
+  font-style: italic;
+  padding: 0 4px;
+}
+
+/* USER PROFILE DROPDOWN (Mirrored from HRM Topbar) */
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 8px;
+  transition: background 0.2s;
+  color: white;
+}
+
+.user-profile:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.user-avatar-circle {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid #F7941D;
+  background: white;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  text-align: right;
+}
+
+.user-name {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: white;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 140px;
+}
+
+.user-role {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 500;
+}
+
+/* BACKDROP */
+.profile-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.45);
+  z-index: -1;
+  animation: fade-in 0.2s ease-out;
+}
+
+/* DROPDOWN */
+.profile-dropdown {
+  position: absolute;
+  top: 56px;
+  right: -0.25rem;
+  width: 300px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  z-index: 105;
+  padding: 1.2rem 0 0.5rem 0;
+  border: 1px solid #e2e8f0;
+  transform-origin: top right;
+  animation: dropdown-unfold 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes dropdown-unfold {
+  from { opacity: 0; transform: scale(0.9) translateY(-10px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* Stagger cascade animation for dropdown children */
+.pd-header, .pd-divider, .pd-item {
+  opacity: 0;
+  animation: item-cascade 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+.pd-header { animation-delay: 0.05s; }
+.profile-dropdown > .pd-divider:nth-of-type(2) { animation-delay: 0.1s; }
+.pd-body:nth-of-type(3) .pd-item:nth-child(1) { animation-delay: 0.12s; }
+.pd-body:nth-of-type(3) .pd-item:nth-child(2) { animation-delay: 0.16s; }
+.pd-body:nth-of-type(3) .pd-item:nth-child(3) { animation-delay: 0.2s; }
+.pd-body:nth-of-type(3) .pd-item:nth-child(4) { animation-delay: 0.24s; }
+.profile-dropdown > .pd-divider:nth-of-type(4) { animation-delay: 0.28s; }
+.pd-body:nth-of-type(5) .pd-item:nth-child(1) { animation-delay: 0.32s; }
+.pd-body:nth-of-type(5) .pd-item:nth-child(2) { animation-delay: 0.36s; }
+
+@keyframes item-cascade {
+  from { opacity: 0; transform: translateY(-15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.pd-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 1.5rem 1rem 1.5rem;
+}
+
+.pd-avatar-large {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: 1px solid #F7941D;
+  outline: 2px solid white;
+  box-shadow: 0 0 0 3px rgba(247, 148, 29, 0.2);
+}
+
+.pd-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.pd-name {
+  color: #F7941D;
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 180px;
+}
+
+.pd-role-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #64748b;
+  font-size: 0.85rem;
+}
+
+.pd-divider {
+  height: 1px;
+  background: #f1f5f9;
+  margin: 0.5rem 0;
+}
+
+.pd-body {
+  padding: 0 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.pd-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  background: none;
+  border: none;
+  border-radius: 8px;
+  color: #334155;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-weight: 500;
+  width: 100%;
+}
+
+.pd-icon {
+  color: #64748b;
+}
+
+.pd-icon-red {
+  color: #ef4444;
+}
+
+.pd-item:hover {
+  background: #f8fafc;
+}
+
+.pd-item .flex-1 {
+  flex: 1;
+}
+
+.lang-text {
+  color: #64748b;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pd-item.text-red-500 {
+  color: #ef4444;
+}
+
+.pd-item.text-red-500:hover {
+  background: #fef2f2;
+}
+
+/* BACKGROUND WRAPPER TO PREVENT CLIP OF DROPDOWNS */
+.topbar-bg-wrapper {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* AMBIENT BLOBS */
+.topbar-ambient {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.ambient-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(45px);
+  opacity: 0.15;
+  animation: topbar-blob-anim 8s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.blob-1 {
+  width: 300px;
+  height: 150px;
+  background: white; /* modified: changed color to fit CRM better, or keep old logo colors? I'll use CRM orange and white */
+  top: -50px;
+  right: 10%;
+  left: auto;
+}
+
+.blob-2 {
+  width: 250px;
+  height: 100px;
+  background: #F7941D;
+  top: 20px;
+  right: 30%;
+  left: auto;
+  animation-delay: -4s;
+  animation-duration: 12s;
+}
+
+@keyframes topbar-blob-anim {
+  0% { transform: translateX(0) scale(1); opacity: 0.1; }
+  100% { transform: translateX(100px) scale(1.2); opacity: 0.2; }
+}
+
+/* SVG FLOATING PARTICLES */
+.topbar-flow {
+  position: absolute;
+  right: 8rem;
+  left: auto;
+  top: 0;
+  height: 100%;
+  width: 500px;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.obj-abstract {
+  width: 100%;
+  height: 100%;
+}
+
+.floating-obj {
+  transform-origin: center;
+  transform-box: fill-box;
+}
+
+.float-1 { animation: obj-float 16s ease-in-out infinite alternate; }
+.float-2 { animation: obj-float-rev 14s ease-in-out infinite alternate; animation-delay: -3s; }
+.float-3 { animation: obj-float 20s ease-in-out infinite alternate; animation-delay: -7s; }
+.float-4 { animation: obj-float-rev 18s ease-in-out infinite alternate; animation-delay: -2s; }
+.float-5 { animation: obj-float 15s ease-in-out infinite alternate; animation-delay: -5s; }
+
+@keyframes obj-float {
+  0% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-8px) rotate(100deg); }
+  100% { transform: translateY(8px) rotate(200deg); }
+}
+
+@keyframes obj-float-rev {
+  0% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(8px) rotate(-100deg); }
+  100% { transform: translateY(-8px) rotate(-200deg); }
+}

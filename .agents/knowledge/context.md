@@ -1,13 +1,40 @@
-﻿# VNFT Group â€” HRM Portal
+# VNFT Group — Portal Platform
 
 ## Project Overview
 
-This is the **VNFT Group Human Resource Management Portal** â€” a web-based HR management system for a logistics/freight transportation company. The application is built with React + TypeScript + Vite, using Tailwind CSS v4, shadcn/ui components, and follows modern SPA architecture.
+This is the **VNFT Group Portal Platform** — a Turborepo-powered monorepo containing multiple web applications for a logistics/freight transportation company. Each application is built with React + TypeScript + Vite, using Tailwind CSS v4, shadcn/ui components, and follows modern SPA architecture.
 
 - **Company**: VNFT Group (Vietnam Freight Transport)
 - **Slogan**: "Your Success, Our Target"
 - **Industry**: Logistics, Freight, Transportation
 - **Application Languages**: Vietnamese (vi-VN), English (en-US), Chinese Simplified (zh-CN)
+
+## Monorepo Structure (Turborepo)
+
+```
+vnft-portal/
+├── apps/
+│   ├── hrm/               # HRM Portal (Human Resource Management)
+│   ├── crm/               # CRM Portal (Customer Relationship Management) — planned
+│   └── fms/               # FMS Portal (Fleet Management System) — planned
+├── packages/
+│   ├── ui/                # Shared UI components (shadcn/ui base)
+│   ├── eslint-config/     # Shared ESLint configuration
+│   └── typescript-config/ # Shared TypeScript configuration
+├── .agents/               # AI agent instructions, skills & knowledge
+├── turbo.json             # Turborepo pipeline configuration
+└── package.json           # Root workspace configuration (npm workspaces)
+```
+
+### Key Commands
+- `npm run dev` — Start all apps in development mode
+- `npm run build` — Build all apps
+- `npm run lint` — Lint all apps and packages
+- `turbo run dev --filter=hrm` — Start only HRM app
+
+---
+
+## HRM Portal (`apps/hrm/`)
 
 ## Brand Identity & Color Palette
 
@@ -88,25 +115,31 @@ When implementing dark mode, use these as base reference:
 | Icons | Lucide React |
 | Notifications | Sonner |
 
-## File Structure Conventions
+## File Structure Conventions (HRM)
 
 ```
-src/
-â”œâ”€â”€ components/
-â”‚   â”œâ”€â”€ ui/          # shadcn/ui components (do not modify directly)
-â”‚   â””â”€â”€ custom/      # Custom reusable components
-â”œâ”€â”€ pages/
-â”‚   â”œâ”€â”€ public-routes/   # Unauthenticated pages (Login, Register)
-â”‚   â””â”€â”€ app-routes/      # Authenticated pages (Dashboard, HR modules)
-â”‚       â””â”€â”€ layout/      # App layouts
-â”‚           â”œâ”€â”€ components/ # Granular layout components (Sidebar, Topbar, Modals)
-â”‚           â”œâ”€â”€ AppLayout.tsx
-â”‚           â””â”€â”€ ...
-â”œâ”€â”€ lib/             # Utilities, API clients, helpers (e.g., i18n.ts)
-â”œâ”€â”€ store/           # Zustand global stores (e.g., useLayoutStore.ts)
-â”œâ”€â”€ App.tsx          # Root component with routing
-â”œâ”€â”€ main.tsx         # Entry point
-â””â”€â”€ index.css        # Global styles + Tailwind theme
+apps/hrm/
+├── src/
+│   ├── components/
+│   │   ├── ui/          # shadcn/ui components (do not modify directly)
+│   │   └── custom/      # Custom reusable components
+│   ├── pages/
+│   │   ├── public-routes/   # Unauthenticated pages (Login, Register)
+│   │   └── app-routes/      # Authenticated pages (Dashboard, HR modules)
+│   │       └── layout/      # App layouts
+│   │           ├── components/ # Granular layout components (Sidebar, Topbar, Modals)
+│   │           ├── AppLayout.tsx
+│   │           └── ...
+│   ├── lib/             # Utilities, API clients, helpers (e.g., i18n.ts)
+│   ├── store/           # Zustand global stores (e.g., useLayoutStore.ts)
+│   ├── App.tsx          # Root component with routing
+│   ├── main.tsx         # Entry point
+│   └── index.css        # Global styles + Tailwind theme
+├── public/              # Static assets (logos, fonts)
+├── package.json         # HRM-specific dependencies
+├── vite.config.ts       # HRM Vite configuration
+├── .env                 # Environment variables
+└── index.html           # Vite entry HTML
 ```
 
 ## Component & CSS Conventions

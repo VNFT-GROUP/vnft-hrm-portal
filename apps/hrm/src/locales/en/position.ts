@@ -1,0 +1,43 @@
+export default {
+  createdSuccess: "Position created successfully.",
+  updatedSuccess: "Position updated successfully.",
+  deletedSuccess: "Position deleted.",
+  title: "Job Titles",
+  subtitle: "Manage and set up the list of Job Titles in the company.",
+  legendTitle: "Operation legend:",
+  legendEdit: "Edit position information",
+  legendDelete: "Delete position",
+  legendHidePrefix: "(Hide legend in settings ",
+  legendHideSuffix: ")",
+  searchPlaceholder: "Search by Position name...",
+  addBtn: "Add Position",
+  table: {
+    name: "Position Name",
+    level: "Level",
+    description: "Description",
+    status: "Status",
+    actions: "Actions",
+    manager: "Manager",
+    staff: "Staff",
+    active: "Active",
+    inactive: "Inactive",
+    notFound: "No positions found"
+  },
+  form: {
+    updateTitle: "Update Position",
+    addTitle: "Add New Position",
+    updateSubtitle: "Edit information of the selected position.",
+    addSubtitle: "Fill in the information below to create a new position in the system.",
+    nameLabel: "Position Name",
+    namePlaceholder: "e.g., Marketing Manager",
+    descLabel: "Description (Optional)",
+    descPlaceholder: "Enter description of authorities and responsibilities...",
+    managerLabel: "Managerial Position?",
+    managerDesc: "Enable if this is an executive Job Title (Manager, Director...)",
+    statusLabel: "Active status?",
+    statusDesc: "Enable to allow assigning this Job Title to personnel",
+    cancel: "Cancel",
+    saveChanges: "Save Changes",
+    saveBtn: "Save Position"
+  }
+};

@@ -1,0 +1,12 @@
+.crm-app-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #f1f5f9;
+}
+
+.crm-app-main {
+  flex: 1;
+  padding: 1.5rem;
+  overflow-y: auto;
+}

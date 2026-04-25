@@ -1,0 +1,43 @@
+export default {
+  createdSuccess: "职位创建成功。",
+  updatedSuccess: "职位更新成功。",
+  deletedSuccess: "职位已删除。",
+  title: "职位",
+  subtitle: "管理并设置公司的职位列表。",
+  legendTitle: "操作图例：",
+  legendEdit: "编辑职位信息",
+  legendDelete: "删除职位",
+  legendHidePrefix: "(在设置中隐藏图例 ",
+  legendHideSuffix: ")",
+  searchPlaceholder: "按职位名称搜索...",
+  addBtn: "添加职位",
+  table: {
+    name: "职位名称",
+    level: "级别",
+    description: "描述",
+    status: "状态",
+    actions: "操作",
+    manager: "经理",
+    staff: "员工",
+    active: "活跃",
+    inactive: "暂停",
+    notFound: "未找到职位"
+  },
+  form: {
+    updateTitle: "更新职位",
+    addTitle: "添加新职位",
+    updateSubtitle: "编辑所选职位的信息。",
+    addSubtitle: "填写以下信息在系统中创建新职位。",
+    nameLabel: "职位名称",
+    namePlaceholder: "例如：市场部经理",
+    descLabel: "描述 (可选)",
+    descPlaceholder: "输入权限和责任的描述...",
+    managerLabel: "管理职位？",
+    managerDesc: "如果是执行角色（经理、总监...），请启用",
+    statusLabel: "激活状态？",
+    statusDesc: "启用以允许将此角色分配给人员",
+    cancel: "取消",
+    saveChanges: "保存更改",
+    saveBtn: "保存职位"
+  }
+};

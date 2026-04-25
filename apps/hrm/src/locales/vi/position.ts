@@ -1,0 +1,43 @@
+export default {
+  createdSuccess: "Đã tạo vị trí thành công.",
+  updatedSuccess: "Đã cập nhật vị trí thành công.",
+  deletedSuccess: "Đã xóa vị trí.",
+  title: "Vị trí",
+  subtitle: "Quản lý và thiết lập danh sách vị trí trong công ty.",
+  legendTitle: "Chú thích thao tác:",
+  legendEdit: "Chỉnh sửa thông tin vị trí",
+  legendDelete: "Xóa vị trí",
+  legendHidePrefix: "(Tắt chú thích trong tùy chỉnh ",
+  legendHideSuffix: ")",
+  searchPlaceholder: "Tìm kiếm theo Tên vị trí...",
+  addBtn: "Thêm vị trí",
+  table: {
+    name: "Tên vị trí",
+    level: "Cấp bậc",
+    description: "Mô tả",
+    status: "Trạng thái",
+    actions: "Thao tác",
+    manager: "Quản lý",
+    staff: "Nhân viên",
+    active: "Hoạt động",
+    inactive: "Tạm ngưng",
+    notFound: "Không tìm thấy vị trí nào"
+  },
+  form: {
+    updateTitle: "Cập nhật vị trí",
+    addTitle: "Thêm mới vị trí",
+    updateSubtitle: "Chỉnh sửa thông tin của vị trí đang chọn.",
+    addSubtitle: "Điền thông tin bên dưới để khởi tạo một vị trí mới trong hệ thống.",
+    nameLabel: "Tên vị trí",
+    namePlaceholder: "VD: Trưởng phòng Marketing",
+    descLabel: "Mô tả (Tùy chọn)",
+    descPlaceholder: "Nhập mô tả quyền hạn và trách nhiệm...",
+    managerLabel: "Vị trí cấp Quản lý?",
+    managerDesc: "Bật nếu đây là vị trí điều hành (Trưởng phòng, Giám đốc...)",
+    statusLabel: "Trạng thái hoạt động?",
+    statusDesc: "Bật để cho phép gán bộ phận này cho nhân sự",
+    cancel: "Hủy",
+    saveChanges: "Lưu thay đổi",
+    saveBtn: "Lưu vị trí"
+  }
+};

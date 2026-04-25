@@ -1,0 +1,23 @@
+export default {
+  title: "Hikvision - Records",
+  subtitle: "View and inspect raw attendance data from devices.",
+  searchPlaceholder: "Search by Emp ID or Name...",
+  startDate: "Start Date",
+  endDate: "End Date",
+  loadingData: "Loading data...",
+  noData: "No attendance data",
+  noDataDesc: "Please change the filter or wait for data synchronization.",
+  date: "Date",
+  employeeCode: "Emp ID",
+  employeeName: "Employee Name",
+  attendanceCode: "Att. Code",
+  checkIn: "Check In",
+  checkOut: "Check Out",
+  jsonDetails: "Device Data Details (Raw Payload)",
+  viewJson: "View JSON",
+  copyJsonSuccess: "JSON Copied",
+  invalidJson: "Invalid JSON format",
+  infoTitle: "Data Notice",
+  infoNotice: "Note:",
+  infoDesc: "This is raw data retrieved directly from the timekeeping tracking devices (unprocessed by any leave or adjustment requests). This dataset is for system referencing and checking purposes only and is not the final data evaluated for payroll calculation."
+};

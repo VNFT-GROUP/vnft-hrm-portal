@@ -6,7 +6,7 @@ services:
     restart: unless-stopped
 
   hrm:
-    image: huynhducphu2502/vnft-hrm-service:latest
+    image: huynhducphu2502/vnft-hrm:latest
     ports:
       - "3001:80"
     restart: unless-stopped

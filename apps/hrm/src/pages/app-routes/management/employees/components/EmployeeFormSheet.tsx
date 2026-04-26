@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
 import { useQuery } from "@tanstack/react-query";
 import { departmentService } from "@/services/department";
 import { positionService } from "@/services/position";
@@ -11,6 +10,8 @@ import { groupService } from "@/services/group/groupService";
 import { employeeCodeService } from "@/services/employeeCode";
 import { jobTitleService } from "@/services/jobtitle/jobTitleService";
 import { SearchableSelect } from "@/components/custom/SearchableSelect";
+import { FUNCTION_TYPE_OPTIONS } from "@/types/user/UserFunctionType";
+import type { UserFunctionType } from "@/types/user/UserFunctionType";
 
 
 interface EmployeeFormSheetProps {
@@ -60,7 +61,7 @@ export default function EmployeeFormSheet({ isOpen, onOpenChange, formData, setF
   const positions = positionsResponse?.data?.map(p => ({ value: p.id, label: p.name })) || [];
   const groups = groupsResponse?.data?.map(g => ({ value: g.id, label: g.name })) || [];
   const employeeCodes = employeeCodesResponse?.data?.filter(c => c.active).map(c => ({ value: c.id, label: c.prefix })) || [];
-  const jobTitles = jobTitlesResponse?.data?.filter((r: any) => r.active !== false).map((r: any) => ({ value: r.id, label: r.name })) || [];
+  const jobTitles = jobTitlesResponse?.data?.filter((r) => r.active !== false).map((r) => ({ value: r.id, label: r.name })) || [];
 
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
@@ -202,10 +203,7 @@ export default function EmployeeFormSheet({ isOpen, onOpenChange, formData, setF
             </div>
 
             <div className="space-y-2">
-              <Label className="text-sm font-semibold text-foreground flex items-center justify-between">
-                <span className="flex items-center gap-1.5"><Users size={14} className="text-muted-foreground"/> Nhóm/Chức năng <span className="text-rose-500">*</span></span>
-                <Badge variant="outline" className="text-[10px] bg-sky-50 text-sky-600 border-sky-200 uppercase pointer-events-none tracking-widest px-1.5 flex h-5 items-center">Phân quyền</Badge>
-              </Label>
+              <Label className="text-sm font-semibold text-foreground flex items-center gap-1.5"><Users size={14} className="text-muted-foreground"/> Nhóm/Chức năng <span className="text-rose-500">*</span></Label>
               <SearchableSelect 
                 options={groups}
                 value={formData.func || ""}
@@ -214,6 +212,24 @@ export default function EmployeeFormSheet({ isOpen, onOpenChange, formData, setF
                 onRefresh={() => refetchGroups()}
                 isLoading={isFetchingGroups}
               />
+            </div>
+
+            <div className="space-y-2">
+              <Label className="text-sm font-semibold text-foreground flex items-center gap-1.5">
+                Chức Năng (Phân loại)
+              </Label>
+              <select
+                className="flex h-11 w-full rounded-xl border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                value={formData.functionType || 'BACK_OFFICE'}
+                onChange={(e) => setFormData({...formData, functionType: e.target.value as UserFunctionType})}
+              >
+                {FUNCTION_TYPE_OPTIONS.map((opt) => (
+                  <option key={opt.value} value={opt.value}>{opt.label}</option>
+                ))}
+              </select>
+              <p className="text-[11px] text-muted-foreground">
+                Xác định loại đánh giá: Back Office / Sales / Marketing
+              </p>
             </div>
 
           </div>

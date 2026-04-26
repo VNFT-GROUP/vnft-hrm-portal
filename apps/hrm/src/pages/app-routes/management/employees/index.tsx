@@ -134,6 +134,7 @@ export default function EmployeesPage() {
       department: user.departmentName || "-",
       position: user.positionName || "-",
       func: user.groupName || "-",
+      functionType: user.functionType,
       status: user.active ? "Đang làm" : "Đã nghỉ việc",
 
       sysJobTitle: user.jobTitleName || "-",

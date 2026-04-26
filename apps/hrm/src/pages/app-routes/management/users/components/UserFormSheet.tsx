@@ -23,6 +23,7 @@ import { employeeCodeService } from "@/services/employeeCode";
 import { jobTitleService } from "@/services/jobtitle/jobTitleService";
 import { groupService } from "@/services/group/groupService";
 import type { CreateUserRequest } from '@/types/user/CreateUserRequest';
+import { FUNCTION_TYPE_OPTIONS } from '@/types/user/UserFunctionType';
 
 interface UserFormSheetProps {
   isOpen: boolean;
@@ -44,6 +45,7 @@ export default function UserFormSheet({
     englishName: "",
     employeeCodeId: "",
     groupId: "",
+    functionType: "BACK_OFFICE",
   });
 
   // Reset form khi mở Sheet
@@ -57,6 +59,7 @@ export default function UserFormSheet({
           englishName: "",
           employeeCodeId: "",
           groupId: "",
+          functionType: "BACK_OFFICE",
         });
       }, 0);
       return () => clearTimeout(timeout);
@@ -89,7 +92,7 @@ export default function UserFormSheet({
   const activeCodes = employeeCodes.filter((c) => c.active);
 
   const jobTitles = jobTitlesData?.data || [];
-  const activeJobTitles = jobTitles.filter((r: any) => r.active !== false);
+  const activeJobTitles = jobTitles.filter((r) => r.active !== false);
 
   const groups = groupsData?.data || [];
 
@@ -320,7 +323,7 @@ export default function UserFormSheet({
                     <SelectValue placeholder="-- Chọn một chức vụ --" />
                   </SelectTrigger>
                   <SelectContent>
-                    {activeJobTitles.map((jobTitle: any) => (
+                    {activeJobTitles.map((jobTitle) => (
                       <SelectItem key={jobTitle.id} value={jobTitle.id}>
                         <div className="flex items-center gap-2">
                           <span className="font-semibold text-[#1E2062]">
@@ -336,6 +339,34 @@ export default function UserFormSheet({
                     )}
                   </SelectContent>
                 </Select>
+              </div>
+
+              <div className="space-y-2 pb-2">
+                <Label className="text-sm font-semibold text-foreground">
+                  Chức Năng
+                </Label>
+                <Select
+                  value={formData.functionType || "BACK_OFFICE"}
+                  onValueChange={(val) =>
+                    setFormData({ ...formData, functionType: val as CreateUserRequest['functionType'] })
+                  }
+                >
+                  <SelectTrigger className="rounded-xl border-border focus:ring-[#2E3192]">
+                    <SelectValue placeholder="-- Chọn chức năng --" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {FUNCTION_TYPE_OPTIONS.map((opt) => (
+                      <SelectItem key={opt.value} value={opt.value}>
+                        <span className="font-semibold text-[#1E2062]">
+                          {opt.label}
+                        </span>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <p className="text-[11px] text-muted-foreground">
+                  Back Office = Đánh giá Chuyên cần + Hiệu suất. Sales / Marketing = Đánh giá Chuyên cần + KPI Sales.
+                </p>
               </div>
 
 

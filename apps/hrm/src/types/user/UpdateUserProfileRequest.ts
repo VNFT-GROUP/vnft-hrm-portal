@@ -3,12 +3,14 @@ import type { DependentRequest } from './Dependent/DependentRequest';
 import type { EducationRecordRequest } from './EducationRecord/EducationRecordRequest';
 import type { WorkExperienceRequest } from './WorkExperience/WorkExperienceRequest';
 import type { Gender } from './UserSessionResponse';
+import type { UserFunctionType } from './UserFunctionType';
 
 export type MaritalStatus = 'SINGLE' | 'MARRIED';
 
 export interface UpdateUserProfileRequest {
   fullName?: string;
   englishName?: string;
+  functionType?: UserFunctionType | null;
   attendanceCode?: string;
   phoneNumber?: string;
   avatarTempKey?: string;

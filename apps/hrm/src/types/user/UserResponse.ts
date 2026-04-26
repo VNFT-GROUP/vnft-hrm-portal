@@ -1,8 +1,12 @@
+import type { UserFunctionType } from './UserFunctionType';
+
 export interface UserResponse {
   id: string;
+  profileId?: string;
   username: string;
   fullName?: string;
   englishName?: string;
+  functionType?: UserFunctionType | null;
   avatarKey?: string;
   avatarUrl?: string;
   employeeCode?: string;

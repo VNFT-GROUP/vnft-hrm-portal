@@ -1,6 +1,6 @@
 export default {
-  title: "Đánh giá hiệu suất",
-  subtitle: "Quản lý và thực hiện đánh giá hiệu suất hàng tháng cho nhân sự trong phòng ban.",
+  title: "Đánh giá Performance & KPI",
+  subtitle: "Back Office dùng Hiệu suất, Sales/Marketing dùng KPI. Điểm chuyên cần áp dụng cho tất cả.",
   searchPlaceholder: "Tìm kiếm nhân sự bằng tên hoặc mã nhân viên...",
   period: "Kỳ đánh giá:",
   monthLabel: "Tháng",

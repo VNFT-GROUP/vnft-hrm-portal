@@ -1,5 +1,7 @@
 import { Trash2, Users, Shield, CircleDollarSign, UserCog, Briefcase, Key } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { FUNCTION_TYPE_LABELS } from "@/types/user/UserFunctionType";
+import type { UserFunctionType } from "@/types/user/UserFunctionType";
 import { m, AnimatePresence  } from 'framer-motion';
 import {
   ContextMenu,
@@ -22,6 +24,7 @@ export interface Employee {
   department: string;
   position: string;
   func: string;
+  functionType?: UserFunctionType | null;
   status: string;
   sysJobTitle: string;
   avatarUrl?: string;
@@ -63,6 +66,7 @@ export default function EmployeeTable({ employees, onDelete, onEditBasicInfo, on
                 <th className="px-4 py-3 font-medium whitespace-nowrap text-left w-[180px]">{t('management.colDepartment', { defaultValue: 'DEPARTMENT' })}</th>
                 <th className="px-4 py-3 font-medium whitespace-nowrap text-left w-[180px]">{t('management.colPosition', { defaultValue: 'POSITION' })}</th>
                 <th className="px-4 py-3 font-medium whitespace-nowrap text-left w-[180px]">{t('management.colJobTitle', { defaultValue: 'CHỨC VỤ' })}</th>
+                <th className="px-4 py-3 font-medium whitespace-nowrap text-center w-[130px]">{t('management.colFunctionType', { defaultValue: 'CHỨC NĂNG' })}</th>
                 <th className="px-4 py-3 font-medium whitespace-nowrap text-center w-[150px]">{t('management.colStatus', { defaultValue: 'STATUS' })}</th>
                 <th className="px-4 py-3 font-medium whitespace-nowrap text-center w-[150px]">{t('management.colCreatedAt', { defaultValue: 'NGÀY TẠO' })}</th>
                 <th className="px-4 py-3 font-medium whitespace-nowrap text-center w-[150px]">{t('management.colUpdatedAt', { defaultValue: 'NGÀY CẬP NHẬT' })}</th>
@@ -108,6 +112,21 @@ export default function EmployeeTable({ employees, onDelete, onEditBasicInfo, on
                 </td>
                 <td className="px-4 py-3 font-medium text-slate-700 text-left align-middle whitespace-nowrap">
                   {emp.sysJobTitle || "-"}
+                </td>
+                <td className="px-4 py-3 text-center align-middle">
+                  {emp.functionType ? (
+                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-bold tracking-wide border ${
+                      emp.functionType === 'SALES'
+                        ? 'bg-blue-50 text-blue-700 border-blue-200'
+                        : emp.functionType === 'MARKETING'
+                        ? 'bg-purple-50 text-purple-700 border-purple-200'
+                        : 'bg-slate-50 text-slate-600 border-slate-200'
+                    }`}>
+                      {FUNCTION_TYPE_LABELS[emp.functionType] ?? emp.functionType}
+                    </span>
+                  ) : (
+                    <span className="text-xs text-muted-foreground">—</span>
+                  )}
                 </td>
                 <td className="px-4 py-3 text-center align-middle">
                   <Badge className={`${getEmployeeStatusColor(emp.status)} shadow-sm font-medium border-0`}>
@@ -161,7 +180,7 @@ export default function EmployeeTable({ employees, onDelete, onEditBasicInfo, on
           </AnimatePresence>
           {employees.length === 0 && (
             <tr>
-              <td colSpan={12} className="h-40 text-center">
+              <td colSpan={13} className="h-40 text-center">
                 <div className="flex flex-col items-center justify-center text-slate-500">
                   <Users size={32} className="mb-2 opacity-50" />
                   <p>{t('management.emptyEmployee', { defaultValue: 'Không tìm thấy nhân viên nào' })}</p>

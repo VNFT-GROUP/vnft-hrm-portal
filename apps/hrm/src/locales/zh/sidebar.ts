@@ -41,10 +41,16 @@ export default {
   opsShort: "业务",
   organization: "组织与人事",
   orgShort: "组织人事",
-  performance: "绩效评估",
+  performance: "绩效与KPI",
   performanceShort: "绩效",
   reports: "内部报告",
   reportsShort: "报告",
   payroll: "薪资管理",
-  payrollShort: "薪资"
+  payrollShort: "薪资",
+  accounting: "财务会计",
+  accountingShort: "财务",
+  profitReport: "利润报表",
+  profitReportShort: "利润",
+  salesmanMapping: "业务员对照",
+  salesmanMappingShort: "对照"
 };

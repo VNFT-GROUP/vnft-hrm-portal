@@ -1,6 +1,7 @@
 import type { GroupPermissionResponse } from '../group/GroupPermissionResponse';
 import type { AttendanceDailySummaryResponse } from '../attendance/AttendanceDailySummaryResponse';
 import type { AttendanceMonthlySummaryResponse } from '../attendance/AttendanceMonthlySummaryResponse';
+import type { UserFunctionType } from './UserFunctionType';
 
 export type Gender = 'MALE' | 'FEMALE' | 'OTHER';
 
@@ -10,6 +11,7 @@ export interface UserSessionResponse {
   passwordChangedAt?: string;
   fullName?: string;
   englishName?: string;
+  functionType?: UserFunctionType | null;
   gender?: Gender;
   avatarKey?: string;
   avatarUrl?: string;

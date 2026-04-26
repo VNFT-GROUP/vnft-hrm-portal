@@ -41,10 +41,16 @@ export default {
   opsShort: "Ops",
   organization: "Organization & HR",
   orgShort: "Org & HR",
-  performance: "Performance Reviews",
-  performanceShort: "Reviews",
+  performance: "Performance & KPI",
+  performanceShort: "Perf&KPI",
   reports: "Internal Reports",
   reportsShort: "Reports",
   payroll: "Payroll",
-  payrollShort: "Payroll"
+  payrollShort: "Payroll",
+  accounting: "Accounting",
+  accountingShort: "Acctg",
+  profitReport: "Profit Report",
+  profitReportShort: "Profit",
+  salesmanMapping: "Salesman Mapping",
+  salesmanMappingShort: "Mapping"
 };

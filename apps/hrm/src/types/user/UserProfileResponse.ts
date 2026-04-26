@@ -5,12 +5,14 @@ import type { DependentResponse } from './Dependent/DependentResponse';
 import type { EducationRecordResponse } from './EducationRecord/EducationRecordResponse';
 import type { WorkExperienceResponse } from './WorkExperience/WorkExperienceResponse';
 import type { UserCompensationResponse } from './salary/UserCompensationResponse';
+import type { UserFunctionType } from './UserFunctionType';
 
 export interface UserProfileResponse {
   id: string;
   username: string;
   fullName?: string;
   englishName?: string;
+  functionType?: UserFunctionType | null;
   employeeCode?: string;
   attendanceCode?: string;
   departmentId?: string;

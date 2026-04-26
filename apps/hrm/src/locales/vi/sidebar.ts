@@ -41,10 +41,16 @@ export default {
   opsShort: "Nghiệp vụ",
   organization: "Tổ chức & Nhân sự",
   orgShort: "Tổ chức",
-  performance: "Đánh giá hiệu suất",
-  performanceShort: "Hiệu suất",
+  performance: "Performance & KPI",
+  performanceShort: "Perf&KPI",
   reports: "Báo cáo nội bộ",
   reportsShort: "Báo cáo",
   payroll: "Bảng lương",
-  payrollShort: "Lương"
+  payrollShort: "Lương",
+  accounting: "Kế toán",
+  accountingShort: "Kế toán",
+  profitReport: "Báo cáo Lợi nhuận",
+  profitReportShort: "Lợi nhuận",
+  salesmanMapping: "Đối chiếu Nhân viên",
+  salesmanMappingShort: "Đối chiếu"
 };

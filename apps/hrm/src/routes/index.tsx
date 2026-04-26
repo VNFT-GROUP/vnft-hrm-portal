@@ -24,12 +24,10 @@ const ManagementPayrollPage = lazy(() => import("../pages/app-routes/management/
 const ServerSettingsPage = lazy(() => import("../pages/app-routes/management/server-settings"));
 const PerformanceReviewsPage = lazy(() => import("../pages/app-routes/management/performance"));
 const MyAttendancePage = lazy(() => import("../pages/app-routes/attendance"));
-const EvaluationPage = lazy(() => import("../pages/app-routes/evaluation"));
 const ProfitReportPage = lazy(() => import("../pages/app-routes/acc/profit-report"));
-const VotingPage = lazy(() => import("../pages/app-routes/voting"));
+const SalesmanMappingPage = lazy(() => import("../pages/app-routes/acc/profit-report/salesman-mappings"));
 const RequestsPage = lazy(() => import("../pages/app-routes/requests"));
 const CreateRequestPage = lazy(() => import("../pages/app-routes/requests/create/index"));
-const FinanceReportsPage = lazy(() => import("../pages/app-routes/finance/reports"));
 const ReportsPage = lazy(() => import("../pages/app-routes/reports"));
 const SettingsPage = lazy(() => import("../pages/app-routes/settings"));
 const ActivityLogsPage = lazy(() => import("../pages/app-routes/activity-logs"));
@@ -100,8 +98,6 @@ export default function AppRoutes() {
           <Route path="profile" element={<Lazy><ProfilePage /></Lazy>} />
           <Route path="profile/edit" element={<Lazy><EditProfilePage /></Lazy>} />
           <Route path="attendance" element={<Lazy><MyAttendancePage /></Lazy>} />
-          <Route path="evaluation" element={<Lazy><EvaluationPage /></Lazy>} />
-          <Route path="voting" element={<Lazy><VotingPage /></Lazy>} />
           <Route path="requests">
              <Route index element={<Lazy><RequestsPage /></Lazy>} />
              <Route path="create" element={<Lazy><CreateRequestPage /></Lazy>} />
@@ -122,18 +118,14 @@ export default function AppRoutes() {
              <Route path="requests" element={<Lazy><ManagementRequestsPage /></Lazy>} />
              <Route path="attendance" element={<Lazy><ManagementAttendancePage /></Lazy>} />
              <Route path="payroll" element={<Lazy><ManagementPayrollPage /></Lazy>} />
-             <Route path="performance" element={<Lazy><PerformanceReviewsPage /></Lazy>} />
+             <Route path="evaluation" element={<Lazy><PerformanceReviewsPage /></Lazy>} />
              <Route path="server-settings" element={<Lazy><ServerSettingsPage /></Lazy>} />
           </Route>
 
           {/* Cấp 2: ACC */}
           <Route path="acc">
              <Route path="profit-report" element={<Lazy><ProfitReportPage /></Lazy>} />
-          </Route>
-
-          {/* Cấp 2: Tài chính */}
-          <Route path="finance">
-             <Route path="reports" element={<Lazy><FinanceReportsPage /></Lazy>} />
+             <Route path="profit-report/salesman-mappings" element={<Lazy><SalesmanMappingPage /></Lazy>} />
           </Route>
         </Route>
         {/* Catch-all: redirect to /verify (public auth check) */}

@@ -20,6 +20,8 @@ import {
   getCountryNameForLocale,
   WORLD_RELIGIONS as PROFILE_WORLD_RELIGIONS,
 } from "@/constants/profile-options";
+import { FUNCTION_TYPE_OPTIONS } from "@/types/user/UserFunctionType";
+import type { UserFunctionType } from "@/types/user/UserFunctionType";
 
 
 type ProfileFormData = Partial<UpdateUserProfileRequest> & {
@@ -79,6 +81,7 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
      englishName: "",
      attendanceCode: "",
      employeeCode: "",
+     functionType: undefined,
      phoneNumber: "",
      gender: "MALE",
      dateOfBirth: "",
@@ -132,6 +135,7 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
           englishName: d.englishName || prev.englishName,
           attendanceCode: d.attendanceCode || "",
           employeeCode: d.employeeCode || prev.employeeCode,
+          functionType: d.functionType || undefined,
           phoneNumber: d.phoneNumber || "",
           gender: d.gender || prev.gender,
           dateOfBirth: d.dateOfBirth?.substring(0, 10) || "",
@@ -397,6 +401,21 @@ export default function BasicInformationSheet({ isOpen, onOpenChange, userId }: 
                       placeholder={t("editProfile.basicInfo.phoneNumberPlaceholder", { defaultValue: "VD: 09xxxxxxxx" })} 
                       className="h-11 rounded-xl"
                     />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>{t("editProfile.basicInfo.functionType", { defaultValue: "Chức Năng" })}</Label>
+                    <select disabled={!isEditingMode || loading}
+                      className={selectClassName}
+                      value={formData.functionType || 'BACK_OFFICE'}
+                      onChange={(e) => handleTextChange("functionType", e.target.value as UserFunctionType)}
+                    >
+                      {FUNCTION_TYPE_OPTIONS.map((opt) => (
+                        <option key={opt.value} value={opt.value}>{opt.label}</option>
+                      ))}
+                    </select>
+                    <p className="text-[11px] text-muted-foreground">
+                      {t("editProfile.basicInfo.functionTypeHint", { defaultValue: "Xác định phương thức đánh giá: Back Office = Chuyên cần + Hiệu suất, Sales/Marketing = Chuyên cần + KPI Sales." })}
+                    </p>
                   </div>
                   <div className="space-y-2">
                      <Label>{t("editProfile.basicInfo.dob", { defaultValue: "Ngày sinh (Date of Birth)" })}</Label>

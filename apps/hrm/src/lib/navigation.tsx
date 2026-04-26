@@ -15,6 +15,8 @@ import {
   Clock,
   Settings,
   BarChart3,
+  Link2,
+  Calculator,
 } from "lucide-react";
 import { PERMISSIONS } from "@/constants/permissions";
 
@@ -35,6 +37,7 @@ export const useNavigationData = () => {
     PERMISSIONS.PERFORMANCE_REVIEW_DEPARTMENT, 
     PERMISSIONS.ATTENDANCE_MANAGE, 
     PERMISSIONS.PAYROLL_MANAGE,
+    PERMISSIONS.PROFIT_REPORT_MANAGE,
     PERMISSIONS.SETTINGS_MANAGE,
     PERMISSIONS.ALLOWANCE_REPORT_VIEW
   ] as string[]).includes(p)) || isAdmin;
@@ -50,9 +53,9 @@ export const useNavigationData = () => {
   }
   if (isAdmin || perms.includes(PERMISSIONS.PERFORMANCE_REVIEW_ALL) || (session?.isManager && perms.includes(PERMISSIONS.PERFORMANCE_REVIEW_DEPARTMENT))) {
     opsSubItems.push({
-      label: t("sidebar.performance", { defaultValue: "Đánh giá hiệu suất" }),
-      shortName: t("sidebar.performanceShort", { defaultValue: "Đánh giá" }),
-      path: "/app/management/performance",
+      label: t("sidebar.performance", { defaultValue: "Performance & KPI" }),
+      shortName: t("sidebar.performanceShort", { defaultValue: "Perf&KPI" }),
+      path: "/app/management/evaluation",
       icon: <CheckSquare size={16} />,
     });
   }
@@ -70,6 +73,21 @@ export const useNavigationData = () => {
       shortName: t("sidebar.payrollShort", { defaultValue: "Lương" }),
       path: "/app/management/payroll",
       icon: <FileText size={16} />,
+    });
+  }
+  const accSubItems = [];
+  if (isAdmin || perms.includes(PERMISSIONS.PROFIT_REPORT_MANAGE)) {
+    accSubItems.push({
+      label: t("sidebar.profitReport", { defaultValue: "Báo cáo Lợi nhuận" }),
+      shortName: t("sidebar.profitReportShort", { defaultValue: "Lợi nhuận" }),
+      path: "/app/acc/profit-report",
+      icon: <BarChart3 size={16} />,
+    });
+    accSubItems.push({
+      label: t("sidebar.salesmanMapping", { defaultValue: "Đối chiếu Nhân viên" }),
+      shortName: t("sidebar.salesmanMappingShort", { defaultValue: "Đối chiếu" }),
+      path: "/app/acc/profit-report/salesman-mappings",
+      icon: <Link2 size={16} />,
     });
   }
 
@@ -187,6 +205,13 @@ export const useNavigationData = () => {
                 shortName: t("sidebar.opsShort", { defaultValue: "Nghiệp vụ" }),
                 icon: <FolderOpen size={20} />,
                 subItems: opsSubItems,
+              }] : []),
+              ...(accSubItems.length > 0 ? [{
+                id: "accounting",
+                label: t("sidebar.accounting", { defaultValue: "Kế toán" }),
+                shortName: t("sidebar.accountingShort", { defaultValue: "Kế toán" }),
+                icon: <Calculator size={20} />,
+                subItems: accSubItems,
               }] : []),
               ...(masterDataSubItems.length > 0 ? [{
                 id: "organization",

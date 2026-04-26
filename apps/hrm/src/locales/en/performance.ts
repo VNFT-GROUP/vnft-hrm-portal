@@ -1,6 +1,6 @@
 export default {
-  title: "Performance Reviews",
-  subtitle: "Manage and execute monthly performance reviews for employees in the department.",
+  title: "Performance & KPI Reviews",
+  subtitle: "Manage and execute monthly performance & KPI reviews for employees in the department.",
   searchPlaceholder: "Search employee by name or ID...",
   period: "Review Period:",
   monthLabel: "Month",

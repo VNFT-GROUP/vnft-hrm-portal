@@ -10,7 +10,7 @@ import { useDebounce } from "@/hooks/useDebounce";
 import { format } from "date-fns";
 import { getErrorMessage } from "@/lib/utils";
 
-import { payrollService } from "@/services/payroll/payroll.service";
+import { payrollService } from "@/services/payroll/payrollService";
 import type { PayrollResponse, PayrollStatus } from "@/types/payroll/PayrollResponse";
 import type { CreatePayrollRequest, PayrollCalculateRequest, PayrollEmployeeImportRequest } from "@/types/payroll/CalculatePayrollRequest";
 

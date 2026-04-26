@@ -1,6 +1,6 @@
 export default {
-  title: "绩效评估",
-  subtitle: "管理和执行部门员工的月度绩效评估。",
+  title: "绩效与KPI评估",
+  subtitle: "管理和执行部门员工的月度绩效与KPI评估。",
   searchPlaceholder: "通过姓名或员工ID搜索...",
   period: "评估周期:",
   monthLabel: "月",

@@ -1,6 +1,6 @@
 import type { AllowanceReportItem } from "@/types/report/AllowanceReportItem";
 import { FolderKanban } from "lucide-react";
-import { formatVND } from "@/lib/utils";
+import { formatVND, formatNumber } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
 
 interface AllowanceReportTableProps {
@@ -9,10 +9,7 @@ interface AllowanceReportTableProps {
 
 export function AllowanceReportTable({ items }: AllowanceReportTableProps) {
   const { t } = useTranslation();
-  const formatScore = (val: number | undefined | null) => {
-    if (val === null || val === undefined) return "—";
-    return Number(val).toLocaleString('vi-VN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  };
+  const formatScore = (val: number | undefined | null) => formatNumber(val, 2, 2);
 
   return (
     <div className="w-full relative min-h-[400px] border border-slate-200 rounded-xl overflow-hidden shadow-sm flex flex-col bg-white">

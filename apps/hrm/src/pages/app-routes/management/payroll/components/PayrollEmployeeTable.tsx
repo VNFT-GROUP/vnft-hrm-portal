@@ -18,6 +18,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import type { PayrollEmployeeResponse } from "@/types/payroll/PayrollResponse";
+import { formatVND, formatWorkday } from "@/lib/utils";
 
 /** Override map: userProfileId → field → value */
 export type CellOverrides = Record<string, Record<string, number>>;
@@ -29,14 +30,6 @@ interface PayrollEmployeeTableProps {
   overrides?: CellOverrides;
   onCellChange?: (userProfileId: string, field: string, value: number) => void;
 }
-
-const fmt = (v: number) =>
-  new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(v || 0);
-
-const fmtWd = (v?: number | null) => {
-  const r = v ?? 0;
-  return Number.isInteger(r) ? r.toString() : r.toFixed(2).replace(/\.?0+$/, "");
-};
 
 // ---- Inline editable cell ----
 function EditableCell({
@@ -155,7 +148,7 @@ function col(
     header: () => <HeaderWithTooltip label={header} tooltip={tooltip} />,
     meta: { role, tooltip } as ColMeta,
     cell: (info) => {
-      const val = fmt(info.getValue() as number);
+      const val = formatVND(info.getValue() as number);
       if (highlight) return <span className={highlight}>{val}</span>;
       return val;
     },
@@ -186,7 +179,7 @@ export default function PayrollEmployeeTable({
     (key: string) =>
       (info: { row: { original: PayrollEmployeeResponse }; getValue: () => unknown }) => {
         if (!editable || !onCellChange) {
-          const val = fmt(info.getValue() as number);
+          const val = formatVND(info.getValue() as number);
           return val;
         }
         const uid = info.row.original.userProfileId;
@@ -217,7 +210,7 @@ export default function PayrollEmployeeTable({
       cell: editable && onCellChange
         ? editableCell(key)
         : (info) => {
-            const val = fmt(info.getValue() as number);
+            const val = formatVND(info.getValue() as number);
             if (highlight) return <span className={highlight}>{val}</span>;
             return val;
           },
@@ -273,13 +266,13 @@ export default function PayrollEmployeeTable({
         accessorKey: "standardWorkdays",
         header: "Số công chuẩn",
         meta: { role: "readonly" } as ColMeta,
-        cell: (info) => fmtWd(info.getValue() as number),
+        cell: (info) => formatWorkday(info.getValue() as number),
       },
       {
         accessorKey: "actualWorkdays",
         header: "Công làm việc",
         meta: { role: "readonly" } as ColMeta,
-        cell: (info) => fmtWd(info.getValue() as number),
+        cell: (info) => formatWorkday(info.getValue() as number),
       },
 
       // ── 5. Phụ cấp hiệu suất từ performance (§4.2) ──

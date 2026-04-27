@@ -57,7 +57,7 @@ import {
   BUSINESS_TRIP_REASON_LABELS, 
   REQUEST_FORM_TYPE_LABELS,
   countedWorkLabel
-} from "@/types/requestform/RequestFormLabels";
+} from "@/constants/request-form";
 
 const requestCards = [
   {

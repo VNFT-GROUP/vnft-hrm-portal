@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { RichTextViewer } from "@/components/custom/RichTextViewer";
 import { Loader2, Star, Calendar, Trash2, User, Building, Briefcase } from "lucide-react";
 import { toast } from "sonner";
-import { getErrorMessage } from "@/lib/utils";
+import { getErrorMessage, formatVND } from "@/lib/utils";
 import { format } from "date-fns";
 
 interface PerformanceReviewDetailModalProps {
@@ -112,7 +112,7 @@ export default function PerformanceReviewDetailModal({ isOpen, onOpenChange, id 
                         <span className="text-indigo-200 text-[11px] uppercase">Mức thưởng</span>
                         <div className="text-base font-bold text-emerald-300">
                           {review.performanceAllowance != null 
-                             ? new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(review.performanceAllowance)
+                             ? formatVND(review.performanceAllowance)
                              : "Không có thưởng"}
                         </div>
                       </div>

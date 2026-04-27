@@ -1,6 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { lazy, Suspense, useEffect } from "react";
-import { getGatewayLoginUrl } from "@/config/portal.config";
+import { getGatewayLoginUrl } from "@/lib/permission/portal.config";
 
 
 const AppLayout = lazy(() => import("../pages/app-routes/layout/AppLayout"));

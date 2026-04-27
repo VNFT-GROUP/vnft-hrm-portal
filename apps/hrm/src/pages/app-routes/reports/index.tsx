@@ -6,7 +6,7 @@ import { AttendanceDisciplineReportTable } from "./components/AttendanceDiscipli
 import { Loader2, AlertCircle, ShieldAlert } from "lucide-react";
 import { m, AnimatePresence } from "framer-motion";
 import { useAuthStore } from "@/store/useAuthStore";
-import { PERMISSIONS } from "@/constants/permissions";
+import { PERMISSIONS } from "@/lib/permission/permissions";
 import { useAllowanceReport } from "./hooks/useAllowanceReport";
 import { useAttendanceDisciplineReport } from "./hooks/useAttendanceDisciplineReport";
 import { useTranslation } from "react-i18next";

@@ -11,7 +11,7 @@ import {
   ContextMenuSeparator,
 } from "@/components/ui/context-menu";
 import { AvatarPlaceholder } from "@/components/custom/AvatarPlaceholder";
-import { getEmployeeStatusColor } from "@/lib/utils";
+import { getEmployeeStatusColor, formatDate } from "@/lib/utils";
 
 export interface Employee {
   id: string;
@@ -134,10 +134,10 @@ export default function EmployeeTable({ employees, onDelete, onEditBasicInfo, on
                   </Badge>
                 </td>
                 <td className="px-4 py-3 font-medium text-slate-700 text-center align-middle whitespace-nowrap">
-                  {emp.createdAt ? new Date(emp.createdAt).toLocaleDateString('vi-VN') : "-"}
+                  {emp.createdAt ? formatDate(emp.createdAt) : "-"}
                 </td>
                 <td className="px-4 py-3 font-medium text-slate-700 text-center align-middle whitespace-nowrap">
-                  {emp.updatedAt ? new Date(emp.updatedAt).toLocaleDateString('vi-VN') : "-"}
+                  {emp.updatedAt ? formatDate(emp.updatedAt) : "-"}
                 </td>
                 <td className="px-4 py-3 align-middle text-center text-slate-500 whitespace-nowrap text-xs">
                   {emp.updatedBy ? (

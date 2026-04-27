@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { Edit2, Trash2, FolderOpen, ChevronRight, ChevronDown } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { cn } from "@/lib/utils";
+import { cn, formatDate } from "@/lib/utils";
 
 import {
   ContextMenu,
@@ -174,10 +174,10 @@ export default function DepartmentTreeList({ departments, onEdit, onDelete }: De
 
                         {/* Audit info */}
                         <td className="px-4 py-3 align-middle text-center text-slate-500 whitespace-nowrap text-xs">
-                          {dept.createdAt ? new Date(dept.createdAt).toLocaleDateString('vi-VN') : "—"}
+                          {dept.createdAt ? formatDate(dept.createdAt) : "—"}
                         </td>
                         <td className="px-4 py-3 align-middle text-center text-slate-500 whitespace-nowrap text-xs">
-                          {dept.updatedAt ? new Date(dept.updatedAt).toLocaleDateString('vi-VN') : "—"}
+                          {dept.updatedAt ? formatDate(dept.updatedAt) : "—"}
                         </td>
                         <td className="px-4 py-3 align-middle text-center text-slate-500 whitespace-nowrap text-xs">
                           {dept.createdBy ? (

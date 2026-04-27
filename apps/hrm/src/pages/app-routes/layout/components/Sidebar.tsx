@@ -11,7 +11,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { ScrollArea } from "../../../../components/ui/scroll-area";
 import { useLayoutStore } from "../../../../store/useLayoutStore";
-import { useNavigationData } from "@/lib/navigation";
+import { useNavigationData } from "@/lib/permission/navigation";
 import "./Sidebar.css";
 
 type SubItemType = {

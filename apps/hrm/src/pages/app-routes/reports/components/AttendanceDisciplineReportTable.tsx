@@ -1,6 +1,6 @@
 import type { AttendanceDisciplineReportItem } from "@/types/report/AttendanceDisciplineReportItem";
 import { FolderKanban } from "lucide-react";
-import { formatVND } from "@/lib/utils";
+import { formatVND, formatNumber } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
 
 interface AttendanceDisciplineReportTableProps {
@@ -9,10 +9,7 @@ interface AttendanceDisciplineReportTableProps {
 
 export function AttendanceDisciplineReportTable({ items }: AttendanceDisciplineReportTableProps) {
   const { t } = useTranslation();
-  const formatNum = (val: number | undefined | null) => {
-    if (val === null || val === undefined) return "—";
-    return Number(val).toLocaleString('vi-VN', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
-  };
+  const formatNum = (val: number | undefined | null) => formatNumber(val, 0, 2);
 
   const getScoreStyle = (score: number) => {
     if (score <= 2) return "text-red-700 bg-red-50 px-2 py-0.5 rounded-md font-bold";

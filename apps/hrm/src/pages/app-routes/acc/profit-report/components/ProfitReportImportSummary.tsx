@@ -10,6 +10,7 @@ import {
   HelpCircle,
 } from "lucide-react";
 import type { ProfitReportImportResponse } from "@/types/profit-report/ProfitReportResponse";
+import { formatCurrency } from "@/lib/utils";
 
 interface ProfitReportImportSummaryProps {
   summary: ProfitReportImportResponse;
@@ -170,7 +171,7 @@ function StatCard({
       <span className={`${color} opacity-80`}>{icon}</span>
       <div>
         <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider leading-tight">{label}</p>
-        <p className={`text-lg font-bold ${color}`}>{value.toLocaleString("vi-VN")}</p>
+        <p className={`text-lg font-bold ${color}`}>{formatCurrency(value)}</p>
       </div>
     </div>
   );

@@ -5,8 +5,8 @@ import type {
   BusinessTripReasonType,
   RequestFormType,
   RequestFormStatus,
-} from "./RequestFormEnums";
-import type { RequestFormResponse } from "./RequestFormResponse";
+} from "@/types/requestform/RequestFormEnums";
+import type { RequestFormResponse } from "@/types/requestform/RequestFormResponse";
 
 // ===== Leave reason labels =====
 

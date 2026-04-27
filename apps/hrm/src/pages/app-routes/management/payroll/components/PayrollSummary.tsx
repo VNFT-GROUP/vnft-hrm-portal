@@ -1,12 +1,11 @@
 import { DollarSign, ShieldCheck, FileText, Banknote, CalendarDays } from "lucide-react";
 import type { PayrollTotalsResponse } from "@/types/payroll/PayrollResponse";
 
+import { formatVND, formatWorkday } from "@/lib/utils";
+
 interface PayrollSummaryProps {
   totals: PayrollTotalsResponse;
 }
-
-const fmt = (v: number) =>
-  new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(v || 0);
 
 interface StatCardProps {
   label: string;
@@ -42,28 +41,28 @@ export default function PayrollSummary({ totals }: PayrollSummaryProps) {
         />
         <StatCard
           label="Tổng lương theo công"
-          value={fmt(totals.workdaySalary)}
+          value={formatVND(totals.workdaySalary)}
           icon={<DollarSign size={16} />}
           color="bg-emerald-100 text-emerald-600"
           bgColor="border-emerald-100 bg-emerald-50/40"
         />
         <StatCard
           label="Thu nhập chịu thuế"
-          value={fmt(totals.taxableIncome)}
+          value={formatVND(totals.taxableIncome)}
           icon={<FileText size={16} />}
           color="bg-amber-100 text-amber-600"
           bgColor="border-amber-100 bg-amber-50/40"
         />
         <StatCard
           label="Thực lãnh"
-          value={fmt(totals.netSalary)}
+          value={formatVND(totals.netSalary)}
           icon={<Banknote size={16} />}
           color="bg-[#2E3192]/10 text-[#2E3192]"
           bgColor="border-[#2E3192]/10 bg-[#2E3192]/5"
         />
         <StatCard
           label="Chuyển khoản"
-          value={fmt(totals.bankTransfer)}
+          value={formatVND(totals.bankTransfer)}
           icon={<Banknote size={16} />}
           color="bg-sky-100 text-sky-600"
           bgColor="border-sky-100 bg-sky-50/40"
@@ -79,13 +78,13 @@ export default function PayrollSummary({ totals }: PayrollSummaryProps) {
             Bảo hiểm
           </div>
           <div className="text-[13px] space-y-1.5 text-slate-600">
-            <Row label="BHXH Cty" value={fmt(totals.companySocialInsurance)} />
-            <Row label="BHYT Cty" value={fmt(totals.companyHealthInsurance)} />
-            <Row label="BHTN Cty" value={fmt(totals.companyUnemploymentInsurance)} />
+            <Row label="BHXH Cty" value={formatVND(totals.companySocialInsurance)} />
+            <Row label="BHYT Cty" value={formatVND(totals.companyHealthInsurance)} />
+            <Row label="BHTN Cty" value={formatVND(totals.companyUnemploymentInsurance)} />
             <div className="border-t border-dashed border-slate-200 pt-1.5 mt-1.5" />
-            <Row label="BHXH NV" value={fmt(totals.employeeSocialInsurance)} />
-            <Row label="BHYT NV" value={fmt(totals.employeeHealthInsurance)} />
-            <Row label="BHTN NV" value={fmt(totals.employeeUnemploymentInsurance)} />
+            <Row label="BHXH NV" value={formatVND(totals.employeeSocialInsurance)} />
+            <Row label="BHYT NV" value={formatVND(totals.employeeHealthInsurance)} />
+            <Row label="BHTN NV" value={formatVND(totals.employeeUnemploymentInsurance)} />
           </div>
         </div>
 
@@ -96,13 +95,13 @@ export default function PayrollSummary({ totals }: PayrollSummaryProps) {
             Thuế
           </div>
           <div className="text-[13px] space-y-1.5 text-slate-600">
-            <Row label="TN Chịu thuế" value={fmt(totals.taxableIncome)} />
-            <Row label="GTGC bản thân" value={fmt(totals.personalDeduction)} />
+            <Row label="TN Chịu thuế" value={formatVND(totals.taxableIncome)} />
+            <Row label="GTGC bản thân" value={formatVND(totals.personalDeduction)} />
             <Row label="SL NPT" value={totals.dependentCount.toString()} />
-            <Row label="GT NPT" value={fmt(totals.dependentDeduction)} />
-            <Row label="TN tính thuế" value={fmt(totals.assessableIncome)} />
+            <Row label="GT NPT" value={formatVND(totals.dependentDeduction)} />
+            <Row label="TN tính thuế" value={formatVND(totals.assessableIncome)} />
             <div className="border-t border-dashed border-slate-200 pt-1.5 mt-1.5" />
-            <Row label="Thuế TNCN" value={fmt(totals.personalIncomeTax)} bold className="text-rose-600" />
+            <Row label="Thuế TNCN" value={formatVND(totals.personalIncomeTax)} bold className="text-rose-600" />
           </div>
         </div>
 
@@ -114,12 +113,12 @@ export default function PayrollSummary({ totals }: PayrollSummaryProps) {
           </div>
           <div className="text-[13px] space-y-1.5 text-slate-600">
             <Row label="Công chuẩn" value={totals.standardWorkdays.toString()} />
-            <Row label="Công thực" value={fmtWorkday(totals.actualWorkdays)} />
+            <Row label="Công thực" value={formatWorkday(totals.actualWorkdays)} />
             <div className="border-t border-dashed border-slate-200 pt-1.5 mt-1.5" />
-            <Row label="Chuyển khoản" value={fmt(totals.bankTransfer)} />
-            <Row label="Tiền mặt" value={fmt(totals.cashPayment)} />
+            <Row label="Chuyển khoản" value={formatVND(totals.bankTransfer)} />
+            <Row label="Tiền mặt" value={formatVND(totals.cashPayment)} />
             <div className="border-t border-dashed border-slate-200 pt-1.5 mt-1.5" />
-            <Row label="Thực lãnh" value={fmt(totals.netSalary)} bold className="text-[#2E3192]" />
+            <Row label="Thực lãnh" value={formatVND(totals.netSalary)} bold className="text-[#2E3192]" />
           </div>
         </div>
       </div>
@@ -134,8 +133,4 @@ function Row({ label, value, bold, className }: { label: string; value: string; 
       <span className={`font-mono ${bold ? "font-bold" : "font-medium"} ${className || "text-slate-800"}`}>{value}</span>
     </div>
   );
-}
-
-function fmtWorkday(v: number) {
-  return Number.isInteger(v) ? v.toString() : v.toFixed(2).replace(/\.?0+$/, "");
 }

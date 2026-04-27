@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Loader2, TrendingUp } from "lucide-react";
 import { toast } from "sonner";
-import { getErrorMessage } from "@/lib/utils";
+import { getErrorMessage, formatCurrency } from "@/lib/utils";
 import { useCreateSalesKpiReview, useUpdateSalesKpiReview, useSalesKpiCandidates } from "@/hooks/useSalesKpiReviews";
 import { salesKpiReviewService } from "@/services/salesKpiReviewService";
 import { useQuery } from "@tanstack/react-query";
@@ -135,9 +135,9 @@ export default function SalesKpiReviewFormModal({
               <div className="space-y-2 p-4 bg-white border border-slate-200 rounded-xl shadow-sm">
                 <Label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Tổng hợp từ Profit Report (Chỉ đọc)</Label>
                 <div className="grid grid-cols-2 gap-2 mt-2">
-                  {readonlyField("Target", displayData.targetAmount?.toLocaleString("vi-VN"))}
-                  {readonlyField("Doanh thu", displayData.revenueAmount?.toLocaleString("vi-VN"))}
-                  {readonlyField("Lợi nhuận", displayData.profitAmount?.toLocaleString("vi-VN"))}
+                  {readonlyField("Target", formatCurrency(displayData.targetAmount))}
+                  {readonlyField("Doanh thu", formatCurrency(displayData.revenueAmount))}
+                  {readonlyField("Lợi nhuận", formatCurrency(displayData.profitAmount))}
                   {readonlyField("Biên độ LN", displayData.profitMarginPercent, "%")}
                   {readonlyField("Đạt target", displayData.targetAchievementPercent, "%")}
                   {readonlyField("Điểm doanh số", displayData.salesScore)}

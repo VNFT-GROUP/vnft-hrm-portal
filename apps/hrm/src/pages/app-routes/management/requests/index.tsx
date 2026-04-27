@@ -3,7 +3,7 @@ import { Check, X, Search, Eye, Activity, ShieldAlert, Info, Clock, AlertCircle,
 import { m  } from 'framer-motion';
 import { toast } from "sonner";
 import { useAuthStore } from "@/store/useAuthStore";
-import { PERMISSIONS } from "@/constants/permissions";
+import { PERMISSIONS } from "@/lib/permission/permissions";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import CustomPagination from "@/components/custom/CustomPagination";
@@ -22,7 +22,7 @@ import {
   ATTENDANCE_ADJUSTMENT_REASON_LABELS, 
   BUSINESS_TRIP_REASON_LABELS,
   countedWorkLabel
-} from "@/types/requestform/RequestFormLabels";
+} from "@/constants/request-form";
 
 export default function ManagementRequestsPage() {
   const { t } = useTranslation();

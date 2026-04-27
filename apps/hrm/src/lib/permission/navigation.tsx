@@ -18,7 +18,7 @@ import {
   Link2,
   Calculator,
 } from "lucide-react";
-import { PERMISSIONS } from "@/constants/permissions";
+import { PERMISSIONS } from "@/lib/permission/permissions";
 
 export const useNavigationData = () => {
   const { session } = useAuthStore();

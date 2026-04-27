@@ -2,6 +2,7 @@ import { AlertCircle, ChevronDown, BarChart3 } from "lucide-react";
 import { useContext, useState } from "react";
 import { ProfileContext } from "../contexts/ProfileContext";
 import { useTranslation } from "react-i18next";
+import { formatCurrency } from "@/lib/utils";
 
 export default function SalaryTab() {
   const { t } = useTranslation();
@@ -14,8 +15,6 @@ export default function SalaryTab() {
   
   const [selectedIndex, setSelectedIndex] = useState(0);
   const currentConfig = sortedConfigs.length > 0 ? sortedConfigs[selectedIndex] : null;
-
-  const formatCurrency = (amount: number) => new Intl.NumberFormat('vi-VN').format(amount);
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500 fill-mode-both">

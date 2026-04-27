@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { UserSessionResponse } from '@/types/user/UserSessionResponse';
-import { getGatewayLoginUrl } from '@/config/portal.config';
+import { getGatewayLoginUrl } from '@/lib/permission/portal.config';
 
 interface AuthState {
   id: string | null;

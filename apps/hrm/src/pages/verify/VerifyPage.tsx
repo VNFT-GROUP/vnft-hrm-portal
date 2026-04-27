@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/store/useAuthStore';
 import axios from 'axios';
-import { portalConfig, getGatewayLoginUrl } from '@/config/portal.config';
+import { portalConfig, getGatewayLoginUrl } from '@/lib/permission/portal.config';
 
 /**
  * Public Verify Page — entry point for HRM.

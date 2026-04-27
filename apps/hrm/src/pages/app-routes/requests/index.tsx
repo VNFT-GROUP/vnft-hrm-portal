@@ -4,7 +4,7 @@ import { m  } from 'framer-motion';
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/store/useAuthStore";
-import { PERMISSIONS } from "@/constants/permissions";
+import { PERMISSIONS } from "@/lib/permission/permissions";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { requestFormMeService } from "@/services/requestform/me";
 import CustomPagination from "@/components/custom/CustomPagination";
@@ -16,7 +16,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { RichTextViewer } from "@/components/custom/RichTextViewer";
 import { getErrorMessage } from "@/lib/utils";
 import RequestFormModal from "./components/RequestFormModal";
-import { LEAVE_REASON_LABELS, ABSENCE_REASON_LABELS, ATTENDANCE_ADJUSTMENT_REASON_LABELS, BUSINESS_TRIP_REASON_LABELS, countedWorkLabel } from "@/types/requestform/RequestFormLabels";
+import { LEAVE_REASON_LABELS, ABSENCE_REASON_LABELS, ATTENDANCE_ADJUSTMENT_REASON_LABELS, BUSINESS_TRIP_REASON_LABELS, countedWorkLabel } from "@/constants/request-form";
 const safeFormatDate = (dateString?: string | null) => {
   if (!dateString) return "—";
   try {

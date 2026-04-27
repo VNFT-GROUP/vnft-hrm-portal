@@ -153,7 +153,7 @@ export default function ProfitReportTable({ data, loading, onCreateMapping }: Pr
 
       {/* Footer row count */}
       <div className="sticky bottom-0 bg-muted/90 backdrop-blur-sm border-t border-border px-4 py-2.5 text-xs text-muted-foreground font-medium">
-        Tổng: {data.length.toLocaleString("vi-VN")} dòng
+        Tổng: {formatCurrency(data.length)} dòng
       </div>
     </div>
   );

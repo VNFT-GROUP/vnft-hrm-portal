@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { RichTextEditor } from "@/components/custom/RichTextEditor";
 import { toast } from "sonner";
-import { getErrorMessage } from "@/lib/utils";
+import { getErrorMessage, formatVND } from "@/lib/utils";
 import { Loader2, CalendarIcon, Star, CheckCircle2, AlertCircle } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
@@ -225,7 +225,7 @@ export default function PerformanceReviewFormModal({ isOpen, onOpenChange, userI
                         <div className="flex flex-col text-right">
                            <span className="text-xs font-semibold text-emerald-600/70 uppercase tracking-widest">Mức thưởng công</span>
                            <span className="font-bold text-emerald-600 text-xl mt-0.5">
-                              {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(selectedLevel.allowance)}
+                              {formatVND(selectedLevel.allowance)}
                            </span>
                         </div>
                      </div>

@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { salesmanMappingService } from "@/services/profit-report/salesmanMappingService";
-import { profitReportKeys } from "@/hooks/useProfitReports";
+import { profitReportKeys } from "@/pages/app-routes/acc/profit-report/hooks/useProfitReports";
 import type {
   GetProfitReportSalesmanMappingsParams,
   UpsertProfitReportSalesmanMappingRequest,

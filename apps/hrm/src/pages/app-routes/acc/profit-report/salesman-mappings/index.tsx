@@ -9,7 +9,7 @@ import { useDebounce } from "@/hooks/useDebounce";
 import {
   useSalesmanMappings,
   useDeleteSalesmanMapping,
-} from "@/hooks/useSalesmanMappings";
+} from "@/pages/app-routes/acc/profit-report/hooks/useSalesmanMappings";
 import type { ProfitReportSalesmanMappingResponse } from "@/types/profit-report/SalesmanMappingResponse";
 
 import SalesmanMappingFormModal from "../components/SalesmanMappingFormModal";

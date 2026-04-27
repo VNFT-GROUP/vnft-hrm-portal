@@ -9,7 +9,7 @@ import {
   useProfitReports,
   useImportProfitReport,
   useDeleteProfitReport,
-} from "@/hooks/useProfitReports";
+} from "@/pages/app-routes/acc/profit-report/hooks/useProfitReports";
 import type {
   ProfitReportCurrency,
   ProfitReportMatchStatus,

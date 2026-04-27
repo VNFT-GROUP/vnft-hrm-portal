@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Loader2, TrendingUp } from "lucide-react";
 import { toast } from "sonner";
 import { getErrorMessage, formatCurrency } from "@/lib/utils";
-import { useCreateSalesKpiReview, useUpdateSalesKpiReview, useSalesKpiCandidates } from "@/hooks/useSalesKpiReviews";
+import { useCreateSalesKpiReview, useUpdateSalesKpiReview, useSalesKpiCandidates } from "@/pages/app-routes/management/performance/hooks/useSalesKpiReviews";
 import { salesKpiReviewService } from "@/services/salesKpiReviewService";
 import { useQuery } from "@tanstack/react-query";
 

@@ -12,7 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { cn } from "@/lib/utils";
 import { SearchableSelect } from "@/components/custom/SearchableSelect";
 import { useTranslation } from "react-i18next";
-import { useSalesKpiReviews } from "@/hooks/useSalesKpiReviews";
+import { useSalesKpiReviews } from "@/pages/app-routes/management/performance/hooks/useSalesKpiReviews";
 import { mergeEvaluationRows } from "./utils/mergeEvaluationRows";
 import type { EvaluationUnifiedRow } from "@/types/evaluation/EvaluationUnifiedRow";
 import type { UserFunctionType } from "@/types/user/UserFunctionType";

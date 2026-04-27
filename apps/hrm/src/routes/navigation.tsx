@@ -25,10 +25,10 @@ export const useNavigationData = () => {
 
   const { t } = useTranslation();
 
-  const perms = session?.groupPermissions?.map(p => p.code) || [];
+  const perms = session?.groupPermissions?.map((p: { code: string }) => p.code) || [];
   const isAdmin = session?.groupName === "ADMIN";
 
-  const hasManagementAccess = session?.isManager === true || perms.some(p => ([
+  const hasManagementAccess = session?.isManager === true || perms.some((p: string) => ([
     PERMISSIONS.USER_MANAGE, 
     PERMISSIONS.MASTER_DATA_MANAGE, 
     PERMISSIONS.REQUEST_FORM_APPROVE_ALL, 

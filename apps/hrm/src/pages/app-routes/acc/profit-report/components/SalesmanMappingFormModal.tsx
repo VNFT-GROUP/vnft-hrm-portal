@@ -19,7 +19,7 @@ import { getErrorMessage } from "@/lib/utils";
 import {
   useCreateSalesmanMapping,
   useUpdateSalesmanMapping,
-} from "@/hooks/useSalesmanMappings";
+} from "@/pages/app-routes/acc/profit-report/hooks/useSalesmanMappings";
 import type { ProfitReportSalesmanMappingResponse } from "@/types/profit-report/SalesmanMappingResponse";
 
 interface SalesmanMappingFormModalProps {

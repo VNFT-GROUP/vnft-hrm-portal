@@ -1,6 +1,6 @@
 # VNFT Portal Frontend Architecture & Best Practices
 
-## 1. Nguyên tắc tổ chức (Domain-Driven & Co-location)
+## 1. Nguyên tắc tổ chức
 
 Cốt lõi của kiến trúc là **Co-location**: _"Cái gì chỉ dùng cho một tính năng thì phải đặt bên trong thư mục của tính năng đó, không được ném ra ngoài Global"_. Điều này giúp dự án dễ dàng scale, tránh rác (bloat) các thư mục dùng chung khi dự án lớn dần.
 
@@ -52,7 +52,7 @@ Chỉ những code được tái sử dụng từ **2 nơi trở lên** mới đ
 
 ### 📦 Quản lý State
 
-- **Global State**: Sử dụng Zustand/Redux trong `src/store/` chỉ cho các state **bắt buộc** phải dùng chung toàn app (Session Auth, Theme, Layout status).
+- **Global State**: Sử dụng Zustand trong `src/store/` chỉ cho các state **bắt buộc** phải dùng chung toàn app (Session Auth, Theme, Layout status).
 - **Server State**: Xử lý hoàn toàn qua React Query (`useQuery`, `useMutation`).
 - **Local State**: Các state đóng/mở UI, data form đang nhập dở... quản lý bằng `useState`/`useReducer` ngay tại Component cục bộ.
 
